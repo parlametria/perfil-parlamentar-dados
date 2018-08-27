@@ -5,21 +5,50 @@ import json
 
 def requestPage(pageUrl, data):
     payload = {'per_page': 100}
-    
+    idPerguntas = []
+    idRespostas = []
     request = s.get(pageUrl, params=payload)
 
     temp = json.loads(request.text)        
-    data += json.dumps(temp,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
     
-    for (k, v) in temp.items():
-        if k == "links":
-            if 'next' in v.keys():
-                nextPage = v["next"]
-                data += ", "
-                return(requestPage(nextPage, data))
+   
+    for val in temp["data"]:
+        jsonCandidato = {}
+        for (k,v) in val.items():
+            if k == "pages":
+                print("later")
+
+            elif k == "metadata":
+                for (c,va) in val[k]["contact"].items():
+                    jsonCandidato[c] = va['value']     
             else:
-                data += "]"
-                return data
+                jsonCandidato[k] = v
+
+        jsonCandidato.pop("custom_variables", None)
+        jsonCandidato.pop("logic_path", None)
+        jsonCandidato.pop("page_path", None)
+
+        jsonCandidato["nome_urna"] = jsonCandidato.pop("last_name", None)
+        jsonCandidato["nome_exibicao"] = jsonCandidato.pop("first_name", None)
+        jsonCandidato["genero"] = jsonCandidato.pop("custom_value", None)
+        jsonCandidato["uf"] = jsonCandidato.pop("custom_value2", None)
+        jsonCandidato["estado"] = jsonCandidato.pop("custom_value3", None)
+        jsonCandidato["sg_partido"] = jsonCandidato.pop("custom_value4", None)
+        jsonCandidato["partido"] = jsonCandidato.pop("custom_value5", None)
+        jsonCandidato["cpf"] = jsonCandidato.pop("custom_value6", None)
+
+        data += json.dumps(jsonCandidato,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+        data += ", "
+
+    
+
+    if 'next' in temp["links"].keys():
+        nextPage = temp["links"]["next"]
+        return(requestPage(nextPage, data))
+    else:
+        data = data[:-2]
+        data += "]"
+        return data
 
 
 s = requests.Session()
