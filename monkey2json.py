@@ -3,6 +3,8 @@ import keys
 import requests
 import json
 
+NAO_RESPONDEU = '-2'
+
 def requestPage(pageUrl, data):
     payload = {'per_page': 100}
     request = s.get(pageUrl, params=payload)
@@ -10,34 +12,39 @@ def requestPage(pageUrl, data):
     temp = json.loads(request.text)        
     
    
-    for val in temp["data"]:
+    for valorData in temp["data"]:
         jsonCandidato = {}
         idPerguntas = []
         idRespostas = []
-        for (k,v) in val.items():
-            if k == "pages":
-                for elem in val[k]:
-                    for e in elem['questions']:
-                        idPerguntas.append(e['id'])
-                        if 'choice_id' in e['answers'][0].keys():
-                            idRespostas.append(e['answers'][0]['choice_id'])
-                        elif 'text' in e['answers'][0].keys():
-                            idRespostas.append(e['answers'][0]['text'])
+        for (key, value) in valorData.items():
+            if key == "pages":
+                for elem in valorData[key]:
+                    for subelem in elem['questions']:
+                        idPerguntas.append(subelem['id'])
+                        if 'choice_id' in subelem['answers'][0].keys():
+                            idRespostas.append(subelem['answers'][0]['choice_id'])
+                        elif 'text' in subelem['answers'][0].keys():
+                            idRespostas.append(subelem['answers'][0]['text'])
                         else:
-                            idRespostas.append('0')
+                            idRespostas.append(NAO_RESPONDEU)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-            elif k == "metadata":
-                for (c,va) in val[k]["contact"].items():
-                    jsonCandidato[c] = va['value']     
+            elif key == "metadata":
+                for (chave,valor) in valorData[key]["contact"].items():
+                    jsonCandidato[chave] = valor['value']     
             else:
-                jsonCandidato[k] = v
+                jsonCandidato[key] = value
 
         jsonCandidato["idRespostas"] = idRespostas
         jsonCandidato["idPerguntas"] = idPerguntas    
     
         jsonCandidato.pop("custom_variables", None)
+        jsonCandidato.pop("edit_url", None)
+        jsonCandidato.pop("analyze_url", None)
+        jsonCandidato.pop("collection_mode", None)
+        jsonCandidato.pop("survey_id",None)
         jsonCandidato.pop("logic_path", None)
         jsonCandidato.pop("page_path", None)
+        jsonCandidato.pop("ip_address", None)
 
         jsonCandidato["nome_urna"] = jsonCandidato.pop("last_name", None)
         jsonCandidato["nome_exibicao"] = jsonCandidato.pop("first_name", None)
