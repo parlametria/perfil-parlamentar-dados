@@ -85,7 +85,7 @@ data = "[ "
 
 print("iniciando request")
             
-data = requestPage(url,data)
+data = request_page(url,data)
 
 with open('responses.json', 'w') as file:
     file.write(data)
