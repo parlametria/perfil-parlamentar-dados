@@ -5,6 +5,27 @@ import json
 
 NAO_RESPONDEU = '-2'
 
+def changeCandidato(jsonCandidato):
+    jsonCandidato.pop("custom_variables", None)
+    jsonCandidato.pop("edit_url", None)
+    jsonCandidato.pop("analyze_url", None)
+    jsonCandidato.pop("collection_mode", None)
+    jsonCandidato.pop("survey_id",None)
+    jsonCandidato.pop("logic_path", None)
+    jsonCandidato.pop("page_path", None)
+    jsonCandidato.pop("ip_address", None)
+
+    jsonCandidato["nome_urna"] = jsonCandidato.pop("last_name", None)
+    jsonCandidato["nome_exibicao"] = jsonCandidato.pop("first_name", None)
+    jsonCandidato["genero"] = jsonCandidato.pop("custom_value", None)
+    jsonCandidato["uf"] = jsonCandidato.pop("custom_value2", None)
+    jsonCandidato["estado"] = jsonCandidato.pop("custom_value3", None)
+    jsonCandidato["sg_partido"] = jsonCandidato.pop("custom_value4", None)
+    jsonCandidato["partido"] = jsonCandidato.pop("custom_value5", None)
+    jsonCandidato["cpf"] = jsonCandidato.pop("custom_value6", None)
+
+    return jsonCandidato
+
 def requestPage(pageUrl, data):
     payload = {'per_page': 100}
     request = s.get(pageUrl, params=payload)
@@ -36,24 +57,8 @@ def requestPage(pageUrl, data):
 
         jsonCandidato["idRespostas"] = idRespostas
         jsonCandidato["idPerguntas"] = idPerguntas    
-    
-        jsonCandidato.pop("custom_variables", None)
-        jsonCandidato.pop("edit_url", None)
-        jsonCandidato.pop("analyze_url", None)
-        jsonCandidato.pop("collection_mode", None)
-        jsonCandidato.pop("survey_id",None)
-        jsonCandidato.pop("logic_path", None)
-        jsonCandidato.pop("page_path", None)
-        jsonCandidato.pop("ip_address", None)
 
-        jsonCandidato["nome_urna"] = jsonCandidato.pop("last_name", None)
-        jsonCandidato["nome_exibicao"] = jsonCandidato.pop("first_name", None)
-        jsonCandidato["genero"] = jsonCandidato.pop("custom_value", None)
-        jsonCandidato["uf"] = jsonCandidato.pop("custom_value2", None)
-        jsonCandidato["estado"] = jsonCandidato.pop("custom_value3", None)
-        jsonCandidato["sg_partido"] = jsonCandidato.pop("custom_value4", None)
-        jsonCandidato["partido"] = jsonCandidato.pop("custom_value5", None)
-        jsonCandidato["cpf"] = jsonCandidato.pop("custom_value6", None)
+        jsonCandidato = changeCandidato(jsonCandidato)
 
         data += json.dumps(jsonCandidato,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
         data += ", "
