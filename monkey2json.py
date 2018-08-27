@@ -3,71 +3,71 @@ import keys
 import requests
 import json
 
-NAO_RESPONDEU = '-2'
+NAO_RESPONDEU = '0'
 
-def changeCandidato(jsonCandidato):
-    jsonCandidato.pop("custom_variables", None)
-    jsonCandidato.pop("edit_url", None)
-    jsonCandidato.pop("analyze_url", None)
-    jsonCandidato.pop("collection_mode", None)
-    jsonCandidato.pop("survey_id",None)
-    jsonCandidato.pop("logic_path", None)
-    jsonCandidato.pop("page_path", None)
-    jsonCandidato.pop("ip_address", None)
+def change_candidato(json_candidato):
+    json_candidato.pop("custom_variables", None)
+    json_candidato.pop("edit_url", None)
+    json_candidato.pop("analyze_url", None)
+    json_candidato.pop("collection_mode", None)
+    json_candidato.pop("survey_id",None)
+    json_candidato.pop("logic_path", None)
+    json_candidato.pop("page_path", None)
+    json_candidato.pop("ip_address", None)
 
-    jsonCandidato["nome_urna"] = jsonCandidato.pop("last_name", None)
-    jsonCandidato["nome_exibicao"] = jsonCandidato.pop("first_name", None)
-    jsonCandidato["genero"] = jsonCandidato.pop("custom_value", None)
-    jsonCandidato["uf"] = jsonCandidato.pop("custom_value2", None)
-    jsonCandidato["estado"] = jsonCandidato.pop("custom_value3", None)
-    jsonCandidato["sg_partido"] = jsonCandidato.pop("custom_value4", None)
-    jsonCandidato["partido"] = jsonCandidato.pop("custom_value5", None)
-    jsonCandidato["cpf"] = jsonCandidato.pop("custom_value6", None)
+    json_candidato["nome_urna"] = json_candidato.pop("last_name", None)
+    json_candidato["nome_exibicao"] = json_candidato.pop("first_name", None)
+    json_candidato["genero"] = json_candidato.pop("custom_value", None)
+    json_candidato["uf"] = json_candidato.pop("custom_value2", None)
+    json_candidato["estado"] = json_candidato.pop("custom_value3", None)
+    json_candidato["sg_partido"] = json_candidato.pop("custom_value4", None)
+    json_candidato["partido"] = json_candidato.pop("custom_value5", None)
+    json_candidato["cpf"] = json_candidato.pop("custom_value6", None)
 
-    return jsonCandidato
+    return json_candidato
 
-def requestPage(pageUrl, data):
+def request_page(page_url, data):
     payload = {'per_page': 100}
-    request = s.get(pageUrl, params=payload)
+    request = s.get(page_url, params=payload)
 
     temp = json.loads(request.text)        
     
    
-    for valorData in temp["data"]:
-        jsonCandidato = {}
-        idPerguntas = []
-        idRespostas = []
-        for (key, value) in valorData.items():
+    for valor_data in temp["data"]:
+        json_candidato = {}
+        id_perguntas = []
+        id_respostas = []
+        for (key, value) in valor_data.items():
             if key == "pages":
-                for elem in valorData[key]:
+                for elem in valor_data[key]:
                     for subelem in elem['questions']:
-                        idPerguntas.append(subelem['id'])
+                        id_perguntas.append(subelem['id'])
                         if 'choice_id' in subelem['answers'][0].keys():
-                            idRespostas.append(subelem['answers'][0]['choice_id'])
+                            id_respostas.append(subelem['answers'][0]['choice_id'])
                         elif 'text' in subelem['answers'][0].keys():
-                            idRespostas.append(subelem['answers'][0]['text'])
+                            id_respostas.append(subelem['answers'][0]['text'])
                         else:
-                            idRespostas.append(NAO_RESPONDEU)
+                            id_respostas.append(NAO_RESPONDEU)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
             elif key == "metadata":
-                for (chave,valor) in valorData[key]["contact"].items():
-                    jsonCandidato[chave] = valor['value']     
+                for (chave,valor) in valor_data[key]["contact"].items():
+                    json_candidato[chave] = valor['value']     
             else:
-                jsonCandidato[key] = value
+                json_candidato[key] = value
 
-        jsonCandidato["idRespostas"] = idRespostas
-        jsonCandidato["idPerguntas"] = idPerguntas    
+        json_candidato["id_respostas"] = id_respostas
+        json_candidato["id_perguntas"] = id_perguntas    
 
-        jsonCandidato = changeCandidato(jsonCandidato)
+        json_candidato = change_candidato(json_candidato)
 
-        data += json.dumps(jsonCandidato,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+        data += json.dumps(json_candidato,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
         data += ", "
 
     
 
     if 'next' in temp["links"].keys():
         nextPage = temp["links"]["next"]
-        return(requestPage(nextPage, data))
+        return(request_page(nextPage, data))
     else:
         data = data[:-2]
         data += "]"
