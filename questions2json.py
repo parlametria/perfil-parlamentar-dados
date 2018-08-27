@@ -23,10 +23,25 @@ for i in ['37769727', '38341527', '38341716', '38341742', '38341818']:
     temp = temp["data"]
 # Edita e adiciona conteúdo das perguntas em uma lista
     for elem in temp:
-        elem["_id_survey"] = elem.pop("id")
+        # Remove dados desnecessários 
+        elem.pop("href", None)
         elem.pop('position', None)
+        # Altera nomes de variáveis
+        elem["_id_survey"] = elem.pop("id")
         elem["texto"] = elem.pop("heading")
         elem["id"] = pos
+        # Define o tema com base no índice
+        if pos < 10:
+            elem["tema"] = "Meio Ambiente"
+        elif pos >= 10 and pos < 20:
+            elem["tema"] = "Direitos Humanos"
+        elif pos >=20 and pos < 30:
+            elem["tema"] = "Integridade e Transparência"
+        elif pos >= 30 and pos < 38:
+            elem["tema"] = "Nova Economia"
+        else:
+            elem["tema"] = "Transversal"
+
         pos += 1
         perguntas.append(elem)
 
