@@ -1,34 +1,37 @@
+# encoding: iso-8859-1
 import keys
 import requests
 import json
+
 s = requests.Session()
 s.headers.update({
   "Authorization": "Bearer %s" % keys.YOUR_ACCESS_TOKEN,
   "Content-Type": "application/json"
 })
-
-# Script para pegar as respostas das surveys
+# Inicialização das variáveis necessárias
 data = ""
 perguntas = []
 temp = ""
-
-#lista contém o id das páginas
+# índice da pergunta
 pos = 0
+
+# Get de todas as páginas da survey e seu conteúdo
 for i in ['37769727', '38341527', '38341716', '38341742', '38341818']:
     url = "https://api.surveymonkey.com/v3/surveys/%s/pages/%s/questions" % (keys.survey_id,i)
     request = s.get(url)
     temp = json.loads(request.text)
     temp = temp["data"]
-    for i in temp:
-        i["_id_survey"] = i.pop("id")
-        i.pop('position', None)
-        i["texto"] = i.pop("heading")
-        i["id"] = pos
+# Edita e adiciona conteúdo das perguntas em uma lista
+    for elem in temp:
+        elem["_id_survey"] = elem.pop("id")
+        elem.pop('position', None)
+        elem["texto"] = elem.pop("heading")
+        elem["id"] = pos
         pos += 1
-        perguntas.append(i)
+        perguntas.append(elem)
 
-data = json.dumps(perguntas,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
-print(data)   
+data = json.dumps(perguntas,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)   
 
+# Salva perguntas
 with open('perguntas.json', 'w') as file:
    file.write(data)
