@@ -32,22 +32,31 @@ def request_page(page_url, data):
 
     temp = json.loads(request.text)        
     
-   
+    with open("keys_answers.json", 'r') as f:
+       keys4answers = json.load(f)
+    
+    with open("id_perguntas.json", 'r') as f:
+       id_perguntas = json.load(f)
+    
     for valor_data in temp["data"]:
         json_candidato = {}
-        id_perguntas = []
-        id_respostas = []
+        json_perguntas = {}
         for (key, value) in valor_data.items():
             if key == "pages":
                 for elem in valor_data[key]:
                     for subelem in elem['questions']:
-                        id_perguntas.append(subelem['id'])
+                        pergunta = subelem['id']
                         if 'choice_id' in subelem['answers'][0].keys():
-                            id_respostas.append(subelem['answers'][0]['choice_id'])
+                            resposta = subelem['answers'][0]['choice_id']
+                            if pergunta == "129411238":
+                                json_perguntas[pergunta] = keys4answers[pergunta][resposta]
+                            else:    
+                                json_perguntas[id_perguntas[pergunta]] = keys4answers[pergunta][resposta]
                         elif 'text' in subelem['answers'][0].keys():
-                            id_respostas.append(subelem['answers'][0]['text'])
+                            resposta = subelem['answers'][0]['text']
+                            json_perguntas[pergunta] = resposta
                         else:
-                            id_respostas.append(NAO_RESPONDEU)
+                            json_perguntas[pergunta] = NAO_RESPONDEU
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
             elif key == "metadata":
                 for (chave,valor) in valor_data[key]["contact"].items():
@@ -55,8 +64,7 @@ def request_page(page_url, data):
             else:
                 json_candidato[key] = value
 
-        json_candidato["id_respostas"] = id_respostas
-        json_candidato["id_perguntas"] = id_perguntas    
+        json_candidato["respostas"] = json_perguntas  
 
         json_candidato = change_candidato(json_candidato)
 
@@ -87,7 +95,7 @@ print("iniciando request")
             
 data = request_page(url,data)
 
-with open('responses.json', 'w') as file:
+with open('respostas.json', 'w') as file:
     file.write(data)
 
 print("finalizado")
