@@ -11,6 +11,7 @@ s.headers.update({
 # Inicialização das variáveis necessárias
 data = ""
 perguntas = []
+idPerguntas = {}
 temp = ""
 # índice da pergunta
 pos = 0
@@ -30,6 +31,9 @@ for i in ['37769727', '38341527', '38341716', '38341742', '38341818']:
         elem["_id_survey"] = elem.pop("id")
         elem["texto"] = elem.pop("heading")
         elem["id"] = pos
+
+        idPerguntas[elem["_id_survey"]] = pos
+
         # Define o tema com base no índice
         if pos < 10:
             elem["tema"] = "Meio Ambiente"
@@ -41,12 +45,16 @@ for i in ['37769727', '38341527', '38341716', '38341742', '38341818']:
             elem["tema"] = "Nova Economia"
         else:
             elem["tema"] = "Transversal"
-
+    
         pos += 1
         perguntas.append(elem)
 
 data = json.dumps(perguntas,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)   
+perg = json.dumps(idPerguntas,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)   
 
 # Salva perguntas
 with open('perguntas.json', 'w') as file:
    file.write(data)
+
+with open('id_perguntas.json', 'w') as file:
+   file.write(perg)
