@@ -19,7 +19,15 @@ for elem in temp['pages']:
         choices = {}
         if "answers" in e.keys():
             for el in e["answers"]["choices"]:
-                choices[el["id"]] = el["text"]
+                if el["text"] == "A FAVOR " or el["text"] == "A FAVOR" or el["text"] == " A FAVOR":
+                    choices[el["id"]] = "1"
+                elif el["text"] == "CONTRA":
+                    choices[el["id"]] = "-1"
+                elif el["text"] == "NÃO SEI":
+                    choices[el["id"]] = "-2"
+                else:
+                    choices[el["id"]] = el["text"]
+                
         answers[e["id"]] = choices
 
 data = json.dumps(answers,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)   
