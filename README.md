@@ -23,8 +23,20 @@ monkey2json.py
 
 ### 2 Povoando o banco de dados
 
-O arquivo `respostas.json` é a única coleção necessária.
+Os arquivos `respostas.json`, `candidatos.json` e `candidatos_slim.json` são necessários.
 
 ```
 mongoimport --db=voz-ativa --collection=respostas --file=respostas.json --jsonArray
+
+mongoimport --db=voz-ativa --collection=candidatos_extended --file=candidatos.json --jsonArray
+
+mongoimport --db=voz-ativa --collection=candidatos --file=candidatos_slim.json --jsonArray
 ```
+
+### 3 Povoando o mlab
+
+```
+mongoimport -h ds031822.mlab.com:31822 -d <bd> -c <collection> -u <user> -p <password> --file <input file>
+```
+
+
