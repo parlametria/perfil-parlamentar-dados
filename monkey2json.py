@@ -3,8 +3,30 @@ import keys
 import requests
 import json
 
-NAO_RESPONDEU = '0'
+NAO_RESPONDEU = 0
 
+def get_todos_candidatos():
+    with open('./tse/candidatos.json') as f:
+        candidatos = json.load(f)
+    
+    for elem in candidatos:
+        elem.pop('ocupacao', None)
+        elem.pop('estado', None)
+        elem.pop('nome_social', None)
+        elem.pop('nome_candidato', None)
+        elem.pop('tipo_agremiacao', None)
+        elem.pop('num_partido', None)
+        elem.pop('partido', None)
+        elem.pop('raca', None)
+        elem.pop('nome_coligacao', None)
+        elem.pop('composicao_coligacao', None)
+        elem.pop('idade_posse', None)
+        elem.pop('genero', None)
+        elem.pop('grau_instrucao', None)
+        elem["respostas"] = {}
+
+    return candidatos
+            
 def change_candidato(json_candidato):
     json_candidato.pop("custom_variables", None)
     json_candidato.pop("edit_url", None)
@@ -39,7 +61,6 @@ def candidato_slim(candidato):
     candidato.pop("response_status", None)
     candidato.pop("collector_id", None)
     candidato.pop("id", None)
-    candidato.pop("email", None)
 
     return candidato
     
@@ -118,11 +139,43 @@ data = "[ "
 data_slim = "[ "
 
 print("iniciando request")
-            
+
 data, data_slim = request_page(url,data, data_slim)
 
-with open('respostas.json', 'w') as file:
-    file.write(data)
+candidatos = get_todos_candidatos()
+
+with open('respostas_slim.json', 'w') as file:
+    file.write(data_slim)
+
+#with open('respostas.json', 'w') as file:
+#    file.write(data)
+
+print("Comparando csv de candidatos com os resultados do SM") 
+
+with open('respostas_slim.json') as f:
+    data_slim_temp = json.load(f)
+
+lista_candidatos = []
+for candidato in candidatos:
+    lista_candidatos.append(candidato["cpf"])
+
+lista_resultados = []
+for resultado in data_slim_temp:
+    lista_resultados.append(resultado["cpf"])
+
+lista_final =  [x for x in lista_candidatos if x not in lista_resultados]
+
+data_slim = data_slim[:-1]
+data_slim += ", "
+for candidato in candidatos:
+    if candidato["cpf"] in lista_final:
+        data_slim += json.dumps(candidato, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+        data_slim += ", "
+
+data_slim = data_slim[:-2]
+data_slim += "]"
+
+print("Salvando os dados")
 
 with open('respostas_slim.json', 'w') as file:
     file.write(data_slim)
