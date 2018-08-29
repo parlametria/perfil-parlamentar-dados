@@ -20,11 +20,11 @@ for elem in temp['pages']:
         if "answers" in e.keys():
             for el in e["answers"]["choices"]:
                 if el["text"] == "A FAVOR " or el["text"] == "A FAVOR" or el["text"] == " A FAVOR":
-                    choices[el["id"]] = "1"
+                    choices[el["id"]] = 1
                 elif el["text"] == "CONTRA":
-                    choices[el["id"]] = "-1"
+                    choices[el["id"]] = -1
                 elif el["text"] == "NÃO SEI":
-                    choices[el["id"]] = "-2"
+                    choices[el["id"]] = -2
                 else:
                     choices[el["id"]] = el["text"]
                 
