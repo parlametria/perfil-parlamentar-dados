@@ -14,6 +14,7 @@ def change_candidato(json_candidato):
     json_candidato.pop("logic_path", None)
     json_candidato.pop("page_path", None)
     json_candidato.pop("ip_address", None)
+    json_candidato.pop("href", None)
 
     json_candidato["nome_urna"] = json_candidato.pop("last_name", None)
     json_candidato["nome_exibicao"] = json_candidato.pop("first_name", None)
@@ -26,7 +27,24 @@ def change_candidato(json_candidato):
 
     return json_candidato
 
-def request_page(page_url, data):
+def candidato_slim(candidato):
+    candidato.pop("genero", None)
+    candidato.pop("estado", None)
+    candidato.pop("partido", None)
+    candidato.pop("recipient_id", None)
+    candidato.pop("date_modified", None)
+    candidato.pop("date_modified", None)
+    candidato.pop("date_created", None)
+    candidato.pop("total_time", None)
+    candidato.pop("response_status", None)
+    candidato.pop("collector_id", None)
+    candidato.pop("id", None)
+    candidato.pop("email", None)
+
+    return candidato
+    
+
+def request_page(page_url, data, data_slim):
     payload = {'per_page': 100}
     request = s.get(page_url, params=payload)
 
@@ -39,6 +57,7 @@ def request_page(page_url, data):
        id_perguntas = json.load(f)
     
     for valor_data in temp["data"]:
+        json_candidato_slim = {}
         json_candidato = {}
         json_perguntas = {}
         for (key, value) in valor_data.items():
@@ -67,6 +86,10 @@ def request_page(page_url, data):
         json_candidato["respostas"] = json_perguntas  
 
         json_candidato = change_candidato(json_candidato)
+        json_candidato_slim =  candidato_slim(json_candidato)
+
+        data_slim += json.dumps(json_candidato_slim,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+        data_slim += ", "
 
         data += json.dumps(json_candidato,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
         data += ", "
@@ -75,11 +98,13 @@ def request_page(page_url, data):
 
     if 'next' in temp["links"].keys():
         nextPage = temp["links"]["next"]
-        return(request_page(nextPage, data))
+        return(request_page(nextPage, data, data_slim))
     else:
         data = data[:-2]
         data += "]"
-        return data
+        data_slim = data_slim[:-2]
+        data_slim += "]"
+        return data, data_slim
 
 
 s = requests.Session()
@@ -90,13 +115,17 @@ s.headers.update({
 
 url = "https://api.surveymonkey.com/v3/surveys/%s/responses/bulk" % (keys.survey_id)
 data = "[ "
+data_slim = "[ "
 
 print("iniciando request")
             
-data = request_page(url,data)
+data, data_slim = request_page(url,data, data_slim)
 
 with open('respostas.json', 'w') as file:
     file.write(data)
+
+with open('respostas_slim.json', 'w') as file:
+    file.write(data_slim)
 
 print("finalizado")
 
