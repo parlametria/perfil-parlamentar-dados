@@ -23,7 +23,8 @@ def get_todos_candidatos():
         elem.pop('idade_posse', None)
         elem.pop('genero', None)
         elem.pop('grau_instrucao', None)
-        elem["respostas"] = {}
+        elem["respostas"] = {},
+        elem["date_modified"] = ""
 
     return candidatos
             
@@ -54,9 +55,6 @@ def candidato_slim(candidato):
     candidato.pop("estado", None)
     candidato.pop("partido", None)
     candidato.pop("recipient_id", None)
-    candidato.pop("date_modified", None)
-    candidato.pop("date_modified", None)
-    candidato.pop("date_created", None)
     candidato.pop("total_time", None)
     candidato.pop("response_status", None)
     candidato.pop("collector_id", None)
@@ -70,7 +68,7 @@ def request_page(page_url, data, data_slim):
     request = s.get(page_url, params=payload)
 
     temp = json.loads(request.text)        
-    
+     
     with open("keys_answers.json", 'r') as f:
        keys4answers = json.load(f)
     
@@ -144,7 +142,10 @@ data, data_slim = request_page(url,data, data_slim)
 
 candidatos = get_todos_candidatos()
 
-with open('respostas_slim.json', 'w') as file:
+with open('respostas_slim.json') as f:
+    data_old = json.load(f)
+
+with open('respostas_novo.json', 'w') as file:
     file.write(data_slim)
 
 #with open('respostas.json', 'w') as file:
@@ -152,7 +153,7 @@ with open('respostas_slim.json', 'w') as file:
 
 print("Comparando csv de candidatos com os resultados do SM") 
 
-with open('respostas_slim.json') as f:
+with open('respostas_novo.json') as f:
     data_slim_temp = json.load(f)
 
 lista_candidatos = []
@@ -161,7 +162,10 @@ for candidato in candidatos:
 
 lista_resultados = []
 for resultado in data_slim_temp:
-    lista_resultados.append(resultado["cpf"])
+    if resultado["cpf"] != None:
+        if len(resultado["cpf"]) < 11:
+            resultado["cpf"] = (11 - len(resultado["cpf"]))*"0" + str(resultado["cpf"])
+        lista_resultados.append(resultado["cpf"])
 
 lista_final =  [x for x in lista_candidatos if x not in lista_resultados]
 
@@ -175,10 +179,42 @@ for candidato in candidatos:
 data_slim = data_slim[:-2]
 data_slim += "]"
 
-print("Salvando os dados")
+lista_cpf = []
+lista_tempo_final = []
+for cand in data_old:
+    lista_cpf.append(cand["cpf"])
+    lista_tempo_final.append(cand["date_modified"])
 
-with open('respostas_slim.json', 'w') as file:
+alteracoes = []
+
+with open('respostas_novo.json', 'w') as file:
     file.write(data_slim)
+
+with open('respostas_novo.json') as f:
+    data_slim = json.load(f)
+
+for cand in data_slim:
+    for n in range(len(lista_cpf)):
+        if cand["cpf"] == lista_cpf[n]:
+            if cand["date_modified"] != lista_tempo_final[n]:
+                alteracoes.append(cand)
+
+dados_alterados = json.dumps(data_old, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+if len(alteracoes) > 0:
+    print("Existem alterações")
+    dados_alterados = dados_alterados[:-1]
+    for candidato in alteracoes:
+        print(candidato)
+        dados_alterados += json.dumps(candidato, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+        dados_alterados += ", "
+    dados_alterados = dados_alterados[:-2]
+    dados_alterados += "]"
+    print("Salvando os dados")
+    with open('respostas_slim.json', 'w') as file:
+        file.write(dados_alterados)
+
+
+
 
 print("finalizado")
 
