@@ -25,7 +25,11 @@ def get_todos_candidatos():
         elem.pop('idade_posse', None)
         elem.pop('genero', None)
         elem.pop('grau_instrucao', None)
-        elem["respostas"] = {},
+        elem["respostas"] = {"0":0, "1":0,"2":0,"3":0, "4":0, "5":0, 
+        "6":0, "7":0, "8":0, "9":0, "10":0, "11":0, "12":0, "13":0, "14":0, "15":0, "16":0,
+        "17":0, "18":0, "19":0, '20':0, "21":0, "22":0, "23":0, "24":0, "25":0, "26":0, "27":0,
+        "28":0, "29":0, "30":0, "31":0, "32":0, "33":0, "34":0, "35":0, "36":0, "37":0, "38":0,
+        "39":0, "40":0, "41":0, "42":0, "43":0, "44":0, "45":0},
         elem["date_modified"] = ""
 
     return candidatos
@@ -152,6 +156,41 @@ def compara_candidatos(candidatos, data_slim_clone, data_slim):
     data_slim += "]"
     return data_slim
 
+def procura_alteracoes(data_old, data_slim):
+    lista_cpf = []
+    lista_tempo_final = []
+    old_unique = { each['cpf'] : each for each in data_old }.values()
+
+    alteracoes = []
+    for cand in data_slim:
+        for c in old_unique:
+            if cand["cpf"] == c["cpf"]:
+                if c["date_modified"] == "":
+                    date_old = datetime.strptime("0001-01-01T00:00:00", "%Y-%m-%dT%H:%M:%S")
+                else:
+                    strs = c["date_modified"]
+                    strs = strs[::-1].replace(':','',1)[::-1]
+                    date_old = datetime.strptime(strs[:-5], "%Y-%m-%dT%H:%M:%S")
+                if cand["date_modified"] == "":
+                    date_new = datetime.strptime("0001-01-01T00:00:00", "%Y-%m-%dT%H:%M:%S")
+                else:
+                    strs = cand["date_modified"]
+                    strs = strs[::-1].replace(':','',1)[::-1]
+                    date_new  = datetime.strptime(strs[:-5], "%Y-%m-%dT%H:%M:%S") 
+                
+                if date_new > date_old:
+                    alteracoes.append(cand)
+    return alteracoes
+
+def escreve_dados(caminho,dados):
+    with open(caminho, 'w') as file:
+        file.write(dados)    
+
+def recupera_dados(caminho):
+    with open(caminho) as file:
+        dados = json.load(file)
+    return dados
+
 s = requests.Session()
 s.headers.update({
   "Authorization": "Bearer %s" % keys.YOUR_ACCESS_TOKEN,
@@ -168,52 +207,26 @@ data, data_slim = request_page(url,data, data_slim)
 
 candidatos = get_todos_candidatos()
 
-with open('respostas_novo.json', 'w') as file:
-    file.write(data_slim)
+escreve_dados("respostas_novo.json", data_slim)
 
 print("Comparando csv de candidatos com os resultados do SM") 
 
-with open('respostas_novo.json') as f:
-    data_slim_clone = json.load(f)
+data_slim_clone = recupera_dados("respostas_novo.json")
 
 data_slim = compara_candidatos(candidatos,data_slim_clone, data_slim)
 
-with open('respostas_novo.json', 'w') as file:
-    file.write(data_slim)
+escreve_dados("respostas_novo.json", data_slim)
 
 print("Procurando alterações em respostas")
 
-with open('respostas_slim.json') as f:
-    data_old = json.load(f)
-
-with open('respostas_novo.json') as f:
-    data_slim = json.load(f)
+data_old = recupera_dados("respostas_slim.json")
+data_slim = recupera_dados("respostas_novo.json")
 
 dados_alterados = json.dumps(data_old, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
 
-lista_cpf = []
-lista_tempo_final = []
-old_unique = { each['cpf'] : each for each in data_old }.values()
+alteracoes = procura_alteracoes(data_old,data_slim)
 
-alteracoes = []
-for cand in data_slim:
-    for c in old_unique:
-        if cand["cpf"] == c["cpf"]:
-            if c["date_modified"] == "":
-                date_old = datetime.strptime("0001-01-01T00:00:00", "%Y-%m-%dT%H:%M:%S")
-            else:
-                strs = c["date_modified"]
-                strs = strs[::-1].replace(':','',1)[::-1]
-                date_old = datetime.strptime(strs[:-5], "%Y-%m-%dT%H:%M:%S")
-            if cand["date_modified"] == "":
-                date_new = datetime.strptime("0001-01-01T00:00:00", "%Y-%m-%dT%H:%M:%S")
-            else:
-                strs = cand["date_modified"]
-                strs = strs[::-1].replace(':','',1)[::-1]
-                date_new  = datetime.strptime(strs[:-5], "%Y-%m-%dT%H:%M:%S") 
-            
-            if date_new > date_old:
-                alteracoes.append(cand)
+print("Quantidade de candidatos com alteração: %s" % len(alteracoes))
 
 if len(alteracoes) > 0:
     print("Existem alterações")
