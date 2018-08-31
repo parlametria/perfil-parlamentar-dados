@@ -3,7 +3,7 @@ library("tidyverse")
 library(stringi)
 library(dplyr)
 
-setwd("~/Documents/vozativa-monkey-ui/tse/dados candidatos/")
+setwd("./dados candidatos/")
 
 ### 1. Importar Dados -----
 AC <- read_delim("consulta_cand_2018_AC.csv", 
