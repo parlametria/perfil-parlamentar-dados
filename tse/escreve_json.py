@@ -9,7 +9,10 @@ def row_count(filename):
 
 
 csvfile = open('./dados tratados/candidatos.csv', "r", encoding="latin-1")
+fileObject = open('./dados tratados/candidatos.csv', "r", encoding="latin-1")
 jsonfile = open('candidatos.json', 'w', encoding= 'latin-1')
+
+row_count = sum(1 for row in fileObject)
 
 names = ("uf","estado","nome_candidato","nome_urna",
                                "nome_social","email","tipo_agremiacao","num_partido","sg_partido",
@@ -19,11 +22,9 @@ names = ("uf","estado","nome_candidato","nome_urna",
 reader = csv.DictReader( csvfile, names)
 
 jsonfile.write('[')
-last_line_number = 8370
-
 for row in reader:
     json.dump(row, jsonfile, ensure_ascii=False)
-    if last_line_number == reader.line_num:
+    if row_count == reader.line_num:
         print("Última linha") 
     else:
         jsonfile.write(',\n')
