@@ -29,8 +29,12 @@ def get_todos_candidatos():
         elem.pop('grau_instrucao', None)
         elem['respostas'] = {}
         elem['date_modified'] = ""
+        
         for i in range(46):
             elem['respostas'][str(i)] = 0
+
+        if len(elem["cpf"]) < 11:
+                        elem["cpf"] = (11 - len(elem["cpf"]))*"0" + elem["cpf"]
     return candidatos
             
 def change_candidato(json_candidato):
@@ -52,6 +56,9 @@ def change_candidato(json_candidato):
     json_candidato["sg_partido"] = json_candidato.pop("custom_value4", None)
     json_candidato["partido"] = json_candidato.pop("custom_value5", None)
     json_candidato["cpf"] = json_candidato.pop("custom_value6", None)
+
+    if len(json_candidato["cpf"]) < 11:
+        json_candidato["cpf"] = (11 - len(json_candidato["cpf"])) * "0" + json_candidato["cpf"]
 
     return json_candidato
 
@@ -84,7 +91,7 @@ def request_page(page_url, data, data_slim):
         json_candidato_slim = {}
         json_candidato = {}
         json_perguntas = {}
-        for (key, value) in valor_data.items():
+        for (key, value) in valor_data.items():        
             if key == "pages":
                 for elem in valor_data[key]:
                     for subelem in elem['questions']:
@@ -138,8 +145,6 @@ def compara_candidatos(candidatos, data_slim_clone, data_slim):
     lista_resultados = []
     for resultado in data_slim_clone:
         if resultado["cpf"] != None:
-            if len(resultado["cpf"]) < 11:
-                resultado["cpf"] = (11 - len(resultado["cpf"]))*"0" + str(resultado["cpf"])
             lista_resultados.append(resultado["cpf"])
 
     lista_final =  [x for x in lista_candidatos if x not in lista_resultados]
