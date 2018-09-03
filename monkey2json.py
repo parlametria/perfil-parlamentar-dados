@@ -4,8 +4,26 @@ import requests
 import json
 import datetime
 from datetime import timedelta,datetime
+import os
 
 NAO_RESPONDEU = 0
+
+def tem_foto(candidato_json):
+    lista = os.listdir("./fotos_tratadas/")
+    for i in lista:
+        if("tem_foto" in candidato_json.keys()):
+            if(candidato_json["cpf"] == i[4:15]):
+                candidato_json["tem_foto"] = 1
+            else:
+                candidato_json["tem_foto"] = candidato_json["tem_foto"]
+
+        elif (candidato_json["cpf"] == i[4:15]):
+            candidato_json["tem_foto"] = 1 
+        else:
+            candidato_json["tem_foto"] = 0    
+    
+    return candidato_json
+    
 
 def get_todos_candidatos():
     with open('./tse/candidatos.json') as f:
@@ -34,7 +52,10 @@ def get_todos_candidatos():
             elem['respostas'][str(i)] = 0
 
         if len(elem["cpf"]) < 11:
-                        elem["cpf"] = (11 - len(elem["cpf"]))*"0" + elem["cpf"]
+            elem["cpf"] = (11 - len(elem["cpf"]))*"0" + elem["cpf"]
+        
+        elem = tem_foto(elem)
+
     return candidatos
             
 def change_candidato(json_candidato):
@@ -59,6 +80,8 @@ def change_candidato(json_candidato):
 
     if len(json_candidato["cpf"]) < 11:
         json_candidato["cpf"] = (11 - len(json_candidato["cpf"])) * "0" + json_candidato["cpf"]
+
+    json_candidato = tem_foto(json_candidato)
 
     return json_candidato
 
