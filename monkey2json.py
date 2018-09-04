@@ -47,7 +47,8 @@ def get_todos_candidatos():
         elem.pop('grau_instrucao', None)
         elem['respostas'] = {}
         elem['date_modified'] = ""
-        
+        elem['respondeu'] = False
+
         for i in range(46):
             elem['respostas'][str(i)] = 0
 
@@ -77,6 +78,12 @@ def change_candidato(json_candidato):
     json_candidato["sg_partido"] = json_candidato.pop("custom_value4", None)
     json_candidato["partido"] = json_candidato.pop("custom_value5", None)
     json_candidato["cpf"] = json_candidato.pop("custom_value6", None)
+
+    must = {"129411238", "129521027", "129520614" }
+    if len(json_candidato["respostas"]) > len(must) and all(key in json_candidato["respostas"] for key in must):
+        json_candidato["respondeu"] = True
+    else: 
+        json_candidato["respondeu"] = False
 
     if len(json_candidato["cpf"]) < 11:
         json_candidato["cpf"] = (11 - len(json_candidato["cpf"])) * "0" + json_candidato["cpf"]
