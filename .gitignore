@@ -5,8 +5,15 @@ id_perguntas.json
 keys_answers.json
 perguntas.json
 respostas.json
+respostas_novo.json
+respostas_slim.json
+test.py
+.vscode
 
 # Arquivos tse
 /tse/dados candidatos
 /tse/dados tratados
 /tse/candidatos.json
+
+#fotos
+/fotos_tratadas
