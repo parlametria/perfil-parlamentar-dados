@@ -117,7 +117,6 @@ with open("candidatos_sent.json") as file:
 print("Comparando com os dados do TSE")
 todos_candidatos = get_todos_candidatos()
 
-data = "["
 data += compara_candidatos(todos_candidatos,enviados, data)
 data = data[:-2]
 data += "]"

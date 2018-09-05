@@ -282,7 +282,23 @@ if len(alteracoes) > 0:
 else: 
     print("Não Existem alterações")
 
+data_final = recupera_dados("respostas_slim.json")
+candidatos = recupera_dados("candidatos_sent.json")
 
+dados = "["
+for elem in data_final:
+    for cand in candidatos:
+        if elem["cpf"] == cand["cpf"]:
+            elem["recebeu"] = cand["recebeu"]
+
+for elem in data_final:
+    dados += json.dumps(elem, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+    dados += ", "
+
+dados[:-2]
+dados += "]"
+with open('respostas_slim.json', 'w') as file:
+        file.write(dados)
 
 
 print("finalizado")
