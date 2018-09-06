@@ -32,5 +32,5 @@ for elem in temp['pages']:
 
 data = json.dumps(answers,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)   
 
-with open('keys_answers.json', 'w') as file:
+with open('./dados/keys_answers.json', 'w') as file:
     file.write(data)

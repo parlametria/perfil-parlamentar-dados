@@ -53,8 +53,8 @@ data = json.dumps(perguntas,sort_keys=False, indent=4, separators=(',', ': '),en
 perg = json.dumps(idPerguntas,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)   
 
 # Salva perguntas
-with open('perguntas.json', 'w') as file:
+with open('./dados/perguntas.json', 'w') as file:
    file.write(data)
 
-with open('id_perguntas.json', 'w') as file:
+with open('./dados/id_perguntas.json', 'w') as file:
    file.write(perg)

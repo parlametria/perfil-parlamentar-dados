@@ -111,10 +111,10 @@ def request_page(page_url, data, data_slim):
 
     temp = json.loads(request.text)        
      
-    with open("keys_answers.json", 'r') as f:
+    with open("./dados/keys_answers.json", 'r') as f:
        keys4answers = json.load(f)
     
-    with open("id_perguntas.json", 'r') as f:
+    with open("./dados/id_perguntas.json", 'r') as f:
        id_perguntas = json.load(f)
     
     for valor_data in temp["data"]:
@@ -245,20 +245,20 @@ data, data_slim = request_page(url,data, data_slim)
 
 candidatos = get_todos_candidatos()
 
-escreve_dados("respostas_novo.json", data_slim)
+escreve_dados("./dados/respostas_novo.json", data_slim)
 
 print("Comparando csv de candidatos com os resultados do SM") 
 
-data_slim_clone = recupera_dados("respostas_novo.json")
+data_slim_clone = recupera_dados("./dados/respostas_novo.json")
 
 data_slim = compara_candidatos(candidatos,data_slim_clone, data_slim)
 
-escreve_dados("respostas_novo.json", data_slim)
+escreve_dados("./dados/respostas_novo.json", data_slim)
 
 print("Procurando alterações em respostas")
 
-data_old = recupera_dados("respostas_slim.json")
-data_slim = recupera_dados("respostas_novo.json")
+data_old = recupera_dados("./dados/respostas_slim.json")
+data_slim = recupera_dados("./dados/respostas_novo.json")
 
 dados_alterados = json.dumps(data_old, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
 
@@ -277,19 +277,20 @@ if len(alteracoes) > 0:
     dados_alterados = dados_alterados[:-2]
     dados_alterados += "]"
     print("Salvando os dados")
-    with open('respostas_slim.json', 'w') as file:
+    with open('./dados/respostas_slim.json', 'w') as file:
         file.write(dados_alterados)
 else: 
     print("Não Existem alterações")
 
-data_final = recupera_dados("respostas_slim.json")
-candidatos = recupera_dados("candidatos_sent.json")
+data_final = recupera_dados("./dados/respostas_slim.json")
+candidatos = recupera_dados("./dados/candidatos_sent.json")
 
 dados = "["
 for elem in data_final:
     for cand in candidatos:
-        if elem["cpf"] == cand["cpf"]:
-            elem["recebeu"] = cand["recebeu"]
+        if "cpf" in cand.keys():
+            if elem["cpf"] == cand["cpf"]:
+                elem["recebeu"] = cand["recebeu"]
 
 for elem in data_final:
     dados += json.dumps(elem, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
@@ -297,7 +298,7 @@ for elem in data_final:
 
 dados[:-2]
 dados += "]"
-with open('respostas_slim.json', 'w') as file:
+with open('./dados/respostas_slim.json', 'w') as file:
         file.write(dados)
 
 
