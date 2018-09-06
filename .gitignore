@@ -1,13 +1,7 @@
 __pycache__
 
 # Arquivos gerados
-id_perguntas.json
-keys_answers.json
-perguntas.json
-respostas.json
-respostas_novo.json
-respostas_slim.json
-test.py
+/dados
 .vscode
 
 # Arquivos tse

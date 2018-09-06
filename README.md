@@ -23,6 +23,7 @@ escreve_json.py
 Tendo feito isso poderá ser realizada a requisição dos dados do survey monkey, seguindo esta ordem de scripts:
 
 ```
+verifica_candidatos.py
 keys4answers2json.py
 questions2json.py
 
