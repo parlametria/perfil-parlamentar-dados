@@ -117,10 +117,11 @@ with open("./dados/candidatos_sent.json") as file:
 print("Comparando com os dados do TSE")
 todos_candidatos = get_todos_candidatos()
 
-data += compara_candidatos(todos_candidatos,enviados, data)
-data = data[:-2]
-data += "]"
+dados = "["
+dados += compara_candidatos(todos_candidatos,enviados, dados)
+dados = dados[:-2]
+dados += "]"
 
 print("Salva dados com a nova flag")
 with open('./dados/candidatos_sent.json', 'w') as file:
-    file.write(data)
+    file.write(dados)

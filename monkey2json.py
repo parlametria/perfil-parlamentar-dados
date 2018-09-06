@@ -296,7 +296,7 @@ for elem in data_final:
     dados += json.dumps(elem, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
     dados += ", "
 
-dados[:-2]
+dados = dados[:-2]
 dados += "]"
 with open('./dados/respostas_slim.json', 'w') as file:
         file.write(dados)
