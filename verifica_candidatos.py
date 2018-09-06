@@ -108,10 +108,10 @@ data = "["
 print("Fazendo request dos dados")
 data = request_page(url, data)
 
-with open('candidatos_sent.json', 'w') as file:
+with open('./dados/candidatos_sent.json', 'w') as file:
     file.write(data)
 
-with open("candidatos_sent.json") as file:
+with open("./dados/candidatos_sent.json") as file:
     enviados = json.load(file)
 
 print("Comparando com os dados do TSE")
@@ -122,5 +122,5 @@ data = data[:-2]
 data += "]"
 
 print("Salva dados com a nova flag")
-with open('candidatos_sent.json', 'w') as file:
+with open('./dados/candidatos_sent.json', 'w') as file:
     file.write(data)
