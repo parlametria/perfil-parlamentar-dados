@@ -2,7 +2,7 @@ import keys
 import requests
 import json
 import datetime
-from datetime import timedelta,datetime
+from datetime import timedelta,datetime, date
 import os
 
 NAO_RESPONDEU = 0
@@ -112,6 +112,11 @@ def candidato_slim(candidato):
 # Função principal de requisição das respostas dos candidatos
 
 def request_page(page_url, data_slim):
+    s = requests.Session()
+    s.headers.update({
+    "Authorization": "Bearer %s" % keys.YOUR_ACCESS_TOKEN,
+    "Content-Type": "application/json"
+    })
     payload = {'per_page': 100}
     request = s.get(page_url, params=payload)
 
@@ -258,15 +263,17 @@ def salva_alteracoes(alteracoes, dados_alterados, mudancas):
             dados_alterados += ", "
         dados_alterados = dados_alterados[:-2]
         dados_alterados += "]"
-        
-        log = {"data": datetime.datetime.now(), "alteracoes": alteracoes}
+
+        today = date.today()
+
+        log = {"data": today, "alteracoes": alteracoes}
         
         # Salvando log das alterações
         mudancas = mudancas[:-1]
         mudancas += ", "
-        mudancas += json.dumps(candidato, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+        mudancas += json.dumps(log, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
         mudancas += "]"
-        escreve_dados("./dados/mudancas.json")
+        escreve_dados("./dados/mudancas.json", mudancas)
 
         return dados_alterados
     else: 
@@ -289,12 +296,7 @@ def insere_flag_recebeu(data_final, candidatos):
     dados += "]"
     return dados
 
-def main():   
-    s = requests.Session()
-    s.headers.update({
-    "Authorization": "Bearer %s" % keys.YOUR_ACCESS_TOKEN,
-    "Content-Type": "application/json"
-    })
+def main(): 
     url = "https://api.surveymonkey.com/v3/surveys/%s/responses/bulk" % (keys.survey_id)
     
     data_slim = "[ "
