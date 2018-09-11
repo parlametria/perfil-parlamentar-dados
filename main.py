@@ -1,6 +1,8 @@
 import subprocess
 import sys
-import keys4answers2json, questions2json, verifica_candidatos, escreve_json, request_file, monkey2json
+import keys4answers2json, questions2json, verifica_candidatos, escreve_json, request_file, monkey2json, keys
+from pymongo import MongoClient
+import pprint
 
 # Dados TSE
 request_file.main()
@@ -12,3 +14,9 @@ verifica_candidatos.main()
 keys4answers2json.main()
 questions2json.main()
 monkey2json.main()
+
+# Conectando ao banco de validação
+client = MongoClient(keys.VALIDACAO_URI)
+db = client.heroku_j4qrssbw
+collection = db.candidatos
+pprint.pprint(collection.find_one())
