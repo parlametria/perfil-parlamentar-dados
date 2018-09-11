@@ -126,6 +126,7 @@ def main():
   dados += compara_candidatos(todos_candidatos,enviados, dados)
   dados = dados[:-2]
   dados += "]"
+  dados = dados[1:]
 
   print("Salva dados com a nova flag")
   with open('./dados/candidatos_sent.json', 'w') as file:
