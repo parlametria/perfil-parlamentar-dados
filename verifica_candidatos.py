@@ -2,7 +2,9 @@ import requests
 import json
 import keys
 
+# Altera candidato para que uma nova flag "recebeu" seja um de seus atributos e altera nome de campos
 def change_candidato(cand):
+  # Recebeu indica se um candidato recebeu o email para responder o formulário
   cand["recebeu"] = cand.pop("mail_status", None)
   if cand["recebeu"] == "sent":
     cand["recebeu"] = True
@@ -17,7 +19,14 @@ def change_candidato(cand):
 
   return cand
 
+# Função para recuperar todos os candidatos a quem foi enviado um email 
 def request_page(page_url, data):
+    s = requests.session()
+    s.headers.update({
+      "Authorization": "Bearer %s" % keys.YOUR_ACCESS_TOKEN,
+      "Content-Type": "application/json"
+    })
+
     payload = {'per_page': 1000, 'include': "survey_response_status,mail_status,custom_fields"}
     request = s.get(page_url, params=payload)
 
@@ -50,7 +59,7 @@ def request_page(page_url, data):
         data += "]"
         return data
 
-
+# Recupera o json contendo todos os dados de todos candidatos fornecidos pelo tse e formata ele
 def get_todos_candidatos():
     with open('./tse/candidatos.json') as f:
         candidatos = json.load(f)
@@ -76,7 +85,8 @@ def get_todos_candidatos():
             elem["cpf"] = (11 - len(elem["cpf"]))*"0" + elem["cpf"]
         
     return candidatos
-  
+
+# Compara os dados do survey monkey com os do json dos dados do tse para verificar quais candidatos receberam email ou não 
 def compara_candidatos(todos, sent, data):
 
     for elem in todos:
@@ -95,33 +105,28 @@ def compara_candidatos(todos, sent, data):
         data += ", "
 
     return data
-    
-s = requests.session()
-s.headers.update({
-  "Authorization": "Bearer %s" % keys.YOUR_ACCESS_TOKEN,
-  "Content-Type": "application/json"
-})
 
-url = "https://api.surveymonkey.com/v3/collectors/%s/recipients" % (keys.collector_id)
+def main():
+  url = "https://api.surveymonkey.com/v3/collectors/%s/recipients" % (keys.collector_id)
 
-data = "["
-print("Fazendo request dos dados")
-data = request_page(url, data)
+  data = "["
+  print("Fazendo request dos dados dos candidatos")
+  data = request_page(url, data)
 
-with open('./dados/candidatos_sent.json', 'w') as file:
-    file.write(data)
+  with open('./dados/candidatos_sent.json', 'w') as file:
+      file.write(data)
 
-with open("./dados/candidatos_sent.json") as file:
-    enviados = json.load(file)
+  with open("./dados/candidatos_sent.json") as file:
+      enviados = json.load(file)
 
-print("Comparando com os dados do TSE")
-todos_candidatos = get_todos_candidatos()
+  print("Comparando com os dados do TSE")
+  todos_candidatos = get_todos_candidatos()
 
-dados = "["
-dados += compara_candidatos(todos_candidatos,enviados, dados)
-dados = dados[:-2]
-dados += "]"
+  dados = "["
+  dados += compara_candidatos(todos_candidatos,enviados, dados)
+  dados = dados[:-2]
+  dados += "]"
 
-print("Salva dados com a nova flag")
-with open('./dados/candidatos_sent.json', 'w') as file:
-    file.write(dados)
+  print("Salva dados com a nova flag")
+  with open('./dados/candidatos_sent.json', 'w') as file:
+      file.write(dados)
