@@ -12,23 +12,10 @@ Coletor de respostas do Survey Monkey que alimenta o Voz Ativa.
 
 ### 1 Baixando as respostas
 
-Configure o arquivo `keys.py` com as credenciais do Survey Monkey, rode os scripts da pasta tse nesta ordem:
+Configure o arquivo `keys.py` com as credenciais do Survey Monkey e rode o script:
 
 ```
-request_file.py
-cria_planilha_tratada.R
-escreve_json.py
-
-```
-Tendo feito isso poderá ser realizada a requisição dos dados do survey monkey, seguindo esta ordem de scripts:
-
-```
-verifica_candidatos.py
-keys4answers2json.py
-questions2json.py
-
-monkey2json.py
-
+main.py
 ```
 
 ### 2 Povoando o banco de dados
