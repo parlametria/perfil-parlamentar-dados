@@ -1,147 +1,156 @@
+#! /usr/bin/Rscript --vanilla --default-packages=utils
+list.of.packages <- c("readr", "tidyverse", "stringi", "dplyr")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+
+if(length(new.packages)){
+   res <- try(install.packages(new.packages))
+}
+
+
 library("readr")
 library("tidyverse")
-library(stringi)
-library(dplyr)
+library("stringi")
+library("dplyr")
 
-setwd("./dados candidatos/")
+getwd()
 
 ### 1. Importar Dados -----
-AC <- read_delim("consulta_cand_2018_AC.csv", 
+AC <- read_delim("tse/dados candidatos/consulta_cand_2018_AC.csv", 
               ";", escape_double = FALSE,
               locale = locale(date_names = "pt", 
               encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-AL <- read_delim("consulta_cand_2018_AL.csv", 
+AL <- read_delim("tse/dados candidatos/consulta_cand_2018_AL.csv", 
                     ";", escape_double = FALSE,
                     locale = locale(date_names = "pt", 
                                     encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-AM <- read_delim("consulta_cand_2018_AM.csv", 
+AM <- read_delim("tse/dados candidatos/consulta_cand_2018_AM.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-AP <- read_delim("consulta_cand_2018_AP.csv", 
+AP <- read_delim("tse/dados candidatos/consulta_cand_2018_AP.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-BA <- read_delim("consulta_cand_2018_BA.csv", 
+BA <- read_delim("tse/dados candidatos/consulta_cand_2018_BA.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-BR <- read_delim("consulta_cand_2018_BR.csv", 
+BR <- read_delim("tse/dados candidatos/consulta_cand_2018_BR.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-CE <- read_delim("consulta_cand_2018_CE.csv", 
+CE <- read_delim("tse/dados candidatos/consulta_cand_2018_CE.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-DF <- read_delim("consulta_cand_2018_DF.csv", 
+DF <- read_delim("tse/dados candidatos/consulta_cand_2018_DF.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-ES <- read_delim("consulta_cand_2018_ES.csv", 
+ES <- read_delim("tse/dados candidatos/consulta_cand_2018_ES.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-GO <- read_delim("consulta_cand_2018_GO.csv", 
+GO <- read_delim("tse/dados candidatos/consulta_cand_2018_GO.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-MA <- read_delim("consulta_cand_2018_MA.csv", 
+MA <- read_delim("tse/dados candidatos/consulta_cand_2018_MA.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-MG <- read_delim("consulta_cand_2018_MG.csv", 
+MG <- read_delim("tse/dados candidatos/consulta_cand_2018_MG.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-MS <- read_delim("consulta_cand_2018_MS.csv", 
+MS <- read_delim("tse/dados candidatos/consulta_cand_2018_MS.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-MT <- read_delim("consulta_cand_2018_MT.csv", 
+MT <- read_delim("tse/dados candidatos/consulta_cand_2018_MT.csv", 
                     ";", escape_double = FALSE,
                     locale = locale(date_names = "pt", 
                                     encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-PA <- read_delim("consulta_cand_2018_PA.csv", 
+PA <- read_delim("tse/dados candidatos/consulta_cand_2018_PA.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-PB <- read_delim("consulta_cand_2018_PB.csv", 
+PB <- read_delim("tse/dados candidatos/consulta_cand_2018_PB.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-PE <- read_delim("consulta_cand_2018_PE.csv", 
+PE <- read_delim("tse/dados candidatos/consulta_cand_2018_PE.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-PI <- read_delim("consulta_cand_2018_PI.csv", 
+PI <- read_delim("tse/dados candidatos/consulta_cand_2018_PI.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-PR <- read_delim("consulta_cand_2018_PR.csv", 
+PR <- read_delim("tse/dados candidatos/consulta_cand_2018_PR.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-RJ <- read_delim("consulta_cand_2018_RJ.csv", 
+RJ <- read_delim("tse/dados candidatos/consulta_cand_2018_RJ.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-RN <- read_delim("consulta_cand_2018_RN.csv", 
+RN <- read_delim("tse/dados candidatos/consulta_cand_2018_RN.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-RO <- read_delim("consulta_cand_2018_RO.csv", 
+RO <- read_delim("tse/dados candidatos/consulta_cand_2018_RO.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-RR <- read_delim("consulta_cand_2018_RR.csv", 
+RR <- read_delim("tse/dados candidatos/consulta_cand_2018_RR.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-RS <- read_delim("consulta_cand_2018_RS.csv", 
+RS <- read_delim("tse/dados candidatos/consulta_cand_2018_RS.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-SC <- read_delim("consulta_cand_2018_SC.csv", 
+SC <- read_delim("tse/dados candidatos/consulta_cand_2018_SC.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-SE <- read_delim("consulta_cand_2018_SE.csv", 
+SE <- read_delim("tse/dados candidatos/consulta_cand_2018_SE.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-SP <- read_delim("consulta_cand_2018_SP.csv", 
+SP <- read_delim("tse/dados candidatos/consulta_cand_2018_SP.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-TO <- read_delim("consulta_cand_2018_TO.csv", 
+TO <- read_delim("tse/dados candidatos/consulta_cand_2018_TO.csv", 
                  ";", escape_double = FALSE,
                  locale = locale(date_names = "pt", 
                                  encoding = "ISO-8859-1"), trim_ws = TRUE)
@@ -185,11 +194,11 @@ dados_sem_rep <- dados_completos[!(duplicated(dados_completos$email) | duplicate
 dados_mesmo_email <- dados_completos[(duplicated(dados_completos$email) | duplicated(dados_completos$email, fromLast=TRUE)),]
 
 
-write.csv(dados_completos,"../dados tratados/candidatos.csv",row.names = FALSE)
-write.csv(dados_sem_rep,"../dados tratados/emails_nao_repetidos.csv",row.names = FALSE)
-write.csv(dados_mesmo_email,"../dados tratados/emails_repetidos.csv",row.names = FALSE)
+write.csv(dados_completos,"./tse/dados tratados/candidatos.csv",row.names = FALSE)
+write.csv(dados_sem_rep,"./tse/dados tratados/emails_nao_repetidos.csv",row.names = FALSE)
+write.csv(dados_mesmo_email,"./tse/dados tratados/emails_repetidos.csv",row.names = FALSE)
 
 survey <- dados_sem_rep %>% select(email, nome_exibicao, nome_urna, genero,uf,estado,
                                    sg_partido,partido,cpf)
 
-write.csv(survey,"../dados tratados/survey.csv",row.names = FALSE)
+write.csv(survey,"./tse/dados tratados/survey.csv",row.names = FALSE)
