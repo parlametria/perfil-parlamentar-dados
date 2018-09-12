@@ -1,4 +1,4 @@
-import subprocess, sys, pprint,time
+import subprocess, sys, pprint, time, json
 import keys4answers2json, questions2json, verifica_candidatos, escreve_json, request_file, monkey2json, keys
 from pymongo import MongoClient
 
@@ -54,10 +54,38 @@ def atualiza_producao():
     atualiza_respostas(db)
     atualiza_candidatos(db)
     atualiza_mudancas(db)
-    
+
+def pega_mudancas(db):
+    collection = db.mudancas
+    data_slim = "["
+
+    for doc in collection.find({}):
+        doc.pop("_id", None)
+        data_slim += json.dumps(doc,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+        data_slim += ", "
+
+    data_slim = data_slim[:-2]
+    data_slim += "]"
+
+    monkey2json.escreve_dados("./dados/mudancas.json", data_slim)
+
+
+def pega_respostas(db):
+    collection = db.respostas
+    data_slim = "["
+
+    for doc in collection.find({}):
+        doc.pop("_id", None)
+        data_slim += json.dumps(doc,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+        data_slim += ", "
+
+    data_slim = data_slim[:-2]
+    data_slim += "]"
+
+    monkey2json.escreve_dados("./dados/respostas_slim.json", data_slim)
+
 def main():
     # Dados TSE
-    request_file.main()
     subprocess.call ("/usr/bin/Rscript --vanilla ./tse/cria_planilha_tratada.R", shell=True)
     escreve_json.main()
 
@@ -67,6 +95,10 @@ def main():
     questions2json.main()
     monkey2json.main()
 
+db = conecta_banco(keys.VALIDACAO_URI)
+request_file.main()
+pega_mudancas(db)
+pega_respostas(db)
 main()
 atualiza_validacao()
 
