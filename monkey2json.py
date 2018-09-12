@@ -47,6 +47,7 @@ def get_todos_candidatos():
         elem.pop('grau_instrucao', None)
         elem['respostas'] = {}
         elem['date_modified'] = ""
+        elem['date_created'] = ""
         elem['respondeu'] = False
 
         for i in range(46):
@@ -265,8 +266,8 @@ def salva_alteracoes(alteracoes, dados_alterados, mudancas):
         dados_alterados += "]"
 
         today = date.today()
-
-        log = {"data": today, "alteracoes": alteracoes}
+    
+        log = {"data": today.isoformat(), "alteracoes": alteracoes}
         
         # Salvando log das alterações
         mudancas = mudancas[:-1]
