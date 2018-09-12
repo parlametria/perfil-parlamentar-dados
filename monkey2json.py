@@ -265,7 +265,7 @@ def salva_alteracoes(alteracoes, dados_alterados, mudancas):
         dados_alterados = dados_alterados[:-2]
         dados_alterados += "]"
 
-        today = date.today()
+        today = datetime.now()
     
         log = {"data": today.isoformat(), "alteracoes": alteracoes}
         
