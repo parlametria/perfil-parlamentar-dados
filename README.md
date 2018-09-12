@@ -10,7 +10,7 @@ Coletor de respostas do Survey Monkey que alimenta o Voz Ativa.
 
 ## Instruções
 
-### 1 Baixando as respostas
+### 1 Baixando as respostas e povoando mlab de validação
 
 Configure o arquivo `keys.py` com as credenciais do Survey Monkey e rode o script:
 
@@ -18,23 +18,17 @@ Configure o arquivo `keys.py` com as credenciais do Survey Monkey e rode o scrip
 main.py
 ```
 
-### 2 Povoando o banco de dados
+### 2 Povoando o banco de dados local
 
-Os arquivos `respostas.json`, `candidatos.json` e `respostas_slim.json` são necessários.
+Os arquivos `respostas_novo.json` e `candidatos.json` são necessários.
 
 ```
-mongoimport --db=voz-ativa --collection=respostas --file=respostas_slim.json --jsonArray
-
-mongoimport --db=voz-ativa --collection=respostas_extended --file=respostas.json --jsonArray
+mongoimport --db=voz-ativa --collection=respostas --file=respostas_novo.json --jsonArray
 
 mongoimport --db=voz-ativa --collection=candidatos --file=candidatos.json --jsonArray
-```
-
-### 3 Povoando o mlab
 
 ```
-mongoimport -h ds031822.mlab.com:31822 -d <bd> -c <collection> -u <user> -p <password> --file <input file>
 
-```
+
 
 
