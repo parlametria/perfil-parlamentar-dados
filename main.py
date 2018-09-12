@@ -4,9 +4,12 @@ from pymongo import MongoClient
 
 start_time = time.time()
 
-def conecta_banco(URI):
+def conecta_banco(URI, validacao):
     client = MongoClient(URI)
-    db = client.heroku_j4qrssbw
+    if validacao:
+        db = client.heroku_j4qrssbw
+    else:
+        db = client.heroku_15g9nm1x
     return db
 
 def atualiza_respostas(db):
@@ -17,9 +20,12 @@ def atualiza_respostas(db):
     for candidato in jsonObj:
         collection.find_one_and_update(
     { "cpf" : candidato["cpf"] },
-    { "$set": { "respostas" : candidato["respostas"], "respondeu": candidato["respondeu"],
-        "recebeu": candidato["recebeu"], "date_created": candidato["date_created"], 
-        "date_modified": candidato["date_modified"] }}, upsert=True)
+    { "$set": { "date_modified" : candidato["date_modified"], "date_created": candidato["date_created"],
+        "email": candidato["email"], "respostas": candidato["respostas"], 
+        "nome_urna": candidato["nome_urna"], "nome_exibicao": candidato["nome_exibicao"],
+        "uf": candidato["uf"], "sg_partido": candidato["sg_partido"],
+        "cpf": candidato["cpf"], "respondeu": candidato["respondeu"], 
+        "tem_foto": candidato["tem_foto"], "recebeu": candidato["recebeu"] }}, upsert=True)
         i += 1
         print("Resposta de nº %s adicionada ou alterada" % i)
 
@@ -31,7 +37,7 @@ def atualiza_mudancas(db):
     for alteracao in jsonObj:
         collection.find_one_and_update(
     { "data" : alteracao["data"], "alteracoes": alteracao["alteracoes"] },
-    { "$set": { "alteracoes": alteracao["alteracoes"] }}, upsert=True)
+    { "$set": { "data" : alteracao["data"], "alteracoes": alteracao["alteracoes"]}}, upsert=True)
         i += 1
         print("Mudança de nº %s adicionada ou alterada" % i)
 
@@ -44,13 +50,13 @@ def atualiza_candidatos(db):
     print("Candidatos salvos")
 
 def atualiza_validacao():
-    db = conecta_banco(keys.VALIDACAO_URI)
+    db = conecta_banco(keys.VALIDACAO_URI,True)
     atualiza_respostas(db)
     atualiza_candidatos(db)
     atualiza_mudancas(db)
     
 def atualiza_producao():
-    db = conecta_banco(keys.PRODUCAO_URI)
+    db = conecta_banco(keys.PRODUCAO_URI, False)
     atualiza_respostas(db)
     atualiza_candidatos(db)
     atualiza_mudancas(db)
@@ -95,11 +101,12 @@ def main():
     questions2json.main()
     monkey2json.main()
 
-db = conecta_banco(keys.VALIDACAO_URI)
+db = conecta_banco(keys.VALIDACAO_URI,True)
 request_file.main()
 pega_mudancas(db)
 pega_respostas(db)
 main()
 atualiza_validacao()
+# atualiza_producao()
 
 print("--- %s seconds ---" % (time.time() - start_time))
