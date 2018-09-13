@@ -92,6 +92,16 @@ def change_candidato(json_candidato):
 
     if len(json_candidato["cpf"]) < 11:
         json_candidato["cpf"] = (11 - len(json_candidato["cpf"])) * "0" + json_candidato["cpf"]
+    
+    if json_candidato["nome_exibicao"] == "CARLOS AUGUSTO PEREIRA DA SILVA":
+        json_candidato["nome_urna"] = "DR. CARLOS AUGUSTO"
+        json_candidato["nome_exibicao"] = "CARLOS AUGUSTO PEREIRA DA SILVA"
+        json_candidato["genero"] = "MASCULINO"
+        json_candidato["uf"] = "SP"
+        json_candidato["estado"] = "SÃO PAULO"
+        json_candidato["sg_partido"] = "PV"
+        json_candidato["partido"] = "PARTIDO VERDE"
+        json_candidato["cpf"] = "76760456815"
 
     json_candidato = tem_foto(json_candidato)
 
