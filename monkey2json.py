@@ -93,6 +93,7 @@ def change_candidato(json_candidato):
     if len(json_candidato["cpf"]) < 11:
         json_candidato["cpf"] = (11 - len(json_candidato["cpf"])) * "0" + json_candidato["cpf"]
     
+    # Erro de digitação do candidato no TSE quebrou esse contato no Survey Monkey
     if json_candidato["nome_exibicao"] == "CARLOS AUGUSTO PEREIRA DA SILVA":
         json_candidato["nome_urna"] = "DR. CARLOS AUGUSTO"
         json_candidato["nome_exibicao"] = "CARLOS AUGUSTO PEREIRA DA SILVA"

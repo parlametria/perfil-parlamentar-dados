@@ -36,7 +36,7 @@ def atualiza_mudancas(db):
     i = 0
     for alteracao in jsonObj:
         collection.find_one_and_update(
-    { "data" : alteracao["data"], "alteracoes": alteracao["alteracoes"] },
+    { "data" : alteracao["data"]},
     { "$set": { "data" : alteracao["data"], "alteracoes": alteracao["alteracoes"]}}, upsert=True)
         i += 1
         print("Mudança de nº %s adicionada ou alterada" % i)
