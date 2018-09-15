@@ -32,14 +32,9 @@ def atualiza_respostas(db):
 def atualiza_mudancas(db):
     collection = db.mudancas
     jsonObj =  monkey2json.recupera_dados("./dados/mudancas.json")
-
-    i = 0
-    for alteracao in jsonObj:
-        collection.find_one_and_update(
-    { "data" : alteracao["data"]},
-    { "$set": { "data" : alteracao["data"], "alteracoes": alteracao["alteracoes"]}}, upsert=True)
-        i += 1
-        print("Mudança de nº %s adicionada ou alterada" % i)
+    collection.drop()
+    collection.insert_many(jsonObj)
+    print("Mudanças salvas")
 
 def atualiza_candidatos(db):
     collection = db.candidatos
@@ -107,6 +102,6 @@ pega_mudancas(db)
 pega_respostas(db)
 main()
 atualiza_validacao()
-# atualiza_producao()
+atualiza_producao()
 
 print("--- %s seconds ---" % (time.time() - start_time))

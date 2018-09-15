@@ -59,7 +59,22 @@ def get_todos_candidatos():
         elem = tem_foto(elem)
 
     return candidatos
+
+def get_todos_candidatos_b():
+    with open('./tse/candidatos.json') as f:
+        candidatos = json.load(f)
+    
+    candidatos[:] = [d for d in candidatos if d.get('cpf') != "cpf"]
+
+    for elem in candidatos:
+        if len(elem["cpf"]) < 11:
+            elem["cpf"] = (11 - len(elem["cpf"]))*"0" + elem["cpf"]
+        
+        elem = tem_foto(elem)
+
+    return candidatos
  
+
  # Altera candidato para se adequar ao padrão            
 def change_candidato(json_candidato):
     json_candidato.pop("custom_variables", None)
@@ -347,6 +362,13 @@ def main():
     print("Salvando os dados")
     escreve_dados('./dados/respostas_slim.json', dados_alterados)
 
+    # Salva candidatos com flag recebeu e tem_foto
+    candidatos = candidatos = get_todos_candidatos_b()
+    cand_sent = recupera_dados("./dados/candidatos_sent.json")
+    candidatos = insere_flag_recebeu(candidatos,cand_sent)
+        
+
+    escreve_dados("./tse/candidatos.json", candidatos)
+
+        
     print("finalizado")
-
-
