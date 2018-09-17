@@ -6,6 +6,8 @@ Coletor de respostas do Survey Monkey que alimenta o Voz Ativa.
 
 * Python 3.5.x
 * MongoDB
+* pymongo
+* R 
 
 
 ## Instruções
