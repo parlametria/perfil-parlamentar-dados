@@ -1,9 +1,8 @@
-import keys
+import keys, monkey2json
 from pymongo import MongoClient
 
-def nenhum_nulo(URI):
+def nenhum_nulo(db):
     num_nulos = 0
-    db = conecta_banco(URI,True)
 
     query = db.respostas.find({"cpf": None})
     num_nulos += query.count()
@@ -51,16 +50,15 @@ def conecta_banco(URI, validacao):
         db = client.heroku_15g9nm1x
     return db
 
-def tamanho_banco(URI):
-    db = conecta_banco(URI,True)
+def tamanho_banco(db):
+
     if(db.respostas.find({}).count() <= db.candidatos.find({}).count()):
         return True
     else:
         return False
 
-def nenhum_nulo_cand(URI):
+def nenhum_nulo_cand(db):
     num_nulos = 0
-    db = conecta_banco(URI,True)
 
     query = db.candidatos.find({"cpf": None})
     num_nulos += query.count()
@@ -97,15 +95,40 @@ def nenhum_nulo_cand(URI):
     else:
         return False
 
-def todos_presentes(URI):
-    db = conecta_banco(URI,True)
+def todos_presentes(db):
+    cpf_duplicado = []
     for cand in db.candidatos.find({}):
         query = db.respostas.find({"cpf": cand["cpf"]})
         if query.count() != 1:
-            return False, cand["cpf"]
-    return True, "Nenhum cpf duplicado ou nulo"
+            cpf_duplicado.append(cand["cpf"])
+    
+    if len(cpf_duplicado) > 0:
+        return False, cpf_duplicado
+    else:
+        return True, "Nenhum cpf duplicado ou nulo"
 
-nenhum_nulo(keys.VALIDACAO_URI)
-print(nenhum_nulo_cand(keys.VALIDACAO_URI))
+def esta_atualizado(db):
+    mudc = monkey2json.recupera_dados("./dados/mudancas.json")
+    ind = 0
+    for m in mudc:
+        ind += 1
+        if ind == len(mudc):
+            mod = m["alteracoes"]
+    
+    total = 0
+    print(mod)
+    for m in mod:
+        print(m)
+        query = db.respostas.find({"cpf": m["cpf"]})
+        if query.count() == 0:
+            return False
+        total += query.count()
 
-print(todos_presentes(keys.VALIDACAO_URI))
+    if total == len(mod):
+        return True
+    else:
+        return False 
+
+def main:
+    db = conecta_banco(keys.VALIDACAO_URI, True)
+    return(esta_atualizado(db) and todos_presentes(db) and nenhum_nulo_cand(db) and tamanho_banco(db) and nenhum_nulo(db))
