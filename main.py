@@ -1,5 +1,5 @@
 import subprocess, sys, pprint, time, json
-import keys4answers2json, questions2json, verifica_candidatos, escreve_json, request_file, monkey2json, keys
+import scripts.keys4answers2json, scripts.questions2json, scripts.verifica_candidatos, scripts.escreve_json, scripts.request_file, scripts.monkey2json, keys, testes
 from pymongo import MongoClient
 
 start_time = time.time()
@@ -14,7 +14,7 @@ def conecta_banco(URI, validacao):
 
 def atualiza_respostas(db):
     collection = db.respostas
-    jsonObj =  monkey2json.recupera_dados("./dados/respostas_novo.json")
+    jsonObj =  scripts.monkey2json.recupera_dados("./dados/respostas_novo.json")
 
     i = 0
     for candidato in jsonObj:
@@ -31,7 +31,7 @@ def atualiza_respostas(db):
 
 def atualiza_mudancas(db):
     collection = db.mudancas
-    jsonObj =  monkey2json.recupera_dados("./dados/mudancas.json")
+    jsonObj =  scripts.monkey2json.recupera_dados("./dados/mudancas.json")
     collection.drop()
     collection.insert_many(jsonObj)
     print("Mudanças salvas")
@@ -39,7 +39,7 @@ def atualiza_mudancas(db):
 def atualiza_candidatos(db):
     collection = db.candidatos
 
-    jsonObj =  monkey2json.recupera_dados("./tse/candidatos.json")
+    jsonObj =  scripts.monkey2json.recupera_dados("./tse/candidatos.json")
     collection.drop()
     collection.insert_many(jsonObj)
     print("Candidatos salvos")
@@ -68,7 +68,7 @@ def pega_mudancas(db):
     data_slim = data_slim[:-2]
     data_slim += "]"
 
-    monkey2json.escreve_dados("./dados/mudancas.json", data_slim)
+    scripts.monkey2json.escreve_dados("./dados/mudancas.json", data_slim)
 
 
 def pega_respostas(db):
@@ -83,25 +83,28 @@ def pega_respostas(db):
     data_slim = data_slim[:-2]
     data_slim += "]"
 
-    monkey2json.escreve_dados("./dados/respostas_slim.json", data_slim)
+    scripts.monkey2json.escreve_dados("./dados/respostas_slim.json", data_slim)
 
 def main():
     # Dados TSE
     subprocess.call ("/usr/bin/Rscript --vanilla ./tse/cria_planilha_tratada.R", shell=True)
-    escreve_json.main()
+    scripts.escreve_json.main()
 
     # Survey Monkey
-    verifica_candidatos.main()
-    keys4answers2json.main()
-    questions2json.main()
-    monkey2json.main()
+    scripts.verifica_candidatos.main()
+    scripts.keys4answers2json.main()
+    scripts.questions2json.main()
+    scripts.monkey2json.main()
 
 db = conecta_banco(keys.VALIDACAO_URI,True)
-request_file.main()
+scripts.request_file.main()
 pega_mudancas(db)
 pega_respostas(db)
 main()
 atualiza_validacao()
-atualiza_producao()
+if(testes.main()):
+    atualiza_producao()
+else:
+    print("Erro no banco")
 
 print("--- %s seconds ---" % (time.time() - start_time))

@@ -1,4 +1,4 @@
-import keys, monkey2json
+import keys, scripts.monkey2json
 import smtplib, email
 from pymongo import MongoClient
 from email.mime.multipart import MIMEMultipart
@@ -116,7 +116,7 @@ def todos_presentes(db, log):
         return True, log
 
 def esta_atualizado(db, log):
-    mudc = monkey2json.recupera_dados("./dados/mudancas.json")
+    mudc = scripts.monkey2json.recupera_dados("./dados/mudancas.json")
     ind = 0
     for m in mudc:
         ind += 1
@@ -169,7 +169,7 @@ def main():
         enviaEmail(log)
         return False
 
-    monkey2json.escreve_dados("erros.log", log)
+    scripts.monkey2json.escreve_dados("erros.log", log)
 
     return True
 
