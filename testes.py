@@ -1,7 +1,11 @@
 import keys, monkey2json
+import smtplib, email
 from pymongo import MongoClient
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
-def nenhum_nulo(db):
+
+def nenhum_nulo(db, log):
     num_nulos = 0
 
     query = db.respostas.find({"cpf": None})
@@ -38,9 +42,10 @@ def nenhum_nulo(db):
     num_nulos += query.count()
     
     if num_nulos == 0:
-        return True
+        return True, log
     else:
-        return False
+        log += "\n ERRO: algum campo nulo foi encontrado em respostas"
+        return False, log
 
 def conecta_banco(URI, validacao):
     client = MongoClient(URI)
@@ -50,14 +55,15 @@ def conecta_banco(URI, validacao):
         db = client.heroku_15g9nm1x
     return db
 
-def tamanho_banco(db):
+def tamanho_banco(db, log):
 
     if(db.respostas.find({}).count() <= db.candidatos.find({}).count()):
-        return True
+        return True, log
     else:
-        return False
+        log += "\n ERRO: número incongruente de respostas"
+        return False, log
 
-def nenhum_nulo_cand(db):
+def nenhum_nulo_cand(db, log):
     num_nulos = 0
 
     query = db.candidatos.find({"cpf": None})
@@ -91,11 +97,12 @@ def nenhum_nulo_cand(db):
     num_nulos += query.count()
     
     if num_nulos == 0:
-        return True
+        return True, log
     else:
-        return False
+        log += "\n ERRO: algum campo nulo encontrado em candidatos"
+        return False, log 
 
-def todos_presentes(db):
+def todos_presentes(db, log):
     cpf_duplicado = []
     for cand in db.candidatos.find({}):
         query = db.respostas.find({"cpf": cand["cpf"]})
@@ -103,11 +110,12 @@ def todos_presentes(db):
             cpf_duplicado.append(cand["cpf"])
     
     if len(cpf_duplicado) > 0:
-        return False, cpf_duplicado
+        log += "\n ERRO: CPF duplicado ou inexistente: %s" % cpf_duplicado
+        return False, log
     else:
-        return True, "Nenhum cpf duplicado ou nulo"
+        return True, log
 
-def esta_atualizado(db):
+def esta_atualizado(db, log):
     mudc = monkey2json.recupera_dados("./dados/mudancas.json")
     ind = 0
     for m in mudc:
@@ -125,10 +133,58 @@ def esta_atualizado(db):
         total += query.count()
 
     if total == len(mod):
-        return True
+        return True, log
     else:
-        return False 
+        log += "\n ERRO: Banco não está atualizado"
+        return False, log
 
-def main:
+def main():
+    log = "[Log de Erros]"
     db = conecta_banco(keys.VALIDACAO_URI, True)
-    return(esta_atualizado(db) and todos_presentes(db) and nenhum_nulo_cand(db) and tamanho_banco(db) and nenhum_nulo(db))
+    
+    erro, log = esta_atualizado(db, log)
+    if (not erro):
+        enviaEmail(log)
+        return False
+
+    erro, log = todos_presentes(db, log)
+    if (not erro):
+        enviaEmail(log)
+        return False
+
+    erro, log = nenhum_nulo_cand(db, log)
+    if (not erro):
+        enviaEmail(log)
+        return False
+    
+    
+    erro, log = nenhum_nulo(db, log)
+    if (not erro):
+        enviaEmail(log)
+        return False
+    
+
+    erro, log = tamanho_banco(db, log)
+    if (not erro):
+        enviaEmail(log)
+        return False
+
+    monkey2json.escreve_dados("erros.log", log)
+
+    return True
+
+def enviaEmail(log):
+    toaddr = "luiza.silveira@ccc.ufcg.edu.br"
+    msg = MIMEMultipart()
+    msg['From'] = keys.email
+    msg['To'] = toaddr
+    msg['Subject'] = "ERRO NO BD: VozAtiva"
+    
+    msg.attach(MIMEText(log, 'plain'))
+    
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(keys.email, keys.senha_email) 
+    text = msg.as_string()    
+    server.sendmail(keys.email, toaddr, text)
+    server.quit()
