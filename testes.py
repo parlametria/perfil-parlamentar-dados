@@ -181,7 +181,7 @@ def enviaEmail(log):
     msg = MIMEMultipart()
     msg['From'] = keys.email
     msg['To'] = toaddr
-    msg['Subject'] = "ERRO NO BD: VozAtiva"
+    msg['Subject'] = "[ERRO NO BD: VozAtiva]"
     
     msg.attach(MIMEText(log, 'plain'))
     
