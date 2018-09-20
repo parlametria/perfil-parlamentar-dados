@@ -138,10 +138,13 @@ def esta_atualizado(db, log):
         log += "\n ERRO: Banco não está atualizado"
         return False, log
 
-def main():
-    log = "[Log de Erros]"
-    db = conecta_banco(keys.VALIDACAO_URI, True)
-    
+def main(URI, cond):
+    db = conecta_banco(URI, cond)
+    if(cond):
+        log = "[Log de Erros - VALIDAÇÃO]"
+    else:
+        log = "[Log de Erros - PRODUÇÃO]"
+
     erro, log = esta_atualizado(db, log)
     if (not erro):
         enviaEmail(log)
