@@ -174,7 +174,7 @@ dados_completos <- dados_completos %>% filter(DS_CARGO == "DEPUTADO FEDERAL")
 dados_completos <- dados_completos %>% select(SG_UF,NM_UE,NM_CANDIDATO,NM_URNA_CANDIDATO,
                                               NM_SOCIAL_CANDIDATO,NM_EMAIL,TP_AGREMIACAO,NR_PARTIDO,SG_PARTIDO,
                                               NM_PARTIDO, NM_COLIGACAO, DS_COMPOSICAO_COLIGACAO,NR_IDADE_DATA_POSSE,
-                                              DS_GENERO,DS_GRAU_INSTRUCAO,DS_COR_RACA,DS_OCUPACAO,NR_CPF_CANDIDATO)
+                                              DS_GENERO,DS_GRAU_INSTRUCAO,DS_COR_RACA,DS_OCUPACAO,NR_CPF_CANDIDATO, ST_REELEICAO)
 
 
 
@@ -188,7 +188,9 @@ dados_completos <- dados_completos %>% mutate(NM_EXIBICAO =
 colnames(dados_completos) <- c("uf","estado","nome_candidato","nome_urna",
                                "nome_social","email","tipo_agremiacao","num_partido","sg_partido",
                                "partido", "nome_coligacao","composicao_coligacao","idade_posse",
-                               "genero","grau_instrucao","raca","ocupacao","cpf","nome_exibicao")
+                               "genero","grau_instrucao","raca","ocupacao","cpf","reeleicao","nome_exibicao")
+
+dados_completos <- dados_completos %>% mutate(reeleicao = ifelse(reeleicao == "S",1,0))
 
 dados_sem_rep <- dados_completos[!(duplicated(dados_completos$email) | duplicated(dados_completos$email, fromLast = TRUE)), ]
 dados_mesmo_email <- dados_completos[(duplicated(dados_completos$email) | duplicated(dados_completos$email, fromLast=TRUE)),]

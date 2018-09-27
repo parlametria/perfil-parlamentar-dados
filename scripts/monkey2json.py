@@ -199,7 +199,7 @@ def request_page(page_url, data_slim):
         # Salva json de candidato com string
         data_slim += json.dumps(json_candidato_slim,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
         data_slim += ", "
-
+    
     # Se existir outra página de respostas chama novamente a função
     if 'next' in temp["links"].keys():
         nextPage = temp["links"]["next"]

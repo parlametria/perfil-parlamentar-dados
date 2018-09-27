@@ -16,7 +16,7 @@ def main():
     names = ("uf","estado","nome_candidato","nome_urna",
                                 "nome_social","email","tipo_agremiacao","num_partido","sg_partido",
                                 "partido", "nome_coligacao","composicao_coligacao","idade_posse",
-                                "genero","grau_instrucao","raca","ocupacao","cpf","nome_exibicao")
+                                "genero","grau_instrucao","raca","ocupacao","cpf","reeleicao","nome_exibicao")
 
     reader = csv.DictReader( csvfile, names)
 
@@ -24,7 +24,7 @@ def main():
     for row in reader:
         json.dump(row, jsonfile, ensure_ascii=False)
         if row_count == reader.line_num:
-            print("Última linha") 
+            print("Última linha")
         else:
             jsonfile.write(',\n')
 
