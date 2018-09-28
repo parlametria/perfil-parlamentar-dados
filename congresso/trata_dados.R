@@ -1,10 +1,10 @@
 # devtools::install_github('analytics-ufcg/rcongresso')
+# install.packages("tm", repos="http://R-Forge.R-project.org")
 
-library(rcongresso)
-library(readr)
-library(jsonlite)
 library(tidyverse)
-library(congressbr)
+library(rcongresso)
+library(tm)
+library(stringr)
 
 enumera_votacoes <- Vectorize(function(voto) {
   voto <- as.character(voto)
@@ -19,8 +19,22 @@ enumera_votacoes <- Vectorize(function(voto) {
   )
 })
 
+# Remove stopwords dos nomes dos candidatos/deputados
+stopwords_regex <- paste(toupper(stopwords('pt')), collapse = '\\b|\\b')
+stopwords_regex <- paste0('\\b', stopwords_regex, '\\b')
+
+#stringr::str_replace_all(nomes_sem_cpf, stopwords_regex, '') %>%
+#  str_replace("  "," ")
+
 votacoes <<- read_csv("~/Documentos/vozativa-monkey-ui/congresso/TabelaAuxVotacoes .csv")
-candidatos_2018 <<- read_csv("~/Documentos/vozativa-monkey-ui/congresso/candidatos_2018.csv")
+candidatos_2010a2018 <<- read_csv("~/Documentos/vozativa-monkey-ui/congresso/candidatos_2010_14_18.csv")
+
+info_util_candidatos <- candidatos_2010a2018 %>%
+  select(name, cpf) %>% 
+  mutate(name = toupper(iconv(name, to="ASCII//TRANSLIT"))) %>%
+  unique() %>%
+  mutate(name = str_replace_all(name, stopwords_regex, "")) %>%
+  mutate(name = str_replace_all(name, "  "," "))
 
 ids_votacoes <- votacoes$id_votacao
 
@@ -39,20 +53,31 @@ votos <- fetch_votos(votacoes$id_votacao) %>%
   left_join(info_pessoais_20142018, by= c("parlamentar.id" = "id")) %>%
   left_join(info_pessoais_20102014, by= c("parlamentar.id" = "id")) %>%
   mutate(nomeCivil = ifelse(is.na(nomeCivil.x), nomeCivil.y, nomeCivil.x)) %>%
+  mutate(nomeCivil = toupper(iconv(nomeCivil, to="ASCII//TRANSLIT"))) %>%
+  mutate(nomeCivil = str_replace_all(nomeCivil, stopwords_regex, "")) %>%
+  mutate(nomeCivil = str_replace_all(nomeCivil, "  "," ")) %>%
   select(-nomeCivil.x, -nomeCivil.y)
 
-# Falta pegar os dados dos candidatos de 2010~2014
-votos_tratados <- candidatos_2018 %>%
-  select(cpf, name) %>%
-  right_join(votos, by=c("name"="nomeCivil"))
+votos_tratados <- votos %>%
+  left_join(info_util_candidatos, by=c("nomeCivil"="name"))
 
 # Fazer com que cada deputado tenha todas as votações e tratar os casos como ele não votou
-votos_completos <- votos_tratados %>%
-  complete(id_votacao, nesting(cpf, name, parlamentar.nome, parlamentar.id)) %>%
+votos_completos <- votos_tratados %>% select(-parlamentar.nome, -parlamentar.id,-nomeCivil) %>%
+  complete(id_votacao, nesting(cpf, voto)) %>%
   mutate(voto = enumera_votacoes(voto))
 
-votos_completos %>% 
-  dplyr::group_by(cpf, name, parlamentar.nome, parlamentar.id) %>% 
-  nest() %>% 
-  rename(projetos = data) %>% 
-  jsonlite::toJSON()
+# Funções auxiliares:
+
+# Verificar quem está sem o cpf
+# sem_cpf <- votos_tratados %>% filter(is.na(cpf))
+
+# Salvar como csv
+# votos_completos %>% 
+#  write.csv("votacoes.csv", row.names=FALSE)
+
+# Salvar como json
+#votos_completos %>% 
+#  dplyr::group_by(cpf, name, parlamentar.nome, parlamentar.id) %>% 
+#  nest() %>% 
+#  rename(projetos = data) %>% 
+#  jsonlite::toJSON()
