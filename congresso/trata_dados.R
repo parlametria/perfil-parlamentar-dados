@@ -26,8 +26,10 @@ stopwords_regex <- paste0('\\b', stopwords_regex, '\\b')
 #stringr::str_replace_all(nomes_sem_cpf, stopwords_regex, '') %>%
 #  str_replace("  "," ")
 
-votacoes <<- read_csv("~/Documentos/vozativa-monkey-ui/congresso/TabelaAuxVotacoes .csv")
-candidatos_2010a2018 <<- read_csv("~/Documentos/vozativa-monkey-ui/congresso/candidatos_2010_14_18.csv")
+getwd()
+
+votacoes <<- read_csv("congresso/dados congresso/TabelaAuxVotacoes .csv")
+candidatos_2010a2018 <<- read_csv("congresso/dados congresso/candidatos_2010_14_18.csv")
 
 info_util_candidatos <- candidatos_2010a2018 %>%
   select(name, cpf) %>% 
