@@ -1,9 +1,12 @@
 __pycache__
 keys.py
 teste.py
+erros.log
+pega_tudo.py
 
 # Arquivos gerados
 /dados
+candidatos_link.json
 .vscode
 
 # Arquivos tse
