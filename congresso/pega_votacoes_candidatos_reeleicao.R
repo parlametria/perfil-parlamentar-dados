@@ -24,8 +24,8 @@ enumera_votacoes <- Vectorize(function(voto) {
 })
 
 # Diretório de arquivos
-INFO_VOTACOES <- "./input/TabelaAuxVotacoes.csv"
-INFO_CANDIDATOS <- "./input/candidatos_2010_14_18.csv"
+INFO_VOTACOES <- "./dados_congresso/TabelaAuxVotacoes.csv"
+INFO_CANDIDATOS <- "./dados_congresso/candidatos_2010_14_18.csv"
 
 # Remove stopwords dos nomes dos candidatos/deputados
 stopwords_regex <- paste(toupper(stopwords('pt')), collapse = '\\b|\\b')
