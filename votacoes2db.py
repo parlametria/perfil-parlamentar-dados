@@ -14,10 +14,9 @@ def conecta_banco(URI, validacao):
 def insere_votacoes(URI, val):
     db = conecta_banco(URI, val)
 
-    collection = db.votacoes
     jsonObj =  recupera_dados("./congresso/votacoes.json")
-    collection.drop()
-    collection.insert_many(jsonObj)
+    db.votacoes.drop()
+    db.votacoes.insert_many(jsonObj)
     print("Votações salvas")
 
 insere_votacoes(keys.VALIDACAO_URI, True)
