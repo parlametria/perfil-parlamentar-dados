@@ -35,7 +35,7 @@ for row in reader:
         candidato["votacoes"] = {}
     for r in reader2:
         if cpf == r["cpf"]:
-            candidato["votacoes"][r["id_votacao"]] = r["voto"]
+            candidato["votacoes"][r["id_votacao"]] = int(r["voto"])
     if candidato not in candidatos and candidato != {}:
         candidatos.append(candidato)
 

@@ -24,8 +24,8 @@ enumera_votacoes <- Vectorize(function(voto) {
 })
 
 # Diretório de arquivos
-INFO_VOTACOES <- "./dados_congresso/TabelaAuxVotacoes.csv"
-INFO_CANDIDATOS <- "./dados_congresso/candidatos_2010_14_18.csv"
+INFO_VOTACOES <- "./dados congresso/TabelaAuxVotacoes.csv"
+INFO_CANDIDATOS <- "./dados congresso/candidatos_2010_14_18.csv"
 
 # Remove stopwords dos nomes dos candidatos/deputados
 stopwords_regex <- paste(toupper(stopwords('pt')), collapse = '\\b|\\b')
@@ -77,7 +77,7 @@ votos_completos <- votos_tratados %>% select(-parlamentar.nome, -parlamentar.id,
   mutate(voto = enumera_votacoes(voto))
 
 votos_completos %>%
-  write.csv("votacoes.csv", row.names = FALSE)
+  write.csv("./dados congresso/votacoes.csv", row.names = FALSE)
 
 # sem_cpf %>%
 #   select(parlamentar.nome, parlamentar.id, nomeCivil) %>%
