@@ -39,3 +39,13 @@ cd congresso
 ```
 
 O script demora alguns minutos para ser executado e o arquivo gerado será o `votacoes.csv` dentro da pasta congresso.
+
+Após isso execute os scripts:
+
+```
+cd congresso
+escreve_json_vot.py 
+cd ..
+votacoes2db.py
+```
+Para atualizar o banco de dados das votações dos projetos de lei.
