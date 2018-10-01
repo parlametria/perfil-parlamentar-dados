@@ -13,3 +13,7 @@ teste.py
 
 #fotos
 /fotos_tratadas
+
+# R
+.RData
+.Rhistory
