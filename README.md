@@ -4,13 +4,12 @@ Coletor de respostas do Survey Monkey que alimenta o Voz Ativa.
 
 ## Dependências
 
-* Python 3.5.x
-* MongoDB
-* pymongo
-* R 
+- Python 3.5.x
+- MongoDB
+- pymongo
+- R
 
-
-## Instruções
+## Instruções para o Survey Monkey
 
 ### 1 Baixando as respostas e povoando mlab de validação
 
@@ -28,9 +27,15 @@ Os arquivos `respostas_novo.json` e `candidatos.json` são necessários.
 mongoimport --db=voz-ativa --collection=respostas --file=respostas_novo.json --jsonArray
 
 mongoimport --db=voz-ativa --collection=candidatos --file=candidatos.json --jsonArray
-
 ```
 
+## Instruções para pegar votos dos candidatos à reeleição
 
+Entre na pasta `congresso` pelo terminal e execute o _script_ `pega_votacoes_candidatos_reeleicao.R`.
 
+```
+cd congresso
+./pega_votacoes_candidatos_reeleicao.R
+```
 
+O script demora alguns minutos para ser executado e o arquivo gerado será o `votacoes.csv` dentro da pasta congresso.
