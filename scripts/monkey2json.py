@@ -3,7 +3,7 @@ import requests
 import json
 import datetime
 from datetime import timedelta,datetime, date
-import os
+import os, csv
 
 NAO_RESPONDEU = 0
 
@@ -323,6 +323,37 @@ def insere_flag_recebeu(data_final, candidatos):
     dados += "]"
     return dados
 
+def insere_qnt_eleicoes(candidatos):
+
+    csvfile = open('./dados/candidatos2018_count_candidaturas.csv', "r", encoding="latin-1")
+   
+    names = ("cpf",	"display_name",	"name",	"count(e.year)",	"group_concat(e.year)")
+
+    reader = csv.DictReader( csvfile, names)
+
+    dados = "["
+    for elem in reader:
+        if len(elem["cpf"]) < 11:
+            elem["cpf"] = (11 - len(elem["cpf"]))*"0" + elem["cpf"]
+        for cand in candidatos:
+            if "cpf" in cand.keys():
+                if elem["cpf"] == cand["cpf"]:
+                    cand["n_candidatura"] = elem["count(e.year)"]
+                    cand["candidaturas"] = elem["group_concat(e.year)"]
+
+    for elem in candidatos:
+        if not ("n_candidatura" in elem.keys()):
+            elem["n_candidatura"] = 0
+            elem["candidaturas"] = 0
+
+        dados += json.dumps(elem, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+        dados += ", "
+
+    dados = dados[:-2]
+    dados += "]"
+    return dados
+
+
 def main(): 
     url = "https://api.surveymonkey.com/v3/surveys/%s/responses/bulk" % (keys.survey_id)
     
@@ -363,10 +394,12 @@ def main():
     escreve_dados('./dados/respostas_slim.json', dados_alterados)
 
     # Salva candidatos com flag recebeu e tem_foto
-    candidatos = candidatos = get_todos_candidatos_b()
+    candidatos = get_todos_candidatos_b()
     cand_sent = recupera_dados("./dados/candidatos_sent.json")
     candidatos = insere_flag_recebeu(candidatos,cand_sent)
-        
+    escreve_dados("./tse/candidatos.json", candidatos)
+    candidatos = recupera_dados("./tse/candidatos.json")
+    candidatos = insere_qnt_eleicoes(candidatos)    
 
     escreve_dados("./tse/candidatos.json", candidatos)
 
