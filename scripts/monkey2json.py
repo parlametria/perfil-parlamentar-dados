@@ -325,7 +325,7 @@ def insere_flag_recebeu(data_final, candidatos):
 
 def insere_qnt_eleicoes(candidatos):
 
-    csvfile = open('./dados/candidatos2018_count_candidaturas.csv', "r", encoding="latin-1")
+    csvfile = open('./congresso/dados congresso/candidatos2018_count_candidaturas.csv', "r", encoding="latin-1")
    
     names = ("cpf",	"display_name",	"name",	"count(e.year)",	"group_concat(e.year)")
 
