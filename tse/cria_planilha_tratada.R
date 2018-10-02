@@ -1,5 +1,5 @@
 #! /usr/bin/Rscript --vanilla --default-packages=utils
-list.of.packages <- c("readr", "tidyverse", "stringi", "dplyr")
+list.of.packages <- c("readr",  "stringi", "dplyr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 
 if(length(new.packages)){
@@ -8,12 +8,11 @@ if(length(new.packages)){
 
 
 library("readr")
-library("tidyverse")
 library("stringi")
 library("dplyr")
 
 getwd()
-
+setwd("/home/luiza/Documents/vozativa-monkey-ui/")
 ### 1. Importar Dados -----
 AC <- read_delim("tse/dados candidatos/consulta_cand_2018_AC.csv", 
               ";", escape_double = FALSE,

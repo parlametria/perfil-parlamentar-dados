@@ -149,7 +149,7 @@ def request_page(page_url, data_slim):
 
     temp = json.loads(request.text)        
 
-    # Json conmtendo o id das respostas de cada pergunta 
+    # Json contendo o id das respostas de cada pergunta 
     with open("./dados/keys_answers.json", 'r') as f:
        keys4answers = json.load(f)
 
@@ -228,12 +228,19 @@ def compara_candidatos(candidatos_tse, data_slim_clone, data_slim):
     print(len(lista_resultados))
     print(len(lista_final))
     
-    data_slim = data_slim[:-1]
-    data_slim += ", "
+    data_slim = "["
     for candidato in candidatos_tse:
         if candidato["cpf"] in lista_final:
             data_slim += json.dumps(candidato, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
             data_slim += ", "
+
+    for candidato in data_slim_clone:
+        for c in candidatos_tse:
+            if candidato["cpf"] == c["cpf"]:
+                candidato["reeleicao"] = c["reeleicao"]
+                data_slim += json.dumps(candidato, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+                data_slim += ", "
+
 
     data_slim = data_slim[:-2]
     data_slim += "]"
