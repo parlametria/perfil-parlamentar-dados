@@ -82,7 +82,7 @@ votos_completos <- votos_tratados %>% select(-parlamentar.nome, -parlamentar.id,
   mutate(voto = enumera_votacoes(voto))
 
 votos_completos %>%
-  write.csv("votacoes.csv", row.names = FALSE)
+  write.csv("./dados congresso/votacoes.csv", row.names = FALSE)
 
 # sem_cpf %>%
 #   select(parlamentar.nome, parlamentar.id, nomeCivil) %>%

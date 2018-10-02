@@ -25,7 +25,7 @@ def atualiza_respostas(db):
         "nome_urna": candidato["nome_urna"], "nome_exibicao": candidato["nome_exibicao"],
         "uf": candidato["uf"], "sg_partido": candidato["sg_partido"],
         "cpf": candidato["cpf"], "respondeu": candidato["respondeu"], 
-        "tem_foto": candidato["tem_foto"], "recebeu": candidato["recebeu"] }}, upsert=True)
+        "tem_foto": candidato["tem_foto"], "recebeu": candidato["recebeu"], "reeleicao": candidato["reeleicao"] }}, upsert=True)
         i += 1
         print("Resposta de nº %s adicionada ou alterada" % i)
 
@@ -103,8 +103,9 @@ pega_respostas(db)
 main()
 atualiza_validacao()
 if(testes.main(keys.VALIDACAO_URI, True)):
-    atualiza_producao()
-    testes.main(keys.PRODUCAO_URI, False)
+   # atualiza_producao()
+   # testes.main(keys.PRODUCAO_URI, False)
+   print("Tudo ok")
 else:
     print("Erro no banco")
 
