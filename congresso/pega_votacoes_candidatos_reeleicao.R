@@ -19,13 +19,15 @@ enumera_votacoes <- Vectorize(function(voto) {
           "null" = 0,
           "Obstrução" = 0,
           "Abstenção" = 0,
-          "Art. 17" = 0
+          "Art. 17" = 0,
+          "-" = 0
   )
 })
 
 # Diretório de arquivos
-INFO_VOTACOES <- "./dados_congresso/TabelaAuxVotacoes.csv"
-INFO_CANDIDATOS <- "./dados_congresso/candidatos_2010_14_18.csv"
+INFO_VOTACOES <- "./dados congresso/TabelaAuxVotacoes.csv"
+INFO_CANDIDATOS <- "./dados congresso/candidatos_2010_14_18.csv"
+PL6299_2002_DIRETORIO <- "./dados congresso/pl6299_tratada.csv"
 
 # Remove stopwords dos nomes dos candidatos/deputados
 stopwords_regex <- paste(toupper(stopwords('pt')), collapse = '\\b|\\b')
@@ -34,6 +36,8 @@ stopwords_regex <- paste0('\\b', stopwords_regex, '\\b')
 # Import dos dados
 votacoes <- read_csv(INFO_VOTACOES)
 candidatos_2010a2018 <- read_csv(INFO_CANDIDATOS)
+pl6299_2002 <- read_csv(PL6299_2002_DIRETORIO) %>%
+  select(id_votacao, voto, cpf)
 
 # Tratamento de string - Remove acentuação, apóstrofes, deixa todos maiúsculos e remove
 # stopwords
@@ -73,6 +77,7 @@ votos_tratados <- votos %>%
 
 # Fazer com que cada deputado tenha todas as votações e tratar os casos como ele não votou
 votos_completos <- votos_tratados %>% select(-parlamentar.nome, -parlamentar.id,-nomeCivil) %>%
+  bind_rows(pl6299_2002) %>%
   complete(id_votacao, nesting(cpf, voto)) %>%
   mutate(voto = enumera_votacoes(voto))
 
