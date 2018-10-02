@@ -1,13 +1,17 @@
 numero_proj_lei,id_votacao,titulo,descricao,tema
-PL 4148/2008,6259,Rotulagem de Alimentos Transgênicos,,Meio Ambiente/Integridade e Transparência
-PL 1876/1999,4968,Mudanças no Código Florestal,,Meio Ambiente
-PEC 171/1993,6517,Redução da Maioridade Penal,,Direitos Humanos
-PEC 241/2016,7252,PEC do congelamento de gastos públicos,,Direitos Humanos
-PDC 886/2018,8175,Intervenção Federal no Rio de Janeiro,,Direitos Humanos
-PL 2516/2015,7317,Lei da Migração,,Direitos Humanos
-PL 1057/2007,6531,Infanticídio Indígena,,Direitos Humanos
-PL 8843/2017,7927,Regulamentação de acordos de leniência,,Integridade e Transparência
-PL 4850/2016,7291,Tipificação de crimes eleitorais,,Integridade e Transparência
-PL 4474/2004,6608,Limite de transferências voluntárias em anos de eleição aos municípios,,Integridade e Transparência
-PLP 177/2012,6095,Normas de repasses ou parcerias entre o setor público e ONGs,,Nova Economia
-MPV 809/2017,8309,Contribuição para o fundo de manutenção de unidades em conservação por parte de empreendimentos com grande impacto ambiental,,Nova Economia/Meio Ambiente
+PDC 886/2018,8175,Intervenção Federal no Rio de Janeiro,Autoriza o Exército Brasileiro a administrar a segurança pública e suas operações no estado do Rio de Janeiro até o final de 2018.,Direitos Humanos
+PEC 171/1993,6517,Redução da Maioridade Penal,O projeto tem o objetivo de diminuir de 18 para 16 anos de idade a maioridade penal para tipos específicos de crimes,Direitos Humanos
+PEC 241/2016,7252,PEC do congelamento de gastos públicos,Determina um limite de gastos governamentais pelos próximos 20 anos,Direitos Humanos
+PL 1057/2007,6531,Infanticídio Indígena,Visa frear a suposta prática cultural de infanticídio e controle populacional em determinados territórios indígenas,Direitos Humanos
+PL 2516/2015,7317,Lei da Migração,A lei disserta sobre direitos e deveres do indivíduo migrante e estabelece formatações para políticas públicas aos migrantes.,Direitos Humanos
+PL 4474/2004,6608,Limite de transferências voluntárias em anos de eleição aos municípios,"Limita as transferências voluntárias (em anos eleitorais) da União aos estados e municípios, e dos estados aos municípios, à média dos valores correspondentes às transferências realizadas nos três anos anteriores as eleições.",Integridade e Transparência
+PL 4850/2016,7291,Tipificação de crimes eleitorais,"Prevê a tipificação do crime eleitoral de caixa dois, a criminalização do eleitor pela venda do voto e a transformação de corrupção que envolve valores superiores a 10 mil salários mínimos em crime hediondo",Integridade e Transparência
+PL 8843/2017,7927,Regulamentação de acordos de leniência,Regulamentação e delimitação de acordos entre agentes infratores e mecanismos do Estado para cooperação em investigações e mitigação de danos ao bem público.,Integridade e Transparência
+MPV 756/2016,7546,Redução da proteção ambiental na Floresta do Jamanxim,"A MP 756 visou alterar os limites da Floresta Nacional do Jamanxim, no Pará, e transformá-la em um Área de Preservação Ambiental – um tipo de Unidade de Conservação que admite maior grau de ocupação humana e uso da terra. Também ltera os limites do Parque Nacional do Rio Novo.",Meio Ambiente
+MPV 758/2016,7566,Redução do Parque Nacional do Jamanxim,"Altera os limites do Parque Nacional do Jamanxim e da Área de Proteção Ambiental do Tapajós para dar possibilidade legal à construção do Ferrogrão, a Estrada de Ferro 170.",Meio Ambiente
+PL 1876/1999,4968,Mudanças no Código Florestal,O projeto visou regulamentar e limitar os espaços e as maneiras disponíveis para exploração de vegetação nativa no país.,Meio Ambiente
+PL 4148/2008,6259,Rotulagem de Alimentos Transgênicos,Coloca um fim à exigência do símbolo da transgenia nos rótulos de produtos comercializados com organismos geneticamente modificados (OGM),Meio Ambiente/Integridade e Transparência
+MPV 810/2017,8334,"Subsídios dados a empresas de tecnologia que façam investimentos em pesquisa, inovação e modernização dentro do território brasileiro","Subsídios dados a empresas de tecnologia que façam investimentos em pesquisa, inovação e modernização dentro do território brasileiro",Nova Economia
+PLP 177/2012,6095,Normas de repasses ou parcerias entre o setor público e ONGs,Cria normas de finanças públicas para a realização de repasses ou termos de parceria entre órgãos e entidades do setor público com pessoas jurídicas de direito privado sem fins lucrativos (ONGs),Nova Economia
+MPV 809/2017,8309,Contribuição para o fundo de manutenção de unidades em conservação por parte de empreendimentos com grande impacto ambiental,"Autoriza a criação de um fundo financeiro pelo Instituto Chico Mendes de Conservação da Biodiversidade (ICMBio), órgão vinculado ao Ministério do Meio Ambiente; dá, ao órgão, a permissão legal de selecionar um banco público para a manutenção e gestão do fundo, que terá o efeito de promover uma compensação ambiental em Unidades de Conservação.",Nova Economia/Meio Ambiente
+PL 6299/2002,99999,Flexibilização das normas para uso de agrotóxicos,O Projeto de Lei 6299/2002 está em tramitação no Congresso e visa flexibilizar a legislação que compreende as normas para uso de agrotóxicos em plantações no país.,Meio Ambiente
