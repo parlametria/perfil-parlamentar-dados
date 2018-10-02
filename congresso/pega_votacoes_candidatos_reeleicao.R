@@ -78,8 +78,9 @@ votos_tratados <- votos %>%
 # Fazer com que cada deputado tenha todas as votações e tratar os casos como ele não votou
 votos_completos <- votos_tratados %>% select(-parlamentar.nome, -parlamentar.id,-nomeCivil) %>%
   bind_rows(pl6299_2002) %>%
-  complete(id_votacao, nesting(cpf, voto)) %>%
-  mutate(voto = enumera_votacoes(voto))
+  complete(id_votacao, nesting(cpf)) %>%
+  mutate(voto = enumera_votacoes(voto)) %>% 
+  unique()
 
 votos_completos %>%
   write.csv("./dados congresso/votacoes.csv", row.names = FALSE)
