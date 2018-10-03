@@ -103,8 +103,8 @@ pega_respostas(db)
 main()
 atualiza_validacao()
 if(testes.main(keys.VALIDACAO_URI, True)):
-   # atualiza_producao()
-   # testes.main(keys.PRODUCAO_URI, False)
+    atualiza_producao()
+    testes.main(keys.PRODUCAO_URI, False)
    print("Tudo ok")
 else:
     print("Erro no banco")
