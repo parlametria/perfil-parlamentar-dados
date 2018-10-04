@@ -17,9 +17,9 @@ enumera_votacoes <- Vectorize(function(voto) {
           "Sim" = 1,
           "NA" = 0,
           "null" = 0,
-          "Obstrução" = 0,
-          "Abstenção" = 0,
-          "Art. 17" = 0,
+          "Obstrução" = 2,
+          "Abstenção" = 3,
+          "Art. 17" = 4,
           "-" = 0
   )
 })
