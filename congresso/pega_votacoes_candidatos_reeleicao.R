@@ -75,12 +75,25 @@ votos_tratados <- votos %>%
   # Trata caso especial de Lauriete (PSC/ES) que possui 3 nomes diferentes
   mutate(cpf = ifelse(parlamentar.nome == "LAURIETE", "00974976733", cpf))
 
+# CPFs dos candidatos a reeleição na plataforma voz ativa
+cpfs_voz <- read_csv("~/Documentos/vozativa-monkey-ui/tse/dados tratados/candidatos.csv") %>% 
+  filter(reeleicao == 1) %>% select(cpf) %>% unique()
+
+# CPFs dos deputados que votaram na câmara 
+cpf_completos <- votos_tratados %>% select(cpf) %>%  unique()
+
+# CPFs dos deputados que estão no voz ativa e não estão na câmara
+faltantes <- cpfs_voz[!(cpfs_voz$cpf %in% cpf_completos$cpf),] %>% mutate(id_votacao = 4968, voto = "-")
+
+
 # Fazer com que cada deputado tenha todas as votações e tratar os casos como ele não votou
 votos_completos <- votos_tratados %>% select(-parlamentar.nome, -parlamentar.id,-nomeCivil) %>%
   bind_rows(pl6299_2002) %>%
+  bind_rows(faltantes) %>% 
   complete(id_votacao, nesting(cpf)) %>%
   mutate(voto = enumera_votacoes(voto)) %>% 
   unique()
+
 
 votos_completos %>%
   write.csv("./dados congresso/votacoes.csv", row.names = FALSE)
