@@ -12,7 +12,7 @@ library("stringi")
 library("dplyr")
 
 getwd()
-setwd("/home/luiza/Documents/vozativa-monkey-ui/")
+
 ### 1. Importar Dados -----
 AC <- read_delim("tse/dados candidatos/consulta_cand_2018_AC.csv", 
               ";", escape_double = FALSE,
