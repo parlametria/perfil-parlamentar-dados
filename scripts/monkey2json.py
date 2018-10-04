@@ -385,10 +385,14 @@ def main():
     escreve_dados('./dados/respostas_novo.json', dados)
 
     # Procura alterações no banco de dados
+    data_slim = recupera_dados("./dados/respostas_novo.json")
+    dados_slim = insere_qnt_eleicoes(data_slim)
+    escreve_dados('./dados/respostas_novo.json', dados_slim)
+    
     print("Procurando alterações em respostas")
     data_old = recupera_dados("./dados/respostas_slim.json")
     data_slim = recupera_dados("./dados/respostas_novo.json")
-
+    
     dados_alterados = json.dumps(data_old, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
 
     alteracoes = procura_alteracoes(data_old,data_slim)
