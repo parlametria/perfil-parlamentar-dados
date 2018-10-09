@@ -25,7 +25,8 @@ def atualiza_respostas(db):
         "nome_urna": candidato["nome_urna"], "nome_exibicao": candidato["nome_exibicao"],
         "uf": candidato["uf"], "sg_partido": candidato["sg_partido"],
         "cpf": candidato["cpf"], "respondeu": candidato["respondeu"], 
-        "tem_foto": candidato["tem_foto"], "recebeu": candidato["recebeu"], "reeleicao": candidato["reeleicao"], "n_candidatura": candidato["n_candidatura"] }}, upsert=True)
+        "tem_foto": candidato["tem_foto"], "recebeu": candidato["recebeu"], "reeleicao": candidato["reeleicao"],
+         "n_candidatura": candidato["n_candidatura"], "eleito": candidato["eleito"] }}, upsert=True)
         i += 1
         print("Resposta de nº %s adicionada ou alterada" % i)
 
@@ -97,7 +98,7 @@ def main():
     scripts.monkey2json.main()
 
 db = conecta_banco(keys.VALIDACAO_URI,True)
-scripts.request_file.main()
+#scripts.request_file.main()
 pega_mudancas(db)
 pega_respostas(db)
 main()

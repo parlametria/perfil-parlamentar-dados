@@ -254,8 +254,6 @@ def cria_data(c):
 
 # Procura alterações no banco de dados
 def procura_alteracoes(data_old, data_slim):
-    lista_cpf = []
-    lista_tempo_final = []
     old_unique = { each['cpf'] : each for each in data_old }.values()
 
     alteracoes = []
@@ -360,6 +358,26 @@ def insere_qnt_eleicoes(candidatos):
     dados += "]"
     return dados
 
+def insere_flag_eleito(dados_originais):
+
+    dados_eleitos = recupera_dados("./tse/eleitos1.json")
+    dados_string = "["
+
+    for elem in dados_originais:
+        for e in dados_eleitos:
+            if elem["nome_urna"] == e["nome_urna"]:
+                elem["eleito"] = e["eleito"]
+        
+        if "eleito" not in elem.keys():
+            elem["eleito"] = False
+        
+        dados_string += json.dumps(elem, sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)
+        dados_string += ", "
+    
+    dados_string = dados_string[:-2]
+    dados_string += "]"
+
+    return dados_string
 
 def main(): 
     url = "https://api.surveymonkey.com/v3/surveys/%s/responses/bulk" % (keys.survey_id)
@@ -384,11 +402,17 @@ def main():
     dados = insere_flag_recebeu(data_final, candidatos)
     escreve_dados('./dados/respostas_novo.json', dados)
 
-    # Procura alterações no banco de dados
+    # Insere quantidade de eleições do candidato
     data_slim = recupera_dados("./dados/respostas_novo.json")
     dados_slim = insere_qnt_eleicoes(data_slim)
     escreve_dados('./dados/respostas_novo.json', dados_slim)
+
+    # Adiciona flag eleito
+    data_slim = recupera_dados("./dados/respostas_novo.json")
+    dados_slim = insere_flag_eleito(data_slim)
+    escreve_dados('./dados/respostas_novo.json', dados_slim)
     
+    # Procura alterações no banco de dados
     print("Procurando alterações em respostas")
     data_old = recupera_dados("./dados/respostas_slim.json")
     data_slim = recupera_dados("./dados/respostas_novo.json")
