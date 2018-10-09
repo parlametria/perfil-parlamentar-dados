@@ -1,4 +1,3 @@
-import keys
 import requests
 import json
 import datetime
@@ -61,4 +60,23 @@ def busca_candidatos():
     
     escreve_dados("eleitos.json",data)
 
-busca_candidatos()
+def formata_eleitos():
+    eleitos = recupera_dados("eleitos.json")
+
+    data = "["
+    json_candidato = {}
+    for e in eleitos:
+        for cand in e["cand"]:   
+            if cand["e"] == "s":
+                json_candidato["eleito"] = True
+                json_candidato["nome_urna"] = cand["nm"]
+                json_candidato["coligacao"] = cand["cc"]
+                json_candidato["id"]  = cand["sqcand"] 
+                json_candidato["uf"] = e["cdabr"]
+            
+                data += json.dumps(json_candidato,sort_keys=False, indent=4, separators=(',', ': '),ensure_ascii=False)   
+                data += ", "
+
+    data = data[:-2]
+    data += "]"
+    escreve_dados("eleitos1.json",data)
