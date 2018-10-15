@@ -98,7 +98,7 @@ def main():
     scripts.monkey2json.main()
 
 db = conecta_banco(keys.VALIDACAO_URI,True)
-#scripts.request_file.main()
+scripts.request_file.main()
 pega_mudancas(db)
 pega_respostas(db)
 main()

@@ -362,11 +362,13 @@ def insere_flag_eleito(dados_originais):
 
     dados_eleitos = recupera_dados("./tse/eleitos1.json")
     dados_string = "["
-
     for elem in dados_originais:
         for e in dados_eleitos:
-            if elem["nome_urna"] == e["nome_urna"]:
+            if (elem["nome_urna"].upper().rstrip() == e["nome_urna"].upper().rstrip()) and (elem["uf"].upper() == e["uf"].upper()):
                 elem["eleito"] = e["eleito"]
+
+        if elem["nome_urna"] == "CHICO D ANGELO":
+                elem["eleito"] = True
         
         if "eleito" not in elem.keys():
             elem["eleito"] = False
@@ -403,11 +405,13 @@ def main():
     escreve_dados('./dados/respostas_novo.json', dados)
 
     # Insere quantidade de eleições do candidato
+    print("Inserindo flag qnt eleições")
     data_slim = recupera_dados("./dados/respostas_novo.json")
     dados_slim = insere_qnt_eleicoes(data_slim)
     escreve_dados('./dados/respostas_novo.json', dados_slim)
 
     # Adiciona flag eleito
+    print("Inserindo flag eleito")
     data_slim = recupera_dados("./dados/respostas_novo.json")
     dados_slim = insere_flag_eleito(data_slim)
     escreve_dados('./dados/respostas_novo.json', dados_slim)
