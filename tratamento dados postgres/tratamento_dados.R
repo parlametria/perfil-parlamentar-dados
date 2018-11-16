@@ -170,6 +170,11 @@ for (i in datasets){
   votacoes <- rbind(votacoes, get(i))
 }
 
+
+not_there <- votacoes %>% anti_join(candidatos_full) %>% select(cpf) %>% unique()
+
+votacoes <- votacoes %>% anti_join(not_there)
+
 ## 7. Salva dados ----
 
 write.csv(temas, "./final/temas.csv", row.names = FALSE)
