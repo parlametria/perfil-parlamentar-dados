@@ -59,16 +59,19 @@ info_pessoais_20102014 <- fetch_deputado(deputados20102014_id) %>%
 info_pessoais_20142018 <- fetch_deputado(deputados20142018_id) %>% 
   select(id, nomeCivil)
 
-votos <- fetch_votos(votacoes$id_votacao) %>% 
-  select(id_votacao, parlamentar.nome, parlamentar.id, voto) %>% 
-  left_join(info_pessoais_20142018, by= c("parlamentar.id" = "id")) %>%
-  left_join(info_pessoais_20102014, by= c("parlamentar.id" = "id")) %>%
-  mutate(nomeCivil = ifelse(is.na(nomeCivil.x), nomeCivil.y, nomeCivil.x)) %>%
-  mutate(nomeCivil = toupper(iconv(nomeCivil, to="ASCII//TRANSLIT"))) %>%
-  mutate(nomeCivil = str_replace_all(nomeCivil, stopwords_regex, "")) %>%
-  mutate(nomeCivil = str_replace_all(nomeCivil, "  "," ")) %>%
-  mutate(nomeCivil = str_replace_all(nomeCivil, "'","  ")) %>%
-  select(-nomeCivil.x, -nomeCivil.y)
+ids <- ids_votacoes[1:15]
+ids2 <- ids_votacoes[16:34]
+
+  votos <- fetch_votos(ids) %>% dplyr::bind_rows(fetch_votos(ids2)) %>%
+    select(id_votacao, parlamentar.nome, parlamentar.id, voto) %>% 
+    left_join(info_pessoais_20142018, by= c("parlamentar.id" = "id")) %>%
+    left_join(info_pessoais_20102014, by= c("parlamentar.id" = "id")) %>%
+    mutate(nomeCivil = ifelse(is.na(nomeCivil.x), nomeCivil.y, nomeCivil.x)) %>%
+    mutate(nomeCivil = toupper(iconv(nomeCivil, to="ASCII//TRANSLIT"))) %>%
+    mutate(nomeCivil = str_replace_all(nomeCivil, stopwords_regex, "")) %>%
+    mutate(nomeCivil = str_replace_all(nomeCivil, "  "," ")) %>%
+    mutate(nomeCivil = str_replace_all(nomeCivil, "'","  ")) %>%
+    select(-nomeCivil.x, -nomeCivil.y)
 
 votos_tratados <- votos %>%
   left_join(info_util_candidatos, by=c("nomeCivil"="name")) %>%
