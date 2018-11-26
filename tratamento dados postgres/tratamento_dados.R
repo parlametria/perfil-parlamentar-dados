@@ -1,5 +1,6 @@
 library(readr)
 library(dplyr)
+library(splitstackshape)
 
 ## 1. Criando o data frame de respostas completo ----
 
@@ -12,8 +13,6 @@ respostas <- read_csv("./csv/respostas.csv") %>%
 
 respostas <- respostas  %>%  mutate(date_modified = as.POSIXct(date_modified))
 respostas <- respostas  %>%  mutate(date_created = as.POSIXct(date_created))
-
-library(splitstackshape)
 
 # Cria tabelas auxiliares, cada uma contendo o id da pergunta a resposta e o cpf do deputado
 for(i in c(0:45)){
@@ -78,7 +77,8 @@ respostas_raw <- respostas_raw %>% anti_join(duplicados)
 # Insere os cpfs únicos de volta
 respostas_raw <- rbind(respostas_raw,unicos)
 
-respostas_raw <- respostas_raw %>% select("cpf", "tem_foto", "reeleicao", "recebeu", "n_candidatura", "eleito", "respondeu")
+respostas_raw <- respostas_raw %>% 
+  select("cpf", "tem_foto", "reeleicao", "recebeu", "n_candidatura", "eleito", "respondeu") 
 
 # right join de candidatos com respostas para reter todas as informações necessaŕias
 candidatos_full <- candidatos %>% right_join(respostas_raw)
@@ -105,7 +105,8 @@ candidatos_full <- candidatos_full %>% filter(!duplicated(cpf)) %>% select("esta
 "grau_instrucao",
 "genero",
 "eleito",
-"respondeu") 
+"respondeu") %>% 
+mutate(createdAt = Sys.Date(), updatedAt = Sys.Date())
 
 ## 3. Formatando data frame de perguntas ----
 
@@ -121,6 +122,8 @@ perguntas <- perguntas %>% select("texto", "id", "tema_id") %>% mutate(createdAt
 
 temas <- as.data.frame(cbind(c("Meio Ambiente", "Direitos Humanos", "Integridade e Transparência", "Nova Economia", "Transversal"), c(0,1,2,3,4)))
 colnames(temas) <- c("tema", "id")
+temas <- temas %>%
+  mutate(createdAt = Sys.Date(), updatedAt = Sys.Date())
 
 ## 5. Formatando data frame de proposições ----
 
@@ -131,6 +134,8 @@ proposicoes <- read_csv("./csv/proposicoes.csv")
 proposicoes <- proposicoes %>% mutate(tema_id = ifelse(tema =="Meio Ambiente",0, ifelse(tema == "Direitos Humanos", 1 , ifelse(tema == "Integridade e Transparência",2, ifelse(tema == "Nova Economia", 3 ,4)))))
 proposicoes <- proposicoes[-6]
 colnames(proposicoes) <- c("id", "projeto_lei", "id_votacao", "titulo", "descricao", "tema_id")
+proposicoes <- proposicoes %>% 
+  mutate(createdAt = Sys.Date(), updatedAt = Sys.Date())
 
 ## 6. Formatando data frame de proposições ----
 
@@ -170,7 +175,7 @@ for(i in id_votacoes){
   ind <- ind + 1
 }
 
-# Faz o rbind de todas as tabelas auxiliares%>% select(c("cpf", col, "createdAt", "updatedAt"))
+# Faz o rbind de todas as tabelas auxiliares
 votacoes <- votacao_4968
 
 datasets <- datasets[-1]
@@ -182,7 +187,12 @@ for (i in datasets){
 
 not_there <- votacoes %>% anti_join(candidatos_full) %>% select(cpf) %>% unique()
 
-votacoes <- votacoes %>% anti_join(not_there)
+votacoes <- votacoes %>% anti_join(not_there) %>% 
+  mutate(createdAt = Sys.Date(), updatedAt = Sys.Date())
+
+votacoes$id <- seq.int(nrow(votacoes))
+
+votacoes <- votacoes %>% select("id", "cpf", "resposta", "proposicao_id", "createdAt", "updatedAt")
 
 ## 7. Salva dados ----
 
