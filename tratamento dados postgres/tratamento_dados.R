@@ -4,18 +4,23 @@ library(dplyr)
 ## 1. Criando o data frame de respostas completo ----
 
 # Lê dados
-respostas <- read_csv("./csv/respostas.csv")
+respostas <- read_csv("./csv/respostas.csv") %>%  
+  mutate(date_modified = paste(substr(date_modified,0,10), substr(date_modified,12,19))) %>% 
+  mutate(date_modified = ifelse(date_modified == "NA NA", "2000-01-01 00:00:00", date_modified)) %>%  
+  mutate(date_created = paste(substr(date_created,0,10), substr(date_created,12,19))) %>% 
+  mutate(date_created = ifelse(date_created == "NA NA", "2000-01-01 00:00:00", date_created))
 
-# Remove variáveis irrelevantes
-respostas <- respostas[-c(1:9)] 
-respostas <- respostas[-c(48:55)] 
+respostas <- respostas  %>%  mutate(date_modified = as.POSIXct(date_modified))
+respostas <- respostas  %>%  mutate(date_created = as.POSIXct(date_created))
+
+library(splitstackshape)
 
 # Cria tabelas auxiliares, cada uma contendo o id da pergunta a resposta e o cpf do deputado
 for(i in c(0:45)){
     nam <- paste("respostas_", i, sep = "")
     col <- paste("respostas/", i, sep = "")
-    r <- respostas %>% select(c("cpf", col)) %>% mutate(pergunta_id = i)
-    colnames(r) <- c("cpf", "resposta", "pergunta_id")
+    r <- respostas %>% mutate(createdAt = date_created, updatedAt = date_modified) %>% mutate(pergunta_id = i) %>% select(c("cpf", col, pergunta_id,"createdAt", "updatedAt")) 
+    colnames(r) <- c("cpf", "resposta", "pergunta_id", "createdAt", "updatedAt")
     assign(nam, r)
 }
 
@@ -34,6 +39,10 @@ for (i in datasets){
 
 # Substitui NA por 0 (não respondeu)
 respostas[is.na(respostas)] <- 0
+
+respostas$id <- seq.int(nrow(respostas))
+
+respostas  <- respostas %>% select( "id","cpf", "resposta", "pergunta_id", "createdAt", "updatedAt")
 
 ## 2. Criando o data frame de candidatos completo ----
 
@@ -96,7 +105,7 @@ candidatos_full <- candidatos_full %>% filter(!duplicated(cpf)) %>% select("esta
 "grau_instrucao",
 "genero",
 "eleito",
-"respondeu")
+"respondeu") 
 
 ## 3. Formatando data frame de perguntas ----
 
@@ -106,7 +115,7 @@ perguntas <- read_csv("./csv/perguntas.csv")
 # Adiciona campo tema_id de acordo com o tema de cada pergunta
 perguntas <- perguntas %>% mutate(tema_id = ifelse(tema =="Meio Ambiente",0, ifelse(tema == "Direitos Humanos", 1 , ifelse(tema == "Integridade e Transparência",2, ifelse(tema == "Nova Economia", 3 ,4)))))
 
-perguntas <- perguntas %>% select("texto", "id", "tema_id")
+perguntas <- perguntas %>% select("texto", "id", "tema_id") %>% mutate(createdAt = Sys.Date(), updatedAt = Sys.Date())
  
 ## 4. Criando data frame de temas ----
 
@@ -161,7 +170,7 @@ for(i in id_votacoes){
   ind <- ind + 1
 }
 
-# Faz o rbind de todas as tabelas auxiliares
+# Faz o rbind de todas as tabelas auxiliares%>% select(c("cpf", col, "createdAt", "updatedAt"))
 votacoes <- votacao_4968
 
 datasets <- datasets[-1]
