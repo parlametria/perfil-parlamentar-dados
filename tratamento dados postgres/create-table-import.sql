@@ -70,9 +70,12 @@ CREATE TABLE candidatos
 );
 
 
--- \copy respostas FROM '/home/luizacs/Documentos/respostas.csv' DELIMITER ',' CSV HEADER;
--- \copy candidatos FROM '/home/luizacs/Documentos/candidatos.csv' DELIMITER ',' CSV HEADER;
--- \copy votacoes FROM '/home/luizacs/Documentos/votacoes.csv' DELIMITER ',' CSV HEADER;
+\copy respostas FROM '/home/luizacs/Documentos/respostas.csv' DELIMITER ',' CSV HEADER;
+\copy candidatos FROM '/home/luizacs/Documentos/candidatos.csv' DELIMITER ',' CSV HEADER;
+\copy votacoes FROM '/home/luizacs/Documentos/votacoes.csv' DELIMITER ',' CSV HEADER;
+\copy temas FROM '/home/luizacs/Documentos/temas.csv' DELIMITER ',' CSV HEADER;
+\copy proposicoes FROM '/home/luizacs/Documentos/proposicoes.csv' DELIMITER ',' CSV HEADER;
+\copy perguntas FROM '/home/luizacs/Documentos/perguntas.csv' DELIMITER ',' CSV HEADER;
 
 ALTER TABLE perguntas 
 ADD CONSTRAINT tema_pergunta FOREIGN KEY (tema_id) REFERENCES temas (id);
