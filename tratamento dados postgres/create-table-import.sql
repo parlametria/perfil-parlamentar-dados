@@ -94,4 +94,3 @@ ADD CONSTRAINT perguntas_respostas FOREIGN KEY (pergunta_id) REFERENCES pergunta
 
 ALTER TABLE votacoes 
 ADD CONSTRAINT cpf_votacoes FOREIGN KEY (cpf) REFERENCES candidatos (cpf);
-

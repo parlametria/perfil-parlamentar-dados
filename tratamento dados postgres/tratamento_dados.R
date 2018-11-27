@@ -18,8 +18,8 @@ respostas <- respostas  %>%  mutate(date_created = as.POSIXct(date_created))
 for(i in c(0:45)){
     nam <- paste("respostas_", i, sep = "")
     col <- paste("respostas/", i, sep = "")
-    r <- respostas %>% mutate(createdAt = date_created, updatedAt = date_modified) %>% mutate(pergunta_id = i) %>% select(c("cpf", col, pergunta_id,"createdAt", "updatedAt")) 
-    colnames(r) <- c("cpf", "resposta", "pergunta_id", "createdAt", "updatedAt")
+    r <- respostas %>% mutate(createdAt = date_created, updatedAt = date_modified) %>% mutate(pergunta_id = i) %>% select(c("cpf", col, pergunta_id)) 
+    colnames(r) <- c("cpf", "resposta", "pergunta_id")
     assign(nam, r)
 }
 
@@ -41,7 +41,7 @@ respostas[is.na(respostas)] <- 0
 
 respostas$id <- seq.int(nrow(respostas))
 
-respostas  <- respostas %>% select( "id","cpf", "resposta", "pergunta_id", "createdAt", "updatedAt")
+respostas  <- respostas %>% select( "id", "resposta", "cpf","pergunta_id")
 
 ## 2. Criando o data frame de candidatos completo ----
 
@@ -105,8 +105,7 @@ candidatos_full <- candidatos_full %>% filter(!duplicated(cpf)) %>% select("esta
 "grau_instrucao",
 "genero",
 "eleito",
-"respondeu") %>% 
-mutate(createdAt = Sys.Date(), updatedAt = Sys.Date())
+"respondeu") 
 
 ## 3. Formatando data frame de perguntas ----
 
@@ -116,14 +115,13 @@ perguntas <- read_csv("./csv/perguntas.csv")
 # Adiciona campo tema_id de acordo com o tema de cada pergunta
 perguntas <- perguntas %>% mutate(tema_id = ifelse(tema =="Meio Ambiente",0, ifelse(tema == "Direitos Humanos", 1 , ifelse(tema == "Integridade e Transparência",2, ifelse(tema == "Nova Economia", 3 ,4)))))
 
-perguntas <- perguntas %>% select("texto", "id", "tema_id") %>% mutate(createdAt = Sys.Date(), updatedAt = Sys.Date())
+perguntas <- perguntas %>% select("texto", "id", "tema_id") 
  
 ## 4. Criando data frame de temas ----
 
 temas <- as.data.frame(cbind(c("Meio Ambiente", "Direitos Humanos", "Integridade e Transparência", "Nova Economia", "Transversal"), c(0,1,2,3,4)))
 colnames(temas) <- c("tema", "id")
-temas <- temas %>%
-  mutate(createdAt = Sys.Date(), updatedAt = Sys.Date())
+
 
 ## 5. Formatando data frame de proposições ----
 
@@ -134,8 +132,7 @@ proposicoes <- read_csv("./csv/proposicoes.csv")
 proposicoes <- proposicoes %>% mutate(tema_id = ifelse(tema =="Meio Ambiente",0, ifelse(tema == "Direitos Humanos", 1 , ifelse(tema == "Integridade e Transparência",2, ifelse(tema == "Nova Economia", 3 ,4)))))
 proposicoes <- proposicoes[-6]
 colnames(proposicoes) <- c("id", "projeto_lei", "id_votacao", "titulo", "descricao", "tema_id")
-proposicoes <- proposicoes %>% 
-  mutate(createdAt = Sys.Date(), updatedAt = Sys.Date())
+
 
 ## 6. Formatando data frame de proposições ----
 
@@ -187,12 +184,11 @@ for (i in datasets){
 
 not_there <- votacoes %>% anti_join(candidatos_full) %>% select(cpf) %>% unique()
 
-votacoes <- votacoes %>% anti_join(not_there) %>% 
-  mutate(createdAt = Sys.Date(), updatedAt = Sys.Date())
+votacoes <- votacoes %>% anti_join(not_there) 
 
 votacoes$id <- seq.int(nrow(votacoes))
 
-votacoes <- votacoes %>% select("id", "cpf", "resposta", "proposicao_id", "createdAt", "updatedAt")
+votacoes <- votacoes %>% select("id", "resposta", "cpf", "proposicao_id")
 
 ## 7. Salva dados ----
 
