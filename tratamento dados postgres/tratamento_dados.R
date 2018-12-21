@@ -65,7 +65,7 @@ duplicados <- respostas_raw %>% filter(cpf %in% duplicated)
 
 # Ordena duplicados de maneira decrescente por cpf e data de modificação
 duplicados <- duplicados[
-  duplicados(duplicados, order(cpf, date_modified, decreasing = T )),
+  with(duplicados, order(cpf, date_modified, decreasing = T )),
   ]
 
 # Cria data frame com cpfs únicos
@@ -113,13 +113,13 @@ candidatos_full <- candidatos_full %>% filter(!duplicated(cpf)) %>% select("esta
 perguntas <- read_csv("./csv/perguntas.csv")
 
 # Adiciona campo tema_id de acordo com o tema de cada pergunta
-perguntas <- perguntas %>% mutate(tema_id = ifelse(tema =="Meio Ambiente",0, ifelse(tema == "Direitos Humanos", 1 , ifelse(tema == "Integridade e Transparência",2, ifelse(tema == "Nova Economia", 3 ,4)))))
+perguntas <- perguntas %>% mutate(tema_id = ifelse(tema =="Meio Ambiente",0, ifelse(tema == "Direitos Humanos", 1 , ifelse(tema == "Integridade e Transparência",2, ifelse(tema == "Nova Economia", 3 ,ifelse(tema == "Transversal",4,5))))))
 
 perguntas <- perguntas %>% select("texto", "id", "tema_id") 
  
 ## 4. Criando data frame de temas ----
 
-temas <- as.data.frame(cbind(c("Meio Ambiente", "Direitos Humanos", "Integridade e Transparência", "Nova Economia", "Transversal"), c(0,1,2,3,4)))
+temas <- as.data.frame(cbind(c("Meio Ambiente", "Direitos Humanos", "Integridade e Transparência", "Nova Economia", "Transversal", "Eleitoral"), c(0,1,2,3,4,5)))
 colnames(temas) <- c("tema", "id")
 
 
@@ -129,10 +129,10 @@ colnames(temas) <- c("tema", "id")
 proposicoes <- read_csv("./csv/proposicoes.csv")
 
 # Adiciona campo tema_id de acordo com o tema de cada pergunta
-proposicoes <- proposicoes %>% mutate(tema_id = ifelse(tema =="Meio Ambiente",0, ifelse(tema == "Direitos Humanos", 1 , ifelse(tema == "Integridade e Transparência",2, ifelse(tema == "Nova Economia", 3 ,4)))))
-proposicoes <- proposicoes[-6]
+proposicoes <- proposicoes %>% mutate(tema_id = ifelse(tema =="Meio Ambiente",0, ifelse(tema == "Direitos Humanos", 1 , ifelse(tema == "Integridade e Transparência",2, ifelse(tema == "Nova Economia", 3 ,ifelse(tema == "Transversal",4,5))))))
+proposicoes <- proposicoes[-5]
 colnames(proposicoes) <- c("id", "projeto_lei", "id_votacao", "titulo", "descricao", "tema_id")
-
+proposicoes <- distinct(proposicoes,id_votacao, .keep_all= TRUE)
 
 ## 6. Formatando data frame de proposições ----
 
@@ -140,23 +140,41 @@ colnames(proposicoes) <- c("id", "projeto_lei", "id_votacao", "titulo", "descric
 votacoes <- read_csv("./csv/votacoes.csv")
 
 # array auxiliar com ids das votações
-id_votacoes <- c(
-  "6259",
-  "4968",
-  "6517",
-  "7252",
-  "8175",
-  "7317",
-  "6531",
-  "7927",
-  "7291",
-  "6608",
-  "6095",
-  "8309",
-  "7566",
-  "7546",
-  "8334",
-  "99999")
+id_votacoes <- unique(c("8175",
+                        "6517",
+                        "7252",
+                        "6531",
+                        "7317",
+                        "6608",
+                        "7291",
+                        "7927",
+                        "7546",
+                        "7566",
+                        "4968",
+                        "6259",
+                        "8334",
+                        "6095",
+                        "8309",
+                        "99999",
+                        "6675",
+                        "6204",
+                        "7431",
+                        "7492",
+                        "6286",
+                        "6358",
+                        "6370",
+                        "6359",
+                        "6354",
+                        "6371",
+                        "6352",
+                        "6369",
+                        "6377",
+                        "6378",
+                        "6259",
+                        "6310",
+                        "6575",
+                        '6502'
+))
 
 datasets <- c()
 
