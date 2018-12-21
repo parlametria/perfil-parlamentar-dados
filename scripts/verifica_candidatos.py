@@ -31,7 +31,6 @@ def request_page(page_url, data):
     request = s.get(page_url, params=payload)
 
     temp = json.loads(request.text)        
-    
     for dados in temp["data"]:
       candidato = {}
       for (key, value) in dados.items():        
