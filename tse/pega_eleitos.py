@@ -80,3 +80,6 @@ def formata_eleitos():
     data = data[:-2]
     data += "]"
     escreve_dados("eleitos1.json",data)
+
+busca_candidatos()
+formata_eleitos()
