@@ -26,7 +26,7 @@ enumera_votacoes <- Vectorize(function(voto) {
 
 # Diretório de arquivos
 INFO_VOTACOES <- "./dados congresso/TabelaAuxVotacoes.csv"
-INFO_CANDIDATOS <- "./dados congresso/candidatos_2010_14_18.csv"
+INFO_CANDIDATOS <- "./candidatos/output.csv"
 PL6299_2002_DIRETORIO <- "./dados congresso/pl6299_tratada.csv"
 
 # Remove stopwords dos nomes dos candidatos/deputados
@@ -35,19 +35,19 @@ stopwords_regex <- paste0('\\b', stopwords_regex, '\\b')
 
 # Import dos dados
 votacoes <- read_csv(INFO_VOTACOES)
-candidatos_2010a2018 <- read_csv(INFO_CANDIDATOS)
+candidatos_2010a2018 <- read.csv(INFO_CANDIDATOS)
 pl6299_2002 <- read_csv(PL6299_2002_DIRETORIO) %>%
-  select(id_votacao, voto, cpf)
+  select(id_votacao, voto, cpf_candidato)
 
 # Tratamento de string - Remove acentuação, apóstrofes, deixa todos maiúsculos e remove
 # stopwords
 info_util_candidatos <- candidatos_2010a2018 %>%
-  select(name, cpf) %>% 
-  mutate(name = toupper(iconv(name, to="ASCII//TRANSLIT"))) %>%
+  select(nome_candidato, cpf_candidato) %>% 
+  mutate(nome_candidato = toupper(iconv(nome_candidato, to="ASCII//TRANSLIT"))) %>%
   unique() %>%
-  mutate(name = str_replace_all(name, stopwords_regex, "")) %>%
-  mutate(name = str_replace_all(name, "  "," ")) %>%
-  mutate(name = str_replace_all(name, "'","  "))
+  mutate(nome_candidato = str_replace_all(nome_candidato, stopwords_regex, "")) %>%
+  mutate(nome_candidato = str_replace_all(nome_candidato, "  "," ")) %>%
+  mutate(nome_candidato = str_replace_all(nome_candidato, "'","  "))
 
 ids_votacoes <- votacoes$id_votacao
 deputados20142018_id <- fetch_deputado(idLegislatura = 55, itens = -1)$id
@@ -74,26 +74,38 @@ ids2 <- ids_votacoes[16:34]
     select(-nomeCivil.x, -nomeCivil.y)
 
 votos_tratados <- votos %>%
-  left_join(info_util_candidatos, by=c("nomeCivil"="name")) %>%
+  left_join(info_util_candidatos, by=c("nomeCivil"="nome_candidato")) %>%
   # Trata caso especial de Lauriete (PSC/ES) que possui 3 nomes diferentes
-  mutate(cpf = ifelse(parlamentar.nome == "LAURIETE", "00974976733", cpf))
+  mutate(cpf_candidato = ifelse(parlamentar.nome == "LAURIETE", "00974976733", cpf_candidato))
 
 # CPFs dos candidatos a reeleição na plataforma voz ativa
-cpfs_voz <- read_csv("~/Documentos/vozativa-monkey-ui/tse/dados tratados/candidatos.csv") %>% 
-  filter(reeleicao == 1) %>% select(cpf) %>% unique()
+cpfs_voz <- candidatos_2010a2018 %>%
+  mutate(situacao_reeleicao = if_else(situacao_reeleicao == 'S', 1, 0)) %>% 
+  filter(situacao_reeleicao == 1) %>% select(cpf_candidato) %>% unique()
 
 # CPFs dos deputados que votaram na câmara 
-cpf_completos <- votos_tratados %>% select(cpf) %>%  unique()
+cpf_completos <- votos_tratados %>% select(cpf_candidato) %>%  unique()
 
 # CPFs dos deputados que estão no voz ativa e não estão na câmara
-faltantes <- cpfs_voz[!(cpfs_voz$cpf %in% cpf_completos$cpf),] %>% mutate(id_votacao = 4968, voto = "-")
+faltantes <- cpfs_voz[!(cpfs_voz$cpf_candidato %in% cpf_completos$cpf_candidato),] %>% 
+  as.character()
+faltantes <-
+  faltantes %>% 
+  as.data.frame() %>% 
+  mutate(id_votacao = 4968, voto = "-") %>% 
+  rename(cpf_candidato = ".")
 
 
 # Fazer com que cada deputado tenha todas as votações e tratar os casos como ele não votou
-votos_completos <- votos_tratados %>% select(-parlamentar.nome, -parlamentar.id,-nomeCivil) %>%
+votos_completos$cpf_candidato = as.character(votos_completos$cpf_candidato)
+pl6299_2002$cpf_candidato = as.character(pl6299_2002$cpf_candidato)
+
+votos_completos <- 
+  votos_tratados %>% 
+  select(-parlamentar.nome, -parlamentar.id,-nomeCivil) %>%
   bind_rows(pl6299_2002) %>%
   bind_rows(faltantes) %>% 
-  complete(id_votacao, nesting(cpf)) %>%
+  complete(id_votacao, nesting(cpf_candidato)) %>%
   mutate(voto = enumera_votacoes(voto)) %>% 
   unique()
 
