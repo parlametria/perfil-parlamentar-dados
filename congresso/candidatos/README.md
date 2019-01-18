@@ -30,13 +30,13 @@ Você deve observar ao final da execução que houve a criação de diretórios 
 ### 2. Execute o processamento dos dados e exporte
 
 ```
-Rscript export-data-candidatos.R anos.csv cargos.csv output.csv
+Rscript export-data-candidatos.R -a anos.csv -c cargos.csv -o output.csv
 ```
 
 1. anos.csv : um csv com apenas uma coluna composta pelos anos para recuperação dos dados das eleições. O nome da coluna deve ser ano
 2. cargos.csv : um csv com apenas uma coluna composta pelos cargos para recuperação dos dados das eleições. Os candidatos serão filtrados considerando esta lista de cargos. O nome da coluna deve ser cargo
 
-Obs: Os argumentos precisam estar na ordem. Caso você opte por não passar os argumentos, valores default serão utilizados. Estes valores consideram os anos (2010, 2014, 2018) e o cargo 6 (Deputado Federal).
+Obs: Execute ```Rscript export-data-candidatos.R -h``` para exibir informações sobre a execução do arquivo, incluindo os valores default. Estes valores consideram os anos (2010, 2014, 2018) e o cargo 6 (Deputado Federal).
 
 #### Lista de Cargos
 

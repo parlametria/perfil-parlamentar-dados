@@ -39,7 +39,7 @@ import_candidatos_uf <- function(uf, folder_path, cargos, ano) {
 join_data_ufs <- function(ano, ufs, cargos, folder_path) {
   library(tidyverse)
   
-  candidatos <- tibble(uf = ufs) %>%
+  candidatos <- tibble::tibble(uf = ufs) %>%
     mutate(dados = purrr::map(
       uf,
       import_candidatos_uf,
@@ -66,7 +66,7 @@ processa_dados_candidatos <- function(anos, cargos){
   
   ufs <- c("AC" , "AL" , "AM" , "AP" , "BA" , "BR", "CE", "DF", "ES" , "GO" , "MA" , "MG" , "MS" , "MT" , "PA" , "PB" , "PE" , "PI" , "PR" , "RJ" , "RN" , "RO" , "RR" , "RS" , "SC" , "SE" , "SP" , "TO")
 
-  candidatos <- tibble(ano = anos) %>%
+  candidatos <- tibble::tibble(ano = anos) %>%
     mutate(dados = purrr::map(
       ano,
       join_data_ufs,
