@@ -57,3 +57,5 @@ O arquivo com as informações dos candidatos estará no arquivo definido como p
 
 ### Informações importantes
 O script de processamento dos dados funciona, por enquanto, apenas para os anos de 2010, 2014 e 2016.
+
+**Caso seja necessário adicionar mais anos:** será preciso editar o arquivo `get-data-candidatos-tse.sh` para incluir os novos anos. Caso estes anos se refiram a arquivos que possuem extensão .txt quando extraídos, será preciso também incluir o ano no arquivo `clean-data-candidatos-tse.sh` para que a limpeza seja realizada. Também deverá ser criada uma função (no arquivo `import-data-candidatos.R`) que importe os dados conforme o modelo do TSE adotado para aquele ano.
