@@ -81,7 +81,7 @@ import_candidatos_modelo2018 <- function(data_path) {
   
   candidatos_2018 <- candidatos_2018 %>% 
     mutate(siglaLegenda = "#NE#") %>%
-    select("ano_eleicao", "cpf_candidato", "cod_cargo", "desc_cargo", "sequencial_candidato", "nome_urna_candidato", "nome_candidato")
+    select("ano_eleicao", "cpf_candidato", "cod_cargo", "desc_cargo", "sequencial_candidato", "situacao_reeleicao", "nome_urna_candidato", "nome_candidato")
   
   return(candidatos_2018)
 }
