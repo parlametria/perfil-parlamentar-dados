@@ -24,14 +24,28 @@ enumera_votacoes <- Vectorize(function(voto) {
   )
 })
 
+processa_nome_parlamentar <- function(df){
+  # Remove stopwords dos nomes dos candidatos/deputados
+  stopwords_regex <- paste(toupper(stopwords('pt')), collapse = '\\b|\\b')
+  stopwords_regex <- paste0('\\b', stopwords_regex, '\\b')
+  
+  df %>%
+    select(nome_candidato, cpf_candidato) %>% 
+    unique() %>%
+    mutate(nome_candidato = toupper(iconv(nome_candidato, to="ASCII//TRANSLIT"))) %>%
+    mutate(nome_candidato = str_replace_all(nome_candidato, stopwords_regex, "")) %>%
+    mutate(nome_candidato = str_replace_all(nome_candidato, "  "," ")) %>%
+    mutate(nome_candidato = str_replace_all(nome_candidato, "'","")) %>% 
+    mutate(nome_candidato = gsub("(^[[:space:]]+|[[:space:]]+$)", "", nome_candidato)) %>% 
+    group_by(cpf_candidato) %>% 
+    distinct()
+  
+}
+
 # Diretório de arquivos
 INFO_VOTACOES <- "./dados congresso/TabelaAuxVotacoes.csv"
 INFO_CANDIDATOS <- "./candidatos/output.csv"
 PL6299_2002_DIRETORIO <- "./dados congresso/pl6299_tratada.csv"
-
-# Remove stopwords dos nomes dos candidatos/deputados
-stopwords_regex <- paste(toupper(stopwords('pt')), collapse = '\\b|\\b')
-stopwords_regex <- paste0('\\b', stopwords_regex, '\\b')
 
 # Import dos dados
 votacoes <- read_csv(INFO_VOTACOES)
@@ -41,13 +55,7 @@ pl6299_2002 <- read_csv(PL6299_2002_DIRETORIO) %>%
 
 # Tratamento de string - Remove acentuação, apóstrofes, deixa todos maiúsculos e remove
 # stopwords
-info_util_candidatos <- candidatos_2010a2018 %>%
-  select(nome_candidato, cpf_candidato) %>% 
-  mutate(nome_candidato = toupper(iconv(nome_candidato, to="ASCII//TRANSLIT"))) %>%
-  unique() %>%
-  mutate(nome_candidato = str_replace_all(nome_candidato, stopwords_regex, "")) %>%
-  mutate(nome_candidato = str_replace_all(nome_candidato, "  "," ")) %>%
-  mutate(nome_candidato = str_replace_all(nome_candidato, "'","  "))
+info_util_candidatos <- processa_nome_parlamentar(candidatos_2010a2018)
 
 ids_votacoes <- votacoes$id_votacao
 deputados20142018_id <- fetch_deputado(idLegislatura = 55, itens = -1)$id
@@ -62,16 +70,18 @@ info_pessoais_20142018 <- fetch_deputado(deputados20142018_id) %>%
 ids <- ids_votacoes[1:15]
 ids2 <- ids_votacoes[16:34]
 
-  votos <- fetch_votos(ids) %>% dplyr::bind_rows(fetch_votos(ids2)) %>%
-    select(id_votacao, parlamentar.nome, parlamentar.id, voto) %>% 
-    left_join(info_pessoais_20142018, by= c("parlamentar.id" = "id")) %>%
-    left_join(info_pessoais_20102014, by= c("parlamentar.id" = "id")) %>%
-    mutate(nomeCivil = ifelse(is.na(nomeCivil.x), nomeCivil.y, nomeCivil.x)) %>%
-    mutate(nomeCivil = toupper(iconv(nomeCivil, to="ASCII//TRANSLIT"))) %>%
-    mutate(nomeCivil = str_replace_all(nomeCivil, stopwords_regex, "")) %>%
-    mutate(nomeCivil = str_replace_all(nomeCivil, "  "," ")) %>%
-    mutate(nomeCivil = str_replace_all(nomeCivil, "'","  ")) %>%
-    select(-nomeCivil.x, -nomeCivil.y)
+votos <- fetch_votos(ids) %>% dplyr::bind_rows(fetch_votos(ids2)) %>%
+  select(id_votacao, parlamentar.nome, parlamentar.id, voto) %>% 
+  left_join(info_pessoais_20142018, by= c("parlamentar.id" = "id")) %>%
+  left_join(info_pessoais_20102014, by= c("parlamentar.id" = "id")) %>%
+  mutate(nome_candidato = ifelse(is.na(nomeCivil.x), nomeCivil.y, nomeCivil.x)) %>%
+  rename(nome_candidato = nomeCivil) %>% 
+  mutate(nomeCivil = toupper(iconv(nomeCivil, to="ASCII//TRANSLIT"))) %>%
+  mutate(nomeCivil = str_replace_all(nomeCivil, stopwords_regex, "")) %>%
+  mutate(nomeCivil = str_replace_all(nomeCivil, "  "," ")) %>%
+  mutate(nomeCivil = str_replace_all(nomeCivil, "'","  ")) %>%
+  mutate(nomeCivil = gsub("(^[[:space:]]+|[[:space:]]+$)", "", nomeCivil)) %>% 
+  select(-nomeCivil.x, -nomeCivil.y)
 
 votos_tratados <- votos %>%
   left_join(info_util_candidatos, by=c("nomeCivil"="nome_candidato")) %>%
@@ -93,12 +103,14 @@ faltantes <-
   faltantes %>% 
   as.data.frame() %>% 
   mutate(id_votacao = 4968, voto = "-") %>% 
-  rename(cpf_candidato = ".")
+  rename(cpf_candidato = ".") %>% 
+  select(id_votacao, voto, cpf_candidato)
 
 
 # Fazer com que cada deputado tenha todas as votações e tratar os casos como ele não votou
-votos_completos$cpf_candidato = as.character(votos_completos$cpf_candidato)
+faltantes$cpf_candidato = as.character(faltantes$cpf_candidato)
 pl6299_2002$cpf_candidato = as.character(pl6299_2002$cpf_candidato)
+votos_tratados$cpf_candidato = as.character(votos_tratados$cpf_candidato)
 
 votos_completos <- 
   votos_tratados %>% 
@@ -106,9 +118,9 @@ votos_completos <-
   bind_rows(pl6299_2002) %>%
   bind_rows(faltantes) %>% 
   complete(id_votacao, nesting(cpf_candidato)) %>%
-  mutate(voto = enumera_votacoes(voto)) %>% 
+  mutate(voto = enumera_votacoes(voto),
+         cpf_candidato = as.numeric(cpf_candidato)) %>% 
   unique()
-
 
 votos_completos %>%
   write.csv("./dados congresso/votacoes.csv", row.names = FALSE)
