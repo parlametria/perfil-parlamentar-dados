@@ -51,11 +51,12 @@ PL6299_2002_DIRETORIO <- "./dados congresso/pl6299_tratada.csv"
 votacoes <- read_csv(INFO_VOTACOES)
 candidatos_2010a2018 <- read.csv(INFO_CANDIDATOS)
 pl6299_2002 <- read_csv(PL6299_2002_DIRETORIO) %>%
-  select(id_votacao, voto, cpf_candidato)
+  select(id_votacao, voto, cpf)
 
 # Tratamento de string - Remove acentuação, apóstrofes, deixa todos maiúsculos e remove
 # stopwords
-info_util_candidatos <- processa_nome_parlamentar(candidatos_2010a2018)
+info_util_candidatos <- processa_nome_parlamentar(candidatos_2010a2018) %>% 
+  rename(cpf = cpf_candidato)
 
 ids_votacoes <- votacoes$id_votacao
 deputados20142018_id <- fetch_deputado(idLegislatura = 55, itens = -1)$id
@@ -84,42 +85,42 @@ votos <- fetch_votos(ids) %>% dplyr::bind_rows(fetch_votos(ids2)) %>%
   select(-nomeCivil.x, -nomeCivil.y)
 
 votos_tratados <- votos %>%
-  left_join(info_util_candidatos, by=c("nomeCivil"="nome_candidato")) %>%
+  left_join(info_util_candidatos, by=c("nome_candidato")) %>%
   # Trata caso especial de Lauriete (PSC/ES) que possui 3 nomes diferentes
-  mutate(cpf_candidato = ifelse(parlamentar.nome == "LAURIETE", "00974976733", cpf_candidato))
+  mutate(cpf = ifelse(parlamentar.nome == "LAURIETE", "00974976733", cpf))
 
 # CPFs dos candidatos a reeleição na plataforma voz ativa
 cpfs_voz <- candidatos_2010a2018 %>%
   mutate(situacao_reeleicao = if_else(situacao_reeleicao == 'S', 1, 0)) %>% 
-  filter(situacao_reeleicao == 1) %>% select(cpf_candidato) %>% unique()
+  filter(situacao_reeleicao == 1) %>% select(cpf = cpf_candidato) %>% unique()
 
 # CPFs dos deputados que votaram na câmara 
-cpf_completos <- votos_tratados %>% select(cpf_candidato) %>%  unique()
+cpf_completos <- votos_tratados %>% select(cpf) %>%  unique()
 
 # CPFs dos deputados que estão no voz ativa e não estão na câmara
-faltantes <- cpfs_voz[!(cpfs_voz$cpf_candidato %in% cpf_completos$cpf_candidato),] %>% 
+faltantes <- cpfs_voz[!(cpfs_voz$cpf %in% cpf_completos$cpf),] %>% 
   as.character()
 faltantes <-
   faltantes %>% 
   as.data.frame() %>% 
   mutate(id_votacao = 4968, voto = "-") %>% 
-  rename(cpf_candidato = ".") %>% 
-  select(id_votacao, voto, cpf_candidato)
+  rename(cpf = ".") %>% 
+  select(id_votacao, voto, cpf)
 
 
 # Fazer com que cada deputado tenha todas as votações e tratar os casos como ele não votou
-faltantes$cpf_candidato = as.character(faltantes$cpf_candidato)
-pl6299_2002$cpf_candidato = as.character(pl6299_2002$cpf_candidato)
-votos_tratados$cpf_candidato = as.character(votos_tratados$cpf_candidato)
+faltantes$cpf = as.character(faltantes$cpf)
+pl6299_2002$cpf = as.character(pl6299_2002$cpf)
+votos_tratados$cpf = as.character(votos_tratados$cpf)
 
 votos_completos <- 
   votos_tratados %>% 
-  select(-parlamentar.nome, -parlamentar.id,-nomeCivil) %>%
+  select(-parlamentar.nome, -parlamentar.id,-nome_candidato) %>%
   bind_rows(pl6299_2002) %>%
   bind_rows(faltantes) %>% 
-  complete(id_votacao, nesting(cpf_candidato)) %>%
+  complete(id_votacao, nesting(cpf)) %>%
   mutate(voto = enumera_votacoes(voto),
-         cpf_candidato = as.numeric(cpf_candidato)) %>% 
+         cpf = as.numeric(cpf)) %>% 
   unique()
 
 votos_completos %>%
