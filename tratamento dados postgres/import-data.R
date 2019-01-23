@@ -41,5 +41,5 @@ write.table(x = import_tables,
             quote = FALSE, 
             row.names = FALSE)
 
-message(paste0("Arquivo", output ," criado com o código para importação das tabelas"))
+message(paste0("Arquivo ", output ," criado com o código para importação das tabelas"))
 message(paste0("Você pode importar os dados para o Banco Postgres usando: psql --username <seu-user> --dbname <seu-bd> < ", output))
