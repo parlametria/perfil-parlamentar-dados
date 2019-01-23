@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS "candidatos" (
     "email" VARCHAR(255), 
     "nome_social" VARCHAR(255), 
     "nome_urna" VARCHAR(255), 
-    "reeleicao" INTEGER, 
+    "reeleicao" VARCHAR(255), 
     "ocupacao" VARCHAR(255), 
     "nome_exibicao" VARCHAR(255), 
     "raca" VARCHAR(255), 
