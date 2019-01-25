@@ -1,8 +1,71 @@
-# Atualizar dados da pasta csv
-1. Transforme os jsons (candidatos, perguntas, proposições e votações) das pastas de dados e da pasta de congresso em csv
-2. Utilize o script de tratamento de dados tratamento_dados.R para modificar as tabelas para inserção das mesmas no banco  
+# Sobre os Dados
+- raw-data: contém os csvs que foram obtidos através dos jsons de Candidatos, perguntas, proposições e votações.
+- data: contém os csvs que irão ser carregados no banco de dados. Estes csvs são resultado do tratamento utilizando o script `tratamento_dados.R`, que possui como entrada os csvs disponíveis no diretório raw-data.
 
-## Preparando banco local 
+# Como iniciar o banco de dados local
+
+## Usando docker + Postgres
+
+Com o [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce) e o [docker-compose](https://docs.docker.com/compose/install/) instalados na sua máquina execute (no mesmo diretório deste readme):
+
+```
+docker-compose up
+```
+
+Crie as tabelas
+```
+docker-compose exec db psql -U postgres -d vozativa -1 -f /scripts/create-table-bd-vozativa.sql
+```
+
+Importe os dados
+```
+docker-compose exec db psql -U postgres -d vozativa -1 -f /scripts/import-csv-bd-vozativa.sql
+```
+
+Você será capaz de acessar o banco via psql através do comando:
+```
+psql -h localhost -U postgres --dbname vozativa
+```
+
+A senha padrão local é: `secret`
+
+### Como mudar a senha
+
+Desfaça o que foi feito no tópico anterior
+```
+docker-compose down --volumes
+```
+
+crie um arquivo .env no mesmo diretório do arquivo `docker-compose.yml` com o seguinte conteúdo
+
+```
+POSTGRES_PASSWORD=suasenhasupersecreta
+```
+
+Substitua suasenhasupersecreta por uma senha de sua preferência.
+
+Agora volte para o tópico `Usando docker + Postgres` e repita os procedimentos e tudo deverá funcionar.
+
+#### Comandos úteis
+
+Para visualizar que containers estão executando
+```
+docker ps
+```
+
+Para parar a execução de um container
+```
+docker kill <id>
+```
+
+Para forçar regerar a imagem
+```
+docker-compose up --build
+```
+
+Se você não quiser usar o docker, a alternativa é preparar o banco local como mostrado a seguir.
+
+## Alternativa sem Docker - instalando Postgres localmente
 
 1. Instale o [PostgreSQL](https://www.postgresql.org/download/).
 2. Caso for da sua preferência crie um usuário e um database. Você precisará dessas informações. Mais pode ser lido [aqui](https://www.digitalocean.com/community/tutorials/como-instalar-e-utilizar-o-postgresql-no-ubuntu-16-04-pt).
@@ -42,6 +105,8 @@ psql --username <seu-user --dbname <seu-database> < import-csv-bd-vozativa.sql
 ```
 
 Obs: Substitua import-csv-bd-vozativa.sql pelo nome do arquivo gerado pelo Rscript executado anteriormente caso você tenha alterado.
+
+# Deploy no Heroku [deprecated]
 
 ## Criar dump local
 

@@ -9,12 +9,12 @@ message("Use --help para mais informações\n")
 option_list <- list(
   make_option(c("-f", "--folder"), 
               type="character", 
-              default="vozativa", 
+              default="/data/", 
               help="pasta contendo os dados [default= %default]", 
               metavar="character"),
   make_option(c("-o", "--output"), 
               type="character", 
-              default="import-csv-bd-vozativa.sql", 
+              default="./scripts/import-csv-bd-vozativa.sql", 
               help="pasta contendo os dados [default= %default]", 
               metavar="character")
 )
@@ -42,4 +42,3 @@ write.table(x = import_tables,
             row.names = FALSE)
 
 message(paste0("Arquivo ", output ," criado com o código para importação das tabelas"))
-message(paste0("Você pode importar os dados para o Banco Postgres usando: psql --username <seu-user> --dbname <seu-bd> < ", output))
