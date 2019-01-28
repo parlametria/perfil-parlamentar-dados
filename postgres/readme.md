@@ -1,6 +1,6 @@
 # Sobre os Dados
 - raw-data: contém os csvs que foram obtidos através dos jsons de Candidatos, perguntas, proposições e votações.
-- data: contém os csvs que irão ser carregados no banco de dados. Estes csvs são resultado do tratamento utilizando o script `tratamento_dados.R`, que possui como entrada os csvs disponíveis no diretório raw-data.
+- data: contém os csvs que irão ser carregados no banco de dados. Estes csvs são resultado do tratamento utilizando o script `process-data-lib.R`, que possui como entrada os csvs disponíveis no diretório raw-data. Mais detalhes sobre como gerar os dados do diretório `data` no final deste README.
 
 # Como iniciar o banco de dados local
 
@@ -106,6 +106,16 @@ psql --username <seu-user --dbname <seu-database> < import-csv-bd-vozativa.sql
 
 Obs: Substitua import-csv-bd-vozativa.sql pelo nome do arquivo gerado pelo Rscript executado anteriormente caso você tenha alterado.
 
+# Como realizar o tratamentos dos dados e atualizá-los
+
+Como falado no início deste README, os dados presentes no diretório `data` são os que contém a versão mais atual das tabelas que devem ser criadas no banco. Para atualizá-los é preciso executar as funções que transformam e tratam os "dados brutos" contidos em `raw-data`. Portanto, se os dados em `raw-data` mudarem então faz-se necessário que a atualização dos dados em `data` também deverá ocorrer. Para isto, siga os passos.
+
+Todas as funções que tratam os dados de forma individual estão presentes no arquivo `process-data-lib.R`. Para executá-las de uma só vez utilize o script helper criado para este fim, fazendo:
+
+```
+Rscript trata-dados-bd.R
+```
+
 # Deploy no Heroku [deprecated]
 
 ## Criar dump local
@@ -120,4 +130,3 @@ aws s3 presign s3://fotoscandidatos2018/voz-ativa.dump
 ## Upload no heroku
 
 heroku pg:backups:restore 'aws-link' DATABASE_URL --app voz-ativa
-
