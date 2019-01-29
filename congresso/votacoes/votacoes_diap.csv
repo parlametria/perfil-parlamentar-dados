@@ -75,8 +75,8 @@
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/6259",6259,"SUBEMENDA SUBSTITUTIVA DA CDEIC","Nominal Eletrônica",320,135,2
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/7431",7431,"SUBSTITUTIVO DO SENADO FEDERAL","Nominal Eletrônica",232,188,8
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/6204",6204,"SUBEMENDA SUBSTITUTIVA","Nominal Eletrônica",324,137,2
-"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6230&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=77&indTipoSessao=O&tipo=uf",NA,NA,NA,NA,NA,NA
-"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7197&numLegislatura=55&codCasa=1&numSessaoLegislativa=2&indTipoSessaoLegislativa=O&numSessao=243&indTipoSessao=E&tipo=uf",NA,NA,NA,NA,NA,NA
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6230&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=77&indTipoSessao=O&tipo=uf",6230,"EMENDA AGLUTINATIVA Nº 15","Nominal Eletrônica",230,203,4
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7197&numLegislatura=55&codCasa=1&numSessaoLegislativa=2&indTipoSessaoLegislativa=O&numSessao=243&indTipoSessao=E&tipo=uf",7197,"PROJETO DE LEI","Nominal Eletrônica",292,101,1
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/7279",7279,"DTQ. 8 - PPS - EMENDA Nº 4","Nominal Eletrônica",107,247,NA
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/7297",7297,"DTQ 6: PT: DO §4º DO ART. 33 DO DECRETO-LEI Nº 2848/40, NA REDAÇÃO DADA PELO....","Nominal Eletrônica",152,210,1
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/7298",7298,"DTQ 16: PT: EMENDA Nº 11","Nominal Eletrônica",301,107,NA
@@ -100,16 +100,16 @@
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/6117",6117,"DVS - BLOCO PRB - INC. VI, §4º, ART 18 DA SUBEMENDA SUBST. DE PLENÁRIO","Nominal Eletrônica",188,174,6
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/7902",7902,"DTQ 5: PHS - ART. Nº 16-C, CONSTANTE DO ART. 1º DO PL","Nominal Eletrônica",223,209,3
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/6143",6143,"DVS - PSB - § 8º DO ART. 2º","Nominal Eletrônica",275,102,NA
-"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6145&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=34&indTipoSessao=O&tipo=uf",NA,NA,NA,NA,NA,NA
-"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6146&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=34&indTipoSessao=O&tipo=uf",NA,NA,NA,NA,NA,NA
-"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6147&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=34&indTipoSessao=O&tipo=uf",NA,NA,NA,NA,NA,NA
-"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6148&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=34&indTipoSessao=O&tipo=uf",NA,NA,NA,NA,NA,NA
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6145&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=34&indTipoSessao=O&tipo=uf",6145,"DVS PSOL - EXP. ""NO VALOR DE 1 (UM) SAL. MÍNIMO)...","Nominal Eletrônica",254,160,NA
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6146&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=34&indTipoSessao=O&tipo=uf",6146,"DVS - PSDB - INCISO II DO ART. 34","Nominal Eletrônica",204,207,NA
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6147&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=34&indTipoSessao=O&tipo=uf",6147,"DVS - PSDB - EMENDA Nº 25","Nominal Eletrônica",204,169,NA
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6148&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=34&indTipoSessao=O&tipo=uf",6148,"DVS - DEM - ART 32 DA EMENDA SUBSTITUTIVA GLOBAL Nº 38","Nominal Eletrônica",239,192,NA
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/7473",7473,"SUBEMENDA SUBSTITUTIVA DA CFT","Nominal Eletrônica",301,127,7
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/7479",7479,"DTQ 21: PT - INC. I, DO §1º, DO ART. 2º DO SUBSTITUTIVO","Nominal Eletrônica",285,143,3
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/7480",7480,"DTQ 24:  PDT - EMENDA Nº 24","Nominal Eletrônica",164,244,1
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/7481",7481,"DTQ 33:  SD - INCISO II, DO §1º DO ART. 2º DO SUBSTITUTIVO","Nominal Eletrônica",241,185,3
 "https://dadosabertos.camara.leg.br/api/v2/votacoes/7527",7527,"DTQ 12: PT - ART. 8º DO SUBSTITUTIVO","Nominal Eletrônica",314,100,3
 "http://www.camara.leg.br/internet/votacao/PARECER%20-%20DA%20COMISS%C3%83O%20ESPECIAL%20DCR%201-2015.pdf",NA,NA,NA,NA,NA,NA
-"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7158&numLegislatura=55&codCasa=1&numSessaoLegislativa=2&indTipoSessaoLegislativa=O&numSessao=219&indTipoSessao=E&tipo=uf",NA,NA,NA,NA,NA,NA
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7158&numLegislatura=55&codCasa=1&numSessaoLegislativa=2&indTipoSessaoLegislativa=O&numSessao=219&indTipoSessao=E&tipo=uf",7158,"PARECER DO CONSELHO DE ÉTICA E DECORO PARLAMENTAR","Nominal Eletrônica",450,10,9
 "http://www.camara.leg.br/internet/votacao/Resultado_Votacao_SIP_1-2017_UF.pdf",NA,NA,NA,NA,NA,NA
 "http://www.camara.leg.br/internet/votacao/PARECER%20DA%20CCJC%20-%20SIP%202-2017%20-%20%20UF.pdf",NA,NA,NA,NA,NA,NA

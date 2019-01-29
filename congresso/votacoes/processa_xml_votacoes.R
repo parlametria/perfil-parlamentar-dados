@@ -2,6 +2,7 @@ library(XML)
 library(tidyverse)
 library(jsonlite)
 library(RCurl)
+library(rvest)
 
 #' @title Pega as votações da Câmara levantadas pela DIAP
 #' @description Raspa as votações da Câmara levantadas pela DIAP, fornecidas em um pdf e convertido em xml, 
@@ -55,7 +56,7 @@ votos_por_votacao <- function (link_votacao, id_votacao) {
           link_votacao = dplyr::if_else(is.null(votacao$uri), 
                                         link_votacao, 
                                         votacao$uri),
-          id_votacao = id_votacao,
+          id_votacao = as.numeric(id_votacao),
           titulo = dplyr::if_else(is.null(votacao$titulo), 
                                   '', 
                                   votacao$titulo),
@@ -63,18 +64,49 @@ votos_por_votacao <- function (link_votacao, id_votacao) {
                                 '', 
                                 votacao$tipoVotacao),
           votos_sim = dplyr::if_else(is.null(votacao$placarSim),
-                                     '', 
-                                     toString(votacao$placarSim)),
+                                     as.integer(NA), 
+                                     votacao$placarSim),
           votos_nao = dplyr::if_else(is.null(votacao$placarNao), 
-                                     '', 
-                                     toString(votacao$placarNao)),
+                                     as.integer(NA), 
+                                     votacao$placarNao),
           votos_abstencao = dplyr::if_else(is.null(votacao$placarAbstencao), 
-                                           '', 
-                                           toString(votacao$placarAbstencao)))
+                                           as.integer(NA),
+                                           votacao$placarAbstencao))
       
-      return(row)
+    } else {
+      votacao <- read_html(link_votacao)
+      
+      placar_votacao <- votacao %>%
+        html_nodes("#listaVotacao table") %>% 
+        html_table() %>% as.data.frame()
+      
+      
+      info_df <- votacao %>% 
+        html_nodes("p") %>% 
+        html_text() %>% 
+        as.data.frame() 
+      
+      info_df <-
+        info_df %>% 
+        subset(subset = rownames(info_df) == 3) %>% 
+        mutate(
+          tipo = if_else(str_detect(tolower(.), 'nominal eletrônica'), 'Nominal Eletrônica', ''),
+          titulo = str_extract(., '-.*-'),
+          titulo = gsub('^-.|.-$', '', titulo)) %>%
+        select(tipo, titulo)
+      
+      row <- 
+        row %>% 
+        summarise(
+          link_votacao = link_votacao,
+          id_votacao = as.numeric(id_votacao),
+          titulo = info_df$titulo,
+          tipo = info_df$tipo,
+          votos_sim = placar_votacao$X2[1],
+          votos_nao =  placar_votacao$X2[2],
+          votos_abstencao = if_else(nrow(placar_votacao) > 5, placar_votacao$X2[3], as.integer(NA)))
     }
-  }
+  } else {
     row <- 
       row %>% 
       summarise(
@@ -85,6 +117,8 @@ votos_por_votacao <- function (link_votacao, id_votacao) {
         votos_sim = NA,
         votos_nao = NA,
         votos_abstencao = NA)
+  }
+  
   return(row)
 }
 
@@ -113,3 +147,5 @@ processa_votacoes_detalhes <- function(votacoes_df){
 
   return(votacoes_details)
 }
+
+
