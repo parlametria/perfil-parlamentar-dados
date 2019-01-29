@@ -125,8 +125,7 @@ votos_por_votacao <- function (link_votacao, id_votacao) {
 #' @title Pega informações dos votos dos parlamentares
 #' @description Exibe detalhes sobre os votos dos parlamentares em uma determinada votação da câmara
 #' @param id_votacao ID da votação  
-#' @return Dataframe contendo link, id, titulo, tipo, id da proposição, 
-#' placar de votos sim, não e abstenções da votação passada como parâmetro
+#' @return Dataframe contendo link, id, titulo, tipo, placar de votos sim, não e abstenções da votação passada como parâmetro
 #' @examples
 #' processa_votacoes_detalhes(votacoes_df)
 processa_votacoes_detalhes <- function(votacoes_df){
