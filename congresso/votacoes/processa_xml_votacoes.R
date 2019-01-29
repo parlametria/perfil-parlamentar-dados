@@ -62,9 +62,6 @@ votos_por_votacao <- function (link_votacao, id_votacao) {
           tipo = dplyr::if_else(is.null(votacao$tipoVotacao), 
                                 '', 
                                 votacao$tipoVotacao),
-          id_proposicao = dplyr::if_else(is.null(votacao$proposicao$id), 
-                                         '', 
-                                         toString(votacao$proposicao$id)),
           votos_sim = dplyr::if_else(is.null(votacao$placarSim),
                                      '', 
                                      toString(votacao$placarSim)),
@@ -85,7 +82,6 @@ votos_por_votacao <- function (link_votacao, id_votacao) {
         id_votacao = NA,
         titulo = NA,
         tipo = NA,
-        id_proposicao = NA,
         votos_sim = NA,
         votos_nao = NA,
         votos_abstencao = NA)
@@ -111,7 +107,6 @@ processa_votacoes_detalhes <- function(votacoes_df){
     as_tibble()
   
   votacoes_details$id_votacao <- as.numeric(votacoes_details$id_votacao)
-  votacoes_details$id_proposicao <- as.numeric(votacoes_details$id_proposicao)
   votacoes_details$votos_sim <- as.numeric(votacoes_details$votos_sim)
   votacoes_details$votos_nao <- as.numeric(votacoes_details$votos_nao)
   votacoes_details$votos_abstencao <- as.numeric(votacoes_details$votos_abstencao)
