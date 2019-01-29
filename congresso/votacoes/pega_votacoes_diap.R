@@ -26,7 +26,7 @@ votacoes_datapath = opt$votacoes
 output_datapath <- opt$out
 
 message("Iniciando processamento...")
-xml <- xmlParse('~/Desktop/mapa_votacoes_2015_2019.xml')
+xml <- xmlParse(votacoes_datapath)
 xmltop = xmlRoot(xml)
 
 paginas <- seq(50, 88)
