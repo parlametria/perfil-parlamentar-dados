@@ -1,6 +1,6 @@
 # Sobre os Dados
 - raw-data: contém os csvs que foram obtidos através dos jsons de Candidatos, perguntas, proposições e votações.
-- data: contém os csvs que irão ser carregados no banco de dados. Estes csvs são resultado do tratamento utilizando o script `process-data-lib.R`, que possui como entrada os csvs disponíveis no diretório raw-data. Mais detalhes sobre como gerar os dados do diretório `data` no final deste README.
+- data: contém os csvs que irão ser carregados no banco de dados. Estes csvs são resultado do tratamento utilizando o script `process-data-lib.R`, que possui como entrada os csvs disponíveis no diretório raw-data. Mais detalhes sobre como gerar os dados do diretório `data` no [tópico final](#como-realizar-o-tratamento-dos-dados) deste README.
 
 # Como iniciar o banco de dados local
 
@@ -42,9 +42,9 @@ crie um arquivo .env no mesmo diretório do arquivo `docker-compose.yml` com o s
 POSTGRES_PASSWORD=suasenhasupersecreta
 ```
 
-Substitua suasenhasupersecreta por uma senha de sua preferência.
+Substitua _suasenhasupersecreta_ por uma senha de sua preferência.
 
-Agora volte para o tópico `Usando docker + Postgres` e repita os procedimentos e tudo deverá funcionar.
+Agora volte para o tópico [Usando docker + Postgres](#usando-docker-+-postgres) e repita os procedimentos e tudo deverá funcionar.
 
 #### Comandos úteis
 
@@ -106,7 +106,7 @@ psql --username <seu-user --dbname <seu-database> < import-csv-bd-vozativa.sql
 
 Obs: Substitua import-csv-bd-vozativa.sql pelo nome do arquivo gerado pelo Rscript executado anteriormente caso você tenha alterado.
 
-# Como realizar o tratamentos dos dados e atualizá-los
+# Como realizar o tratamento dos dados
 
 Como falado no início deste README, os dados presentes no diretório `data` são os que contém a versão mais atual das tabelas que devem ser criadas no banco. Para atualizá-los é preciso executar as funções que transformam e tratam os "dados brutos" contidos em `raw-data`. Portanto, se os dados em `raw-data` mudarem então faz-se necessário que a atualização dos dados em `data` também deverá ocorrer. Para isto, siga os passos.
 
