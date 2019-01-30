@@ -1,0 +1,22 @@
+version: '3.5'
+
+services:    
+
+  db:
+    image: postgres:11.1-alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=vozativa
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-secret}
+      - TZ=GMT
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./data:/data
+      - ./scripts:/scripts
+    ports:
+      - 5432:5432
+volumes:
+  postgres_data:
+  data:
+  scripts:
