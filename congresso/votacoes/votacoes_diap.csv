@@ -1,0 +1,115 @@
+"link_votacao","id_votacao","titulo","tipo","votos_sim","votos_nao","votos_abstencao"
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6310",6310,"PROJETO DE LEI DE CONVERSÃO","Nominal Eletrônica",277,178,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6312",6312,"DVS - PMDB - EMENDA Nº 507","Nominal Eletrônica",194,261,4
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6313",6313,"DVS - PTB - §§10, 11 E 12 DA EMENDA Nº 45","Nominal Eletrônica",232,210,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6314",6314,"DVS - PPS - §10 DO ART. 29 DA LEI 8.213/1991 CONST. DO ART. 3º DO PLV","Nominal Eletrônica",294,158,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6315",6315,"DVS - PP - ALTERAÇÃO PROMOVIDA PELO ART. 3º  DO PLV","Nominal Eletrônica",220,229,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6317",6317,"EMENDA AGLUTINATIVA Nº 5","Nominal Eletrônica",110,226,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6320",6320,"DVS - PSDB - §5º DO ART. 60 DA LEI Nº 8.213/1991 ALT. PELO ART. 3º  DO PLV","Nominal Eletrônica",244,144,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6321",6321,"DVS - PCdoB - INC. II E III DO §5º DO ART. 60 DA LEI Nº 8.213/1991","Nominal Eletrônica",267,144,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6323",6323,"DVS - DEM - ART. 77, §2º, INC. V, ALÍNEA ""C"" DA LEI Nº 8.213/1991","Nominal Eletrônica",248,143,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6324",6324,"DVS - PSDB - §2ºB DO ART. 77 DA LEI Nº 8.213/1991, CONST. DO ART. 3º DO PLV","Nominal Eletrônica",221,172,6
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6286",6286,"PROJETO DE LEI DE CONVERSÃO","Nominal Eletrônica",252,227,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6287",6287,"DVS - SD - ART. 9º DA LEI Nº 7.998/1990, MODIFICADO PELO ART. 1 DO PLV","Nominal Eletrônica",247,220,4
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6288",6288,"DVS - PSB - EXPR. ""CONTRATADO POR PRAZO INDETERMINADO""","Nominal Eletrônica",234,229,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6289",6289,"DVS - DEM - ART. 3º DA LEI 7998/90","Nominal Eletrônica",258,195,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6290",6290,"EMENDA AGLUTINATIVA Nº 1","Nominal Eletrônica",186,251,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6291",6291,"DVS - PSDB - INCISO I DO ART. 3º DA LEI 7998/90","Nominal Eletrônica",253,186,4
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6292",6292,"DVS - PSDB - EMENDA Nº 208","Nominal Eletrônica",179,241,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6293",6293,"DVS - PSOL - EMENDA Nº 98","Nominal Eletrônica",155,255,7
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6294",6294,"DVS - PPS - EMENDA Nº 94","Nominal Eletrônica",180,241,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6295",6295,"DVS - PMDB - ART. 2º DO PLV","Nominal Eletrônica",223,180,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6296",6296,"DVS - PDT - EMENDA 68","Nominal Eletrônica",180,244,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6297",6297,"DVS - PSDB - § 8º DO ART. 2º DA LEI 10.779/2003","Nominal Eletrônica",233,184,5
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6388",6388,"DTQ. 2  DEM - EMENDA Nº 88","Nominal Eletrônica",170,271,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6390",6390,"DTQ. 3 PPS - EMENDA Nº 76","Nominal Eletrônica",222,199,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6391",6391,"DTQ. 5  PSDB - EMENDA Nº 16","Nominal Eletrônica",231,143,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6407",6407,"EMENDA AGLUTINATIVA Nº 1","Nominal Eletrônica",206,179,4
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6408",6408,"DTQ 13: PSDB - EMENDA 65","Nominal Eletrônica",119,279,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6409",6409,"DTQ 9: PSB - EMENDA 107","Nominal Eletrônica",156,228,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6410",6410,"DTQ 11: PSDB - EMENDA Nº 48","Nominal Eletrônica",161,236,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6411",6411,"DTQ 2: PTB - EMENDA 16","Nominal Eletrônica",125,237,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6616",6616,"DTQ 1: PPS - EMENDA Nº 65","Nominal Eletrônica",174,166,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6618",6618,"DTQ 4: PSB - EMENDA Nº 168","Nominal Eletrônica",214,199,7
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7333",7333,"PROJETO DE LEI DE CONVERSÃO Nº 34/2016","Nominal Eletrônica",263,106,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7335",7335,"DTQ. 11 - PT- §2º DO ART. 5º DA EMENDA Nº 547 COM VISTAS ...","Nominal Eletrônica",121,192,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7336",7336,"DTQ. 23: PTN - EMENDA Nº 22","Nominal Eletrônica",120,171,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7339",7339,"DTQ. 4: PCdoB - §11 E SEUS INCISOS, DO ART. 36 DA LEI 9394/1996...","Nominal Eletrônica",229,124,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7340",7340,"DTQ. 5: PSOL - EMENDA Nº 16","Nominal Eletrônica",148,208,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7344",7344,"DTQ. 6 - PDT - EMENDA Nº 183","Nominal Eletrônica",112,230,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7445",7445,"DTQ 1: PT - EMENDA Nº 34","Nominal Eletrônica",245,179,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/8030",8030,"DTQ 1 - PT - EMENDA Nº 93","Nominal Eletrônica",153,109,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/8077",8077,"PROJETO DE LEI DE CONVERSÃO Nº 36/2017","Nominal Eletrônica",208,184,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/8089",8089,"DTQ 6 - PDT - ART. 1º DO PLV","Nominal Eletrônica",232,185,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/8095",8095,"DTQ 8 - PSOL - ART. 5º DO PLV","Nominal Eletrônica",241,183,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/8100",8100,"DTQ 11 - PV - ART. 7º DO TEXTO ORIGINAL DA MPV","Nominal Eletrônica",123,222,4
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/8148",8148,"EMENDA DO SENADO FEDERAL","Nominal Eletrônica",193,206,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6429",6429,"SUBSTITUTIVO DA COMISSÃO ESPECIAL","Nominal Eletrônica",303,184,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6437",6437,"EMENDA AGLUTINATIVA Nº 16","Nominal Eletrônica",323,155,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6517",6517,"PROPOSTA DE EMENDA À CONSTITUIÇÃO - SEGUNDO TURNO","Nominal Eletrônica",320,152,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6351",6351,"EMENDA AGLUTINATIVA Nº 2","Nominal Eletrônica",99,369,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6352",6352,"ART. 1º DO SUBSTITUTIVO","Nominal Eletrônica",210,267,5
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6354",6354,"EMENDA AGLUTINATIVA Nº 22","Nominal Eletrônica",264,207,4
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6356",6356,"EMENDA AGLUTINATIVA Nº 10","Nominal Eletrônica",164,240,66
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6358",6358,"EMENDA AGLUTINATIVA Nº 28","Nominal Eletrônica",330,141,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6369",6369,"ARTIGO 8º DO SUBSTITUTIVO  - VOTO FACULTATIVO","Nominal Eletrônica",134,311,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6370",6370,"EMENDA AGLUTINATIVA Nº 48","Nominal Eletrônica",348,110,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6371",6371,"EMENDA AGLUTINATIVA Nº 54","Nominal Eletrônica",220,225,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6377",6377,"EMENDA AGLUTINATIVA Nº 57","Nominal Eletrônica",293,101,53
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6379",6379,"ARTIGO 14 DO SUBSTITUTIVO - FEDERAÇÃO PARTIDÁRIA","Nominal Eletrônica",157,277,7
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6384",6384,"EMENDA AGLUTINATIVA Nº 29","Nominal Eletrônica",317,139,6
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7214",7214,"SUBSTITUTIVO DA COMISSÃO ESPECIAL - PRIMEIRO TURNO","Nominal Eletrônica",366,111,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7221",7221,"DTQ 4: PT - EMENDA Nº 19","Nominal Eletrônica",103,303,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7252",7252,"PROPOSTA DE EMENDA À CONSTITUIÇÃO - SEGUNDO TURNO","Nominal Eletrônica",359,116,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7835",7835,"DTQ 14: PT - EXP. ""E ESTABELECER REGRAS SOBRE ESCOLHA, FORMAÇÃO...""","Nominal Eletrônica",311,107,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7867",7867,"DTQ. 1: PSOL - EXPR. ""E ESTABELECER REGRAS SOBRE ESCOLHA, FORMAÇÃO E DURAÇÃO...""","Nominal Eletrônica",326,104,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7869",7869,"DTQ. 4: PP - ART. 17-A, DA CONSTITUIÇÃO FEDERAL, ALTERADO PELO ART.1º DO SUBSTIT","Nominal Eletrônica",143,280,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6675",6675,"SUBSTITUTIVO DA COMISSÃO ESPECIAL - PRIMEIRO TURNO","Nominal Eletrônica",318,129,4
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7448",7448,"PROPOSTA DE EMENDA À CONSTITUIÇÃO - SEGUNDO TURNO","Nominal Eletrônica",304,139,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7031",7031,"SUBSTITUTIVO DA COMISSÃO ESPECIAL - PRIMEIRO TURNO","Nominal Eletrônica",334,90,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7032",7032,"DTQ 6: PSOL: VOTAÇÃO EM SEPARADO DA EXP. ""ÀS CONTRIBUIÇÕES SOCIAIS, SEM PREJUÍZO","Nominal Eletrônica",327,93,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7038",7038,"PROPOSTA DE EMENDA À CONSTITUIÇÃO - SEGUNDO TURNO","Nominal Eletrônica",340,96,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7039",7039,"DTQ. 2 - PSOL - EXP. ""ÀS CONTRIBUIÇÕES SOCIAIS, SEM PREJUÍZO...","Nominal Eletrônica",326,99,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7820",7820,"ART. 45º, CONST. DO ART. 2º DO SUBSTITUTIVO, E ART. 3º DO SUBSTITUTIVO...","Nominal Eletrônica",205,238,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6502",6502,"EMENDA AGLUTINATIVA Nº 4","Nominal Eletrônica",362,85,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6259",6259,"SUBEMENDA SUBSTITUTIVA DA CDEIC","Nominal Eletrônica",320,135,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7431",7431,"SUBSTITUTIVO DO SENADO FEDERAL","Nominal Eletrônica",232,188,8
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6204",6204,"SUBEMENDA SUBSTITUTIVA","Nominal Eletrônica",324,137,2
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6230&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=77&indTipoSessao=O&tipo=uf",6230,"EMENDA AGLUTINATIVA Nº 15","Nominal Eletrônica",230,203,4
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7197&numLegislatura=55&codCasa=1&numSessaoLegislativa=2&indTipoSessaoLegislativa=O&numSessao=243&indTipoSessao=E&tipo=uf",7197,"PROJETO DE LEI","Nominal Eletrônica",292,101,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7279",7279,"DTQ. 8 - PPS - EMENDA Nº 4","Nominal Eletrônica",107,247,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7297",7297,"DTQ 6: PT: DO §4º DO ART. 33 DO DECRETO-LEI Nº 2848/40, NA REDAÇÃO DADA PELO....","Nominal Eletrônica",152,210,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7298",7298,"DTQ 16: PT: EMENDA Nº 11","Nominal Eletrônica",301,107,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7299",7299,"DTQ 21: BLOCO PP: ART. 85 DO SUBSTITUTIVO ADOTADO PELA COMISSÃO ESPECIAL","Nominal Eletrônica",173,222,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7300",7300,"DTQ 14: PSOL: DO ART. 87 (QUE INTRODUZ O CAPÍTULO 1-A NO TÍTULO I DO LIVRO II...","Nominal Eletrônica",151,220,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7302",7302,"DTQ 4: PT: DO ART. 95 DO SUBSTITUTIVO ADOTADO PELA COMISSÃO ESPECIAL","Nominal Eletrônica",143,207,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6453",6453,"DTQ 46: PMDB - EMENDA Nº 75","Nominal Eletrônica",206,163,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6454",6454,"EMENDA AGLUTINATIVA Nº 15","Nominal Eletrônica",194,193,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6456",6456,"DTQ 30: PT - EMENDA Nº 9","Nominal Eletrônica",191,231,5
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6461",6461,"EMENDA AGLUTINATIVA Nº 30","Nominal Eletrônica",204,244,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6463",6463,"DTQ 22: BLOCO PRB - ART. 46 DA LEI Nº 9504/97 CONST. DO ART. 2º DO SUBST.","Nominal Eletrônica",246,200,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6470",6470,"DTQ 9: PCdoB - EMENDA Nº 14","Nominal Eletrônica",149,283,4
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6565",6565,"DTQ. 4: PSDB - CAPUT. DO ART. 9º DA LEI Nº 9504/97, CONST. DO ART. 1º DO SUBST.","Nominal Eletrônica",157,290,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6566",6566,"DTQ. 12: PT - ART. 24 DA LEI 9504/97 CONST. DO ART. 1º DO SUBST DO SF","Nominal Eletrônica",180,285,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6570",6570,"DTQ. 9: PSB - ART. 22-A DA LEI 9.096/95 CONST. DO ART. 2º DO SUBSTITUTIVO DO S.F","Nominal Eletrônica",323,115,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7492",7492,"SUBEMENDA SUBSTITUTIVA GLOBAL","Nominal Eletrônica",296,177,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7494",7494,"DTQ 2  - PDT - ART. 442-B, CONST. DO ART. 1º DO SUBSTITUTIVO","Nominal Eletrônica",258,158,2
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7498",7498,"DTQ 18 - PSOL- ART. 611-A, CONST.  DO ART. 1º DO SUBSTITUTIVO","Nominal Eletrônica",274,160,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7503",7503,"DTQ 54 - PT - EMENDA DE PLENÁRIO Nº 15","Nominal Eletrônica",133,285,4
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7504",7504,"DTQ 51 - SD - EMENDA DE PLENÁRIO Nº 28","Nominal Eletrônica",159,259,5
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6117",6117,"DVS - BLOCO PRB - INC. VI, §4º, ART 18 DA SUBEMENDA SUBST. DE PLENÁRIO","Nominal Eletrônica",188,174,6
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7902",7902,"DTQ 5: PHS - ART. Nº 16-C, CONSTANTE DO ART. 1º DO PL","Nominal Eletrônica",223,209,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/6143",6143,"DVS - PSB - § 8º DO ART. 2º","Nominal Eletrônica",275,102,NA
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6145&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=34&indTipoSessao=O&tipo=uf",6145,"DVS PSOL - EXP. ""NO VALOR DE 1 (UM) SAL. MÍNIMO)...","Nominal Eletrônica",254,160,NA
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6146&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=34&indTipoSessao=O&tipo=uf",6146,"DVS - PSDB - INCISO II DO ART. 34","Nominal Eletrônica",204,207,NA
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6147&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=34&indTipoSessao=O&tipo=uf",6147,"DVS - PSDB - EMENDA Nº 25","Nominal Eletrônica",204,169,NA
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6148&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=34&indTipoSessao=O&tipo=uf",6148,"DVS - DEM - ART 32 DA EMENDA SUBSTITUTIVA GLOBAL Nº 38","Nominal Eletrônica",239,192,NA
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7473",7473,"SUBEMENDA SUBSTITUTIVA DA CFT","Nominal Eletrônica",301,127,7
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7479",7479,"DTQ 21: PT - INC. I, DO §1º, DO ART. 2º DO SUBSTITUTIVO","Nominal Eletrônica",285,143,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7480",7480,"DTQ 24:  PDT - EMENDA Nº 24","Nominal Eletrônica",164,244,1
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7481",7481,"DTQ 33:  SD - INCISO II, DO §1º DO ART. 2º DO SUBSTITUTIVO","Nominal Eletrônica",241,185,3
+"https://dadosabertos.camara.leg.br/api/v2/votacoes/7527",7527,"DTQ 12: PT - ART. 8º DO SUBSTITUTIVO","Nominal Eletrônica",314,100,3
+"http://www.camara.leg.br/internet/votacao/PARECER%20-%20DA%20COMISS%C3%83O%20ESPECIAL%20DCR%201-2015.pdf",NA,NA,NA,NA,NA,NA
+"http://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7158&numLegislatura=55&codCasa=1&numSessaoLegislativa=2&indTipoSessaoLegislativa=O&numSessao=219&indTipoSessao=E&tipo=uf",7158,"PARECER DO CONSELHO DE ÉTICA E DECORO PARLAMENTAR","Nominal Eletrônica",450,10,9
+"http://www.camara.leg.br/internet/votacao/Resultado_Votacao_SIP_1-2017_UF.pdf",NA,NA,NA,NA,NA,NA
+"http://www.camara.leg.br/internet/votacao/PARECER%20DA%20CCJC%20-%20SIP%202-2017%20-%20%20UF.pdf",NA,NA,NA,NA,NA,NA
