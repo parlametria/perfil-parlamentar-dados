@@ -28,7 +28,7 @@ votacoes_por_pagina <- function(number){
   } else {
     votacoes <-
       tribble(
-        ~ link_votacao, ~ id_votacao, ~ numero)
+        ~ link_votacao, ~ id_votacao)
   }
   return(votacoes)
 }

@@ -29,6 +29,7 @@ message("Iniciando processamento...")
 xml <- xmlParse(votacoes_datapath)
 xmltop = xmlRoot(xml)
 
+# 50 a 88 são páginas referentes aos dados das votações
 paginas <- seq(50, 88)
 votacoes <- do.call("rbind", lapply(paginas, votacoes_por_pagina)) 
 
