@@ -1,6 +1,6 @@
 if(!require(optparse)){
   install.packages("optparse")
-  suppressWarnings(suppressMessages(library(optparse)))
+  library(optparse)
 }
 
 message("Leia o README deste diretório")

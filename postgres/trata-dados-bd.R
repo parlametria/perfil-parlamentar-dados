@@ -1,9 +1,9 @@
-suppressWarnings(suppressMessages(library(tidyverse)))
-suppressWarnings(suppressMessages(library(here)))
+library(tidyverse)
+library(here)
 
 if(!require(optparse)){
   install.packages("optparse")
-  suppressWarnings(suppressMessages(library(optparse)))
+  library(optparse)
 }
 
 message("Leia o README deste diretório")
