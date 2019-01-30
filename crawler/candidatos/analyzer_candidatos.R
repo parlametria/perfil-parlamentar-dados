@@ -10,7 +10,7 @@
 #' candidatos <- import_candidatos_uf(uf = "PB", folder_path = "./candidatos/", cargos = c(6), ano = 2018)
 import_candidatos_uf <- function(uf, folder_path, cargos, ano) {
   library(tidyverse)
-  source(here::here("congresso/candidatos/import-data-candidatos.R"))
+  source(here::here("crawler/candidatos/import_data_candidatos.R"))
   
   extension = ".csv"
   
@@ -72,7 +72,7 @@ processa_dados_candidatos <- function(anos, cargos){
       join_data_ufs,
       ufs,
       cargos = cargos,
-      folder_path = here::here("congresso/candidatos/")
+      folder_path = here::here("crawler/candidatos/")
       )) %>% 
     unnest(dados) %>% 
     select(-ano)
