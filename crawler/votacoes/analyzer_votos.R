@@ -54,10 +54,9 @@ processa_nome_parlamentar <- function(df) {
 processa_candidatos <- function(df) {
   candidatos <- df %>%
     select(nome_candidato, cpf_candidato) %>%
-    unique() %>%
-    processa_nome_parlamentar() %>%
+    processa_nome_parlamentar() %>% 
     rename(cpf = cpf_candidato) %>%
-    group_by(cpf) %>%
+    group_by(cpf, nome_candidato) %>%
     distinct()
 
   return (candidatos)
@@ -178,8 +177,10 @@ candidatos_join_votos <- function(candidatos_df, votos_df) {
 #' @examples
 #' processa_votos("./candidatos/output.csv", "./dados congresso/TabelaAuxVotacoes.csv")
 processa_votos <- function(candidatos_datapath, votacoes_datapath, output_datapath) {
-  candidatos_df <- read_csv(candidatos_datapath, col_types = "cicicnccc")
-  votacoes_df <- read_csv(votacoes_datapath, col_types = "cddcccc")
+  candidatos_df <- read_csv(candidatos_datapath, col_types = "cicicnccc") %>% 
+    group_by(cpf_candidato) %>% 
+    distinct(.keep_all = T)
+  votacoes_df <- read_csv(votacoes_datapath, col_types = "cddccc")
 
   cpf_nome_candidatos_df <- processa_candidatos(candidatos_df)
   votos_df <- processa_votacoes(votacoes_df)
