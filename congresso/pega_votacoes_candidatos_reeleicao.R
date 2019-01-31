@@ -7,7 +7,6 @@
 library(tidyverse)
 library(rcongresso)
 library(tm)
-library(stringr)
 
 #' @title Enumera votações
 #' @description Recebe um dataframe com coluna voto e enumera o valor para um número
@@ -103,8 +102,7 @@ processa_votacoes <- function(df) {
   info_pessoais_20142018 <- fetch_deputado(deputados20142018_id) %>%
     select(id, nomeCivil)
 
-  votos <-
-    do.call("rbind", lapply(ids_votacoes, fetch_votos)) %>%
+  votos <- rbind(do.call("rbind", lapply(ids_votacoes, fetch_votos))) %>%
     select(id_votacao, parlamentar.nome, parlamentar.id, voto) %>%
     left_join(info_pessoais_20142018, by= c("parlamentar.id" = "id")) %>%
     left_join(info_pessoais_20102014, by= c("parlamentar.id" = "id")) %>%
