@@ -23,7 +23,7 @@ opt <- parse_args(opt_parser)
 
 output <- opt$output
 
-source(here::here("postgres/process-data-lib.R"))
+source(here::here("bd/analyzer_data_bd.R"))
 
 message("Processando dados...")
 candidatos <- processa_candidatos()
