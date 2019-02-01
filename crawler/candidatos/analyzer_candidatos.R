@@ -81,7 +81,12 @@ processa_dados_candidatos <- function(anos, cargos){
     unnest(dados) %>% 
     select(-ano)
   
-  return(candidatos)
+  candidatos_alt <- candidatos %>% 
+    distinct(cpf_candidato, 
+             ano_eleicao, 
+             .keep_all = TRUE)
+  
+  return(candidatos_alt)
 }
 
 #' @title Processa dados de candidatos a deputado federal nas eleições de 2018.
@@ -120,5 +125,8 @@ processa_info_candidatos_2018 <- function() {
                   grau_instrucao = desc_grau_instrucao, raca = desc_cor_raca, ocupacao = desc_ocupacao, cpf = cpf_candidato,
                   reeleicao, nome_exibicao)
   
-  return(candidatos_alt)
+  candidatos_distinct <- candidatos_alt %>% 
+    distinct(cpf, .keep_all = TRUE)
+  
+  return(candidatos_distinct)
 }

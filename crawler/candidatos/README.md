@@ -81,18 +81,18 @@ O arquivo com as informações dos candidatos estará no arquivo definido como p
 Nesta subseção o objetivo é gerar os dados dos candidatos a deputado federal nas eleições de 2018. Estes dados possuem mais informações do que na subseção anterior. Para gerá-los utilize o seguinte comando:
 
 ```
-Rscript export_info_candidados_2018.R
+Rscript export_info_candidatos_2018.R
 ```
 
 Neste caso o caminho de saída default utilizado é `../raw_data/candidatos.csv`. Caso você queira alterar o caminho para a saída do arquivo, utilize o seguinte comando:
 
 ```
-Rscript export_info_candidados_2018.R -o ./output.csv
+Rscript export_info_candidatos_2018.R -o ./output.csv
 ```
 
 Troque `./output.csv` por um caminho da sua preferência.
 
- Execute ```Rscript export_info_candidados_2018.R -h``` para exibir informações sobre a execução do arquivo
+Execute ```Rscript export_info_candidatos_2018.R -h``` para exibir informações sobre a execução do arquivo
 
 ### Informações importantes
 O script de processamento dos dados funciona, por enquanto, apenas para os anos de 2010, 2014 e 2018.
