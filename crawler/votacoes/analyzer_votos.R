@@ -99,9 +99,7 @@ fetch_votos <- function(ids_votacoes) {
 #' @examples
 #' processa_votos("../raw_data/tabela_votacoes.csv")
 processa_votos <- function(votacoes_datapath) {
-  ids_votacoes <- read_csv(votacoes_datapath, col_types = "cddccc")$id_proposicao %>% 
-    unique() 
-  
+  ids_votacoes <- (read_csv(votacoes_datapath, col_types = "cddccc") %>% filter(!is.na(id_votacao)))$id_votacao
   votos <- fetch_votos(ids_votacoes)
   deputados <- fetch_deputados()
   votos <- votos %>% 
