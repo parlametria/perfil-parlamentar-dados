@@ -105,7 +105,8 @@ processa_votos <- function(votacoes_datapath) {
   votos <- votos %>% 
     left_join(deputados, by = c("parlamentar.id" = "id")) %>% 
     select(id_votacao, cpf, voto) %>% 
-   enumera_votacoes()
+   enumera_votacoes() %>% 
+    distinct()
   
   return(votos)
 }
