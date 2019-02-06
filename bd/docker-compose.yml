@@ -16,6 +16,13 @@ services:
       - ./scripts:/scripts
     ports:
       - 5432:5432
+    networks:
+      - proxynet
+
+networks:
+  proxynet:
+    name: voz_ativa_network
+    
 volumes:
   postgres_data:
   data:
