@@ -1,6 +1,6 @@
 suppressWarnings(suppressMessages(library(tidyverse)))
 suppressWarnings(suppressMessages(library(XML)))
-suppressWarnings(suppressMessages(source(here::here("congresso/votacoes/processa_xml_votacoes.R"))))
+suppressWarnings(suppressMessages(source(here::here("crawler/votacoes/votacoes_diap/analyzer_xml_diap.R"))))
 
 if(!require(optparse)){
   install.packages("optparse")

@@ -2,50 +2,75 @@
 
 Coletor de respostas do Survey Monkey que alimenta o Voz Ativa.
 
-## Dependências
+# Como iniciar o banco de dados local
 
-- Python 3.5.x
-- MongoDB
-- pymongo
-- R
-
-## Instruções para o Survey Monkey
-
-### 1 Baixando as respostas e povoando mlab de validação
-
-Configure o arquivo `keys.py` com as credenciais do Survey Monkey e rode o script:
+Se você já iniciou o banco uma vez basta fazer:
 
 ```
-main.py
+docker-compose up
 ```
 
-### 2 Povoando o banco de dados local
+Caso contrário siga as instruções a seguir.
 
-Os arquivos `respostas_novo.json` e `candidatos.json` são necessários.
+## Usando docker + Postgres
 
-```
-mongoimport --db=voz-ativa --collection=respostas --file=respostas_novo.json --jsonArray
+No terminal, vá para o diretório **bd**: ```cd bd/```
 
-mongoimport --db=voz-ativa --collection=candidatos --file=candidatos.json --jsonArray
-```
-
-## Instruções para pegar votos dos candidatos à reeleição
-
-Entre na pasta `congresso` pelo terminal e execute o _script_ `pega_votacoes_candidatos_reeleicao.R`.
+Com o [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce) e o [docker-compose](https://docs.docker.com/compose/install/) instalados na sua máquina execute:
 
 ```
-cd congresso
-./pega_votacoes_candidatos_reeleicao.R
+docker-compose up
 ```
 
-O script demora alguns minutos para ser executado e o arquivo gerado será o `votacoes.csv` dentro da pasta congresso.
+Crie as tabelas
+```
+docker-compose exec db psql -U postgres -d vozativa -1 -f scripts/create_table_bd_vozativa.sql
+```
 
-Após isso execute os scripts:
+Importe os dados
+```
+docker-compose exec db psql -U postgres -d vozativa -1 -f scripts/import_csv_bd_vozativa.sql
+```
+
+Você será capaz de acessar o banco via psql através do comando:
+```
+psql -h localhost -U postgres --dbname vozativa
+```
+
+A senha padrão local é: `secret`
+
+A partir de agora será possível acessar e utilizar o banco de dados Postgres.
+
+### Como mudar a senha
+
+Desfaça o que foi feito no tópico anterior
+```
+docker-compose down --volumes
+```
+
+Crie o arquivo `.env` no mesmo diretório do arquivo `docker-compose.yml` com o seguinte conteúdo
 
 ```
-cd congresso
-escreve_json_vot.py 
-cd ..
-votacoes2db.py
+POSTGRES_PASSWORD=suasenhasupersecreta
 ```
-Para atualizar o banco de dados das votações dos projetos de lei.
+
+Substitua _suasenhasupersecreta_ por uma senha de sua preferência.
+
+Agora volte para o tópico [Usando docker + Postgres](#usando-docker-+-postgres) e repita os procedimentos e tudo deverá funcionar.
+
+#### Comandos úteis
+
+Para visualizar que containers estão executando
+```
+docker ps
+```
+
+Para parar a execução de um container
+```
+docker kill <id>
+```
+
+Para forçar regerar a imagem
+```
+docker-compose up --build
+```

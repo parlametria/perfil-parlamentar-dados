@@ -2,7 +2,7 @@
 #' @description Lê os dados de respostas dos candidatos e processa o tipo das datas utilizado
 #' @param data_path Caminho para o arquivo de respostas sem tratamento.
 #' @return Dataframe com as respostas e o tratamento para as datas
-carrega_respostas <- function(data_path = here::here("postgres/raw-data/respostas.csv")){
+carrega_respostas <- function(data_path = here::here("crawler/raw_data/respostas.csv")){
   library(tidyverse)
   library(here)
   
@@ -16,7 +16,7 @@ carrega_respostas <- function(data_path = here::here("postgres/raw-data/resposta
                                    date_modified
                     )
     ) %>% 
-    dplyr::mutate(date_created = as.POSIXct(date_created, 
+    dplyr::mutate(date_created = as.POSIXct(date_created,
                                             format = "%Y-%m-%dT%H:%M:%S", 
                                             tz = "GMT")) %>% 
     dplyr::mutate(date_created = 
@@ -36,7 +36,7 @@ carrega_respostas <- function(data_path = here::here("postgres/raw-data/resposta
 #' @description Processa os dados de respostas dos candidatos (extraídos do monkey) e retorna no formato correto para o banco de dados
 #' @param res_data_path Caminho para o arquivo de respostas sem tratamento.
 #' @return Dataframe com id, resposta, cpf, pergunta_id 
-processa_respostas <- function(res_data_path = here::here("postgres/raw-data/respostas.csv")) {
+processa_respostas <- function(res_data_path = here::here("crawler/raw_data/respostas.csv")) {
   library(tidyverse)
   library(here)
   
@@ -64,8 +64,8 @@ processa_respostas <- function(res_data_path = here::here("postgres/raw-data/res
 #' @param cand_data_path Caminho para o arquivo de dados dos candidatos sem tratamento
 #' @param res_data_path Caminho para o arquivo de respostas sem tratamento.
 #' @return Dataframe com informações detalhadas dos candidatos
-processa_candidatos <- function(cand_data_path = here::here("postgres/raw-data/candidatos.csv"),
-                                res_data_path = here::here("postgres/raw-data/respostas.csv")) {
+processa_candidatos <- function(cand_data_path = here::here("crawler/raw_data/candidatos.csv"),
+                                res_data_path = here::here("crawler/raw_data/respostas.csv")) {
   library(tidyverse)
   library(here)
   
@@ -97,7 +97,7 @@ processa_candidatos <- function(cand_data_path = here::here("postgres/raw-data/c
 #' @description Processa os dados de perguntas e adiciona o id do tema da pergunta
 #' @param perg_data_path Caminho para o arquivo de dados de perguntas sem tratamento
 #' @return Dataframe com informações das perguntas incluindo o id do tema da pergunta
-processa_perguntas <- function(perg_data_path = here::here("postgres/raw-data/perguntas.csv")) {
+processa_perguntas <- function(perg_data_path = here::here("crawler/raw_data/perguntas.csv")) {
   library(tidyverse)
   library(here)
   
@@ -137,7 +137,7 @@ processa_temas <- function() {
 #' @description Processa os dados de proposições e adiciona o id do tema da proposição
 #' @param prop_data_path Caminho para o arquivo de dados de perguntas sem tratamento
 #' @return Dataframe com informações das proposições incluindo o id do tema da proposição
-processa_proposicoes <- function(prop_data_path = here::here("postgres/raw-data/proposicoes.csv")) {
+processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/tabela_votacoes.csv")) {
   library(tidyverse)
   library(here)
   
@@ -162,28 +162,22 @@ processa_proposicoes <- function(prop_data_path = here::here("postgres/raw-data/
 #' @description Processa os dados de votações e retorna no formato  a ser utilizado pelo banco de dados
 #' @param vot_data_path Caminho para o arquivo de dados de votações sem tratamento
 #' @return Dataframe com informações das votações
-processa_votacoes <- function(vot_data_path = here::here("postgres/raw-data/votacoes.csv")) {
+processa_votacoes <- function(vot_data_path = here::here("crawler/raw_data/votacoes.csv")) {
   library(tidyverse)
   library(here)
   
   votacoes <- read.csv(vot_data_path, stringsAsFactors = FALSE, colClasses = c("cpf" = "character"))
   
-  votacoes_alt <- votacoes %>% 
-    tidyr::gather(key = "votacao_id", 
-                  value = "resposta", 
-                  dplyr::starts_with("votacoes.")) %>% 
-    dplyr::mutate(votacao_id = substring(votacao_id, nchar("votacoes.") + 1))
-  
-  candidatos <- processa_candidatos(cand_data_path = here::here("postgres/raw-data/candidatos.csv"),
-                                    res_data_path = here::here("postgres/raw-data/respostas.csv"))
+  candidatos <- processa_candidatos(cand_data_path = here::here("crawler/raw_data/candidatos.csv"),
+                                    res_data_path = here::here("crawler/raw_data/respostas.csv"))
   
   candidatos_list <- candidatos %>% dplyr::pull(cpf)
   
   ## Filtra apenas as votações dos candidatos que foram candidatos nas eleições de 2018 (dataframe candidatos)
-  votacoes_filtered <- votacoes_alt %>% 
+  votacoes_filtered <- votacoes %>% 
     dplyr::filter(cpf %in% candidatos_list) %>% 
     tibble::rowid_to_column(var = "id") %>% 
-    dplyr::select(id, resposta, cpf, proposicao_id = votacao_id) ## TODO: alterar para votacao_id e resolver os conflitos colaterais
+    dplyr::select(id, resposta = voto, cpf, votacao_id = id_votacao)
     
   return(votacoes_filtered)  
 }
