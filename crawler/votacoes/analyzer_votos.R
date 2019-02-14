@@ -31,19 +31,40 @@ enumera_votacoes <- function(df) {
 #' @examples
 #' votos <- fetch_voto(7566)
 fetch_voto <- function(id_votacao) {
-  votos <- tryCatch({
-    data <- rcongresso::fetch_votos(id_votacao)
+  votacao <- tryCatch({
+    votacao <- rcongresso::fetch_votacao(id_votacao)
   }, error = function(e) {
-    data <- tribble(
+    votacao <- tribble(
       ~ id_votacao, ~ parlamentar.id, ~ parlamentar.idLegislatura,
       ~ parlamentar.nome, ~ parlamentar.siglaPartido,
       ~ parlamentar.siglaUf, ~ parlamentar.uri, ~ parlamentar.uriPartido,
       ~ parlamentar.urlFoto, ~ voto)
-
-    return(data)
-  })
-
-  return(votos)
+    
+    return(votacao)
+    }) %>% 
+    filter(lubridate::year(votacao$dataHoraInicio) > 2014)
+  
+  if(nrow(votacao) > 0) {
+    votos <- tryCatch({
+      data <- rcongresso::fetch_votos(id_votacao)
+    }, error = function(e) {
+      data <- tribble(
+        ~ id_votacao, ~ parlamentar.id, ~ parlamentar.idLegislatura,
+        ~ parlamentar.nome, ~ parlamentar.siglaPartido,
+        ~ parlamentar.siglaUf, ~ parlamentar.uri, ~ parlamentar.uriPartido,
+        ~ parlamentar.urlFoto, ~ voto)
+      
+      return(data)
+    })
+    return(votos)
+    
+  } else {
+    return(tribble(
+      ~ id_votacao, ~ parlamentar.id, ~ parlamentar.idLegislatura,
+      ~ parlamentar.nome, ~ parlamentar.siglaPartido,
+      ~ parlamentar.siglaUf, ~ parlamentar.uri, ~ parlamentar.uriPartido,
+      ~ parlamentar.urlFoto, ~ voto))
+  }
 }
 
 #' @title Baixa nome civil dos deputados
@@ -71,11 +92,10 @@ fetch_deputado <- function(id_deputado) {
 #' @examples
 #' deputados <- fetch_deputados()
 fetch_deputados <- function() {
-  info_pessoais <- do.call("rbind", lapply(rcongresso::fetch_deputado(idLegislatura = 54, itens = -1)$id, 
-                                           fetch_deputado)) %>% 
-    rbind(do.call("rbind", lapply(rcongresso::fetch_deputado(idLegislatura = 55, itens = -1)$id, 
-                                  fetch_deputado)))  %>% 
-    rbind(do.call("rbind", lapply(rcongresso::fetch_deputado(idLegislatura = 56, itens = -1)$id, fetch_deputado)))
+  info_pessoais <- do.call("rbind", lapply(rcongresso::fetch_deputado(idLegislatura = 55, itens = -1)$id, 
+                                  fetch_deputado))  %>% 
+    rbind(do.call("rbind", lapply(rcongresso::fetch_deputado(idLegislatura = 56, itens = -1)$id, 
+                                  fetch_deputado)))
   
   return(info_pessoais)
 }

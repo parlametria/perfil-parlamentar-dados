@@ -13,7 +13,7 @@ if(!require(devtools)){
   install.packages("devtools")
 }
 
-suppressWarnings(suppressMessages(devtools::install_github('hadrizia/rcongresso')))
+suppressWarnings(suppressMessages(devtools::install_github('andresmrm/rcongresso', force=TRUE)))
 
 args = commandArgs(trailingOnly=TRUE)
 
