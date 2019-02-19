@@ -1,0 +1,159 @@
+---
+title: "Estimando posições dos legisladores"
+output: 
+  html_document:
+    fig_width: 8
+    fig_height: 6
+    theme: paper
+    toc: true
+    toc_depth: 2
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+options(scipen=999)
+```
+
+```{r}
+library(tidyverse)
+library(plotly)
+library(here)
+library(MCMCpack)
+library(congressbr)
+```
+
+```{r}
+votacoes <- read_csv(here::here("crawler/raw_data/votacoes.csv"))
+candidatos <- read_csv(here::here("bd/data/candidatos.csv"))
+
+votos_camara <- votacoes %>% 
+  dplyr::left_join(candidatos %>% dplyr::select(cpf, nome_urna, sg_partido), by = "cpf") %>% 
+  filter(!is.na(nome_urna))
+```
+
+```{r}
+votes_camara_alt <- votos_camara %>% 
+  dplyr::mutate(resposta_alt = dplyr::case_when(
+    voto == -1 ~ 0,
+    voto == 1 ~ 1,
+    TRUE ~ NA_real_
+  )) %>%
+  mutate(id = paste0(nome_urna, " - ", cpf, " - ", sg_partido)) 
+```
+
+```{r}
+votos_camara_irt_format <- vote_to_rollcall(votes = votes_camara_alt$resposta_alt,
+                                            legislators = votes_camara_alt$id,
+                                            bills = votes_camara_alt$id_votacao,
+                                            ideal = FALSE)
+```
+
+```{r results='hide'}
+mcmc_votes <- MCMCirt1d(votos_camara_irt_format, burnin = 2500, mcmc = 50000, thin = 10,
+                        verbose = 1000, seed = 1234, drop.constant.items = T,
+                        theta.constraints =
+                          list(`EDUARDO BOLSONARO - 10655365770 - PSL` = "+",
+                               `LUIZA ERUNDINA - 00480584400 - PSOL` = "-"))
+```
+
+```{r}
+mc <- summary(mcmc_votes)
+
+thetas <- as_tibble(mc$statistics[, 1:2])
+colnames(thetas) <- c("mean", "SD")
+
+id <- unlist(dimnames(votos_camara_irt_format)[1])
+
+legis <- tibble(mean = thetas$mean, sd = thetas$SD, id = id)
+```
+
+```{r}
+legis_partido <- legis %>% 
+  left_join(votes_camara_alt %>% dplyr::distinct(id, cpf, sg_partido), by = "id") %>% 
+  dplyr::mutate(partido_alt = dplyr::case_when(
+    sg_partido == 'PSOL' ~ 'PSOL',
+    sg_partido == 'PSL' ~ 'PSL',
+    sg_partido == 'PT' ~ 'PT',
+    sg_partido == 'PSDB' ~ 'PSDB',
+    sg_partido == 'PC do B' ~ 'PC do B',
+    sg_partido == 'MDB' ~ 'MDB',
+    TRUE ~ 'Outros'
+  ))
+```
+
+## Distribuição dos partidos no eixo esquerda-direita
+
+```{r}
+pallete = c('#ff7f00','#C4C4C4','#984ea3','#004997','#4D9B66','#ffde00','#e31a1c')
+```
+
+
+```{r}
+legis_partido %>%
+  ggplot(aes(x = mean, y = id, color = partido_alt)) +
+  geom_point() +
+  scale_color_manual(values = pallete) +
+  theme_minimal() +
+  theme(axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  facet_wrap(vars(partido_alt)) +
+  labs(color = "Partido", x = "Tendência", y = "")
+```
+
+## Posição dos deputados da legislação passada no eixo esquerda-direita
+
+```{r}
+legis_partido %>%
+  plot_ly() %>%
+  add_trace(x = ~mean,
+            y = ~id,
+            color = ~partido_alt,
+            colors = pallete,
+            type = "scatter",
+            mode = "markers",
+            text = ~paste(id, "<br>",
+                          "Valor: ", mean),
+            hoverinfo = "text") %>%
+  layout(xaxis = list(title = "Tendência"),
+         yaxis = list(title = "",  showticklabels = FALSE)) %>% 
+  config(displayModeBar = FALSE)
+```
+
+```{r}
+candidatos_eleitos <- candidatos %>% 
+  filter(eleito) %>% 
+  pull(cpf)
+```
+
+## Posição dos deputados atuais no eixo esquerda-direita com base nas votações passadas
+```{r}
+legis_partido %>%
+  filter(cpf %in% candidatos_eleitos) %>% 
+  plot_ly() %>%
+  add_trace(x = ~mean,
+            y = ~id,
+            color = ~partido_alt,
+            colors = pallete,
+            marker = list(size = 10),
+            type = "scatter",
+            mode = "markers",
+            text = ~paste(id, "<br>",
+                          "Valor: ", mean),
+            hoverinfo = "text") %>%
+  layout(xaxis = list(title = "Tendência"),
+         yaxis = list(title = "",  showticklabels = FALSE)) %>% 
+  config(displayModeBar = FALSE)
+```
+
+```{r}
+proposicoes_meio_ambiente <- proposicoes %>% 
+  filter(tema_id == 0) %>% 
+  pull(id_votacao)
+  
+votacoes_filter <- votes_camara_alt %>% 
+  filter(id_votacao %in% proposicoes_meio_ambiente)
+  
+```
