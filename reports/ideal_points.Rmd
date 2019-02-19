@@ -25,33 +25,47 @@ library(MCMCpack)
 library(congressbr)
 ```
 
+O objetivo deste relatório é apresentar uma técnica para identificação da tendência dos parlamentares da Câmara dos Deputados do Brasil. A ideia é utilizar a técnica de **Ideal points** para estimar a posição de cada legislador na dimensão de esquerda e direita usando os votos destes legisladores em votações. Mais informações [aqui](https://blogs.iq.harvard.edu/ideal_points_1),  [aqui](http://robertmyles.github.io/Bayesian-IRT-in-R-and-Stan.html) e [aqui](http://keyonvafa.com/ideal-points/).
+
 ```{r}
-votacoes <- read_csv(here::here("crawler/raw_data/votacoes.csv"))
-candidatos <- read_csv(here::here("bd/data/candidatos.csv"))
+votacoes <- readr::read_csv(here::here("crawler/raw_data/votacoes.csv"))
+candidatos <- readr::read_csv(here::here("bd/data/candidatos.csv"))
 
 votos_camara <- votacoes %>% 
+  dplyr::filter(id_votacao != 4968) %>% ## Remove votação fora da legislatura 55
   dplyr::left_join(candidatos %>% dplyr::select(cpf, nome_urna, sg_partido), by = "cpf") %>% 
-  filter(!is.na(nome_urna))
+  dplyr::filter(!is.na(nome_urna))
 ```
 
 ```{r}
-votes_camara_alt <- votos_camara %>% 
+cpfs_candidatos_eleitos <- candidatos %>% 
+  dplyr::filter(eleito) %>% 
+  dplyr::pull(cpf)
+```
+
+Como entrada para o modelo são fornecidos dois exemplos distintos. Um de candidato com tendência de esquerda e outro com tendência de direita. Para este relatório, inicialmente, foram considerados como exemplos Luiza Erundina - PSOL e Eduardo Bolsonaro - PSL.
+
+```{r}
+## Transformando votos para o padrão usado pelo IRT (Sim: 1, Não: 0)
+votos_camara_alt <- votos_camara %>% 
   dplyr::mutate(resposta_alt = dplyr::case_when(
     voto == -1 ~ 0,
     voto == 1 ~ 1,
     TRUE ~ NA_real_
   )) %>%
-  mutate(id = paste0(nome_urna, " - ", cpf, " - ", sg_partido)) 
+  dplyr::mutate(id = paste0(nome_urna, " - ", cpf, " - ", sg_partido))
 ```
 
 ```{r}
-votos_camara_irt_format <- vote_to_rollcall(votes = votes_camara_alt$resposta_alt,
-                                            legislators = votes_camara_alt$id,
-                                            bills = votes_camara_alt$id_votacao,
+## Transformando dados para o formato correto
+votos_camara_irt_format <- vote_to_rollcall(votes = votos_camara_alt$resposta_alt,
+                                            legislators = votos_camara_alt$id,
+                                            bills = votos_camara_alt$id_votacao,
                                             ideal = FALSE)
 ```
 
 ```{r results='hide'}
+## Treinamento do modelo
 mcmc_votes <- MCMCirt1d(votos_camara_irt_format, burnin = 2500, mcmc = 50000, thin = 10,
                         verbose = 1000, seed = 1234, drop.constant.items = T,
                         theta.constraints =
@@ -60,53 +74,105 @@ mcmc_votes <- MCMCirt1d(votos_camara_irt_format, burnin = 2500, mcmc = 50000, th
 ```
 
 ```{r}
+## Informações do modelo
 mc <- summary(mcmc_votes)
 
+## Medidas
 thetas <- as_tibble(mc$statistics[, 1:2])
 colnames(thetas) <- c("mean", "SD")
 
+# Id dos deputados
 id <- unlist(dimnames(votos_camara_irt_format)[1])
 
+## Dataframe com os Ideal Points
 legis <- tibble(mean = thetas$mean, sd = thetas$SD, id = id)
 ```
 
 ```{r}
-legis_partido <- legis %>% 
-  left_join(votes_camara_alt %>% dplyr::distinct(id, cpf, sg_partido), by = "id") %>% 
-  dplyr::mutate(partido_alt = dplyr::case_when(
-    sg_partido == 'PSOL' ~ 'PSOL',
-    sg_partido == 'PSL' ~ 'PSL',
-    sg_partido == 'PT' ~ 'PT',
-    sg_partido == 'PSDB' ~ 'PSDB',
-    sg_partido == 'PC do B' ~ 'PC do B',
-    sg_partido == 'MDB' ~ 'MDB',
-    TRUE ~ 'Outros'
-  ))
+## Adiciona um partido e sua cor ao final dos dois vetores para adicionar um partido específico a visualização
+partidos_selecionados <- c("MDB", "PC do B", "PSDB", "PSL", "PSOL", "PT")
+partidos_cores <- c('#ff7f00','#984ea3','#004997','#4D9B66','#ffde00','#e31a1c')
+
+## Cor para outros: #C4C4C4
+pallete <- c(partidos_cores[1], c('#C4C4C4'), partidos_cores[-1])
+
+candidatos_ideal_points <- legis %>% 
+  dplyr::left_join(votos_camara_alt %>% dplyr::distinct(id, cpf, sg_partido), by = "id") %>% 
+  dplyr::mutate(partido_alt = dplyr::if_else(sg_partido %in% partidos_selecionados, sg_partido, "Outros"))
 ```
 
 ## Distribuição dos partidos no eixo esquerda-direita
 
-```{r}
-pallete = c('#ff7f00','#C4C4C4','#984ea3','#004997','#4D9B66','#ffde00','#e31a1c')
-```
-
+Na visualização a seguir é possível perceber os **Ideal points** dos deputados ao longo de uma escala que considera o 0 como ponto de neutralidade política e conforme mais extremo o deputado se encontra mais "extremo" o mesmo é nos seus ideais políticos. Quando mais a esquerda do 0 mais próximo é o alinhamento do deputado aos deputados considerados de esquerda. De forma análoga quanto mais a direita do 0, mais próximo dos deputados de direita está o deputado.
 
 ```{r}
-legis_partido %>%
+candidatos_ideal_points %>%
   ggplot(aes(x = mean, y = id, color = partido_alt)) +
   geom_point() +
   scale_color_manual(values = pallete) +
   theme_minimal() +
-  theme(axis.text.y=element_blank(),
-        axis.ticks.y=element_blank()) +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank()) +
   facet_wrap(vars(partido_alt)) +
   labs(color = "Partido", x = "Tendência", y = "")
 ```
 
-## Posição dos deputados da legislação passada no eixo esquerda-direita
+Agora com uma visão interativa
 
 ```{r}
-legis_partido %>%
+plot_alinhamento <- function(partido, cor, data) {
+    
+  data %>%
+    filter(cpf %in% cpfs_candidatos_eleitos, partido_alt == partido) %>% 
+    plot_ly() %>%
+    add_trace(x = ~mean,
+              y = ~id,
+              color = ~partido_alt,
+              colors = cor,
+              type = "scatter",
+              mode = "markers",
+              text = ~paste(id, "<br>",
+                            "Valor: ", mean),
+              hoverinfo = "text") %>%
+    layout(xaxis = list(title = "Tendência"),
+           yaxis = list(title = "",  showticklabels = FALSE)) %>% 
+    config(displayModeBar = FALSE)
+}
+```
+
+```{r}
+partidos_completo <- c(partidos_selecionados[1], "Outros", partidos_selecionados[-1])
+
+plots <- tibble(partido = partidos_completo, cor = pallete) %>% 
+  mutate(dados = purrr::map2(
+    partido,
+    cor,
+    plot_alinhamento,
+    candidatos_ideal_points
+)) %>% 
+  dplyr::select(dados)
+
+plots <- as.list(plots$dados)
+  
+subplot(plots, nrows = 7, shareX = TRUE, shareY = TRUE)
+
+# mdb <- plot_alinhamento(candidatos_ideal_points, "#ff7f00", "MDB")
+# outros <- plot_alinhamento(candidatos_ideal_points, "#C4C4C4", "Outros")
+# pcdob <- plot_alinhamento(candidatos_ideal_points, "#984ea3", "PC do B")
+# psdb <- plot_alinhamento(candidatos_ideal_points, "#004997", "PSDB")
+# psl <- plot_alinhamento(candidatos_ideal_points, "#4D9B66", "PSL")
+# psol <- plot_alinhamento(candidatos_ideal_points, "#ffde00", "PSOL")
+# pt <- plot_alinhamento(candidatos_ideal_points, "#e31a1c", "PT")
+```
+
+É possível perceber que os partidos notoriamente de esquerda, como o PSOL e PC do B, têm seus deputados na extrema esquerda da escala. Enquanto partidos como PSDB estão distribuídos pelo centro e pela direita da escala.
+
+## Posição dos deputados da legislatura passada no eixo esquerda-direita
+
+A visualização a seguir permite a interação e a identificação dos deputados federais e seu alinhamento considerando suas votações passadas.
+
+```{r}
+candidatos_ideal_points %>%
   plot_ly() %>%
   add_trace(x = ~mean,
             y = ~id,
@@ -122,16 +188,12 @@ legis_partido %>%
   config(displayModeBar = FALSE)
 ```
 
-```{r}
-candidatos_eleitos <- candidatos %>% 
-  filter(eleito) %>% 
-  pull(cpf)
-```
-
 ## Posição dos deputados atuais no eixo esquerda-direita com base nas votações passadas
+
+Agora estão apresentados apenas os deputados eleitos para a legislatura 2019-2022.
 ```{r}
-legis_partido %>%
-  filter(cpf %in% candidatos_eleitos) %>% 
+candidatos_ideal_points %>%
+  filter(cpf %in% cpfs_candidatos_eleitos) %>% 
   plot_ly() %>%
   add_trace(x = ~mean,
             y = ~id,
@@ -146,14 +208,4 @@ legis_partido %>%
   layout(xaxis = list(title = "Tendência"),
          yaxis = list(title = "",  showticklabels = FALSE)) %>% 
   config(displayModeBar = FALSE)
-```
-
-```{r}
-proposicoes_meio_ambiente <- proposicoes %>% 
-  filter(tema_id == 0) %>% 
-  pull(id_votacao)
-  
-votacoes_filter <- votes_camara_alt %>% 
-  filter(id_votacao %in% proposicoes_meio_ambiente)
-  
 ```
