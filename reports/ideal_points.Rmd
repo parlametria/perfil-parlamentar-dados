@@ -78,14 +78,14 @@ mcmc_votes <- MCMCirt1d(votos_camara_irt_format, burnin = 2500, mcmc = 50000, th
 mc <- summary(mcmc_votes)
 
 ## Medidas
-thetas <- as_tibble(mc$statistics[, 1:2])
+thetas <- tibble::as_tibble(mc$statistics[, 1:2])
 colnames(thetas) <- c("mean", "SD")
 
 # Id dos deputados
 id <- unlist(dimnames(votos_camara_irt_format)[1])
 
 ## Dataframe com os Ideal Points
-legis <- tibble(mean = thetas$mean, sd = thetas$SD, id = id)
+legis <- tibble::tibble(mean = thetas$mean, sd = thetas$SD, id = id)
 ```
 
 ```{r}
@@ -94,7 +94,13 @@ partidos_selecionados <- c("MDB", "PC do B", "PSDB", "PSL", "PSOL", "PT")
 partidos_cores <- c('#ff7f00','#984ea3','#004997','#4D9B66','#ffde00','#e31a1c')
 
 ## Cor para outros: #C4C4C4
-pallete <- c(partidos_cores[1], c('#C4C4C4'), partidos_cores[-1])
+partidos_completo <- c(partidos_selecionados[1], "Outros", partidos_selecionados[-1])
+partidos_cores_completo <- c(partidos_cores[1], c('#C4C4C4'), partidos_cores[-1])
+
+partidos <- tibble::tibble(partido = partidos_completo, cor = partidos_cores_completo) %>% 
+  arrange(partido)
+
+pallete <- partidos %>% dplyr::pull(cor)
 
 candidatos_ideal_points <- legis %>% 
   dplyr::left_join(votos_camara_alt %>% dplyr::distinct(id, cpf, sg_partido), by = "id") %>% 
@@ -123,7 +129,7 @@ Agora com uma visão interativa
 plot_alinhamento <- function(partido, cor, data) {
     
   data %>%
-    filter(cpf %in% cpfs_candidatos_eleitos, partido_alt == partido) %>% 
+    dplyr::filter(cpf %in% cpfs_candidatos_eleitos, partido_alt == partido) %>% 
     plot_ly() %>%
     add_trace(x = ~mean,
               y = ~id,
@@ -141,9 +147,7 @@ plot_alinhamento <- function(partido, cor, data) {
 ```
 
 ```{r}
-partidos_completo <- c(partidos_selecionados[1], "Outros", partidos_selecionados[-1])
-
-plots <- tibble(partido = partidos_completo, cor = pallete) %>% 
+plots <- partidos %>% 
   mutate(dados = purrr::map2(
     partido,
     cor,
@@ -154,15 +158,7 @@ plots <- tibble(partido = partidos_completo, cor = pallete) %>%
 
 plots <- as.list(plots$dados)
   
-subplot(plots, nrows = 7, shareX = TRUE, shareY = TRUE)
-
-# mdb <- plot_alinhamento(candidatos_ideal_points, "#ff7f00", "MDB")
-# outros <- plot_alinhamento(candidatos_ideal_points, "#C4C4C4", "Outros")
-# pcdob <- plot_alinhamento(candidatos_ideal_points, "#984ea3", "PC do B")
-# psdb <- plot_alinhamento(candidatos_ideal_points, "#004997", "PSDB")
-# psl <- plot_alinhamento(candidatos_ideal_points, "#4D9B66", "PSL")
-# psol <- plot_alinhamento(candidatos_ideal_points, "#ffde00", "PSOL")
-# pt <- plot_alinhamento(candidatos_ideal_points, "#e31a1c", "PT")
+subplot(plots, nrows = nrow(partidos), shareX = TRUE, shareY = TRUE)
 ```
 
 É possível perceber que os partidos notoriamente de esquerda, como o PSOL e PC do B, têm seus deputados na extrema esquerda da escala. Enquanto partidos como PSDB estão distribuídos pelo centro e pela direita da escala.
@@ -193,7 +189,7 @@ candidatos_ideal_points %>%
 Agora estão apresentados apenas os deputados eleitos para a legislatura 2019-2022.
 ```{r}
 candidatos_ideal_points %>%
-  filter(cpf %in% cpfs_candidatos_eleitos) %>% 
+  dplyr::filter(cpf %in% cpfs_candidatos_eleitos) %>% 
   plot_ly() %>%
   add_trace(x = ~mean,
             y = ~id,
