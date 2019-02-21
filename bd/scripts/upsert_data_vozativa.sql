@@ -18,6 +18,9 @@ CREATE TEMP TABLE temp_temas AS SELECT * FROM temas LIMIT 0;
 
 -- UPSERT AND DELETE VOTACOES
 
+ALTER TABLE votacoes DROP CONSTRAINT votacoes_pkey;
+ALTER TABLE votacoes ADD PRIMARY KEY (cpf, proposicao_id);
+
 INSERT INTO votacoes (id, resposta, cpf, proposicao_id)
 SELECT id, resposta, cpf, proposicao_id
 FROM temp_votacoes
@@ -26,10 +29,6 @@ DO
  UPDATE
   SET 
     resposta = EXCLUDED.resposta;
-
-DELETE FROM votacoes
-WHERE proposicao_id NOT IN (SELECT p.id_votacao
-                            FROM temp_proposicoes p);
 
 
 -- UPSERT AND DELETE PROPOSICOES
@@ -46,9 +45,18 @@ DO
     descricao = EXCLUDED.descricao,
     tema_id = EXCLUDED.tema_id;
 
-DELETE FROM proposicoes
- WHERE id_votacao NOT IN (SELECT p.id_votacao 
-                          FROM temp_proposicoes p);
+ALTER TABLE proposicoes
+ADD COLUMN IF NOT EXISTS status_proposicao varchar(40);
+
+UPDATE proposicoes
+SET status_proposicao = 'Ativa'
+WHERE id_votacao IN (SELECT p.id_votacao
+                     FROM temp_proposicoes p);
+
+UPDATE proposicoes
+SET status_proposicao = 'Inativa'
+WHERE id_votacao NOT IN (SELECT p.id_votacao
+                     FROM temp_proposicoes p);
 
 
 -- UPSERT AND DELETE TEMAS
