@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS "votacoes" (
     "resposta" INTEGER, 
     "cpf" VARCHAR(255) REFERENCES "candidatos" ("cpf") ON DELETE SET NULL ON UPDATE CASCADE, 
     "proposicao_id" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE, 
-    PRIMARY KEY ("id"));
+    PRIMARY KEY ("cpf", "proposicao_id"));
 
 CREATE TABLE IF NOT EXISTS "respostas" (
     "id" SERIAL, 
