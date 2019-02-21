@@ -110,7 +110,7 @@ Rscript create_script_import.R -f data/ -o scripts/import_csv_bd_vozativa.sql
 Por fim execute o arquivo criado com o seguinte comando:
 
 ```
-psql --username <seu-user --dbname <seu-database> < scripts/import_csv_bd_vozativa.sql
+psql --username <seu-user> --dbname <seu-database> < scripts/import_csv_bd_vozativa.sql
 ```
 
 Obs: Substitua import_csv_bd_vozativa.sql pelo nome do arquivo gerado pelo Rscript executado anteriormente caso você tenha alterado.
@@ -125,6 +125,14 @@ Obs: Só realize este tratamento caso os dados brutos tenham sido alterados. Cas
 
 ```
 Rscript export_dados_tratados_bd.R
+```
+
+# Como atualizar os dados
+
+Caso a tabela de proposições seja alterada. Assumindo que você já executou os scripts que atualizam os votos e demais csv em `raw-data` e também já executou o script que trata os dados para o banco `Rscript export_dados_tratados_bd.R`. Basta executar o seguinte comando para atualização do banco de dados (certifique-se que o diretório atual é o `bd/`.
+
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/upsert_data_vozativa.sql 
 ```
 
 # Deploy no Heroku [deprecated]
