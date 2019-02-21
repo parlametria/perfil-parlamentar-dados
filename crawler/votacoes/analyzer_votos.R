@@ -53,12 +53,19 @@ fetch_voto <- function(id_votacao) {
 #' @examples
 #' deputado <- fetch_deputado(73874)
 fetch_deputado <- function(id_deputado) {
+  print(paste0("Baixando informações do deputado de id ", id_deputado, "..."))
+  url <- paste0("https://dadosabertos.camara.leg.br/api/v2/deputados/", id_deputado)
   deputado <- tryCatch({
-    data <- rcongresso::fetch_deputado(id_deputado) %>% 
-      select(id, nomeCivil, cpf)
+    data <-  RCurl::getURL(url) %>% 
+      jsonlite::fromJSON() %>% 
+      unlist() %>% t() %>% 
+      as.data.frame() %>% 
+      select(id = dados.id, 
+             nome_civil = dados.nomeCivil, 
+             cpf = dados.cpf)
   }, error = function(e) {
     data <- tribble(
-      ~ id, ~ nomeCivil)
+      ~ id, ~ nome_civil, ~cpf)
     return(data)
   })
   
@@ -71,13 +78,17 @@ fetch_deputado <- function(id_deputado) {
 #' @examples
 #' deputados <- fetch_deputados()
 fetch_deputados <- function() {
-  info_pessoais <- do.call("rbind", lapply(rcongresso::fetch_deputado(idLegislatura = 54, itens = -1)$id, 
-                                           fetch_deputado)) %>% 
-    rbind(do.call("rbind", lapply(rcongresso::fetch_deputado(idLegislatura = 55, itens = -1)$id, 
-                                  fetch_deputado)))  %>% 
-    rbind(do.call("rbind", lapply(rcongresso::fetch_deputado(idLegislatura = 56, itens = -1)$id, fetch_deputado)))
+  ids_deputados <- rcongresso::fetch_deputado(idLegislatura = 54, itens = -1) %>% select(id) %>% 
+    rbind(rcongresso::fetch_deputado(idLegislatura = 55, itens = -1) %>% select(id)) %>% 
+    rbind(rcongresso::fetch_deputado(idLegislatura = 56, itens = -1) %>% select(id)) %>% 
+    distinct()
   
-  return(info_pessoais)
+  info_pessoais <- do.call("rbind", lapply(ids_deputados$id, 
+                                           fetch_deputado))
+  return(info_pessoais %>% 
+           unique() %>% 
+           mutate_if(is.factor, as.character) %>% 
+           mutate(id = as.integer(id)))
 }
 
 #' @title Importa e processa dados de votações
@@ -87,6 +98,7 @@ fetch_deputados <- function() {
 #' @examples
 #' votacoes <- fetch_votos(df)
 fetch_votos <- function(ids_votacoes) {
+  print("Baixando informações das votações...")
   votos <- rbind(do.call("rbind", lapply(ids_votacoes, fetch_voto))) %>%
     select(id_votacao, parlamentar.nome, parlamentar.id, voto)
   return (votos)
@@ -102,11 +114,13 @@ processa_votos <- function(votacoes_datapath) {
   ids_votacoes <- (read_csv(votacoes_datapath, col_types = "cddccc") %>% filter(!is.na(id_votacao)))$id_votacao
   votos <- fetch_votos(ids_votacoes)
   deputados <- fetch_deputados()
+  
+  print("Cruzando informações de votos com deputados...")
   votos <- votos %>% 
-    left_join(deputados, by = c("parlamentar.id" = "id")) %>% 
+    inner_join(deputados, by = c("parlamentar.id" = "id")) %>% 
     select(id_votacao, cpf, voto) %>% 
    enumera_votacoes() %>% 
     distinct()
-  
+
   return(votos)
 }
