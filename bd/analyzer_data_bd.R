@@ -154,7 +154,7 @@ processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/t
     )) %>% 
     dplyr::select(-tema) %>% 
     dplyr::distinct(id_votacao, .keep_all= TRUE) %>% 
-    dplyr::mutate(status_proposicao = "Inativa")
+    dplyr::mutate(status_proposicao = "Ativa")
   
   return(proposicoes_alt)
 }
