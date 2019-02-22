@@ -30,6 +30,8 @@ fetch_deputado <- function(id_deputado) {
 #' @examples
 #' deputados <- fetch_deputados(56)
 fetch_deputados <- function(legislatura = 56) {
+  library(rcongresso)
+  
   ids_deputados <- rbind(rcongresso::fetch_deputado(idLegislatura = legislatura, itens = -1) %>% 
                           select(id)) %>% distinct()
   
