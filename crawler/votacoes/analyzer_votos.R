@@ -1,12 +1,11 @@
 #!/usr/bin/env Rscript
-
-# devtools::install_github('analytics-ufcg/rcongresso')
-# install.packages("tm", repos="http://R-Forge.R-project.org")
+source(here::here("crawler/votacoes/utils/constants.R"))
 
 # Bibliotecas
 library(tidyverse)
 library(rcongresso)
 library(tm)
+library(xml2)
 
 #' @title Enumera votações
 #' @description Recebe um dataframe com coluna voto e enumera o valor para um número
@@ -24,26 +23,31 @@ enumera_votacoes <- function(df) {
                             TRUE ~ 0))
 }
 
-#' @title Baixa dados dos votos das votações
-#' @description Baixa os dados dos votos das votações, retornando um dataframe vazio caso a requisição não seja bem sucedida.
-#' @param id_votacao id da votação
-#' @return Dataframe informações sobre os votos e os parlamentares.
+#' @title Enumera tipos de objetivos de votações
+#' @description Recebe um dataframe com coluna obj_votacao e enumera o valor para um número
+#' @param df Dataframe com a coluna obj_votacao
+#' @return Dataframe com coluna obj_votacao_enum enumerada
 #' @examples
-#' votos <- fetch_voto(7566)
-fetch_voto <- function(id_votacao) {
-  votos <- tryCatch({
-    data <- rcongresso::fetch_votos(id_votacao)
-  }, error = function(e) {
-    data <- tribble(
-      ~ id_votacao, ~ parlamentar.id, ~ parlamentar.idLegislatura,
-      ~ parlamentar.nome, ~ parlamentar.siglaPartido,
-      ~ parlamentar.siglaUf, ~ parlamentar.uri, ~ parlamentar.uriPartido,
-      ~ parlamentar.urlFoto, ~ voto)
-
-    return(data)
-  })
-
-  return(votos)
+#' enumera_tipos_objetivos_votacao(df)
+enumera_tipos_objetivos_votacao <- function(df) {
+  df %>%
+    mutate(obj_votacao_enum = case_when(
+      str_detect(obj_votacao, .PDL) ~ 1,
+      str_detect(obj_votacao, .PEC_SEGUNDO_TURNO) ~ 1,
+      str_detect(obj_votacao, .SUBEMENDA_SUBST_GLOBAL) ~ 4,
+      str_detect(obj_votacao, .DESTAQUE) ~ 5,
+      str_detect(obj_votacao, .EMENDA_SUBTS_GLOBAL) ~ 3,
+      str_detect(obj_votacao, .SUBST_COM_ESPECIAL) ~ 2,
+      str_detect(obj_votacao, .SUBST_RELATOR) ~ 2,
+      str_detect(obj_votacao, .PARECER_CM_ATEND_PRESSU_CONST) ~ 4,
+      str_detect(obj_votacao, .SUBEMENDA_SUBST_CDEIC) ~ 4,
+      str_detect(obj_votacao, .VOT_ADMISS_GLOBO) ~ 4,
+      str_detect(obj_votacao, .SUBST_CFT) ~ 2,
+      str_detect(obj_votacao, .SUBEMENDA_SUBST) ~ 4,
+      str_detect(obj_votacao, .SUBST_SF) ~ 2,
+      str_detect(obj_votacao, .PLC) ~ 1,
+      str_detect(obj_votacao, .EMENDA_AGLUT_4) ~ 3,
+      TRUE ~ 5))
 }
 
 #' @title Baixa nome civil dos deputados
@@ -54,7 +58,7 @@ fetch_voto <- function(id_votacao) {
 #' deputado <- fetch_deputado(73874)
 fetch_deputado <- function(id_deputado) {
   print(paste0("Baixando informações do deputado de id ", id_deputado, "..."))
-  url <- paste0("https://dadosabertos.camara.leg.br/api/v2/deputados/", id_deputado)
+  url <- paste0(.URL_DEPUTADOS, id_deputado)
   deputado <- tryCatch({
     data <-  RCurl::getURL(url) %>% 
       jsonlite::fromJSON() %>% 
@@ -94,14 +98,53 @@ fetch_deputados <- function() {
 #' @title Importa e processa dados de votações
 #' @description Recebe um dataframe com os dados das votações das proposições
 #' @param df Dataframe com os dados das votações
-#' @return Dataframe contendo id da votação, nome de urna, nome completo e voto dos deputados que participaram de cada votação
+#' @return Dataframe contendo id da votação, id e voto dos deputados que participaram de cada votação
 #' @examples
-#' votacoes <- fetch_votos(df)
-fetch_votos <- function(ids_votacoes) {
-  print("Baixando informações das votações...")
-  votos <- rbind(do.call("rbind", lapply(ids_votacoes, fetch_voto))) %>%
-    select(id_votacao, parlamentar.nome, parlamentar.id, voto)
-  return (votos)
+#' votacoes <- fetch_votos(2165578, 8334)
+fetch_votos <- function(id_proposicao, id_votacao) {
+  proposicoes <- rcongresso::fetch_proposicao_camara(id_proposicao) %>%
+    select(siglaTipo, numero, ano)
+  
+  url <- paste0("https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicao?tipo=",
+                proposicoes$siglaTipo, "&numero=", proposicoes$numero, "&ano=", proposicoes$ano)
+
+  xml <- RCurl::getURL(url) %>% 
+    read_xml()
+  
+  votacao <- xml_find_all(xml, .QUERY) %>%
+    map_df(function(x) {
+      list(
+        obj_votacao = xml_attr(x, "ObjVotacao"),
+        data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
+      )
+    })
+  
+  if(nrow(votacao) > 1) {
+    votacao <- votacao %>% 
+     enumera_tipos_objetivos_votacao() %>% 
+      mutate(minimo = min(obj_votacao_enum)) %>% 
+               filter(minimo == obj_votacao_enum) %>% 
+      select(-obj_votacao_enum)
+  }
+  
+  votos <- xml2::xml_find_all(xml, paste0(".//Votacao[@ObjVotacao = '", 
+                                          votacao$obj_votacao, "']", 
+                                          "//votos//Deputado")) %>%
+    map_df(function(x) {
+      list(
+        id_deputado = xml_attr(x, "ideCadastro"),
+        voto = xml_attr(x, "Voto") %>% 
+          gsub(" ", "", .))
+      }) %>% 
+    mutate(obj_votacao = votacao$obj_votacao,
+           data_hora = votacao$data,
+           id_votacao = id_votacao,
+           id_deputado = as.integer(id_deputado)) %>%
+    select(id_votacao,
+           id_deputado,
+           voto)
+  
+  return(votos)
 }
 
 #' @title Processa votações e informações dos deputados
@@ -111,13 +154,16 @@ fetch_votos <- function(ids_votacoes) {
 #' @examples
 #' processa_votos("../raw_data/tabela_votacoes.csv")
 processa_votos <- function(votacoes_datapath) {
-  ids_votacoes <- (read_csv(votacoes_datapath, col_types = "cddccc") %>% filter(!is.na(id_votacao)))$id_votacao
-  votos <- fetch_votos(ids_votacoes)
+  proposicao_votacao <- read_csv(votacoes_datapath, col_types = "cddccc") %>% 
+    filter(!is.na(id_votacao)) %>% 
+    select(id_proposicao, id_votacao)
+  
+  votos <- map2_df(proposicao_votacao$id_proposicao, proposicao_votacao$id_votacao, ~ fetch_votos(.x, .y))
   deputados <- fetch_deputados()
   
   print("Cruzando informações de votos com deputados...")
   votos <- votos %>% 
-    inner_join(deputados, by = c("parlamentar.id" = "id")) %>% 
+    inner_join(deputados, by = c("id_deputado" = "id")) %>% 
     select(id_votacao, cpf, voto) %>% 
    enumera_votacoes() %>% 
     distinct()
