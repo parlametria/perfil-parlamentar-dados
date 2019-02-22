@@ -3,7 +3,7 @@
  -- CANDIDATOS
 CREATE TEMP TABLE temp_candidatos AS SELECT * FROM candidatos LIMIT 0;
 
- \copy temp_candidatos FROM './data/candidatos.csv' DELIMITER ',' CSV HEADER WITH NULL AS 'NA';
+ \copy temp_candidatos FROM './data/candidatos.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
 
 
 -- UPDATE COLUMN id_parlamentar ON CANDIDATOS

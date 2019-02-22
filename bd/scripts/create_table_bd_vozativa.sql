@@ -39,7 +39,8 @@ CREATE TABLE IF NOT EXISTS "candidatos" (
     "grau_instrucao" VARCHAR(255), 
     "genero" VARCHAR(255), 
     "eleito" BOOLEAN, 
-    "respondeu" BOOLEAN, 
+    "respondeu" BOOLEAN,
+    "id_parlamentar" VARCHAR(40) DEFAULT NULL,
     PRIMARY KEY ("cpf"));    
 
 CREATE TABLE IF NOT EXISTS "perguntas" (
