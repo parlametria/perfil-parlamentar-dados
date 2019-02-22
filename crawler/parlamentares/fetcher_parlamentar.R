@@ -13,7 +13,8 @@ fetch_deputado <- function(id_deputado) {
       unlist() %>% t() %>% 
       as.data.frame() %>% 
       select(id = dados.id, 
-             nome_civil = dados.nomeCivil, 
+             nome_civil = dados.nomeCivil,
+             nome_eleitoral = dados.ultimoStatus.nomeEleitoral,
              cpf = dados.cpf)
   }, error = function(e) {
     data <- tribble(

@@ -13,8 +13,8 @@ parlamentar_rede_social_merge <- function(parlamentares, redes_sociais) {
                      by = c("id" = "congressperson_id")) %>% 
     arrange(nome_civil) %>% 
     
-    mutate(twitter_profile = ifelse(is.na(twitter_profile), "-", twitter_profile)) %>% 
-    mutate(facebook_page = ifelse(is.na(facebook_page), "-", facebook_page)) %>%
+    mutate(twitter_profile = ifelse(is.na(twitter_profile), "", twitter_profile)) %>% 
+    mutate(facebook_page = ifelse(is.na(facebook_page), "", facebook_page)) %>%
     mutate(nome_civil = toupper(nome_civil))
   
   return(parlamentares_rede_social)
@@ -38,7 +38,7 @@ process_rede_social_deputados <- function() {
   
   deputados_atuais_rede_social <- parlamentar_rede_social_merge(deputados_atuais, redes_sociais_leg55) %>% 
     mutate(casa = "câmara") %>% 
-    select(id_parlamentar = id, casa, nome_civil, twitter = twitter_profile, facebook = facebook_page)
+    select(id_parlamentar = id, casa, nome_civil, nome_eleitoral, twitter = twitter_profile, facebook = facebook_page)
     
   return(deputados_atuais_rede_social)
   
@@ -62,7 +62,9 @@ process_rede_social_senadores <- function() {
   
   senadores_atuais_rede_social <- parlamentar_rede_social_merge(senadores_atuais, redes_sociais_leg55) %>% 
     mutate(casa = "senado") %>% 
-    select(id_parlamentar = id, casa, nome_civil, twitter = twitter_profile, facebook = facebook_page)
+    mutate(nome_eleitoral = nome_civil) %>% 
+    select(id_parlamentar = id, casa, nome_civil, nome_eleitoral, twitter = twitter_profile, facebook = facebook_page)
+    
   
   return(senadores_atuais_rede_social)
   
