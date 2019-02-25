@@ -121,7 +121,7 @@ fetch_votos <- function(id_proposicao, id_votacao) {
 #' @examples
 #' processa_votos("../raw_data/tabela_votacoes.csv")
 processa_votos <- function(votacoes_datapath) {
-  proposicao_votacao <- read_csv(votacoes_datapath, col_types = "cddccc") %>% 
+  proposicao_votacao <- read_csv(votacoes_datapath, col_types = "cdcccc") %>% 
     filter(!is.na(id_votacao)) %>% 
     select(id_proposicao, id_votacao)
   
