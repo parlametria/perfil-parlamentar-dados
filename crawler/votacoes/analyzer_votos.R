@@ -81,6 +81,7 @@ fetch_votos <- function(id_proposicao, id_votacao) {
     map_df(function(x) {
       list(
         obj_votacao = xml_attr(x, "ObjVotacao"),
+        cod_sessao = xml_attr(x, "codSessao"),
         data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
       )
     })
@@ -104,7 +105,7 @@ fetch_votos <- function(id_proposicao, id_votacao) {
       }) %>% 
     mutate(obj_votacao = votacao$obj_votacao,
            data_hora = votacao$data,
-           id_votacao = id_votacao,
+           id_votacao = votacao$cod_sessao,
            id_deputado = as.integer(id_deputado)) %>%
     select(id_votacao,
            id_deputado,
