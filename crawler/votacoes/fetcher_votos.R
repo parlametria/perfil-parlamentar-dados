@@ -1,7 +1,3 @@
-suppressWarnings(suppressMessages(library(tidyverse)))
-suppressWarnings(suppressMessages(library(rcongresso)))
-suppressWarnings(suppressMessages(library(here)))
-suppressWarnings(suppressMessages(library(tm)))
 suppressWarnings(suppressMessages(source(here::here("crawler/votacoes/analyzer_votos.R"))))
   
 if(!require(optparse)){
@@ -13,7 +9,7 @@ if(!require(devtools)){
   install.packages("devtools")
 }
 
-suppressWarnings(suppressMessages(devtools::install_github('hadrizia/rcongresso')))
+suppressWarnings(suppressMessages(devtools::install_github('analytics-ufcg/rcongresso', force = T)))
 
 args = commandArgs(trailingOnly=TRUE)
 
