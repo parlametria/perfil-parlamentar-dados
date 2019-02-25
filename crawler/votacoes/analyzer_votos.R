@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
 source(here::here("crawler/votacoes/utils/constants.R"))
+source(here::here("crawler/parlamentares/fetcher_parlamentar.R"))
 
 # Bibliotecas
 library(tidyverse)
@@ -50,49 +51,14 @@ enumera_tipos_objetivos_votacao <- function(df) {
       TRUE ~ 5))
 }
 
-#' @title Baixa nome civil dos deputados
-#' @description Baixa nome civil dos deputados pelo id do parlamentar na Câmara.
-#' @param id_votacao id do deputado
-#' @return Dataframe informações de id e nome civil.
-#' @examples
-#' deputado <- fetch_deputado(73874)
-fetch_deputado <- function(id_deputado) {
-  print(paste0("Baixando informações do deputado de id ", id_deputado, "..."))
-  url <- paste0(.URL_DEPUTADOS, id_deputado)
-  deputado <- tryCatch({
-    data <-  RCurl::getURL(url) %>% 
-      jsonlite::fromJSON() %>% 
-      unlist() %>% t() %>% 
-      as.data.frame() %>% 
-      select(id = dados.id, 
-             nome_civil = dados.nomeCivil, 
-             cpf = dados.cpf)
-  }, error = function(e) {
-    data <- tribble(
-      ~ id, ~ nome_civil, ~cpf)
-    return(data)
-  })
-  
-  return(deputado)
-}
-
-#' @title Importa dados de todos os deputados nas últimas 3 legislaturas
-#' @description Importa os dados de todos os deputados federais das últimas 3 legislaturas: 54, 55 e 56.
+#' @title Importa dados de todos os deputados por legilatura
+#' @description Importa os dados de todos os deputados federais por legislatura
 #' @return Dataframe contendo informações dos deputados: id, nome civil e cpf
 #' @examples
-#' deputados <- fetch_deputados()
-fetch_deputados <- function() {
-  ids_deputados <- rcongresso::fetch_deputado(idLegislatura = 54, itens = -1) %>% select(id) %>% 
-    rbind(rcongresso::fetch_deputado(idLegislatura = 55, itens = -1) %>% select(id)) %>% 
-    rbind(rcongresso::fetch_deputado(idLegislatura = 56, itens = -1) %>% select(id)) %>% 
-    distinct()
-  
-  info_pessoais <- do.call("rbind", lapply(ids_deputados$id, 
-                                           fetch_deputado))
-  return(info_pessoais %>% 
-           unique() %>% 
-           mutate_if(is.factor, as.character) %>% 
-           mutate(id = as.integer(id)))
+#' deputados <- fetch_deputados_por_legislatura(c(54,55,56))
+fetch_deputados_por_legislatura <- function(legislaturas_list) {
+  return(purrr::map_df(.x = legislaturas_list, 
+                       .f = ~ fetch_deputados(.x)))
 }
 
 #' @title Importa e processa dados de votações
@@ -159,7 +125,11 @@ processa_votos <- function(votacoes_datapath) {
     select(id_proposicao, id_votacao)
   
   votos <- map2_df(proposicao_votacao$id_proposicao, proposicao_votacao$id_votacao, ~ fetch_votos(.x, .y))
-  deputados <- fetch_deputados()
+  
+  # IDS das últimas três legislaturas
+  legislaturas_list <- c(54,55,56)
+  
+  deputados <- fetch_deputados_por_legislatura(legislaturas_list)
   
   print("Cruzando informações de votos com deputados...")
   votos <- votos %>% 
