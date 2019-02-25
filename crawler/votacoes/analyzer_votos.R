@@ -6,7 +6,6 @@ source(here::here("crawler/parlamentares/fetcher_parlamentar.R"))
 library(tidyverse)
 library(rcongresso)
 library(tm)
-library(xml2)
 
 #' @title Enumera votações
 #' @description Recebe um dataframe com coluna voto e enumera o valor para um número
@@ -68,15 +67,16 @@ fetch_deputados_por_legislatura <- function(legislaturas_list) {
 #' @examples
 #' votacoes <- fetch_votos(2165578, 8334)
 fetch_votos <- function(id_proposicao, id_votacao) {
+  library(xml2)
   proposicoes <- rcongresso::fetch_proposicao_camara(id_proposicao) %>%
     select(siglaTipo, numero, ano)
   
   url <- paste0("https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicao?tipo=",
                 proposicoes$siglaTipo, "&numero=", proposicoes$numero, "&ano=", proposicoes$ano)
 
-  xml <- RCurl::getURL(url) %>% 
+  xml <- RCurl::getURL(url) %>%
     read_xml()
-  
+
   votacao <- xml_find_all(xml, .QUERY) %>%
     map_df(function(x) {
       list(
@@ -85,24 +85,24 @@ fetch_votos <- function(id_proposicao, id_votacao) {
         data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
       )
     })
-  
+
   if(nrow(votacao) > 1) {
-    votacao <- votacao %>% 
-     enumera_tipos_objetivos_votacao() %>% 
-      mutate(minimo = min(obj_votacao_enum)) %>% 
-               filter(minimo == obj_votacao_enum) %>% 
+    votacao <- votacao %>%
+     enumera_tipos_objetivos_votacao() %>%
+      mutate(minimo = min(obj_votacao_enum)) %>%
+               filter(minimo == obj_votacao_enum) %>%
       select(-obj_votacao_enum)
   }
-  
-  votos <- xml2::xml_find_all(xml, paste0(".//Votacao[@ObjVotacao = '", 
-                                          votacao$obj_votacao, "']", 
+
+  votos <- xml2::xml_find_all(xml, paste0(".//Votacao[@ObjVotacao = '",
+                                          votacao$obj_votacao, "']",
                                           "//votos//Deputado")) %>%
     map_df(function(x) {
       list(
         id_deputado = xml_attr(x, "ideCadastro"),
-        voto = xml_attr(x, "Voto") %>% 
+        voto = xml_attr(x, "Voto") %>%
           gsub(" ", "", .))
-      }) %>% 
+      }) %>%
     mutate(obj_votacao = votacao$obj_votacao,
            data_hora = votacao$data,
            id_votacao = votacao$cod_sessao,
@@ -110,7 +110,7 @@ fetch_votos <- function(id_proposicao, id_votacao) {
     select(id_votacao,
            id_deputado,
            voto)
-  
+
   return(votos)
 }
 
