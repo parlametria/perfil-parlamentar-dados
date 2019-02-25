@@ -1,0 +1,106 @@
+#' @title Baixa nome civil dos deputados
+#' @description Baixa nome civil dos deputados pelo id do parlamentar na Câmara.
+#' @param id_votacao id do deputado
+#' @return Dataframe informações de id e nome civil.
+#' @examples
+#' deputado <- fetch_deputado(73874)
+fetch_deputado <- function(id_deputado) {
+  print(paste0("Baixando informações do deputado de id ", id_deputado, "..."))
+  url <- paste0("https://dadosabertos.camara.leg.br/api/v2/deputados/", id_deputado)
+  deputado <- tryCatch({
+    data <-  RCurl::getURL(url) %>% 
+      jsonlite::fromJSON() %>% 
+      unlist() %>% t() %>% 
+      as.data.frame() %>% 
+      select(id = dados.id, 
+             nome_civil = dados.nomeCivil,
+             nome_eleitoral = dados.ultimoStatus.nomeEleitoral,
+             cpf = dados.cpf)
+  }, error = function(e) {
+    data <- tribble(
+      ~ id, ~ nome_civil, ~cpf)
+    return(data)
+  })
+  
+  return(deputado)
+}
+
+#' @title Importa dados de todos os deputados de uma legislatura específica
+#' @description Importa os dados de todos os deputados federais de uma legislatura específica
+#' @return Dataframe contendo informações dos deputados: id, nome civil e cpf
+#' @examples
+#' deputados <- fetch_deputados(56)
+fetch_deputados <- function(legislatura = 56) {
+  library(rcongresso)
+  
+  ids_deputados <- rbind(rcongresso::fetch_deputado(idLegislatura = legislatura, itens = -1) %>% 
+                          select(id)) %>% distinct()
+  
+  info_pessoais <- do.call("rbind", lapply(ids_deputados$id, 
+                                           fetch_deputado))
+  return(info_pessoais %>% 
+           unique() %>% 
+           mutate_if(is.factor, as.character) %>% 
+           mutate(id = as.integer(id)))
+}
+
+#' @title Importa dados de todos os senadores de uma legislatura específica
+#' @description Importa os dados de todos os senadores de uma legislatura específica
+#' @return Dataframe contendo informações dos senadores: id e nome civil
+#' @examples
+#' senadores <- fetch_senadores(56)
+fetch_senadores <- function(legislatura = 56) {
+  url <- paste0("http://legis.senado.leg.br/dadosabertos/senador/lista/legislatura/", legislatura)
+  
+  senadores <- tryCatch({
+    xml <- RCurl::getURL(url) %>% xml2::read_xml()
+    data <- xml2::xml_find_all(xml, ".//Parlamentar") %>%
+      map_df(function(x) {
+        list(
+          id = xml2::xml_find_first(x, ".//IdentificacaoParlamentar/CodigoParlamentar") %>% 
+            xml2::xml_text(),
+          nome_civil = xml2::xml_find_first(x, ".//IdentificacaoParlamentar/NomeParlamentar") %>% 
+            xml2::xml_text(),
+          descricao_participacao = xml2::xml_find_first(x, ".//Mandatos/Mandato/DescricaoParticipacao") %>% 
+            xml2::xml_text()
+        )
+      }) %>% 
+      dplyr::filter(descricao_participacao == "Titular") %>% 
+      select(id, nome_civil)
+  }, error = function(e) {
+    data <- tribble(
+      ~ id, ~ nome_civil)
+    return(data)
+  })
+  
+  return(senadores)
+}
+
+#' @title Importa dados de todos os senadores atualmente em exercício no Senado
+#' @description Importa os dados de todos os senadores atualmente em exercício no Senado
+#' @return Dataframe contendo informações dos senadores: id e nome civil
+#' @examples
+#' senadores <- fetch_senadores_atuais()
+fetch_senadores_atuais <- function() {
+  url <- paste0("http://legis.senado.leg.br/dadosabertos/senador/lista/atual")
+  
+  senadores <- tryCatch({
+    xml <- RCurl::getURL(url) %>% xml2::read_xml()
+    data <- xml2::xml_find_all(xml, ".//Parlamentar") %>%
+      map_df(function(x) {
+        list(
+          id = xml2::xml_find_first(x, ".//IdentificacaoParlamentar/CodigoParlamentar") %>% 
+            xml2::xml_text(),
+          nome_civil = xml2::xml_find_first(x, ".//IdentificacaoParlamentar/NomeParlamentar") %>% 
+            xml2::xml_text()
+        )
+      }) %>%
+      select(id, nome_civil)
+  }, error = function(e) {
+    data <- tribble(
+      ~ id, ~ nome_civil)
+    return(data)
+  })
+  
+  return(senadores)
+}

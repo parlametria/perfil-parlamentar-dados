@@ -15,6 +15,12 @@ CREATE TEMP TABLE temp_temas AS SELECT * FROM temas LIMIT 0;
 
 \copy temp_temas FROM './data/temas.csv' DELIMITER ',' CSV HEADER;
 
+-- CANDIDATOS
+CREATE TEMP TABLE temp_candidatos AS SELECT * FROM candidatos LIMIT 0;
+
+\copy temp_candidatos FROM './data/candidatos.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
+
+
 -- UPSERT PROPOSICOES
 
 INSERT INTO proposicoes (projeto_lei, id_votacao, titulo, descricao, tema_id, status_proposicao) 
@@ -22,7 +28,7 @@ SELECT projeto_lei, id_votacao, titulo, descricao, tema_id, status_proposicao
 FROM temp_proposicoes
 ON CONFLICT (id_votacao) 
 DO
- UPDATE
+  UPDATE
   SET 
     projeto_lei = EXCLUDED.projeto_lei,
     titulo = EXCLUDED.titulo,
@@ -65,8 +71,20 @@ DELETE FROM temas
                           FROM temp_temas t);
 
 
+-- UPDATE COLUMN id_parlamentar ON CANDIDATOS
+UPDATE candidatos 
+SET id_parlamentar = (SELECT t.id_parlamentar
+                      FROM temp_candidatos t
+                      WHERE t.cpf = candidatos.cpf);
+
+
 -- DROP TABLES
 
 DROP TABLE temp_proposicoes;
 DROP TABLE temp_temas;
 DROP TABLE temp_votacoes;
+DROP TABLE temp_candidatos;
+
+
+
+
