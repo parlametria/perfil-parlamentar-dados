@@ -2,6 +2,9 @@
 ALTER TABLE proposicoes
 ADD COLUMN IF NOT EXISTS status_proposicao varchar(40) DEFAULT 'Inativa';
 
+ALTER TABLE proposicoes
+ADD COLUMN IF NOT EXISTS id_proposicao varchar(40) DEFAULT NULL;
+
 -- ALTER PRIMARY KEY VOTACOES
 ALTER TABLE votacoes DROP CONSTRAINT votacoes_pkey;
 ALTER TABLE votacoes ADD PRIMARY KEY (cpf, proposicao_id);

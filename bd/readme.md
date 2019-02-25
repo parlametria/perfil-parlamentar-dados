@@ -129,10 +129,22 @@ Rscript export_dados_tratados_bd.R
 
 # Como atualizar os dados
 
-Caso a tabela de proposições seja alterada. Assumindo que você já executou os scripts que atualizam os votos e demais csv em `raw-data` e também já executou o script que trata os dados para o banco `Rscript export_dados_tratados_bd.R`. Basta executar o seguinte comando para atualização do banco de dados (certifique-se que o diretório atual é o `bd/`.
+Caso a tabela de proposições seja alterada. Assumindo que você já executou os scripts que atualizam os votos e demais csv em `raw-data` e também já executou o script que trata os dados para o banco `Rscript export_dados_tratados_bd.R`. Basta executar os seguintes comandos para atualização do banco de dados (certifique-se que o diretório atual é o `bd/`.
 
 ```
-psql -h <host> -U <seu-user> -d <seu-database> < scripts/upsert_data_vozativa.sql 
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_temas.sql 
+```
+
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_proposicoes.sql 
+```
+
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_votacoes.sql 
+```
+
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_candidatos.sql 
 ```
 
 # Deploy no Heroku [deprecated]

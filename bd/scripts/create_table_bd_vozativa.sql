@@ -50,12 +50,13 @@ CREATE TABLE IF NOT EXISTS "perguntas" (
     PRIMARY KEY ("id"));
 
 CREATE TABLE IF NOT EXISTS "proposicoes" (
-    "projeto_lei" VARCHAR(255), 
+    "projeto_lei" VARCHAR(255),    
     "id_votacao" INTEGER, 
     "titulo" VARCHAR(255), 
     "descricao" VARCHAR(800), 
     "tema_id" INTEGER REFERENCES "temas" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-    "status_proposicao" varchar(40) DEFAULT 'Inativa',
+    "status_proposicao" VARCHAR(40) DEFAULT 'Inativa',
+    "id_proposicao" VARCHAR(40), 
     PRIMARY KEY ("id_votacao"));
 
 CREATE TABLE IF NOT EXISTS "votacoes" (

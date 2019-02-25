@@ -158,7 +158,10 @@ processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/t
     )) %>% 
     dplyr::select(-tema) %>% 
     dplyr::distinct(id_votacao, .keep_all= TRUE) %>% 
-    dplyr::mutate(status_proposicao = "Ativa")
+    dplyr::filter(!is.na(id_votacao)) %>% 
+    dplyr::mutate(id_proposicao = as.character(id_proposicao)) %>% 
+    dplyr::mutate(status_proposicao = "Ativa") %>% 
+    dplyr::select("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema_id", "status_proposicao", "id_proposicao")
   
   return(proposicoes_alt)
 }
