@@ -36,7 +36,9 @@ psql -h localhost -U postgres --dbname vozativa
 
 A senha padrão local é: `secret`
 
-A partir de agora será possível acessar e utilizar o banco de dados Postgres.
+**A partir de agora será possível acessar e utilizar o banco de dados Postgres para desenvolvimento da aplicação Voz Ativa.**
+
+Outras informações como mudança de senha, uso do banco sem docker, atualização dos dados para outros ambientes (que não permitem a exclusão dos dados) podem ser obtidas no restante deste readme.
 
 ### Como mudar a senha
 
@@ -110,12 +112,12 @@ Rscript create_script_import.R -f data/ -o scripts/import_csv_bd_vozativa.sql
 Por fim execute o arquivo criado com o seguinte comando:
 
 ```
-psql --username <seu-user --dbname <seu-database> < scripts/import_csv_bd_vozativa.sql
+psql --username <seu-user> --dbname <seu-database> < scripts/import_csv_bd_vozativa.sql
 ```
 
 Obs: Substitua import_csv_bd_vozativa.sql pelo nome do arquivo gerado pelo Rscript executado anteriormente caso você tenha alterado.
 
-# Como realizar o tratamento/atualização dos dados
+# Como realizar o tratamento/atualização dos dados para o banco de dados
 
 Como falado no início deste README, os dados presentes no diretório `data` são os que contém a versão mais atual das tabelas que devem ser criadas e importadas no BD. Para atualizá-los é preciso executar as funções que transformam e tratam os "dados brutos" contidos em `crawler/raw_data` (caminho relativo a raiz desse repositório). Portanto, se os dados em `crawler/raw_data` mudarem então faz-se necessário que a atualização dos dados em `data` também deverá ocorrer. Para isto, siga os passos.
 
@@ -127,17 +129,70 @@ Obs: Só realize este tratamento caso os dados brutos tenham sido alterados. Cas
 Rscript export_dados_tratados_bd.R
 ```
 
-# Deploy no Heroku [deprecated]
+# Como atualizar os dados desde o início
 
-## Criar dump local
+**1. Tudo começa com a tabela de proposições**
 
-pg_dump -U postgres vozativa > voz-ativa.dump -Fc 
+O dado presente em `crawler/raw-data/tabela_votacoes.csv` contém a lista de proposições e informações sobre o tema da proposição, apelido da proposição, descrição e o id da votação mais importante.
 
-## Upload para s3 e criar url do aws
-fazer upload do dump no s3 e depois criar a url com o comando:
+Todas as proposições contidas neste arquivo *tabela_votacoes.csv* são consideradas as atualmente disponíveis e ativas na plataforma Voz Ativa. Logo, se é preciso editar o texto de uma proposição, excluir proposições ou adicionar novas é preciso inicialmente editar este arquivo.
 
-aws s3 presign s3://fotoscandidatos2018/voz-ativa.dump
+**2. Atualize os votos**
 
-## Upload no heroku
+Qualquer alteração de adição ou remoção de proposições na tabela de proposições envolve também a atualização dos dados de votos dos parlamentares para a votação mais importante atrelada a proposição. Para atualizar os votos execute o script *fetcher_votos.R* no módulo de votações. Mais informações sobre a execução desse script podem ser obtidas no readme presente em `crawler/votacoes/readme.md`
 
-heroku pg:backups:restore 'aws-link' DATABASE_URL --app voz-ativa
+```
+Rscript fetcher_votos.R
+```
+
+**3. Atualize a lista de candidatos**
+
+No módulo de candidatos (`crawler/candidatos`) execute o script *export_info_candidatos_2018.R* para salvar os dados de candidatos a Deputado Federal nas eleições de 2018.
+
+```
+Rscript export_info_candidatos_2018.R
+```
+
+**4. Tratamento dos dados para o banco de dados**
+
+Com a execução dos passos 1, 2 e 3, os arquivos *tabela_votacoes.csv*, *votacoes.csv* e *candidatos.csv* presentes em `crawler/raw-data/` estarão atualizados de acordo com a nova lista de proposições ativas no Voz Ativa.
+
+Agora é preciso que esses dados sejam alterados para o formato utilizado no banco de dados do Voz Ativa. Para tal processamento basta executar o script *export_dados_tratados_bd.R* presente em `bd/`:
+
+```
+Rscript export_dados_tratados_bd.R
+```
+
+**Certifique-se que o diretório atual é o `bd/`.**
+
+**5. Atualização do Banco de dados**
+
+5.1 Alteração das Tabelas
+
+Caso já exista um banco de dados executando e você não quer se desfazer dele, será preciso atualizar o schema de dados para a versão atual. Para isto execute (**certifique-se que o diretório atual é o `bd/`.**):
+
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/alter_table_vozativa.sql 
+```
+
+5.1 Alteração dos Dados
+
+Agora atualize os dados presentes nas tabelas do banco de forma individual executando os seguintes comandos(**certifique-se que o diretório atual é o `bd/`.**):
+
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_temas.sql 
+```
+
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_proposicoes.sql 
+```
+
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_votacoes.sql 
+```
+
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_candidatos.sql 
+```
+
+Caso nenhum erro ocorra, fica garantido que as tabelas agora foram atualizadas com os dados corretos.

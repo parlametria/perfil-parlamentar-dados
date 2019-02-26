@@ -50,11 +50,13 @@ CREATE TABLE IF NOT EXISTS "perguntas" (
     PRIMARY KEY ("id"));
 
 CREATE TABLE IF NOT EXISTS "proposicoes" (
-    "projeto_lei" VARCHAR(255), 
+    "projeto_lei" VARCHAR(255),    
     "id_votacao" INTEGER, 
     "titulo" VARCHAR(255), 
     "descricao" VARCHAR(800), 
-    "tema_id" INTEGER REFERENCES "temas" ("id") ON DELETE SET NULL ON UPDATE CASCADE, 
+    "tema_id" INTEGER REFERENCES "temas" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    "status_proposicao" VARCHAR(40) DEFAULT 'Inativa',
+    "id_proposicao" VARCHAR(40), 
     PRIMARY KEY ("id_votacao"));
 
 CREATE TABLE IF NOT EXISTS "votacoes" (
@@ -62,7 +64,7 @@ CREATE TABLE IF NOT EXISTS "votacoes" (
     "resposta" INTEGER, 
     "cpf" VARCHAR(255) REFERENCES "candidatos" ("cpf") ON DELETE SET NULL ON UPDATE CASCADE, 
     "proposicao_id" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE, 
-    PRIMARY KEY ("id"));
+    PRIMARY KEY ("cpf", "proposicao_id"));
 
 CREATE TABLE IF NOT EXISTS "respostas" (
     "id" SERIAL, 
