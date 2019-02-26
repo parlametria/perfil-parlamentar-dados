@@ -109,7 +109,7 @@ candidatos_ideal_points <- legis %>%
 
 ## Distribuição dos partidos no eixo esquerda-direita
 
-Na visualização a seguir é possível perceber os **Ideal points** dos deputados ao longo de uma escala que considera o 0 como ponto de neutralidade política e conforme mais extremo o deputado se encontra mais "extremo" o mesmo é nos seus ideais políticos. Quando mais a esquerda do 0 mais próximo é o alinhamento do deputado aos deputados considerados de esquerda. De forma análoga quanto mais a direita do 0, mais próximo dos deputados de direita está o deputado.
+Na visualização a seguir é possível perceber os **Ideal points** dos deputados ao longo de uma escala que considera o 0 como ponto de neutralidade política e conforme mais extremo o deputado se encontra mais "extremo" o mesmo é nos seus ideais políticos. Quanto mais à esquerda do 0, mais próximo é o alinhamento do deputado aos deputados considerados de esquerda. De forma análoga, quanto mais à direita do 0, mais próximo dos deputados de direita está o deputado.
 
 ```{r}
 candidatos_ideal_points %>%
@@ -123,7 +123,7 @@ candidatos_ideal_points %>%
   labs(color = "Partido", x = "Tendência", y = "")
 ```
 
-Agora com uma visão interativa
+Agora com uma visão interativa:
 
 ```{r}
 plot_alinhamento <- function(partido, cor, data) {
