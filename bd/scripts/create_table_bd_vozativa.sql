@@ -82,3 +82,10 @@ CREATE TABLE IF NOT EXISTS "votacoesus" (
     "id" SERIAL, 
     "resposta" INTEGER, "user_id" INTEGER REFERENCES "usuarios" ("id") ON DELETE SET NULL ON UPDATE CASCADE, 
     "proposicao_id" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE, PRIMARY KEY ("id"));
+
+CREATE TABLE IF NOT EXISTS "temasus" (
+    "id" SERIAL, 
+    "usuario_id" INTEGER REFERENCES "usuarios" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    "temas_preferidos" TEXT [],
+    PRIMARY KEY ("usuario_id")
+);
