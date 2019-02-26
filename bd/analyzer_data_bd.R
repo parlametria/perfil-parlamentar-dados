@@ -65,12 +65,14 @@ processa_respostas <- function(res_data_path = here::here("crawler/raw_data/resp
 #' @param res_data_path Caminho para o arquivo de respostas sem tratamento.
 #' @return Dataframe com informações detalhadas dos candidatos
 processa_candidatos <- function(cand_data_path = here::here("crawler/raw_data/candidatos.csv"),
-                                res_data_path = here::here("crawler/raw_data/respostas.csv")) {
+                                res_data_path = here::here("crawler/raw_data/respostas.csv"),
+                                parlamentares_data_path = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
   library(here)
   
   candidatos <- read.csv(cand_data_path, stringsAsFactors = FALSE, colClasses = c("cpf" = "character"))
   respostas <- carrega_respostas(res_data_path)
+  parlamentares <- read.csv(parlamentares_data_path, stringsAsFactors = FALSE, colClasses = c("cpf" = "character"))
     
   ## Lidando com candidatos que responderam mais de uma vez
   respostas_alt <- respostas %>% 
@@ -88,7 +90,9 @@ processa_candidatos <- function(cand_data_path = here::here("crawler/raw_data/ca
    dplyr::select("estado", "uf", "idade_posse", "nome_coligacao", "nome_candidato", "cpf", "recebeu", "num_partido",
           "email", "nome_social", "nome_urna", "reeleicao", "ocupacao", "nome_exibicao", "raca", "tipo_agremiacao",
           "n_candidatura", "composicao_coligacao", "tem_foto", "partido", "sg_partido", "grau_instrucao",
-          "genero", "eleito", "respondeu")
+          "genero", "eleito", "respondeu") %>% 
+   dplyr::left_join(parlamentares %>% dplyr::select(cpf, id), by = c("cpf")) %>% 
+   dplyr::rename(id_parlamentar = id)
  
  return(candidatos_completo)
 }
@@ -124,9 +128,9 @@ processa_temas <- function() {
   temas <- data.frame(tema = c("Meio Ambiente", 
                         "Direitos Humanos", 
                         "Integridade e Transparência", 
-                        "Nova Economia", 
+                        "Agenda Nacional", 
                         "Transversal", 
-                        "Eleitoral"), 
+                        "Educação"), 
                       id = 0:5,
                       stringsAsFactors = FALSE)
   
@@ -148,12 +152,16 @@ processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/t
       tema == "Meio Ambiente" ~ 0,
       tema == "Direitos Humanos" ~ 1,
       tema == "Integridade e Transparência" ~ 2,
-      tema == "Nova Economia" ~ 3,
+      tema == "Agenda Nacional" ~ 3,
       tema == "Transversal" ~ 4,
       TRUE ~ 5
     )) %>% 
     dplyr::select(-tema) %>% 
-    dplyr::distinct(id_votacao, .keep_all= TRUE)
+    dplyr::distinct(id_votacao, .keep_all= TRUE) %>% 
+    dplyr::filter(!is.na(id_votacao)) %>% 
+    dplyr::mutate(id_proposicao = as.character(id_proposicao)) %>% 
+    dplyr::mutate(status_proposicao = "Ativa") %>% 
+    dplyr::select("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema_id", "status_proposicao", "id_proposicao")
   
   return(proposicoes_alt)
 }
