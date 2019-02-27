@@ -105,7 +105,7 @@ fetch_votos <- function(id_proposicao, id_votacao) {
       }) %>%
     mutate(obj_votacao = votacao$obj_votacao,
            data_hora = votacao$data,
-           id_votacao = votacao$cod_sessao,
+           id_votacao = id_votacao,
            id_deputado = as.integer(id_deputado)) %>%
     select(id_votacao,
            id_deputado,
