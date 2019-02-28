@@ -128,9 +128,9 @@ processa_temas <- function() {
   temas <- data.frame(tema = c("Meio Ambiente", 
                         "Direitos Humanos", 
                         "Integridade e Transparência", 
-                        "Nova Economia", 
+                        "Agenda Nacional", 
                         "Transversal", 
-                        "Eleitoral"), 
+                        "Educação"), 
                       id = 0:5,
                       stringsAsFactors = FALSE)
   
@@ -152,12 +152,16 @@ processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/t
       tema == "Meio Ambiente" ~ 0,
       tema == "Direitos Humanos" ~ 1,
       tema == "Integridade e Transparência" ~ 2,
-      tema == "Nova Economia" ~ 3,
+      tema == "Agenda Nacional" ~ 3,
       tema == "Transversal" ~ 4,
       TRUE ~ 5
     )) %>% 
     dplyr::select(-tema) %>% 
-    dplyr::distinct(id_votacao, .keep_all= TRUE)
+    dplyr::distinct(id_votacao, .keep_all= TRUE) %>% 
+    dplyr::filter(!is.na(id_votacao)) %>% 
+    dplyr::mutate(id_proposicao = as.character(id_proposicao)) %>% 
+    dplyr::mutate(status_proposicao = "Ativa") %>% 
+    dplyr::select("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema_id", "status_proposicao", "id_proposicao")
   
   return(proposicoes_alt)
 }
