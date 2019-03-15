@@ -66,7 +66,7 @@ fetch_deputados_por_legislatura <- function(legislaturas_list) {
 #' @return Dataframe contendo id da votação, id e voto dos deputados que participaram de cada votação
 #' @examples
 #' votacoes <- fetch_votos(2165578, 8334)
-fetch_votos <- function(id_proposicao, id_votacao) {
+fetch_votos <- function(id_proposicao, id_votacao, resumo_votacao) {
   library(xml2)
   proposicoes <- rcongresso::fetch_proposicao_camara(id_proposicao) %>%
     select(siglaTipo, numero, ano)
@@ -77,10 +77,11 @@ fetch_votos <- function(id_proposicao, id_votacao) {
   xml <- RCurl::getURL(url) %>%
     read_xml()
 
-  votacao <- xml_find_all(xml, .QUERY) %>%
+  votacao <- xml_find_all(xml, ".//Votacao") %>%
     map_df(function(x) {
       list(
         obj_votacao = xml_attr(x, "ObjVotacao"),
+        resumo = xml_attr(x, "Resumo"),
         cod_sessao = xml_attr(x, "codSessao"),
         data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
       )
@@ -88,10 +89,8 @@ fetch_votos <- function(id_proposicao, id_votacao) {
 
   if(nrow(votacao) > 1) {
     votacao <- votacao %>%
-     enumera_tipos_objetivos_votacao() %>%
-      mutate(minimo = min(obj_votacao_enum)) %>%
-               filter(minimo == obj_votacao_enum) %>%
-      select(-obj_votacao_enum)
+      mutate(resumo = trimws(resumo, which = "both")) %>%  
+      filter(resumo == trimws(resumo_votacao, "both"))
   }
 
   votos <- xml2::xml_find_all(xml, paste0(".//Votacao[@ObjVotacao = '",
@@ -125,10 +124,13 @@ processa_votos <- function(votacoes_datapath) {
     filter(!is.na(id_votacao)) %>% 
     select(id_proposicao, id_votacao)
   
-  votos <- map2_df(proposicao_votacao$id_proposicao, proposicao_votacao$id_votacao, ~ fetch_votos(.x, .y))
+  votos <- pmap_dfr(list(proposicao_votacao$id_proposicao, 
+                         proposicao_votacao$id_votacao, 
+                         proposicao_votacao$resumo), 
+                    ~ fetch_votos(..1, ..2, ..3))
   
   # IDS das últimas três legislaturas
-  legislaturas_list <- c(54,55,56)
+  legislaturas_list <- c(54, 55, 56)
   
   deputados <- fetch_deputados_por_legislatura(legislaturas_list)
   
