@@ -41,9 +41,10 @@ padroniza_cargo_comissao <- function(cargo) {
   library(tidyverse)
   source(here::here("crawler/parlamentares/comissoes/constants/cargos.R"))
   
-  cargo_padronizado = dplyr::case_when(cargo == .PRIMEIRO_PRESIDENTE ~ "Primeiro Vice-presidente",
-                                       cargo == .SEGUNDO_PRESIDENTE ~ "Segundo Vice-presidente",
-                                       cargo == .TERCEIRO_PRESIDENTE ~ "Terceiro Vice-presidente",
+  cargo_padronizado = dplyr::case_when(cargo == .PRESIDENTE ~ "Presidente",
+                                       cargo == .PRIMEIRO_VICE_PRESIDENTE ~ "Primeiro Vice-presidente",
+                                       cargo == .SEGUNDO_VICE_PRESIDENTE ~ "Segundo Vice-presidente",
+                                       cargo == .TERCEIRO_VICE_PRESIDENTE ~ "Terceiro Vice-presidente",
                                        startsWith(cargo, .TITULAR) ~ "Titular",
                                        startsWith(cargo, .SUPLENTE) ~ "Suplente")
   
@@ -62,9 +63,10 @@ enumera_cargo_comissao <- function(cargo, situacao) {
   library(tidyverse)
   source(here::here("crawler/parlamentares/comissoes/constants/cargos.R"))
   
-  peso = dplyr::case_when(cargo == .PRIMEIRO_PRESIDENTE ~ 6,
-                          cargo == .SEGUNDO_PRESIDENTE ~ 5,
-                          cargo == .TERCEIRO_PRESIDENTE ~ 4,
+  peso = dplyr::case_when(cargo == .PRESIDENTE ~ 7,
+                          cargo == .PRIMEIRO_VICE_PRESIDENTE ~ 6,
+                          cargo == .SEGUNDO_VICE_PRESIDENTE ~ 5,
+                          cargo == .TERCEIRO_VICE_PRESIDENTE ~ 4,
                           startsWith(cargo, .TITULAR) ~ 3,
                           startsWith(cargo, .SUPLENTE) ~ 2,
                           is.na(cargo) & situacao == .TITULAR ~ 1,
