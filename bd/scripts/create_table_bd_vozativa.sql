@@ -91,3 +91,18 @@ CREATE TABLE IF NOT EXISTS "temasus" (
     "temas_preferidos" TEXT [],
     PRIMARY KEY ("usuario_id")
 );
+
+CREATE TABLE IF NOT EXISTS "comissoes" (
+    "id" VARCHAR(40),
+    "sigla" VARCHAR(255),
+    "nome" VARCHAR(255),
+    PRIMARY KEY ("id")
+);
+
+CREATE TABLE IF NOT EXISTS "composicao_comissoes" (
+    "comissao_id" VARCHAR(40) REFERENCES "comissoes" ("id") ON DELETE CASCADE ON UPDATE CASCADE, 
+    "parlamentar_cpf" VARCHAR(40) REFERENCES "candidatos" ("cpf") ON DELETE CASCADE ON UPDATE CASCADE,
+    "cargo" VARCHAR(255),
+    "situacao" VARCHAR(255),
+    PRIMARY KEY("comissao_id", "parlamentar_cpf")
+);
