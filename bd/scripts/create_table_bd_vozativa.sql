@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS "temas" (
-    "tema" VARCHAR(255), 
     "id" INTEGER, 
+    "tema" VARCHAR(255),
+    "slug" VARCHAR(255),
     PRIMARY KEY ("id"));
 
 CREATE TABLE IF NOT EXISTS "usuarios" (
