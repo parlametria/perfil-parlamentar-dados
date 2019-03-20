@@ -190,6 +190,22 @@ processa_votacoes <- function(vot_data_path = here::here("crawler/raw_data/votac
   return(votacoes_filtered)  
 }
 
+#' @title Processa dados de comissões
+#' @description Processa os dados de comissões e retorna no formato  a ser utilizado pelo banco de dados
+#' @param comissoes_data_path Caminho para o arquivo de dados de comissões sem tratamento
+#' @return Dataframe com informações das comissões
+processa_comissoes <- function(comissoes_data_path = here::here("crawler/raw_data/comissoes.csv")) {
+  library(tidyverse)
+  library(here)
+  
+  comissoes <- readr::read_csv(comissoes_data_path, col_types = "icc")
+  
+  comissoes_alt <- comissoes %>% 
+    dplyr::select(id, sigla, nome)
+  
+  return(comissoes_alt)
+}
+
 #' @title Processa dados das composições das comissões
 #' @description Processa os dados das composições das comissões e retorna no formato  a ser utilizado pelo banco de dados
 #' @param composicao_path Caminho para o arquivo de dados de composições das comissões sem tratamento
@@ -209,7 +225,6 @@ processa_composicao_comissoes <- function(composicao_path = here::here("crawler/
   composicao_comissoes_mapped <- inner_join(composicao_comissoes, deputados, by = c("parlamentar_id" = "id")) %>% 
     dplyr::distinct() %>% 
     dplyr::select(comissao_id, parlamentar_cpf = cpf, cargo, situacao)
-  
+
   return(composicao_comissoes_mapped)  
 }
-
