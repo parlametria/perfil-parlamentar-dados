@@ -203,4 +203,12 @@ psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_vo
 psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_candidatos.sql 
 ```
 
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_comissoes.sql 
+```
+
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_composicao_comissoes.sql 
+```
+
 Caso nenhum erro ocorra, fica garantido que as tabelas agora foram atualizadas com os dados corretos.
