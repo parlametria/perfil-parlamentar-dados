@@ -13,3 +13,6 @@ ALTER TABLE votacoes ADD PRIMARY KEY (cpf, proposicao_id);
 ALTER TABLE candidatos
 ADD COLUMN IF NOT EXISTS id_parlamentar varchar(40) DEFAULT NULL;
 
+-- CREATE COLUMN slug
+ALTER TABLE temas
+ADD COLUMN IF NOT EXISTS slug varchar(255) DEFAULT 'sem-nome';
