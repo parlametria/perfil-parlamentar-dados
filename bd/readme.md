@@ -153,7 +153,15 @@ No módulo de candidatos (`crawler/candidatos`) execute o script *export_info_ca
 Rscript export_info_candidatos_2018.R
 ```
 
-**4. Tratamento dos dados para o banco de dados**
+**4. Atualize os dados de comissões**
+
+No módulo de Comissões (`crawler/parlamentares/comissoes`) execute o script *export_comissoes.R* para salvar os dados de comissões e de suas composições.
+
+```
+Rscript export_comissoes.R
+```
+
+**5. Tratamento dos dados para o banco de dados**
 
 Com a execução dos passos 1, 2 e 3, os arquivos *tabela_votacoes.csv*, *votacoes.csv* e *candidatos.csv* presentes em `crawler/raw-data/` estarão atualizados de acordo com a nova lista de proposições ativas no Voz Ativa.
 
@@ -165,7 +173,7 @@ Rscript export_dados_tratados_bd.R
 
 **Certifique-se que o diretório atual é o `bd/`.**
 
-**5. Atualização do Banco de dados**
+**6. Atualização do Banco de dados**
 
 5.1 Alteração das Tabelas
 
@@ -193,6 +201,14 @@ psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_vo
 
 ```
 psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_candidatos.sql 
+```
+
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_comissoes.sql 
+```
+
+```
+psql -h <host> -U <seu-user> -d <seu-database> < scripts/migrations/migration_composicao_comissoes.sql 
 ```
 
 Caso nenhum erro ocorra, fica garantido que as tabelas agora foram atualizadas com os dados corretos.
