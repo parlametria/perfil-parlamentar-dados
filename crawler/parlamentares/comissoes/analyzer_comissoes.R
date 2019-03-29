@@ -8,8 +8,14 @@ fetch_comissoes_composicao <- function() {
   library(agoradigital)
   # devtools::install_github('analytics-ufcg/leggoR', force = T)
   
+  comissao_educacao <- agoradigital::fetch_orgaos_camara() %>% 
+    dplyr::filter(orgao_id == 2009)
+  
   comissoes <- agoradigital::fetch_all_composicao_comissao() %>% 
     dplyr::filter(casa == "camara") %>% 
+    dplyr::bind_rows(agoradigital::fetch_composicao_comissao(
+      sigla = "CE", casa = "camara", 
+      orgaos_camara = comissao_educacao)) %>% 
     dplyr::select(id, nome, cargo, situacao, sigla)
   
   return(comissoes)
