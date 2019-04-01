@@ -61,18 +61,23 @@ fetch_deputados_por_legislatura <- function(legislaturas_list) {
 }
 
 #' @title Importa e processa dados de votações
-#' @description Recebe um dataframe com os dados das votações das proposições
-#' @param df Dataframe com os dados das votações
+#' @description Recebe informações da proposição e da votação específica para obtenção dos votos
+#' @param id_proposicao Id da prposição para obtenção dos votos
+#' @param id_votacao Id da votação no contexto interno do Voz Ativa
+#' @param resumo_votacao Resumo da Votação
+#' @param objeto_votacao Objeto da Votação
 #' @return Dataframe contendo id da votação, id e voto dos deputados que participaram de cada votação
 #' @examples
 #' votacoes <- fetch_votos(2165578, 8334)
-fetch_votos <- function(id_proposicao, id_votacao, resumo_votacao) {
+fetch_votos <- function(id_proposicao, id_votacao, resumo_votacao, objeto_votacao) {
   library(xml2)
   proposicoes <- rcongresso::fetch_proposicao_camara(id_proposicao) %>%
     select(siglaTipo, numero, ano)
   
   url <- paste0("https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicao?tipo=",
                 proposicoes$siglaTipo, "&numero=", proposicoes$numero, "&ano=", proposicoes$ano)
+  
+  print(paste0("Baixando votação da ", proposicoes$siglaTipo, " ", proposicoes$numero, "/", proposicoes$ano))
 
   xml <- RCurl::getURL(url) %>%
     read_xml()
@@ -87,12 +92,20 @@ fetch_votos <- function(id_proposicao, id_votacao, resumo_votacao) {
       )
     })
 
+  ## Escolhe votação específica
   if(nrow(votacao) > 1) {
-    votacao <- votacao %>%
-      mutate(resumo = trimws(resumo, which = "both")) %>%  
-      filter(resumo == trimws(resumo_votacao, "both"))
+    if(is.na(resumo_votacao)) {
+      votacao <- votacao %>%
+        mutate(obj_votacao = trimws(obj_votacao, which = "both")) %>%  
+        filter(obj_votacao == trimws(objeto_votacao, "both"))  
+    } else {
+      votacao <- votacao %>%
+        mutate(resumo = trimws(resumo, which = "both")) %>%  
+        filter(resumo == trimws(resumo_votacao, "both"))  
+    }
   }
 
+  ## Captura os dados dos votos
   votos <- xml2::xml_find_all(xml, paste0(".//Votacao[@ObjVotacao = '",
                                           votacao$obj_votacao, "']",
                                           "//votos//Deputado")) %>%
@@ -103,10 +116,13 @@ fetch_votos <- function(id_proposicao, id_votacao, resumo_votacao) {
           gsub(" ", "", .))
       }) %>%
     mutate(obj_votacao = votacao$obj_votacao,
+           resumo = votacao$resumo,
            data_hora = votacao$data,
            id_votacao = id_votacao,
            id_deputado = as.integer(id_deputado)) %>%
-    select(id_votacao,
+    select(obj_votacao,
+           resumo,
+           id_votacao,
            id_deputado,
            voto)
 
@@ -120,14 +136,15 @@ fetch_votos <- function(id_proposicao, id_votacao, resumo_votacao) {
 #' @examples
 #' processa_votos("../raw_data/tabela_votacoes.csv")
 processa_votos <- function(votacoes_datapath) {
-  proposicao_votacao <- read_csv(votacoes_datapath, col_types = "cdcccc") %>% 
-    filter(!is.na(id_votacao)) %>% 
-    select(id_proposicao, id_votacao)
+  proposicao_votacao <- read_csv(votacoes_datapath, col_types = "cicccccccc") %>% 
+    filter(!is.na(id_sessao)) %>% 
+    select(id_proposicao, id_sessao, resumo, objeto_votacao)
   
   votos <- pmap_dfr(list(proposicao_votacao$id_proposicao, 
-                         proposicao_votacao$id_votacao, 
-                         proposicao_votacao$resumo), 
-                    ~ fetch_votos(..1, ..2, ..3))
+                         proposicao_votacao$id_sessao, 
+                         proposicao_votacao$resumo,
+                         proposicao_votacao$objeto_votacao), 
+                    ~ fetch_votos(..1, ..2, ..3, ..4))
   
   # IDS das últimas três legislaturas
   legislaturas_list <- c(54, 55, 56)
