@@ -11,14 +11,31 @@ fetch_deputado <- function(id_deputado) {
     data <-  RCurl::getURL(url) %>% 
       jsonlite::fromJSON() %>% 
       unlist() %>% t() %>% 
-      as.data.frame() %>% 
+      as.data.frame() 
+    
+    data <- data %>% 
+      dplyr::bind_cols(
+        extract_partido_informations(data$dados.ultimoStatus.uriPartido)) %>% 
+      mutate(casa = "camara") %>% 
       select(id = dados.id, 
+             casa,
+             cpf = dados.cpf,
              nome_civil = dados.nomeCivil,
              nome_eleitoral = dados.ultimoStatus.nomeEleitoral,
-             cpf = dados.cpf)
+             uf = dados.ultimoStatus.siglaUf,
+             num_partido,
+             sg_partido = dados.ultimoStatus.siglaPartido,
+             partido,
+             situacao = dados.ultimoStatus.situacao,
+             condicao_eleitoral = dados.ultimoStatus.condicaoEleitoral,
+             genero = dados.sexo,
+             grau_instrucao = dados.escolaridade,
+             email = dados.ultimoStatus.gabinete.email)
+    
   }, error = function(e) {
-    data <- tribble(
-      ~ id, ~ nome_civil, ~cpf)
+    data <- tribble(~ id, ~ cpf, ~ nome_civil, ~ nome_eleitoral, ~ uf, ~ num_partido,
+                    ~ sg_partido, ~ partido, ~ situacao, ~ condicao_eleitoral, ~ genero,
+                    ~ grau_instrucao, ~ email)
     return(data)
   })
   
@@ -103,4 +120,27 @@ fetch_senadores_atuais <- function() {
   })
   
   return(senadores)
+}
+
+#' @title Extrai informações de um partido a partir de uma URL
+#' @description Recebe uma URL da câmara que possui o formato '/partidos/:num e extrai id e nome
+#' @param URL no formato "https://dadosabertos.camara.leg.br/api/v2/partidos/:num"
+#' @return Dataframe contendo informações de id e nome dos partidos
+#' @examples
+#' extract_partido_informations("https://dadosabertos.camara.leg.br/api/v2/partidos/36835")
+extract_partido_informations <- function(url) {
+  partido <- tryCatch({
+    data <-  RCurl::getURL(url) %>% 
+      jsonlite::fromJSON() %>% 
+      unlist() %>% t() %>% 
+      as.data.frame() %>% 
+      select(num_partido = dados.id, 
+             partido = dados.nome)
+  }, error = function(e) {
+    data <- tribble(
+      ~ num_partido, ~ partido)
+    return(data)
+  })
+  
+  return (partido)
 }
