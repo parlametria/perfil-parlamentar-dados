@@ -54,11 +54,11 @@ enumera_tipos_objetivos_votacao <- function(df) {
 #' @return Dataframe contendo informações dos deputados
 #' @examples
 #' deputados <- get_deputados()
-get_deputados <- function() {
+get_deputados <- function(legislaturas_list) {
   deputados <- tryCatch({
     readr::read_csv(here::here("crawler/raw_data/deputados.csv"))
   }, error = function(e) {
-    fetch_deputados()
+    fetch_deputados(legislaturas_list)
   })
   return(deputados)
 }
@@ -131,9 +131,9 @@ processa_votos <- function(votacoes_datapath) {
   votos <- map2_df(proposicao_votacao$id_proposicao, proposicao_votacao$id_votacao, ~ fetch_votos(.x, .y))
   
   # IDS das últimas três legislaturas
-  legislaturas_list <- c(54,55,56)
+  legislaturas_list <- c(55,56)
   
-  deputados <- get_deputados()
+  deputados <- get_deputados(legislaturas_list)
   
   print("Cruzando informações de votos com deputados...")
   votos <- votos %>% 

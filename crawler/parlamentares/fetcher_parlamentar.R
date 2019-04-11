@@ -58,7 +58,8 @@ fetch_deputados <- function(legislatura = 56) {
   return(info_pessoais %>% 
            unique() %>% 
            mutate_if(is.factor, as.character) %>% 
-           mutate(id = as.integer(id)))
+           mutate(id = as.integer(id),
+                  legislatura = legislatura))
 }
 
 #' @title Importa dados de todos os senadores de uma legislatura específica
