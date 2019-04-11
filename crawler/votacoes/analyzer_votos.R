@@ -5,7 +5,6 @@ source(here::here("crawler/parlamentares/fetcher_parlamentar.R"))
 # Bibliotecas
 library(tidyverse)
 library(rcongresso)
-library(tm)
 
 #' @title Enumera votações
 #' @description Recebe um dataframe com coluna voto e enumera o valor para um número
@@ -50,14 +49,18 @@ enumera_tipos_objetivos_votacao <- function(df) {
       TRUE ~ 5))
 }
 
-#' @title Importa dados de todos os deputados por legilatura
-#' @description Importa os dados de todos os deputados federais por legislatura
-#' @return Dataframe contendo informações dos deputados: id, nome civil e cpf
+#' @title Importa dados de todos os deputados
+#' @description Importa os dados de todos os deputados federais 
+#' @return Dataframe contendo informações dos deputados
 #' @examples
-#' deputados <- fetch_deputados_por_legislatura(c(54,55,56))
-fetch_deputados_por_legislatura <- function(legislaturas_list) {
-  return(purrr::map_df(.x = legislaturas_list, 
-                       .f = ~ fetch_deputados(.x)))
+#' deputados <- get_deputados()
+get_deputados <- function() {
+  deputados <- tryCatch({
+    readr::read_csv(here::here("crawler/raw_data/deputados.csv"))
+  }, error = function(e) {
+    fetch_deputados()
+  })
+  return(deputados)
 }
 
 #' @title Importa e processa dados de votações
@@ -130,7 +133,7 @@ processa_votos <- function(votacoes_datapath) {
   # IDS das últimas três legislaturas
   legislaturas_list <- c(54,55,56)
   
-  deputados <- fetch_deputados_por_legislatura(legislaturas_list)
+  deputados <- get_deputados()
   
   print("Cruzando informações de votos com deputados...")
   votos <- votos %>% 
