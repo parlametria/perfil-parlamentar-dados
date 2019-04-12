@@ -13,6 +13,13 @@ fetch_deputado <- function(id_deputado) {
       unlist() %>% t() %>% 
       as.data.frame() 
     
+    if (!"dados.ultimoStatus.situacao" %in% names(data)) {
+      data$dados.ultimoStatus.situacao = NA
+    }
+    
+    if (!"dados.escolaridade" %in% names(data)) {
+      data$dados.escolaridade = NA
+    }
     data <- data %>% 
       dplyr::bind_cols(
         extract_partido_informations(data$dados.ultimoStatus.uriPartido)) %>% 
@@ -29,7 +36,7 @@ fetch_deputado <- function(id_deputado) {
              situacao = dados.ultimoStatus.situacao,
              condicao_eleitoral = dados.ultimoStatus.condicaoEleitoral,
              genero = dados.sexo,
-             grau_instrucao = dados.escolaridade,
+             escolaridade = dados.escolaridade,
              email = dados.ultimoStatus.gabinete.email)
     
   }, error = function(e) {
