@@ -48,10 +48,12 @@ fetch_deputado <- function(id_deputado) {
 #' @examples
 #' deputados <- fetch_deputados(56)
 fetch_deputados <- function(legislatura = 56) {
-  library(rcongresso)
+  url <- "https://dadosabertos.camara.leg.br/api/v2/deputados?idLegislatura=56"
   
-  ids_deputados <- rbind(rcongresso::fetch_deputado(idLegislatura = legislatura, itens = -1) %>% 
-                          select(id)) %>% distinct()
+  ids_deputados <- 
+    (RCurl::getURL(url) %>%
+       jsonlite::fromJSON())$dados %>% 
+    select(id) %>% distinct()
   
   info_pessoais <- do.call("rbind", lapply(ids_deputados$id, 
                                            fetch_deputado))

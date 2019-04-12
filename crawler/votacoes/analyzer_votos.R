@@ -49,20 +49,6 @@ enumera_tipos_objetivos_votacao <- function(df) {
       TRUE ~ 5))
 }
 
-#' @title Importa dados de todos os deputados
-#' @description Importa os dados de todos os deputados federais 
-#' @return Dataframe contendo informações dos deputados
-#' @examples
-#' deputados <- get_deputados()
-get_deputados <- function(legislaturas_list) {
-  deputados <- tryCatch({
-    readr::read_csv(here::here("crawler/raw_data/deputados.csv"))
-  }, error = function(e) {
-    fetch_deputados(legislaturas_list)
-  })
-  return(deputados)
-}
-
 #' @title Importa e processa dados de votações
 #' @description Recebe um dataframe com os dados das votações das proposições
 #' @param df Dataframe com os dados das votações
@@ -133,7 +119,8 @@ processa_votos <- function(votacoes_datapath) {
   # IDS das últimas três legislaturas
   legislaturas_list <- c(55,56)
   
-  deputados <- get_deputados(legislaturas_list)
+  deputados <- purrr::map_df(legislaturas_list, ~ fetch_deputados(.x))
+  
   
   print("Cruzando informações de votos com deputados...")
   votos <- votos %>% 
