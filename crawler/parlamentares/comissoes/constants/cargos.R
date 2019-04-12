@@ -1,8 +1,8 @@
 # CONSTANTS
 
 .PRESIDENTE="presidente"
-.PRIMEIRO_VICE_PRESIDENTE = "primeirovice-presidente"
-.SEGUNDO_VICE_PRESIDENTE = "segundovice-presidente"
-.TERCEIRO_VICE_PRESIDENTE = "terceirovice-presidente"
+.PRIMEIRO_VICE_PRESIDENTE = "primeiro vice-presidente"
+.SEGUNDO_VICE_PRESIDENTE = "segundo vice-presidente"
+.TERCEIRO_VICE_PRESIDENTE = "terceiro vice-presidente"
 .TITULAR = "titular"
 .SUPLENTE = "suplente"
