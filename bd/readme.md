@@ -15,6 +15,33 @@ Caso contrário siga as instruções a seguir.
 
 Com o [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce) e o [docker-compose](https://docs.docker.com/compose/install/) instalados na sua máquina execute (no mesmo diretório deste readme):
 
+### Usando nosso Makefile
+
+Inicie o serviço do bando de dados:
+
+```
+make up
+```
+
+Crie as tabelas e importe os dados:
+
+```
+make import
+```
+
+Você será capaz de acessar o banco via psql através do comando:
+```
+psql -h localhost -U postgres -d vozativa
+```
+
+A senha padrão local é: `secret`
+
+Mais comandos e informações em: `make help`
+
+### Usando manualmente os comandos do docker-compose
+
+Inicie o serviço do banco de dados:
+
 ```
 docker-compose up
 ```
@@ -31,7 +58,7 @@ docker-compose exec db psql -U postgres -d vozativa -1 -f scripts/import_csv_bd_
 
 Você será capaz de acessar o banco via psql através do comando:
 ```
-psql -h localhost -U postgres --dbname vozativa
+psql -h localhost -U postgres -d vozativa
 ```
 
 A senha padrão local é: `secret`
