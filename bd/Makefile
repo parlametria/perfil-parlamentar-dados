@@ -9,8 +9,8 @@ help:
 	@echo "    up"
 	@echo "        Start services."	
 	@echo "    "
-	@echo "    import"
-	@echo "        Import data to Postgres. Create Tables and import CSVs."	
+	@echo "    create"
+	@echo "        Create Table and Import data to Postgres"	
 	@echo "    "
 	@echo "    logs"
 	@echo "        See services logs."	
@@ -30,7 +30,7 @@ help:
 import:
 	docker-compose exec db psql -U postgres -d vozativa -1 -f scripts/create_table_bd_vozativa.sql
 	docker-compose exec db psql -U postgres -d vozativa -1 -f scripts/import_csv_bd_vozativa.sql
-.PHONY: import
+.PHONY: create
 logs:
 	docker-compose logs --tail=100
 .PHONY: logs
