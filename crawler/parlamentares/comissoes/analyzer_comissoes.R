@@ -102,8 +102,8 @@ processa_comissoes_composicao <- function() {
   composicao_comissoes <- comissao_composicao %>% 
     dplyr::left_join(lista_comissao, by = c("sigla")) %>% 
     
-    dplyr::mutate(peso_cargo = enumera_cargo_comissao(cargo, situacao)) %>% 
-    dplyr::mutate(cargo = padroniza_cargo_comissao(cargo)) %>% 
+    dplyr::mutate(peso_cargo = enumera_cargo_comissao(tolower(cargo), tolower(situacao))) %>% 
+    dplyr::mutate(cargo = padroniza_cargo_comissao(tolower(cargo))) %>% 
     
     dplyr::group_by(comissao_id, id) %>% 
     dplyr::mutate(maximo = max(peso_cargo)) %>%

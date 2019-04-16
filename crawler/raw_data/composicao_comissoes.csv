@@ -9,7 +9,6 @@ comissao_id,parlamentar_id,cargo,situacao
 2001,178833,Suplente,Suplente
 2001,204400,Titular,Titular
 2001,178831,Suplente,Suplente
-2001,204515,Suplente,Suplente
 2001,141391,Suplente,Suplente
 2001,204414,Titular,Titular
 2001,109429,Suplente,Suplente
@@ -38,6 +37,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2001,204351,Suplente,Suplente
 2001,161550,Titular,Titular
 2001,207309,Suplente,Suplente
+2001,204537,Suplente,Suplente
 2001,204482,Titular,Titular
 2001,178871,Titular,Titular
 2001,178930,Titular,Titular
@@ -73,7 +73,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2001,204566,Suplente,Suplente
 2001,204449,Titular,Titular
 2001,146307,Primeiro Vice-presidente,Titular
-2001,194260,Suplente,Suplente
+2001,194260,Titular,Titular
 2001,204475,Suplente,Suplente
 2001,204570,Titular,Titular
 2001,204538,Suplente,Suplente
@@ -85,6 +85,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2001,204530,Suplente,Suplente
 2001,160651,Titular,Titular
 2001,204357,Suplente,Suplente
+2001,90842,Suplente,Suplente
 2001,204399,Titular,Titular
 2001,178933,Suplente,Suplente
 2001,204438,Suplente,Suplente
@@ -189,7 +190,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2003,204374,Primeiro Vice-presidente,Titular
 2003,141513,Titular,Titular
 2003,204520,Suplente,Suplente
-2003,178924,Suplente,Suplente
+2003,93083,Suplente,Suplente
 2003,204487,Suplente,Suplente
 2003,204369,Titular,Titular
 2003,204499,Suplente,Suplente
@@ -228,6 +229,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2003,204394,Suplente,Suplente
 2003,204575,Titular,Titular
 2003,204365,Titular,Titular
+2003,160673,Suplente,Suplente
 2003,204531,Suplente,Suplente
 2003,204442,Suplente,Suplente
 2003,178981,Titular,Titular
@@ -248,6 +250,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2003,204359,Titular,Titular
 2003,204404,Suplente,Suplente
 2003,160510,Titular,Titular
+2003,204418,Titular,Titular
 2003,160645,Suplente,Suplente
 2003,204543,Titular,Titular
 2003,146788,Titular,Titular
@@ -278,7 +281,6 @@ comissao_id,parlamentar_id,cargo,situacao
 2003,204406,Suplente,Suplente
 2003,73486,Suplente,Suplente
 2003,160601,Suplente,Suplente
-2003,204418,Titular,Titular
 2003,74161,Suplente,Suplente
 2003,205865,Suplente,Suplente
 2003,178989,Suplente,Suplente
@@ -359,6 +361,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2006,160619,Suplente,Suplente
 2006,204555,Titular,Titular
 2006,204547,Suplente,Suplente
+2006,204418,Suplente,Suplente
 2006,204485,Suplente,Suplente
 2006,178866,Suplente,Suplente
 2006,204458,Titular,Titular
@@ -368,7 +371,6 @@ comissao_id,parlamentar_id,cargo,situacao
 2006,66179,Titular,Titular
 2006,204529,Suplente,Suplente
 2006,160601,Presidente,Titular
-2006,204418,Suplente,Suplente
 2006,178990,Suplente,Suplente
 2006,178934,Titular,Titular
 2006,204385,Suplente,Suplente
@@ -518,6 +520,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2010,74043,Suplente,Suplente
 2011,121948,Suplente,Suplente
 2011,178881,Titular,Titular
+2011,204515,Suplente,Suplente
 2011,74090,Suplente,Suplente
 2011,204507,Titular,Titular
 2011,204460,Titular,Titular
@@ -526,6 +529,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2011,204552,Suplente,Suplente
 2011,204389,Suplente,Suplente
 2011,204427,Titular,Titular
+2011,160598,Suplente,Suplente
 2011,204491,Titular,Titular
 2011,204408,Titular,Titular
 2011,178884,Suplente,Suplente
@@ -615,9 +619,9 @@ comissao_id,parlamentar_id,cargo,situacao
 2012,160510,Suplente,Suplente
 2012,178858,Suplente,Suplente
 2012,204403,Suplente,Suplente
+2012,188097,Titular,Titular
 2012,204415,Titular,Titular
 2012,204479,Suplente,Suplente
-2012,194260,Titular,Titular
 2012,178987,Titular,Titular
 2012,204475,Suplente,Suplente
 2012,160556,Titular,Titular
@@ -759,6 +763,8 @@ comissao_id,parlamentar_id,cargo,situacao
 2015,178964,Suplente,Suplente
 2015,204436,Suplente,Suplente
 2015,204536,Titular,Titular
+2015,204359,Suplente,Suplente
+2015,74156,Suplente,Suplente
 2015,204523,Suplente,Suplente
 2015,178879,Titular,Titular
 2015,204485,Titular,Titular
@@ -767,11 +773,12 @@ comissao_id,parlamentar_id,cargo,situacao
 2015,74571,Suplente,Suplente
 2015,178986,Titular,Titular
 2015,178987,Suplente,Suplente
-2015,178860,Suplente,Suplente
 2015,133968,Titular,Titular
 2015,122974,Suplente,Suplente
 2015,160641,Presidente,Titular
+2015,74305,Suplente,Suplente
 2015,204480,Titular,Titular
+2015,204416,Suplente,Suplente
 2015,178921,Suplente,Suplente
 2015,204425,Titular,Titular
 2015,204519,Suplente,Suplente
@@ -829,6 +836,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2016,178983,Titular,Titular
 2016,204522,Suplente,Suplente
 2016,74749,Primeiro Vice-presidente,Titular
+2016,188097,Suplente,Suplente
 2016,178985,Suplente,Suplente
 2016,204449,Suplente,Suplente
 2016,204479,Suplente,Suplente
@@ -852,7 +860,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2016,204463,Titular,Titular
 2016,204559,Suplente,Suplente
 2017,204495,Titular,Titular
-2017,204549,Titular,Titular
+2017,204549,Primeiro Vice-presidente,Titular
 2017,178836,Titular,Titular
 2017,204353,Suplente,Suplente
 2017,74090,Presidente,Titular
@@ -873,7 +881,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2017,204393,Suplente,Suplente
 2017,204465,Suplente,Suplente
 2017,178839,Titular,Titular
-2017,204435,Titular,Titular
+2017,204435,Segundo Vice-presidente,Titular
 2017,178970,Suplente,Suplente
 2017,204555,Titular,Titular
 2017,204497,Suplente,Suplente
@@ -980,7 +988,6 @@ comissao_id,parlamentar_id,cargo,situacao
 5438,178986,Titular,Titular
 5438,160556,Titular,Titular
 5438,74160,Suplente,Suplente
-5438,178860,Titular,Titular
 5438,160604,Suplente,Suplente
 5438,73486,Titular,Titular
 5438,204567,Titular,Titular
@@ -995,7 +1002,6 @@ comissao_id,parlamentar_id,cargo,situacao
 5503,204520,Titular,Titular
 5503,204572,Titular,Titular
 5503,178829,Presidente,Titular
-5503,178924,Terceiro Vice-presidente,Titular
 5503,204487,Titular,Titular
 5503,178876,Suplente,Suplente
 5503,204514,Suplente,Suplente
@@ -1027,7 +1033,7 @@ comissao_id,parlamentar_id,cargo,situacao
 5503,74585,Titular,Titular
 5503,204381,Suplente,Suplente
 5503,204543,Suplente,Suplente
-5503,166402,Suplente,Suplente
+5503,166402,Titular,Titular
 5503,204458,Titular,Titular
 5503,204471,Titular,Titular
 5503,76874,Titular,Titular
@@ -1066,6 +1072,7 @@ comissao_id,parlamentar_id,cargo,situacao
 6066,204388,Titular,Titular
 6066,178928,Suplente,Suplente
 6066,74467,Titular,Titular
+6066,160588,Suplente,Suplente
 6066,204450,Suplente,Suplente
 6066,204541,Titular,Titular
 6066,178871,Suplente,Suplente
@@ -1099,7 +1106,6 @@ comissao_id,parlamentar_id,cargo,situacao
 6066,204396,Titular,Titular
 6066,178952,Suplente,Suplente
 6174,204495,Suplente,Suplente
-6174,204400,Suplente,Suplente
 6174,204358,Suplente,Suplente
 6174,207176,Titular,Titular
 6174,204352,Primeiro Vice-presidente,Titular
@@ -1113,16 +1119,17 @@ comissao_id,parlamentar_id,cargo,situacao
 6174,204368,Titular,Titular
 6174,204494,Titular,Titular
 6174,204393,Suplente,Suplente
-6174,204527,Suplente,Suplente
 6174,160673,Suplente,Suplente
 6174,204468,Suplente,Suplente
 6174,204386,Titular,Titular
+6174,204391,Suplente,Suplente
 6174,74299,Titular,Titular
 6174,204415,Suplente,Suplente
 6174,146307,Suplente,Suplente
 6174,178986,Titular,Titular
 6174,204422,Suplente,Suplente
 6174,204538,Titular,Titular
+6174,204395,Suplente,Suplente
 6174,204524,Suplente,Suplente
 6174,204446,Titular,Titular
 6174,205865,Suplente,Suplente
@@ -1171,6 +1178,7 @@ comissao_id,parlamentar_id,cargo,situacao
 537236,178927,Suplente,Suplente
 537236,133439,Titular,Titular
 537236,204397,Suplente,Suplente
+537236,74052,Suplente,Suplente
 537236,204361,Suplente,Suplente
 537236,178876,Titular,Titular
 537236,160552,Primeiro Vice-presidente,Titular
@@ -1201,10 +1209,10 @@ comissao_id,parlamentar_id,cargo,situacao
 537236,204505,Suplente,Suplente
 537480,204503,Titular,Titular
 537480,178833,Suplente,Suplente
-537480,204400,Suplente,Suplente
+537480,204400,Titular,Titular
 537480,204507,Suplente,Suplente
 537480,178962,Suplente,Suplente
-537480,204451,Titular,Titular
+537480,204451,Suplente,Suplente
 537480,178929,Terceiro Vice-presidente,Titular
 537480,81297,Titular,Titular
 537480,204450,Titular,Titular
@@ -1259,7 +1267,6 @@ comissao_id,parlamentar_id,cargo,situacao
 537870,66179,Titular,Titular
 537870,160642,Suplente,Suplente
 537870,204377,Suplente,Suplente
-537870,178860,Suplente,Suplente
 537870,204565,Titular,Titular
 537870,178989,Suplente,Suplente
 537870,204525,Titular,Titular
@@ -1300,6 +1307,7 @@ comissao_id,parlamentar_id,cargo,situacao
 537871,204422,Titular,Titular
 537871,178860,Suplente,Suplente
 537871,74161,Titular,Titular
+537871,178925,Suplente,Suplente
 537871,204525,Segundo Vice-presidente,Titular
 537871,74371,Suplente,Suplente
 537871,204466,Suplente,Suplente
@@ -1345,6 +1353,7 @@ comissao_id,parlamentar_id,cargo,situacao
 2009,139285,Titular,Titular
 2009,74585,Suplente,Suplente
 2009,204410,Titular,Titular
+2009,204418,Suplente,Suplente
 2009,204433,Suplente,Suplente
 2009,171619,Suplente,Suplente
 2009,74398,Suplente,Suplente
@@ -1374,7 +1383,6 @@ comissao_id,parlamentar_id,cargo,situacao
 2009,178925,Titular,Titular
 2009,178989,Titular,Titular
 2009,160653,Suplente,Suplente
-2009,178945,Suplente,Suplente
 2009,204357,Primeiro Vice-presidente,Titular
 2009,204557,Suplente,Suplente
 2009,178947,Suplente,Suplente
