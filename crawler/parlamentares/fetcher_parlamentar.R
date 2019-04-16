@@ -55,7 +55,7 @@ fetch_deputado <- function(id_deputado) {
 #' @examples
 #' deputados <- fetch_deputados(56)
 fetch_deputados <- function(legislatura = 56) {
-  url <- "https://dadosabertos.camara.leg.br/api/v2/deputados?idLegislatura=56"
+  url <- paste0("https://dadosabertos.camara.leg.br/api/v2/deputados?idLegislatura=", legislatura)
   
   ids_deputados <- 
     (RCurl::getURL(url) %>%

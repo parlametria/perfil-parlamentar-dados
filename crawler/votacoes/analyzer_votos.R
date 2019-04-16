@@ -115,16 +115,21 @@ processa_votos <- function(votacoes_datapath) {
     select(id_proposicao, id_votacao)
   
   votos <- map2_df(proposicao_votacao$id_proposicao, proposicao_votacao$id_votacao, ~ fetch_votos(.x, .y))
+
+  parlamentares_filepath = here::here("crawler/raw_data/parlamentares.csv")
   
-  # IDS das últimas três legislaturas
-  legislaturas_list <- c(55,56)
-  
-  deputados <- purrr::map_df(legislaturas_list, ~ fetch_deputados(.x))
-  
-  
-  print("Cruzando informações de votos com deputados...")
+  if(file.exists(parlamentares_filepath)) {
+    parlamentares <- read.csv(parlamentares_filepath)
+    
+  } else {
+    # IDS das últimas duas legislaturas
+    legislaturas_list <- c(55,56)
+    parlamentares <- purrr::map_df(legislaturas_list, ~ fetch_deputados(.x))
+  }
+
+  print("Cruzando informações de votos com parlamentares...")
   votos <- votos %>% 
-    inner_join(deputados, by = c("id_deputado" = "id")) %>% 
+    inner_join(parlamentares, by = c("id_deputado" = "id")) %>% 
     select(id_votacao, cpf, voto) %>% 
    enumera_votacoes() %>% 
     distinct()
