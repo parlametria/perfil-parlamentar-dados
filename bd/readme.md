@@ -26,7 +26,7 @@ make up
 Crie as tabelas e importe os dados:
 
 ```
-make import
+make create
 ```
 
 Você será capaz de acessar o banco via psql através do comando:

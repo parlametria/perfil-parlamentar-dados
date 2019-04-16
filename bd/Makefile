@@ -27,7 +27,7 @@ help:
 	@echo "    sh"
 	@echo "        Open sh prompt inside container with name postgres.	"
 .PHONY: help
-import:
+create:
 	docker-compose exec db psql -U postgres -d vozativa -1 -f scripts/create_table_bd_vozativa.sql
 	docker-compose exec db psql -U postgres -d vozativa -1 -f scripts/import_csv_bd_vozativa.sql
 .PHONY: create
