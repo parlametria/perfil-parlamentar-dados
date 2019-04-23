@@ -49,7 +49,7 @@ enumera_tipos_objetivos_votacao <- function(df) {
       TRUE ~ 5))
 }
 
-#' @title Importa e processa dados de votações
+#' @title Importa e processa dados de votações na Câmara dos Deputados
 #' @description Recebe informações da proposição e da votação específica para obtenção dos votos
 #' @param id_proposicao Id da prposição para obtenção dos votos
 #' @param id_votacao Id da votação no contexto interno do Voz Ativa
@@ -57,8 +57,8 @@ enumera_tipos_objetivos_votacao <- function(df) {
 #' @param objeto_votacao Objeto da Votação
 #' @return Dataframe contendo id da votação, id e voto dos deputados que participaram de cada votação
 #' @examples
-#' votacoes <- fetch_votos(2165578, 8334)
-fetch_votos <- function(id_proposicao, id_votacao, resumo_votacao, objeto_votacao) {
+#' votacoes <- fetch_votos_camara(2165578, 8334)
+fetch_votos_camara <- function(id_proposicao, id_votacao, resumo_votacao, objeto_votacao) {
   library(xml2)
   proposicoes <- rcongresso::fetch_proposicao_camara(id_proposicao) %>%
     select(siglaTipo, numero, ano)
@@ -120,25 +120,25 @@ fetch_votos <- function(id_proposicao, id_votacao, resumo_votacao, objeto_votaca
 
 #' @title Processa votações e informações dos deputados
 #' @description O processamento consiste em mapear as votações dos deputados (caso tenha votado) e tratar os casos quando ele não votou
-#' @param votacoes_datapath Datapath do csv com os dados das votações
+#' @param votacoes Dataframe com informações das votações para captura dos votos
 #' @return Dataframe contendo o id da votação, o cpf e o voto dos deputados
 #' @examples
-#' processa_votos("../raw_data/tabela_votacoes.csv")
-processa_votos <- function(votacoes_datapath) {
-  proposicao_votacao <- read_csv(votacoes_datapath, col_types = "cicccccccc") %>% 
-    filter(!is.na(id_sessao)) %>% 
-    select(id_proposicao, id_sessao, resumo, objeto_votacao)
+#' processa_votos_camara(votacoes)
+processa_votos_camara <- function(votacoes) {
+  proposicao_votacao <- votacoes %>% 
+    dplyr::filter(!is.na(id_sessao)) %>% 
+    dplyr::select(id_proposicao, id_sessao, resumo, objeto_votacao)
 
-  votos <- pmap_dfr(list(proposicao_votacao$id_proposicao, 
+  votos <- purrr::pmap_dfr(list(proposicao_votacao$id_proposicao, 
                          proposicao_votacao$id_sessao, 
                          proposicao_votacao$resumo,
                          proposicao_votacao$objeto_votacao), 
-                    ~ fetch_votos(..1, ..2, ..3, ..4))
+                    ~ fetch_votos_camara(..1, ..2, ..3, ..4))
 
   parlamentares_filepath = here::here("crawler/raw_data/parlamentares.csv")
   
   if(file.exists(parlamentares_filepath)) {
-    parlamentares <- read.csv(parlamentares_filepath)
+    parlamentares <- readr::read_csv(parlamentares_filepath)
     
   } else {
     # IDS das últimas duas legislaturas
@@ -148,11 +148,32 @@ processa_votos <- function(votacoes_datapath) {
 
   print("Cruzando informações de votos com parlamentares...")
   
-  votos <- votos %>% 
-    inner_join(parlamentares, by = c("id_deputado" = "id")) %>% 
-    select(id_votacao, cpf, voto) %>% 
-   enumera_votacoes() %>% 
-    distinct()
+  votos_alt <- votos %>% 
+    dplyr::mutate(casa = "camara") %>% 
+    dplyr::inner_join(parlamentares, by = c("id_deputado" = "id", "casa" = "casa")) %>% 
+    dplyr::select(id_votacao, id_parlamentar = id_deputado, casa, voto) %>% 
+    enumera_votacoes() %>% 
+    dplyr::distinct()
 
-  return(votos)
+  return(votos_alt)
+}
+
+#' @title Processa votações dos parlamentares
+#' @description O processamento consiste em mapear as votações dos parlamentares (caso tenha votado) e tratar os casos quando ele não votou
+#' @param votacoes_datapath Datapath do csv com os dados das votações
+#' @return Dataframe contendo o id da votação, o id do parlamentar, a casa e o voto dos parlamentares
+#' @examples
+#' processa_votos("../raw_data/tabela_votacoes.csv")
+processa_votos <- function(votacoes_datapath) {
+  votacoes_all <- readr::read_csv(votacoes_datapath, col_types = "cicccccccc")
+  
+  votacoes_camara <- votacoes_all %>% 
+    dplyr::filter(casa == "camara")
+  
+  votacoes_senado <- votacoes_all %>% 
+    dplyr::filter(casa == "senado")
+  
+  votacoes <- processa_votos_camara(votacoes_camara)
+  
+  return(votacoes)
 }

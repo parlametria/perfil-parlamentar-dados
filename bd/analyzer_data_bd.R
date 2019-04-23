@@ -151,8 +151,11 @@ processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/t
   library(tidyverse)
   library(here)
   
-  proposicoes <- read.csv(prop_data_path, stringsAsFactors = FALSE)
+  proposicoes <- read_csv(prop_data_path)
   
+  colnames(proposicoes) <- c("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema", 
+                             "id_proposicao", "resumo", "objeto_votacao", "casa", "no_ar_vozativa")
+
   proposicoes_alt <- proposicoes %>% 
     dplyr::mutate(tema_id = dplyr::case_when(
       tema == "Meio Ambiente" ~ 0,
@@ -167,7 +170,7 @@ processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/t
     dplyr::filter(!is.na(id_votacao)) %>% 
     dplyr::mutate(id_proposicao = as.character(id_proposicao)) %>% 
     dplyr::mutate(status_proposicao = "Ativa") %>% 
-    dplyr::select("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema_id", "status_proposicao", "id_proposicao")
+    dplyr::select("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema_id", "status_proposicao", "id_proposicao", "casa")
   
   return(proposicoes_alt)
 }
@@ -180,20 +183,12 @@ processa_votacoes <- function(vot_data_path = here::here("crawler/raw_data/votac
   library(tidyverse)
   library(here)
   
-  votacoes <- read.csv(vot_data_path, stringsAsFactors = FALSE, colClasses = c("cpf" = "character"))
+  votacoes <- readr::read_csv(vot_data_path, col_types = cols(id_parlamentar = "i", id_votacao = "i", voto = "i"))
   
-  candidatos <- processa_candidatos(cand_data_path = here::here("crawler/raw_data/candidatos.csv"),
-                                    res_data_path = here::here("crawler/raw_data/respostas.csv"))
+  votacoes_select <- votacoes %>%
+    dplyr::select(id_votacao, id_parlamentar, casa, voto)
   
-  candidatos_list <- candidatos %>% dplyr::pull(cpf)
-  
-  ## Filtra apenas as votações dos candidatos que foram candidatos nas eleições de 2018 (dataframe candidatos)
-  votacoes_filtered <- votacoes %>% 
-    dplyr::filter(cpf %in% candidatos_list) %>% 
-    tibble::rowid_to_column(var = "id") %>% 
-    dplyr::select(id, resposta = voto, cpf, votacao_id = id_votacao)
-    
-  return(votacoes_filtered)  
+  return(votacoes_select)
 }
 
 #' @title Processa dados de comissões
