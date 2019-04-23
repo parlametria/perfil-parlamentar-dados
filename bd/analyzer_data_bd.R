@@ -223,7 +223,9 @@ processa_composicao_comissoes <- function(composicao_path = here::here("crawler/
   
   composicao_comissoes_mapped <- composicao_comissoes %>% 
     dplyr::distinct() %>% 
-    dplyr::select(comissao_id, casa, id_parlamentar, cargo, situacao)
+    dplyr::mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
+                                              id_parlamentar)) %>%
+    dplyr::select(comissao_id, id_parlamentar_voz, cargo, situacao)
 
   return(composicao_comissoes_mapped)  
 }
