@@ -186,7 +186,9 @@ processa_votacoes <- function(vot_data_path = here::here("crawler/raw_data/votac
   votacoes <- readr::read_csv(vot_data_path, col_types = cols(id_parlamentar = "i", id_votacao = "i", voto = "i"))
   
   votacoes_select <- votacoes %>%
-    dplyr::select(id_votacao, id_parlamentar, casa, voto)
+    dplyr::mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
+                                         id_parlamentar)) %>% 
+    dplyr::select(id_votacao, id_parlamentar_voz, voto)
   
   return(votacoes_select)
 }
