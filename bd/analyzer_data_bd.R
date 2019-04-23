@@ -125,13 +125,19 @@ processa_perguntas <- function(perg_data_path = here::here("crawler/raw_data/per
 #' @description Cria os dados dos temas
 #' @return Dataframe com informações dos temas (descrição e id)
 processa_temas <- function() {
-  temas <- data.frame(tema = c("Meio Ambiente", 
+  temas <- data.frame(id = 0:5,
+                      tema = c("Meio Ambiente", 
                         "Direitos Humanos", 
                         "Integridade e Transparência", 
                         "Agenda Nacional", 
                         "Transversal", 
                         "Educação"), 
-                      id = 0:5,
+                      slug = c("meio-ambiente",
+                               "direitos-humanos",
+                               "transparencia",
+                               "agenda-nacional",
+                               "transversal",
+                               "educacao"),
                       stringsAsFactors = FALSE)
   
   return(temas)
@@ -188,4 +194,43 @@ processa_votacoes <- function(vot_data_path = here::here("crawler/raw_data/votac
     dplyr::select(id, resposta = voto, cpf, votacao_id = id_votacao)
     
   return(votacoes_filtered)  
+}
+
+#' @title Processa dados de comissões
+#' @description Processa os dados de comissões e retorna no formato  a ser utilizado pelo banco de dados
+#' @param comissoes_data_path Caminho para o arquivo de dados de comissões sem tratamento
+#' @return Dataframe com informações das comissões
+processa_comissoes <- function(comissoes_data_path = here::here("crawler/raw_data/comissoes.csv")) {
+  library(tidyverse)
+  library(here)
+  
+  comissoes <- readr::read_csv(comissoes_data_path, col_types = "icc")
+  
+  comissoes_alt <- comissoes %>% 
+    dplyr::select(id, sigla, nome)
+  
+  return(comissoes_alt)
+}
+
+#' @title Processa dados das composições das comissões
+#' @description Processa os dados das composições das comissões e retorna no formato  a ser utilizado pelo banco de dados
+#' @param composicao_path Caminho para o arquivo de dados de composições das comissões sem tratamento
+#' @param deputados_path Caminho para o arquivo de dados de composições dos deputados para mapear id ao cpf
+#' @return Dataframe com informações das composições das comissões
+processa_composicao_comissoes <- function(composicao_path = here::here("crawler/raw_data/composicao_comissoes.csv"),
+                                          deputados_path =  here::here("crawler/raw_data/deputados.csv")) {
+  library(tidyverse)
+  library(here)
+  
+  deputados <- read.csv(deputados_path, stringsAsFactors = FALSE, colClasses = c("cpf" = "character")) %>% 
+    dplyr::select(id, cpf)
+  
+  composicao_comissoes <- read.csv(composicao_path, stringsAsFactors = FALSE)
+  
+  ## Junta a informação de cpf do deputado à composição das comissões
+  composicao_comissoes_mapped <- inner_join(composicao_comissoes, deputados, by = c("parlamentar_id" = "id")) %>% 
+    dplyr::distinct() %>% 
+    dplyr::select(comissao_id, parlamentar_cpf = cpf, cargo, situacao)
+
+  return(composicao_comissoes_mapped)  
 }
