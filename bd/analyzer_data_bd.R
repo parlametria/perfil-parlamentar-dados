@@ -234,3 +234,18 @@ processa_composicao_comissoes <- function(composicao_path = here::here("crawler/
 
   return(composicao_comissoes_mapped)  
 }
+
+processa_mandatos <- function(mandatos_path = here::here("crawler/raw_data/mandatos.csv")) {
+  library(tidyverse)
+  
+  mandatos <- read.csv(mandatos_path, stringsAsFactors = FALSE)
+  
+  mandatos <- mandatos %>% 
+    dplyr::mutate(casa_enum = dplyr::if_else(casa == "camara", 1, 2),
+      id_parlamentar_voz = paste0(casa_enum, as.character(id_parlamentar))) %>% 
+    dplyr::select(-c(casa_enum, id_parlamentar, casa)) %>% 
+    dplyr::select(id_parlamentar_voz, 
+                  id_legislatura, data_inicio, data_fim, situacao, 
+                  cod_causa_fim_exercicio, desc_causa_fim_exercicio)
+  return(mandatos)
+}
