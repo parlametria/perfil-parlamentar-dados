@@ -94,16 +94,18 @@ CREATE TABLE IF NOT EXISTS "temasus" (
 );
 
 CREATE TABLE IF NOT EXISTS "comissoes" (
+    "id_comissao_voz" VARCHAR(40),
     "id" VARCHAR(40),
-    "sigla" VARCHAR(255),
+    "casa" VARCHAR(10),
+    "sigla" VARCHAR(40),
     "nome" VARCHAR(255),
-    PRIMARY KEY ("id")
+    PRIMARY KEY ("id_comissao_voz")
 );
 
 CREATE TABLE IF NOT EXISTS "composicao_comissoes" (
-    "comissao_id" VARCHAR(40) REFERENCES "comissoes" ("id") ON DELETE CASCADE ON UPDATE CASCADE, 
-    "parlamentar_cpf" VARCHAR(40) REFERENCES "candidatos" ("cpf") ON DELETE CASCADE ON UPDATE CASCADE,
-    "cargo" VARCHAR(255),
-    "situacao" VARCHAR(255),
-    PRIMARY KEY("comissao_id", "parlamentar_cpf")
+    "id_comissao_voz" VARCHAR(40) REFERENCES "comissoes" ("id_comissao_voz") ON DELETE CASCADE ON UPDATE CASCADE, 
+    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
+    "cargo" VARCHAR(40),
+    "situacao" VARCHAR(40),
+    PRIMARY KEY("id_comissao_voz", "id_parlamentar_voz")
 );
