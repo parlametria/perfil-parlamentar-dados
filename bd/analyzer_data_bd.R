@@ -205,7 +205,9 @@ processa_comissoes <- function(comissoes_data_path = here::here("crawler/raw_dat
   library(here)
   
   comissoes <- readr::read_csv(comissoes_data_path, col_types = cols(id = "i")) %>% 
-    dplyr::select(id, casa, sigla, nome)
+    dplyr::mutate(id_comissao_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
+                                              id)) %>%
+    dplyr::select(id_comissao_voz, id, casa, sigla, nome)
   
   return(comissoes)
 }
@@ -225,7 +227,9 @@ processa_composicao_comissoes <- function(composicao_path = here::here("crawler/
     dplyr::distinct() %>% 
     dplyr::mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
                                               id_parlamentar)) %>%
-    dplyr::select(comissao_id, id_parlamentar_voz, cargo, situacao)
+    dplyr::mutate(id_comissao_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
+                                           comissao_id)) %>%
+    dplyr::select(id_comissao_voz, id_parlamentar_voz, cargo, situacao)
 
   return(composicao_comissoes_mapped)  
 }
