@@ -60,12 +60,12 @@ CREATE TABLE IF NOT EXISTS "proposicoes" (
     "id_proposicao" VARCHAR(40), 
     PRIMARY KEY ("id_votacao"));
 
-CREATE TABLE IF NOT EXISTS "votacoes" (
-    "id" SERIAL, 
-    "resposta" INTEGER, 
-    "cpf" VARCHAR(255) REFERENCES "candidatos" ("cpf") ON DELETE SET NULL ON UPDATE CASCADE, 
-    "proposicao_id" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE, 
-    PRIMARY KEY ("cpf", "proposicao_id"));
+CREATE TABLE IF NOT EXISTS "votacoes" (     
+    "id_votacao" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE,
+    "id_parlamentar_voz" VARCHAR REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
+    "voto" INTEGER,    
+    PRIMARY KEY ("id_votacao", "id_parlamentar_voz")
+);
 
 CREATE TABLE IF NOT EXISTS "respostas" (
     "id" SERIAL, 
