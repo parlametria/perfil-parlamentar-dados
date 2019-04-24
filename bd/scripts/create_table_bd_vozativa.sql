@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS "temasus" (
 
 CREATE TABLE IF NOT EXISTS "comissoes" (
     "id_comissao_voz" VARCHAR(40),
-    "id" VARCHAR(40),
+    "id" INTEGER,
     "casa" VARCHAR(10),
     "sigla" VARCHAR(40),
     "nome" VARCHAR(255),
