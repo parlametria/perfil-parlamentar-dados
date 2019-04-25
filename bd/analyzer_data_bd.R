@@ -59,42 +59,36 @@ processa_respostas <- function(res_data_path = here::here("crawler/raw_data/resp
   return(respostas_alt)
 }
 
-#' @title Processa dados dos candidatos
-#' @description Processa os dados dos candidatos e retorna no formato correto para o banco de dados
-#' @param cand_data_path Caminho para o arquivo de dados dos candidatos sem tratamento
-#' @param res_data_path Caminho para o arquivo de respostas sem tratamento.
-#' @return Dataframe com informações detalhadas dos candidatos
-processa_candidatos <- function(cand_data_path = here::here("crawler/raw_data/candidatos.csv"),
-                                res_data_path = here::here("crawler/raw_data/respostas.csv"),
-                                parlamentares_data_path = here::here("crawler/raw_data/parlamentares.csv")) {
+#' @title Processa dados dos parlamentares
+#' @description Processa os dados dos parlamentares e retorna no formato correto para o banco de dados
+#' @param parlamentares_data_path Caminho para o arquivo de dados dos parlamentares sem tratamento
+#' @return Dataframe com informações detalhadas dos parlamentares
+processa_parlamentares <- function(parlamentares_data_path = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
   library(here)
   
-  candidatos <- read.csv(cand_data_path, stringsAsFactors = FALSE, colClasses = c("cpf" = "character"))
-  respostas <- carrega_respostas(res_data_path)
   parlamentares <- read.csv(parlamentares_data_path, stringsAsFactors = FALSE, colClasses = c("cpf" = "character"))
-    
-  ## Lidando com candidatos que responderam mais de uma vez
-  respostas_alt <- respostas %>% 
-    unique() %>% ## linhas exatamente iguais são eliminadas
-    dplyr::group_by(cpf) %>% 
-    dplyr::mutate(last_date_modified = max(date_modified)) %>% 
-    dplyr::ungroup() %>% 
-    dplyr::filter(date_modified == last_date_modified) %>% ## observações com a última data de atualização são utilizadas
-    dplyr::distinct(cpf, .keep_all = TRUE) %>%  ## Filtra restante das respostas duplicadas (todas de candidatos que não responderam ao questionário)
-    dplyr::select("cpf", "tem_foto", "recebeu", "n_candidatura", "eleito", "respondeu")
   
- candidatos_completo <- candidatos %>%  
-   dplyr::right_join(respostas_alt, by = "cpf") %>% 
-   dplyr::distinct(cpf, .keep_all = TRUE) %>% 
-   dplyr::select("estado", "uf", "idade_posse", "nome_coligacao", "nome_candidato", "cpf", "recebeu", "num_partido",
-          "email", "nome_social", "nome_urna", "reeleicao", "ocupacao", "nome_exibicao", "raca", "tipo_agremiacao",
-          "n_candidatura", "composicao_coligacao", "tem_foto", "partido", "sg_partido", "grau_instrucao",
-          "genero", "eleito", "respondeu") %>% 
-   dplyr::left_join(parlamentares %>% dplyr::select(cpf, id), by = c("cpf")) %>% 
-   dplyr::rename(id_parlamentar = id)
+  parlamentares <- parlamentares  %>%
+   dplyr::mutate(em_exercicio = dplyr::if_else(situacao == 'Exercício', 1, 0),
+                 id_parlamentar_voz = paste0(
+                   dplyr::if_else(casa == "camara", 1, 2), 
+                   id)) %>% 
+   dplyr::select(id_parlamentar_voz, 
+                 id_parlamentar = id,
+                 casa, 
+                 cpf, 
+                 nome_civil, 
+                 nome_eleitoral, 
+                 genero, 
+                 uf, 
+                 partido = sg_partido, 
+                 situacao, 
+                 condicao_eleitoral, 
+                 ultima_legislatura, 
+                 em_exercicio)
  
- return(candidatos_completo)
+ return(parlamentares)
 }
 
 #' @title Processa dados de perguntas
