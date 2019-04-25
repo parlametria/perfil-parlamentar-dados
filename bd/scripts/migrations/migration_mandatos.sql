@@ -11,7 +11,17 @@ data_fim, situacao, cod_causa_fim_exercicio, desc_causa_fim_exercicio
 FROM temp_mandatos
 ON CONFLICT (id_parlamentar_voz, id_legislatura) 
 DO
-  DELETE FROM mandatos 
-    WHERE id_parlamentar_voz = EXCLUDED.id_parlamentar_voz AND id_legislatura = EXCLUDED.id_legislatura;
+  UPDATE
+    SET 
+      data_inicio = EXCLUDED.data_inicio;
+      data_fim = EXCLUDED.data_fim;
+      situacao = EXCLUDED.situacao;
+      cod_causa_fim_exercicio = EXCLUDED.cod_causa_fim_exercicio;
+      desc_causa_fim_exercicio = EXCLUDED.desc_causa_fim_exercicio;
+      
+DELETE FROM mandatos
+WHERE (id_parlamentar_voz, id_legislatura) NOT IN
+  (SELECT id_parlamentar_voz, id_legislatura
+   FROM temp_mandatos);
 
 DROP TABLE temp_mandatos; 
