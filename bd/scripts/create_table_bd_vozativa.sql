@@ -15,34 +15,21 @@ CREATE TABLE IF NOT EXISTS "usuarios" (
     "token" VARCHAR(255), 
     PRIMARY KEY ("id"));
 
-CREATE TABLE IF NOT EXISTS "candidatos" (
-    "estado" VARCHAR(255), 
-    "uf" VARCHAR(255), 
-    "idade_posse" INTEGER, 
-    "nome_coligacao" VARCHAR(255), 
-    "nome_candidato" VARCHAR(255), 
-    "cpf" VARCHAR(255), 
-    "recebeu" BOOLEAN, 
-    "num_partido" VARCHAR(255), 
-    "email" VARCHAR(255), 
-    "nome_social" VARCHAR(255), 
-    "nome_urna" VARCHAR(255), 
-    "reeleicao" VARCHAR(255), 
-    "ocupacao" VARCHAR(255), 
-    "nome_exibicao" VARCHAR(255), 
-    "raca" VARCHAR(255), 
-    "tipo_agremiacao" VARCHAR(255), 
-    "n_candidatura" INTEGER, 
-    "composicao_coligacao" VARCHAR(255), 
-    "tem_foto" INTEGER, 
-    "partido" VARCHAR(255), 
-    "sg_partido" VARCHAR(255), 
-    "grau_instrucao" VARCHAR(255), 
-    "genero" VARCHAR(255), 
-    "eleito" BOOLEAN, 
-    "respondeu" BOOLEAN,
+CREATE TABLE IF NOT EXISTS "parlamentares" (
+    "id_parlamentar_voz" VARCHAR(40),
     "id_parlamentar" VARCHAR(40) DEFAULT NULL,
-    PRIMARY KEY ("cpf"));    
+    "casa" VARCHAR(255),
+    "cpf" VARCHAR(255),
+    "nome_civil" VARCHAR(255),
+    "nome_eleitoral" VARCHAR(255),
+    "genero" VARCHAR(255),
+    "uf" VARCHAR(255),
+    "partido" VARCHAR(255),
+    "situacao" VARCHAR(255),
+    "condicao_eleitoral" VARCHAR(255),
+    "ultima_legislatura" VARCHAR(255),
+    "em_exercicio" BOOLEAN,
+    PRIMARY KEY("id_parlamentar_voz"));  
 
 CREATE TABLE IF NOT EXISTS "perguntas" (
     "texto" VARCHAR(500), 
@@ -63,14 +50,14 @@ CREATE TABLE IF NOT EXISTS "proposicoes" (
 CREATE TABLE IF NOT EXISTS "votacoes" (
     "id" SERIAL, 
     "resposta" INTEGER, 
-    "cpf" VARCHAR(255) REFERENCES "candidatos" ("cpf") ON DELETE SET NULL ON UPDATE CASCADE, 
+    "id_parlamentar_voz" VARCHAR(255) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE, 
     "proposicao_id" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE, 
-    PRIMARY KEY ("cpf", "proposicao_id"));
+    PRIMARY KEY ("id_parlamentar_voz", "proposicao_id"));
 
 CREATE TABLE IF NOT EXISTS "respostas" (
     "id" SERIAL, 
     "resposta" INTEGER, 
-    "cpf" VARCHAR(255) REFERENCES "candidatos" ("cpf") ON DELETE SET NULL ON UPDATE CASCADE, 
+    "id_parlamentar_voz" VARCHAR(255) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE, 
     "pergunta_id" INTEGER REFERENCES "perguntas" ("id") ON DELETE SET NULL ON UPDATE CASCADE, 
     PRIMARY KEY ("id"));
 
@@ -102,8 +89,8 @@ CREATE TABLE IF NOT EXISTS "comissoes" (
 
 CREATE TABLE IF NOT EXISTS "composicao_comissoes" (
     "comissao_id" VARCHAR(40) REFERENCES "comissoes" ("id") ON DELETE CASCADE ON UPDATE CASCADE, 
-    "parlamentar_cpf" VARCHAR(40) REFERENCES "candidatos" ("cpf") ON DELETE CASCADE ON UPDATE CASCADE,
+    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE CASCADE ON UPDATE CASCADE,
     "cargo" VARCHAR(255),
     "situacao" VARCHAR(255),
-    PRIMARY KEY("comissao_id", "parlamentar_cpf")
+    PRIMARY KEY("comissao_id", "id_parlamentar_voz")
 );
