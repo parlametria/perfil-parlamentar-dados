@@ -50,9 +50,9 @@ CREATE TABLE IF NOT EXISTS "proposicoes" (
 CREATE TABLE IF NOT EXISTS "votacoes" (
     "id" SERIAL, 
     "resposta" INTEGER, 
-    "id_parlamentar_voz" VARCHAR(255) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE, 
+    "cpf" VARCHAR(255) REFERENCES "candidatos" ("cpf") ON DELETE SET NULL ON UPDATE CASCADE,  
     "proposicao_id" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE, 
-    PRIMARY KEY ("id_parlamentar_voz", "proposicao_id"));
+    PRIMARY KEY ("cpf", "proposicao_id"));
 
 CREATE TABLE IF NOT EXISTS "respostas" (
     "id" SERIAL, 
@@ -89,8 +89,8 @@ CREATE TABLE IF NOT EXISTS "comissoes" (
 
 CREATE TABLE IF NOT EXISTS "composicao_comissoes" (
     "comissao_id" VARCHAR(40) REFERENCES "comissoes" ("id") ON DELETE CASCADE ON UPDATE CASCADE, 
-    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE CASCADE ON UPDATE CASCADE,
+    "parlamentar_cpf" VARCHAR(40) REFERENCES "candidatos" ("cpf") ON DELETE CASCADE ON UPDATE CASCADE,
     "cargo" VARCHAR(255),
     "situacao" VARCHAR(255),
-    PRIMARY KEY("comissao_id", "id_parlamentar_voz")
+    PRIMARY KEY("comissao_id", "parlamentar_cpf")
 );
