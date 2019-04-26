@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS "votacoes" (
 CREATE TABLE IF NOT EXISTS "respostas" (
     "id" SERIAL, 
     "resposta" INTEGER, 
-    "id_parlamentar_voz" VARCHAR(255) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE, 
+    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE, 
     "pergunta_id" INTEGER REFERENCES "perguntas" ("id") ON DELETE SET NULL ON UPDATE CASCADE, 
     PRIMARY KEY ("id"));
 
