@@ -1,7 +1,7 @@
 -- DROP CPF'S CONSTRAINTS
-ALTER TABLE votacoes DROP CONSTRAINT cpf;
-ALTER TABLE composicao_comissoes DROP CONSTRAINT cpf;
-ALTER TABLE respostas DROP CONSTRAINT cpf;
+ALTER TABLE votacoes DROP CONSTRAINT votacoes_cpf_fkey;
+ALTER TABLE composicao_comissoes DROP CONSTRAINT composicao_comissoes_parlamentar_cpf_fkey;
+ALTER TABLE respostas DROP CONSTRAINT respostas_cpf_fkey;
 
 -- DROP TABLE candidatos
 DROP TABLE IF EXISTS "candidatos";
@@ -22,3 +22,5 @@ CREATE TABLE IF NOT EXISTS "parlamentares" (
     "ultima_legislatura" VARCHAR(255),
     "em_exercicio" BOOLEAN,
     PRIMARY KEY("id_parlamentar_voz"));
+
+\copy parlamentares FROM './data/parlamentares.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
