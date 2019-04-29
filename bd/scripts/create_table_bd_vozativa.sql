@@ -47,12 +47,12 @@ CREATE TABLE IF NOT EXISTS "proposicoes" (
     "id_proposicao" VARCHAR(40), 
     PRIMARY KEY ("id_votacao"));
 
-CREATE TABLE IF NOT EXISTS "votacoes" (
-    "id" SERIAL, 
-    "resposta" INTEGER, 
-    "cpf" VARCHAR(255) REFERENCES "candidatos" ("cpf") ON DELETE SET NULL ON UPDATE CASCADE,  
-    "proposicao_id" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE, 
-    PRIMARY KEY ("cpf", "proposicao_id"));
+CREATE TABLE IF NOT EXISTS "votacoes" (     
+    "id_votacao" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE,
+    "id_parlamentar_voz" VARCHAR REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
+    "voto" INTEGER,    
+    PRIMARY KEY ("id_votacao", "id_parlamentar_voz")
+);
 
 CREATE TABLE IF NOT EXISTS "respostas" (
     "id" SERIAL, 
@@ -81,16 +81,29 @@ CREATE TABLE IF NOT EXISTS "temasus" (
 );
 
 CREATE TABLE IF NOT EXISTS "comissoes" (
-    "id" VARCHAR(40),
-    "sigla" VARCHAR(255),
+    "id_comissao_voz" VARCHAR(40),
+    "id" INTEGER,
+    "casa" VARCHAR(10),
+    "sigla" VARCHAR(40),
     "nome" VARCHAR(255),
-    PRIMARY KEY ("id")
+    PRIMARY KEY ("id_comissao_voz")
 );
 
 CREATE TABLE IF NOT EXISTS "composicao_comissoes" (
-    "comissao_id" VARCHAR(40) REFERENCES "comissoes" ("id") ON DELETE CASCADE ON UPDATE CASCADE, 
-    "parlamentar_cpf" VARCHAR(40) REFERENCES "candidatos" ("cpf") ON DELETE CASCADE ON UPDATE CASCADE,
-    "cargo" VARCHAR(255),
+    "id_comissao_voz" VARCHAR(40) REFERENCES "comissoes" ("id_comissao_voz") ON DELETE CASCADE ON UPDATE CASCADE, 
+    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
+    "cargo" VARCHAR(40),
+    "situacao" VARCHAR(40),
+    PRIMARY KEY("id_comissao_voz", "id_parlamentar_voz")
+);
+
+CREATE TABLE IF NOT EXISTS "mandatos" (
+    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE CASCADE ON UPDATE CASCADE,
+    "id_legislatura" INTEGER,
+    "data_inicio" DATE,
+    "data_fim" DATE,
     "situacao" VARCHAR(255),
-    PRIMARY KEY("comissao_id", "parlamentar_cpf")
+    "cod_causa_fim_exercicio" INTEGER,
+    "desc_causa_fim_exercicio" VARCHAR(255),
+    PRIMARY KEY ("id_parlamentar_voz", "id_legislatura")
 );
