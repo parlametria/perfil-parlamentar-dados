@@ -5,8 +5,8 @@ CREATE TEMP TABLE temp_proposicoes AS SELECT * FROM proposicoes LIMIT 0;
 
 -- UPSERT PROPOSICOES
 
-INSERT INTO proposicoes (projeto_lei, id_votacao, titulo, descricao, tema_id, status_proposicao, id_proposicao) 
-SELECT projeto_lei, id_votacao, titulo, descricao, tema_id, status_proposicao, id_proposicao
+INSERT INTO proposicoes (projeto_lei, id_votacao, titulo, descricao, tema_id, status_proposicao, id_proposicao, casa) 
+SELECT projeto_lei, id_votacao, titulo, descricao, tema_id, status_proposicao, id_proposicao, casa
 FROM temp_proposicoes
 ON CONFLICT (id_votacao) 
 DO
@@ -17,7 +17,8 @@ DO
     descricao = EXCLUDED.descricao,
     tema_id = EXCLUDED.tema_id,
     status_proposicao = EXCLUDED.status_proposicao,
-    id_proposicao = EXCLUDED.id_proposicao;
+    id_proposicao = EXCLUDED.id_proposicao,
+    casa = EXCLUDED.casa;
 
 
 UPDATE proposicoes
