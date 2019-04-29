@@ -26,7 +26,7 @@ output <- opt$output
 source(here::here("bd/analyzer_data_bd.R"))
 
 message("Processando dados...")
-candidatos <- processa_candidatos()
+parlamentares <- processa_parlamentares()
 perguntas <- processa_perguntas()
 proposicoes <- processa_proposicoes()
 respostas <- processa_respostas()
@@ -37,7 +37,7 @@ composicao_comissoes <- processa_composicao_comissoes()
 mandatos <- processa_mandatos()
 
 message("Escrevendo dados em csv...")
-write.csv(candidatos, paste0(output, "candidatos.csv"), row.names = FALSE)
+write.csv(parlamentares, paste0(output, "parlamentares.csv"), row.names = FALSE)
 write.csv(perguntas, paste0(output, "perguntas.csv"), row.names = FALSE)
 write.csv(proposicoes, paste0(output, "proposicoes.csv"), row.names = FALSE)
 write.csv(respostas, paste0(output, "respostas.csv"), row.names = FALSE)
