@@ -3,14 +3,20 @@ source(here::here("bd/send_log_to_bot.R"))
 
 log <- ""
 
+host <- Sys.getenv("PGHOST")
+user <- Sys.getenv("PGUSER")
+database <- Sys.getenv("PGDATABASE")
+## password env PGPASSWORD
+
 tryCatch(
   {
-    send_log_to_bot("Realizando migrações para parlamentares...")
+    log <- paste0(log, date(), " - Realizando migrações para parlamentares...\n")
     file = here::here("bd/scripts/migrations/migration_parlamentares.sql")
-    system(paste0('psql -h localhost -U postgres -d vozativa < ', file))
+    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
   },
   error=function(cond) {
-    send_error_log_to_bot(cond, "Um erro ocorreu durante a execução da migração de Parlamentares")
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Parlamentares")
+    log <- paste0(log, date(), log_error)
     stop("A execução foi interrompida", call. = FALSE)
     return(NA)
   }
@@ -18,12 +24,13 @@ tryCatch(
 
 tryCatch(
   {
-    send_log_to_bot("Realizando migrações para proposicoes...")
+    log <- paste0(log, date(), " - Realizando migrações para proposicoes...\n")
     file = here::here("bd/scripts/migrations/migration_proposicoes.sql")
-    system(paste0('psql -h localhost -U postgres -d vozativa < ', file))
+    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
   },
   error=function(cond) {
-    send_error_log_to_bot(cond, "Um erro ocorreu durante a execução da migração de Proposições")
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Proposições")
+    log <- paste0(log, date(), log_error)
     stop("A execução foi interrompida", call. = FALSE)
     return(NA)
   }
@@ -31,12 +38,13 @@ tryCatch(
 
 tryCatch(
   {
-    send_log_to_bot("Realizando migrações para Votações...")
+    log <- paste0(log, date(), " - Realizando migrações para Votações...\n")
     file = here::here("bd/scripts/migrations/migration_votacoes.sql")
-    system(paste0('psql -h localhost -U postgres -d vozativa < ', file))
+    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
   },
   error=function(cond) {
-    send_error_log_to_bot(cond, "Um erro ocorreu durante a execução da migração de Votações")
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Votações")
+    log <- paste0(log, date(), log_error)
     stop("A execução foi interrompida", call. = FALSE)
     return(NA)
   }
@@ -44,12 +52,13 @@ tryCatch(
 
 tryCatch(
   {
-    send_log_to_bot("Realizando migrações para Comissões...")
+    log <- paste0(log, date(), " - Realizando migrações para Comissões...\n")
     file = here::here("bd/scripts/migrations/migration_comissoes.sql")
-    system(paste0('psql -h localhost -U postgres -d vozativa < ', file))
+    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
   },
   error=function(cond) {
-    send_error_log_to_bot(cond, "Um erro ocorreu durante a execução da migração de Comissões")
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Comissões")
+    log <- paste0(log, date(), log_error)
     stop("A execução foi interrompida", call. = FALSE)
     return(NA)
   }
@@ -57,17 +66,19 @@ tryCatch(
 
 tryCatch(
   {
-    send_log_to_bot("Realizando migrações para Composição de Comissões...")
+    log <- paste0(log, date(), " - Realizando migrações para Composição de Comissões...\n")
     file = here::here("bd/scripts/migrations/migration_composicao_comissoes.sql")
-    system(paste0('psql -h localhost -U postgres -d vozativa < ', file))
+    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
   },
   error=function(cond) {
-    send_error_log_to_bot(cond, "Um erro ocorreu durante a execução da migração de Composição de Comissões")
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Composição de Comissões")
+    log <- paste0(log, date(), log_error)
     stop("A execução foi interrompida", call. = FALSE)
     return(NA)
   }
 )
 
+send_log_to_bot(log)
 success <- "As migrações foram realizadas com sucesso!"
 send_log_to_bot(success)
 print(success)

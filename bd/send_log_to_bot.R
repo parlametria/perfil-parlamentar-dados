@@ -11,10 +11,8 @@ send_log_to_bot <- function(message_log) {
   return("Mensagem Enviada!")
 }
 
-send_error_log_to_bot <- function(error, message_header) {
-  message(message_header)
-  message("Aqui está a mensagem de erro:")
-  message(error)
-  message("")
-  send_log_to_bot(paste0(message_header, "\n", error))
+get_log_error <- function(error, message_header) {
+  log <- paste0(message_header, "\n", "Aqui está a mensagem de erro:\n", 
+                error, "\n")
+  return(log)
 }
