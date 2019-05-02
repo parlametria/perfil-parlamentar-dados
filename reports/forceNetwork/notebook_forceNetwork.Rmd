@@ -1,0 +1,30 @@
+---
+title: "Rede de Autores de Requerimentos"
+output: html_notebook
+---
+
+## Requerimentos da PEC 171/1993 - Redução da Maioridade Penal
+```{r cache=TRUE, warning=FALSE, message=FALSE, include=FALSE}
+library(networkD3)
+library(tidyverse)
+source(here::here('crawler/parlamentares/requerimentos/fetch_autores_req.R'))
+source(here::here('crawler/parlamentares/requerimentos/generate-graph.R'))
+
+pl_14493 <- fetch_autores_req(14493, "camara")
+graph_filepath = here::here('reports/forceNetwork/pl_14493_graph.html')
+
+generate_graph(pl_14493, graph_filepath)
+```
+
+<iframe src="pl_14493_graph.html" width="620" height="620" scrolling="no"></iframe>
+
+## Requerimentos de todas as proposições do Voz Ativa
+```{r warning=FALSE, include=FALSE}
+
+all_reqs <- fetch_all_autores_req('../../crawler/raw_data/tabela_votacoes.csv')
+graph_filepath = here::here('reports/forceNetwork/all_reqs_graph.html')
+
+generate_graph(pl_14493, graph_filepath)
+```
+
+<iframe src="all_reqs_graph.html" width="620" height="620" scrolling="no"></iframe>
