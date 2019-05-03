@@ -33,3 +33,25 @@ generate_graph <- function(df, output_file) {
   fn %>% 
     saveNetwork(output_file)
 }
+
+library(tidyverse)
+library(tidygraph)
+library(ggraph)
+
+reqs <- read.csv(here::here("crawler/raw_data/autores_requerimentos_leggo.csv")) %>% 
+  dplyr::select(-prop_id, -casa) %>% 
+  distinct()
+
+a <- links <- reqs %>% 
+  full_join(reqs, by = "id_req") %>%
+  filter(id_autor.x != id_autor.y) %>% 
+  select(-c(id_autor.x, id_autor.y))
+
+as <- tidygraph::as_tbl_graph(a)
+
+as %>% 
+  mutate(community = as.factor(group_infomap(trials = 2))) %>% 
+  ggraph(layout = 'kk') + 
+  geom_edge_link(aes(alpha = ..index..), show.legend = FALSE) + 
+  geom_node_point(aes(colour = community), size = 7) + 
+  theme_graph()
