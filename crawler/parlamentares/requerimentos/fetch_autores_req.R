@@ -8,7 +8,8 @@ get_info_autores <- function(uri_autor) {
   data <- data %>% 
     unlist() %>% t() %>% 
     tibble::as_tibble() %>% 
-    dplyr::select(id, nome = ultimoStatus.nomeEleitoral)
+    dplyr::mutate(nome = paste0(ultimoStatus.nomeEleitoral, ' - ', ultimoStatus.siglaPartido, '/', ultimoStatus.siglaUf)) %>% 
+    dplyr::select(id, nome)
   
   return(data)
 }
@@ -70,8 +71,7 @@ fetch_autores_req <- function(prop_id, casa, initial_date = lubridate::ymd_hm("2
 
 fetch_all_autores_req <- function(tabela_votacoes_path = "crawler/raw_data/tabela_proposicoes_leggo.csv") {
   tabela_votacoes <- readr::read_csv(tabela_votacoes_path) %>% 
-    dplyr::filter(!is.na(id_camara)) %>% 
-    dplyr::mutate(casa = "camara") %>% 
+    dplyr::filter(!is.na(id_camara)) %>%     dplyr::mutate(casa = "camara") %>% 
     dplyr::select(id_proposicao = id_camara, casa)
   return(purrr::map2_df(tabela_votacoes$id_proposicao, tabela_votacoes$casa, ~ fetch_autores_req(.x, .y)))
 }
