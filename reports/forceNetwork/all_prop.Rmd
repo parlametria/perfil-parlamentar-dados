@@ -1,0 +1,19 @@
+---
+title: "Análise de grupos de deputados por autoria de artefatos"
+output: html_notebook
+---
+
+O ponto de partida foi o arquivo `Autores das Proposições por ano de apresentação` de 2019 disponível na nova versão da [Dados Abertos da Câmara](https://dadosabertos.camara.leg.br/swagger/api.html#staticfile). 
+
+**Observação:** Esta versão da Dados Abertos considera como proposições proposições em si, requerimentos, pareceres, substitutivos, emendas, etc., então o número total de autorias conjuntas corresponde a esse conjunto e não somente à criação de proposições em si.
+
+
+```{r}
+library(DT)
+DT::datatable(table %>% 
+                removeDuplicatedEdges() %>% 
+                rename(deputado_a = source, deputado_b = target) %>% 
+                arrange(-num_autorias_conjuntas))
+```
+
+O partido mais predominante nos maiores clusters são PP, 

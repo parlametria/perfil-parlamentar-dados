@@ -9,7 +9,7 @@ Os requerimentos utilizados para a geração desta rede foram os criados a parti
 library(tidyverse)
 source(here::here('crawler/parlamentares/requerimentos/generate-graph.R'))
 
-requerimentos <- here::here("crawler/raw_data/autores_requerimentos_leggo.csv")
+requerimentos <- "~/Downloads/proposicoesAutores-2019.csv"
 graph_filepath = here::here('reports/forceNetwork/network_graph.html')
 
 generate_graph(requerimentos, graph_filepath)
