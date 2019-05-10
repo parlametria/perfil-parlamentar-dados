@@ -5,43 +5,48 @@ library(ggraph)
 
 
 getDadosFaltosos <- function(df) {
-    return(
-      df %>% 
-    filter(is.na(siglaPartidoAutor)) %>% 
-      group_by(nomeAutor, idDeputadoAutor) %>% 
-      distinct(nomeAutor) %>% 
-    mutate(
-      siglaPartidoAutor = 
-        getDeputadoPartido(idDeputadoAutor))
-    ) %>% 
-    select(-nomeAutor)
+  df = 
+    df %>% 
+    filter(is.na(siglaPartidoAutor) | is.na(siglaUFAutor)) %>% 
+    group_by(nomeAutor, idDeputadoAutor) %>% 
+    distinct(nomeAutor)
+    
+  deputados <- purrr::map_df(df$idDeputadoAutor, ~ getDeputadoDados(.x))
+  return(deputados)
 }
 
-getDeputadoPartido <- function(id_deputado) {
-  url <- paste0('https://dadosabertos.camara.leg.br/api/v2/deputados/', id_deputado)
+getDeputadoDados <- function(id_deputado) {
+  url <- 
+    paste0('https://dadosabertos.camara.leg.br/api/v2/deputados/', id_deputado)
   
   Sys.sleep(5)
   
-  partido <- tryCatch({
-    partido <- 
-      (RCurl::getURL(url) %>% 
-         jsonlite::fromJSON())$dados$ultimoStatus$siglaPartido
-    return(partido)
+  dados <- tryCatch({
+    data <- 
+      RCurl::getURL(url) %>% 
+      jsonlite::fromJSON() %>% 
+      unlist() %>% t() %>% 
+      as_tibble() %>% 
+      select(
+        siglaUFAutor = dados.ultimoStatus.siglaUf,
+        siglaPartidoAutor = dados.ultimoStatus.siglaPartido)
+    data$idDeputadoAutor = id_deputado
+    return(data)
   }, error = function(e) {
-    print(e)
-    return('NA')
+    return(tribble(~ siglaUFAutor, ~ siglaPartidoAutor, ~ idDeputadoAtor))
   })
 
-  return (partido)
+  return (dados)
 }
 
 processaProposicoesAutores <- function(df) {
   remove_autor_regex = 'comissão|instituto|associação|senado|tribunal|poder|sos|mesa|presidência'
   
-  df <- 
-    read_delim(propositions_filepath, ";", 
-             escape_double = FALSE, 
-             trim_ws = TRUE) %>% 
+  df <-
+    read_delim(propositions_filepath,
+               ";",
+               escape_double = FALSE,
+               trim_ws = TRUE) %>%
     filter(!stringr::str_detect(tolower(nomeAutor),
                                 remove_autor_regex) &
              tipoAutor == 'Deputado') %>%
@@ -52,13 +57,12 @@ processaProposicoesAutores <- function(df) {
         siglaPartidoAutor.y,
         siglaPartidoAutor.x
       ),
+      siglaUFAutor = if_else(is.na(siglaUFAutor.x),
+                             siglaUFAutor.y,
+                             siglaUFAutor.x),
       nomeAutor =
-        if_else(
-          !is.na(siglaUFAutor),
-          paste0(nomeAutor.x, ' - ',
-                 siglaPartidoAutor, '/', siglaUFAutor),
-          nomeAutor.x
-        )
+        paste0(nomeAutor, ' - ',
+               siglaPartidoAutor, '/', siglaUFAutor)
     ) %>%
     select(id_req = idProposicao,
            nome = nomeAutor,

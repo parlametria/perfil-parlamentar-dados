@@ -30,7 +30,7 @@ get_uri_autores <- function(uri_autores, id_req) {
 
 # Remover requerimentos de deliberação do plenário sobre a preliminar de admissibilidade e proposições de PEC e aberturas de CPI
 
-fetch_autores_req <- function(prop_id, casa, initial_date = lubridate::ymd_hm("2019-01-01 00:00")) {
+fetch_autores_req <- function(prop_id, casa, initial_date = lubridate::ymd_hm("2019-02-01 00:00")) {
   paste0("Baixando informações dos autores dos requerimentos da proposição ", prop_id, " na casa ", casa, "...") %>% 
     print()
   if (casa == 'camara') {
