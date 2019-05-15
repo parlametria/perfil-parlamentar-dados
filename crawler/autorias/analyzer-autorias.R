@@ -1,6 +1,9 @@
 library(tidyverse)
 library(networkD3)
 
+source(here::here("crawler/autorias/fetcher_autores_2019.R"))
+source(here::here("crawler/autorias/fetcher_proposicoes_2019.R"))
+
 pasteCols <- function(x, y, sep = ":") {
   stopifnot(length(x) == length(y))
   return(lapply(1:length(x), function(i) {
@@ -24,55 +27,30 @@ removeDuplicatedEdges <- function(df) {
     distinct()
 }
 
-generateEdges <- function(autores, proposicoes) {
+processaAutores <- function(autores, proposicoes) {
+  df <- autores %>% 
+    full_join(autores, by = "id_req") %>%
+    filter(id.x != id.y) %>% 
+    removeDuplicatedEdges() %>% 
+    distinct() 
+  
   df <- 
-    left_join(autores, proposicoes, by = c("id_req" = "id")) %>%
+    inner_join(df, proposicoes, by = c("id_req" = "id")) %>%
     group_by(id_req) %>% 
-    mutate(n = n()) %>% 
-    filter(!is.na(id) & n > 1) %>% 
-    select(-n) %>% 
-    ungroup()
-  
-  links <- df %>%
-    full_join(df, by = "id_req") %>%
-    filter(nome.x != nome.y) %>%
-    removeDuplicatedEdges() %>%
-    distinct(id.x, id.y, id_req) %>% 
-    ungroup()
-  
-  autores <- autores %>% 
-    group_by(nome) %>% 
-    mutate(id = as.character(id),
-           partido = first(partido),
-           uf = first(uf)) %>%
+    mutate(n_autores = n(),
+           peso_aresta = 1 / n_autores) %>% 
     ungroup() %>% 
-    group_by(id) %>% 
-    mutate(nome = first(nome),
-           nome = paste0(nome, ' - ', partido, '/', uf)) %>% 
-    select(-id_req) %>%
-    distinct(id, nome) %>% 
-    filter(!is.na(id))
+    filter(peso_aresta >= 0.1)
   
-  edges <- autores %>%
-    dplyr::right_join(links, by = c("id" = "id.x"), keep = TRUE) %>% 
-    dplyr::distinct() %>% 
-    dplyr::rename(id.x = id)
-  
-  edges <- autores %>%
-    dplyr::inner_join(edges, by = c("id" = "id.y")) %>% 
-    dplyr::rename(id.y = id.x,
-                  id.x = id) %>% 
-    dplyr::distinct(id.x, nome.x, id.y, nome.y, id_req)
-  
-  return(edges)
+  return(df)
 }
 
-proposicoes <- read_csv(here::here("crawler/raw_data/proposicoes_2019.csv"))
-autores <- read_csv(here::here("crawler/raw_data/autores_proposicoes_2019.csv"))
+exportaParesAutorias <- function() {
+  proposicoes <- exportaProposicoes()
+  autores <- exportaAutoresProposicoes()
+  
+  df <- processaAutores(autores, proposicoes)
+  
+  write_csv(df, here::here("crawler/raw_data/pares_autorias.csv"))
+}
 
-edges <- generateEdges(autores, proposicoes) %>% 
-  dplyr::group_by(id.x, id.y, id_req) %>%
-  dplyr::mutate(weight = 1 / n()) %>% 
-  filter(weight >= 0.50)
-
-write_csv(edges, here::here("crawler/raw_data/pares_autorias.csv"))

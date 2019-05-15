@@ -12,24 +12,22 @@ filterProposicoes <- function(df) {
       filter(dataApresentacao > as.POSIXct("2019-02-01")) %>% 
       select(id,
              descricao = descricaoTipo,
-             uri,
-             linkInteiroTeor = urlInteiroTeor)
+             uri)
   )
 }
 
-exportaProposicoes <- function(df,
-                               outpath = here::here("crawler/raw_data/proposicoes_2019.csv")) {
+exportaProposicoes <- function() {
+  url <- 
+    "https://dadosabertos.camara.leg.br/arquivos/proposicoes/csv/proposicoes-2019.csv"
+  
+  df <- 
+    readr::read_delim(url, delim = ";")
+  
   df <-
     df %>%
-    filterProposicoes() %>%
-    write_csv(outpath)
+    filterProposicoes() 
   
   return(df)
 }
 
-url <- 
-  "https://dadosabertos.camara.leg.br/arquivos/proposicoes/csv/proposicoes-2019.csv"
 
-df <- 
-  readr::read_delim(url, delim = ";")
-df <- exportaProposicoes(df)
