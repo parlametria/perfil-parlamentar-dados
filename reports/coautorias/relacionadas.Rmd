@@ -1,0 +1,42 @@
+---
+title: "Reforma da Previdência"
+output: html_document
+params:
+  id_prop: 2192458
+  min_peso: 0.1
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r message=FALSE, warning=FALSE
+}
+source(here::here("crawler/autorias/getAutoresConjuntos.R"))
+
+id_reforma <- 2192459
+
+autoriasConjuntas <- generateAutoriasConjuntas(params$id_prop, params$min_peso)
+match <- autoriasConjuntas[[1]]
+nodes <- autoriasConjuntas[[2]]
+edges <- autoriasConjuntas[[3]]  
+```
+
+### Grupos de parlamentares por autorias e co-autorias em proposições relacionadas à Reforma da Previdência
+```{r}
+  forceNetwork(
+    Links = edges, Nodes = nodes,
+    Source = "source", Target = "target",
+    Value = "peso_arestas", NodeID = "nome_eleitoral",
+    Group ="sg_partido",
+    opacity = 0.8, zoom = T,
+    linkColour = "#808080")
+```
+
+É interessante notar que há dois grupos do partido PDT: um deles formado por quatro deputados, todos do Ceará e que aparentemente se isola do outro grupo, composto por deputados de diferentes estados, incluindo um do CE. Além disso, percebe-se a presença de dois grupos formados por deputados de partidos diferentes: um que possui o SOLIDARIEDADE e PV, ambos considerados partidos de esquerda; e o outro mais de direita: PODEMOS e NOVO. 
+
+```{r}
+DT::datatable(match %>% group_by(id) %>% mutate(n = n()) %>% filter(n <= 10) %>% select(-n))
+
+```
+

@@ -9,10 +9,7 @@ filterProposicoes <- function(df) {
           stringr::str_detect(dataApresentacao, '2019')
       ) %>%
       mutate(dataApresentacao = as.POSIXct(dataApresentacao)) %>% 
-      filter(dataApresentacao > as.POSIXct("2019-02-01")) %>% 
-      select(id,
-             descricao = descricaoTipo,
-             uri)
+      filter(dataApresentacao > as.POSIXct("2019-02-01")) 
   )
 }
 
@@ -22,10 +19,6 @@ exportaProposicoes <- function() {
   
   df <- 
     readr::read_delim(url, delim = ";")
-  
-  df <-
-    df %>%
-    filterProposicoes() 
   
   return(df)
 }

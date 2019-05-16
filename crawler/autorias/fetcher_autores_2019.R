@@ -2,7 +2,7 @@ library(tidyverse)
 
 processaProposicoesAutores <- function(df) {
   remove_autor_regex = 
-    'comissão|instituto|associação|senado|tribunal|poder|sos|mesa|presidência'
+    'comissão|instituto|associação|senado|tribunal|poder|mesa|presidência'
   
   df <-
     df %>%
@@ -24,7 +24,9 @@ exportaAutoresProposicoes <- function() {
     "https://dadosabertos.camara.leg.br/arquivos/proposicoesAutores/csv/proposicoesAutores-2019.csv"
   
   df <- 
-    readr::read_delim(url, delim = ";") %>% 
-    processaProposicoesAutores()
+    readr::read_delim(url, delim = ";")
+   # processaProposicoesAutores()
+    
+    return(df)
 }
 
