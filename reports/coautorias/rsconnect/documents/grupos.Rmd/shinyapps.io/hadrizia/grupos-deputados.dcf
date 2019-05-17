@@ -1,0 +1,13 @@
+name: grupos-deputados
+title: grupos-deputados
+username:
+account: hadrizia
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 935333
+bundleId: 2092638
+url: https://hadrizia.shinyapps.io/grupos-deputados/
+when: 1558124326.20169
+asMultiple: TRUE
+asStatic: FALSE
+ignoredFiles: relacionadas.Rmd

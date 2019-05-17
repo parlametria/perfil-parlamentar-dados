@@ -1,6 +1,6 @@
 library(tidyverse)
-source(here::here("crawler/autorias/generate-graph.R"))
-source(here::here("crawler/autorias/analyzer-autorias.R"))
+source("generate-graph.R")
+source("analyzer-autorias.R")
 
 getRelacionadas <- function(id) {
   url <-
@@ -24,7 +24,7 @@ generateAutoriasConjuntas <- function(id, min_peso) {
   ids_relacionadas <- getRelacionadas(id)
   
   parlamentares <-
-    read_csv(here::here("crawler/raw_data/parlamentares.csv")) %>%
+    read_csv("data/parlamentares.csv") %>%
     mutate(nome_eleitoral = paste0(nome_eleitoral, " - ", sg_partido, "/", uf)) %>%
     select(id, nome_eleitoral, sg_partido) %>% 
     mutate(id = as.character(id))

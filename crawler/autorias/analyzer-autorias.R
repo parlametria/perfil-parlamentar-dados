@@ -58,5 +58,6 @@ exportaParesAutorias <- function() {
   df <- processaAutores(autores, proposicoes)
   
   write_csv(df, here::here("crawler/raw_data/autorias.csv"))
+  return(df)
 }
 
