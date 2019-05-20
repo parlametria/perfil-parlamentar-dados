@@ -40,7 +40,7 @@ selectInput("proposition", label = "Selecione a proposição:",
 br()
 
 selectInput("min_peso", "Valor mínimo dos pesos:",
-              choices = seq(0.1, 1, 0.1), selected = choices[1])
+              choices = seq(0.1, 1, 0.1), selected = c hoices[1])
 br()
 
 plotOutput("hist")
