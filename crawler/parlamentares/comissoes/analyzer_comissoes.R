@@ -80,12 +80,10 @@ processa_comissoes <- function() {
     dplyr::mutate(maximo = max(peso_cargo)) %>%
     dplyr::filter(maximo == peso_cargo) %>% 
     
-    #dplyr::mutate(casa = "camara") %>% 
     dplyr::select(comissao_id, casa, id_parlamentar = id, cargo, situacao)
 
   ## Informações das Comissões
-  comissoes <- lista_comissao %>% 
-    #dplyr::mutate(casa = "camara") %>% 
+  comissoes <- lista_comissao %>%
     dplyr::select(id = comissao_id, casa, sigla, nome = nome_comissao)
   
   return(list(comissoes, composicao_comissoes))
