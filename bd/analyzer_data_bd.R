@@ -35,17 +35,26 @@ carrega_respostas <- function(data_path = here::here("crawler/raw_data/respostas
 #' @title Processa respostas dos candidatos
 #' @description Processa os dados de respostas dos candidatos (extraídos do monkey) e retorna no formato correto para o banco de dados
 #' @param res_data_path Caminho para o arquivo de respostas sem tratamento.
+#' @param parlamentares_path Caminho para o arquivo de parlamentares
 #' @return Dataframe com id, resposta, cpf, pergunta_id 
-processa_respostas <- function(res_data_path = here::here("crawler/raw_data/respostas.csv")) {
+processa_respostas <- function(res_data_path = here::here("crawler/raw_data/respostas.csv"),
+                               parlamentares_path = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
   library(here)
   
   respostas <- carrega_respostas(res_data_path)
-  
+  parlamentares <- processa_parlamentares(parlamentares_path) %>%
+    dplyr::select(id_parlamentar_voz, cpf)
+
   respostas_alt <- respostas %>% 
+    unique() %>% ## linhas exatamente iguais são eliminadas
+    dplyr::group_by(cpf) %>% 
+    dplyr::mutate(last_date_modified = max(date_modified)) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::filter(date_modified == last_date_modified) %>% ## observações com a última data de atualização são utilizadas
+    dplyr::distinct(cpf, .keep_all = TRUE) %>%
     dplyr::select(cpf, dplyr::starts_with("respostas.")) %>% 
     dplyr::select(-c(respostas.129411238, respostas.129520614, respostas.129521027)) %>% 
-    
     tidyr::gather(key = "pergunta_id", 
                   value = "resposta", 
                   dplyr::starts_with("respostas.")) %>% 
@@ -53,48 +62,42 @@ processa_respostas <- function(res_data_path = here::here("crawler/raw_data/resp
     dplyr::mutate(pergunta_id = as.numeric(pergunta_id)) %>% 
     dplyr::mutate(resposta = dplyr::if_else(is.na(resposta), 0, as.numeric(resposta))) %>% 
     tibble::rowid_to_column(var = "id") %>% 
-    
-    dplyr::select(id, resposta, cpf, pergunta_id)
+    dplyr::inner_join(parlamentares, by="cpf") %>% 
+    dplyr::select(id, resposta, id_parlamentar_voz, pergunta_id)
   
   return(respostas_alt)
 }
 
-#' @title Processa dados dos candidatos
-#' @description Processa os dados dos candidatos e retorna no formato correto para o banco de dados
-#' @param cand_data_path Caminho para o arquivo de dados dos candidatos sem tratamento
-#' @param res_data_path Caminho para o arquivo de respostas sem tratamento.
-#' @return Dataframe com informações detalhadas dos candidatos
-processa_candidatos <- function(cand_data_path = here::here("crawler/raw_data/candidatos.csv"),
-                                res_data_path = here::here("crawler/raw_data/respostas.csv"),
-                                parlamentares_data_path = here::here("crawler/raw_data/parlamentares.csv")) {
+#' @title Processa dados dos parlamentares
+#' @description Processa os dados dos parlamentares e retorna no formato correto para o banco de dados
+#' @param parlamentares_data_path Caminho para o arquivo de dados dos parlamentares sem tratamento
+#' @return Dataframe com informações detalhadas dos parlamentares
+processa_parlamentares <- function(parlamentares_data_path = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
   library(here)
   
-  candidatos <- read.csv(cand_data_path, stringsAsFactors = FALSE, colClasses = c("cpf" = "character"))
-  respostas <- carrega_respostas(res_data_path)
   parlamentares <- read.csv(parlamentares_data_path, stringsAsFactors = FALSE, colClasses = c("cpf" = "character"))
-    
-  ## Lidando com candidatos que responderam mais de uma vez
-  respostas_alt <- respostas %>% 
-    unique() %>% ## linhas exatamente iguais são eliminadas
-    dplyr::group_by(cpf) %>% 
-    dplyr::mutate(last_date_modified = max(date_modified)) %>% 
-    dplyr::ungroup() %>% 
-    dplyr::filter(date_modified == last_date_modified) %>% ## observações com a última data de atualização são utilizadas
-    dplyr::distinct(cpf, .keep_all = TRUE) %>%  ## Filtra restante das respostas duplicadas (todas de candidatos que não responderam ao questionário)
-    dplyr::select("cpf", "tem_foto", "recebeu", "n_candidatura", "eleito", "respondeu")
   
- candidatos_completo <- candidatos %>%  
-   dplyr::right_join(respostas_alt, by = "cpf") %>% 
-   dplyr::distinct(cpf, .keep_all = TRUE) %>% 
-   dplyr::select("estado", "uf", "idade_posse", "nome_coligacao", "nome_candidato", "cpf", "recebeu", "num_partido",
-          "email", "nome_social", "nome_urna", "reeleicao", "ocupacao", "nome_exibicao", "raca", "tipo_agremiacao",
-          "n_candidatura", "composicao_coligacao", "tem_foto", "partido", "sg_partido", "grau_instrucao",
-          "genero", "eleito", "respondeu") %>% 
-   dplyr::left_join(parlamentares %>% dplyr::select(cpf, id), by = c("cpf")) %>% 
-   dplyr::rename(id_parlamentar = id)
+  parlamentares <- parlamentares  %>%
+   dplyr::mutate(em_exercicio = dplyr::if_else(situacao == 'Exercício', 1, 0),
+                 id_parlamentar_voz = paste0(
+                   dplyr::if_else(casa == "camara", 1, 2), 
+                   id)) %>% 
+   dplyr::select(id_parlamentar_voz, 
+                 id_parlamentar = id,
+                 casa, 
+                 cpf, 
+                 nome_civil, 
+                 nome_eleitoral, 
+                 genero, 
+                 uf, 
+                 partido = sg_partido, 
+                 situacao, 
+                 condicao_eleitoral, 
+                 ultima_legislatura, 
+                 em_exercicio)
  
- return(candidatos_completo)
+ return(parlamentares)
 }
 
 #' @title Processa dados de perguntas
@@ -151,8 +154,11 @@ processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/t
   library(tidyverse)
   library(here)
   
-  proposicoes <- read.csv(prop_data_path, stringsAsFactors = FALSE)
+  proposicoes <- read_csv(prop_data_path)
   
+  colnames(proposicoes) <- c("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema", 
+                             "id_proposicao", "resumo", "objeto_votacao", "casa", "no_ar_vozativa")
+
   proposicoes_alt <- proposicoes %>% 
     dplyr::mutate(tema_id = dplyr::case_when(
       tema == "Meio Ambiente" ~ 0,
@@ -167,7 +173,7 @@ processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/t
     dplyr::filter(!is.na(id_votacao)) %>% 
     dplyr::mutate(id_proposicao = as.character(id_proposicao)) %>% 
     dplyr::mutate(status_proposicao = "Ativa") %>% 
-    dplyr::select("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema_id", "status_proposicao", "id_proposicao")
+    dplyr::select("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema_id", "status_proposicao", "id_proposicao", "casa")
   
   return(proposicoes_alt)
 }
@@ -180,20 +186,14 @@ processa_votacoes <- function(vot_data_path = here::here("crawler/raw_data/votac
   library(tidyverse)
   library(here)
   
-  votacoes <- read.csv(vot_data_path, stringsAsFactors = FALSE, colClasses = c("cpf" = "character"))
+  votacoes <- readr::read_csv(vot_data_path, col_types = cols(id_parlamentar = "i", id_votacao = "i", voto = "i"))
   
-  candidatos <- processa_candidatos(cand_data_path = here::here("crawler/raw_data/candidatos.csv"),
-                                    res_data_path = here::here("crawler/raw_data/respostas.csv"))
+  votacoes_select <- votacoes %>%
+    dplyr::mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
+                                         id_parlamentar)) %>% 
+    dplyr::select(id_votacao, id_parlamentar_voz, voto)
   
-  candidatos_list <- candidatos %>% dplyr::pull(cpf)
-  
-  ## Filtra apenas as votações dos candidatos que foram candidatos nas eleições de 2018 (dataframe candidatos)
-  votacoes_filtered <- votacoes %>% 
-    dplyr::filter(cpf %in% candidatos_list) %>% 
-    tibble::rowid_to_column(var = "id") %>% 
-    dplyr::select(id, resposta = voto, cpf, votacao_id = id_votacao)
-    
-  return(votacoes_filtered)  
+  return(votacoes_select)
 }
 
 #' @title Processa dados de comissões
@@ -204,12 +204,12 @@ processa_comissoes <- function(comissoes_data_path = here::here("crawler/raw_dat
   library(tidyverse)
   library(here)
   
-  comissoes <- readr::read_csv(comissoes_data_path, col_types = "icc")
+  comissoes <- readr::read_csv(comissoes_data_path, col_types = cols(id = "i")) %>% 
+    dplyr::mutate(id_comissao_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
+                                              id)) %>%
+    dplyr::select(id_comissao_voz, id, casa, sigla, nome)
   
-  comissoes_alt <- comissoes %>% 
-    dplyr::select(id, sigla, nome)
-  
-  return(comissoes_alt)
+  return(comissoes)
 }
 
 #' @title Processa dados das composições das comissões
@@ -217,20 +217,34 @@ processa_comissoes <- function(comissoes_data_path = here::here("crawler/raw_dat
 #' @param composicao_path Caminho para o arquivo de dados de composições das comissões sem tratamento
 #' @param deputados_path Caminho para o arquivo de dados de composições dos deputados para mapear id ao cpf
 #' @return Dataframe com informações das composições das comissões
-processa_composicao_comissoes <- function(composicao_path = here::here("crawler/raw_data/composicao_comissoes.csv"),
-                                          deputados_path =  here::here("crawler/raw_data/deputados.csv")) {
+processa_composicao_comissoes <- function(composicao_path = here::here("crawler/raw_data/composicao_comissoes.csv")) {
   library(tidyverse)
   library(here)
   
-  deputados <- read.csv(deputados_path, stringsAsFactors = FALSE, colClasses = c("cpf" = "character")) %>% 
-    dplyr::select(id, cpf)
+  composicao_comissoes <- readr::read_csv(composicao_path, col_types = cols(comissao_id = "i", id_parlamentar = "i"))
   
-  composicao_comissoes <- read.csv(composicao_path, stringsAsFactors = FALSE)
-  
-  ## Junta a informação de cpf do deputado à composição das comissões
-  composicao_comissoes_mapped <- inner_join(composicao_comissoes, deputados, by = c("parlamentar_id" = "id")) %>% 
+  composicao_comissoes_mapped <- composicao_comissoes %>% 
     dplyr::distinct() %>% 
-    dplyr::select(comissao_id, parlamentar_cpf = cpf, cargo, situacao)
+    dplyr::mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
+                                              id_parlamentar)) %>%
+    dplyr::mutate(id_comissao_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
+                                           comissao_id)) %>%
+    dplyr::select(id_comissao_voz, id_parlamentar_voz, cargo, situacao)
 
   return(composicao_comissoes_mapped)  
+}
+
+processa_mandatos <- function(mandatos_path = here::here("crawler/raw_data/mandatos.csv")) {
+  library(tidyverse)
+  
+  mandatos <- read.csv(mandatos_path, stringsAsFactors = FALSE)
+  
+  mandatos <- mandatos %>% 
+    dplyr::mutate(casa_enum = dplyr::if_else(casa == "camara", 1, 2),
+      id_parlamentar_voz = paste0(casa_enum, as.character(id_parlamentar))) %>% 
+    dplyr::select(-c(casa_enum, id_parlamentar, casa)) %>% 
+    dplyr::select(id_parlamentar_voz, 
+                  id_legislatura, data_inicio, data_fim, situacao, 
+                  cod_causa_fim_exercicio, desc_causa_fim_exercicio)
+  return(mandatos)
 }

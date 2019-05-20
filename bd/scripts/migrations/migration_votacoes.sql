@@ -3,13 +3,19 @@ CREATE TEMP TABLE temp_votacoes AS SELECT * FROM votacoes LIMIT 0;
 
 \copy temp_votacoes FROM './data/votacoes.csv' DELIMITER ',' CSV HEADER;
 
-INSERT INTO votacoes (id, resposta, cpf, proposicao_id)
-SELECT id, resposta, cpf, proposicao_id
+INSERT INTO votacoes (id_votacao, id_parlamentar_voz, voto)
+SELECT id_votacao, id_parlamentar_voz, voto
 FROM temp_votacoes
-ON CONFLICT (cpf, proposicao_id) 
+ON CONFLICT (id_votacao, id_parlamentar_voz) 
 DO
   UPDATE
   SET 
-    resposta = EXCLUDED.resposta;
+    voto = EXCLUDED.voto;
+
+DELETE FROM votacoes
+WHERE (id_votacao, id_parlamentar_voz) NOT IN
+  (SELECT id_votacao, id_parlamentar_voz
+   FROM temp_votacoes);
+
 
 DROP TABLE temp_votacoes;

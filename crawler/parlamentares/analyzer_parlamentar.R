@@ -1,35 +1,36 @@
 #' @title Processa dados de deputados
-#' @description Processa informações sobre os deputados da legislatura atual
-#' @return Dataframe contendo o id do parlamentar, casa atual, nome e cpf
+#' @description Processa informações sobre os deputados das legislaturas 55 e 56
+#' @return Dataframe contendo informações sobre os deputados
 #' @examples
 #' #' processa_dados_deputados()
 processa_dados_deputados <- function() {
   library(tidyverse)
   library(here)
   
+  # Lista das legislaturas de interesse
+  legislaturas_list <- c(55, 56)
+  
   source(here::here("crawler/parlamentares/fetcher_parlamentar.R"))
   
-  deputados <- fetch_deputados(legislatura = 56)
+  deputados <- purrr::map_df(legislaturas_list, ~ fetch_deputados(.x))
   
-  deputados_alt <- deputados %>% 
-    mutate(casa = "câmara") %>% 
-    select(id, casa, nome_civil, cpf)
+  deputados <- deputados %>% 
+    dplyr::group_by(id) %>% 
+    dplyr::rename("ultima_legislatura" = "legislatura") %>% 
+    dplyr::mutate(ultima_legislatura = max(ultima_legislatura)) %>% 
+    unique()
   
-  return(deputados_alt)
+  return(deputados)
 }
 
 
 #' @title Processa dados de parlamentares
 #' @description Processa informações sobre os parlamentares da legislatura atual
-#' @return Dataframe contendo o id do parlamentar, casa atual, nome e cpf
+#' @return Dataframe contendo informações sobre os parlamentares (deputados e senadores)
 #' @examples
-#' #' processa_dados_parlamentares()
+#' processa_dados_parlamentares()
 processa_dados_parlamentares <- function() {
-  library(tidyverse)
-  library(here)
-  
   deputados <- processa_dados_deputados()
-  
   return(deputados)
 }
 
