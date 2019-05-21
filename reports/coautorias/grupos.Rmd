@@ -73,7 +73,7 @@ output$hist <- renderPlot({
     group_by(id.x, id.y) %>%
     summarise(peso = sum(peso_arestas)) %>%
     ggplot(aes(x = peso)) +
-    geom_histogram()
+    geom_histogram() + theme_minimal()
 
 })
 
