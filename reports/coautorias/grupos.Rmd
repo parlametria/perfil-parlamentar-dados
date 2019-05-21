@@ -1,0 +1,111 @@
+---
+title: "Encontrando grupos de deputados por co-autorias"
+resource_files:
+- scripts/generate-graph.R
+- scripts/fetcher_autores_2019.R
+- scripts/analyzer-autorias.R
+- scripts/generate-graph.R
+- scripts/fetcher_autores_2019.R
+runtime: shiny
+output:
+  html_document:
+    code_folding: hide
+    theme: sandstone
+---
+
+```{r echo = FALSE, warning=FALSE, message=FALSE}
+library(networkD3)
+library(tidyverse)
+
+source(here::here("scripts/analyzer_autorias.R"))
+
+parlamentares <-
+  read_csv(here::here("data/parlamentares.csv")) %>% 
+  process_parlamentares()
+
+autores <- fetch_csv(URL_AUTORES)
+
+proposicoes <- fetch_csv(URL_PROPOSICOES) %>% 
+  select(siglaTipo, numero, ano, id) %>% 
+  filter(siglaTipo %in% c("PEC", "PL", "PDL", "MPV")) %>% 
+  mutate(choice = paste0(siglaTipo, " - ", numero, "/", ano),
+         id = as.character(id))
+```
+
+## Escolhendo uma proposição para análise
+
+É possível exibir um grafo contendo os grupos dos parlamentares e uma tabela detalhando as proposições relacionadas (requerimentos, apensadas, emendas, etc.) de uma proposição selecionada e a partir do peso mínimo, um valor inversamente proporcional ao número de co-autores por proposição: se uma proposição possui dois co-autores, o peso das arestas será 1/2 = 0.5; já uma proposição com 100 co-autorias terá peso igual a 0.1.
+
+```{r echo=FALSE, warning=FALSE}
+choices <- c(proposicoes$choice)
+
+selectInput("proposition", label = "Selecione a proposição:",
+              choices = choices, selected = choices[30])
+br()
+
+selectInput("min_peso", "Valor mínimo dos pesos:",
+              choices = seq(0.1, 1, 0.1), selected = choices[1])
+br()
+
+plotOutput("hist")
+```
+
+#### Tabela de pares de co-autorias
+
+```{r echo=FALSE}
+DT::DTOutput("dt")
+```
+
+#### Grafo de grupos
+
+```{r echo=FALSE}
+  forceNetworkOutput("grafo")
+```
+
+
+```{r echo=FALSE, context="server"}
+
+output$hist <- renderPlot({
+  proposicao <- (proposicoes %>% filter(choice == input$proposition))$id
+  relacionadas <- fetch_relacionadas(proposicao)
+   getCoautorias()[[1]] %>%
+    filter(id_req %in% relacionadas$id | id_req == proposicao) %>%
+    group_by(id.x, id.y) %>%
+    summarise(peso = sum(peso_arestas)) %>%
+    ggplot(aes(x = peso)) +
+    geom_histogram() + theme_minimal()
+
+})
+
+getCoautorias <- reactive({
+  proposicao <- 
+    proposicoes %>% 
+    filter(choice == input$proposition)
+  coautorias <- 
+    generate_autorias_conjuntas(
+      proposicao$id, 
+      as.double(input$min_peso),
+      autores, 
+      parlamentares)
+  return(coautorias)
+})
+
+output$dt <- 
+  DT::renderDataTable(
+    getCoautorias()[[1]] %>% 
+      group_by(id.x, id.y, nome_eleitoral.x, nome_eleitoral.y) %>% 
+      mutate(peso_total = sum(peso_arestas)), 
+    options = list(pageLength = 5,
+                   scrollX = TRUE))
+  
+output$grafo <- 
+  networkD3::renderForceNetwork({
+    autorias <- getCoautorias()
+    nodes <- autorias[[2]]
+    edges <- autorias[[3]]
+    if (nrow(nodes) > 0 && nrow(edges) > 0){
+      generate_graph(nodes, edges)
+    }
+  })
+
+```
