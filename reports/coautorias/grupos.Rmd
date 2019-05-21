@@ -95,7 +95,8 @@ output$dt <-
     getCoautorias()[[1]] %>% 
       group_by(id.x, id.y, nome_eleitoral.x, nome_eleitoral.y) %>% 
       mutate(peso_total = sum(peso_arestas)), 
-    options = list(pageLength = 5))
+    options = list(pageLength = 5,
+                   scrollX = TRUE))
   
 output$grafo <- 
   networkD3::renderForceNetwork({
