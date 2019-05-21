@@ -17,15 +17,19 @@ output:
 library(networkD3)
 library(tidyverse)
 
-source(here::here("scripts/getAutoresConjuntos.R"))
-source(here::here("scripts/analyzer-autorias.R"))
+source(here::here("scripts/analyzer_autorias.R"))
 
-autores_proposicoes <- analyzer_autores_proposicoes()
-autorias <- autores_proposicoes[[1]]
-proposicoes <- autores_proposicoes[[2]]
-proposicoes <- proposicoes %>% 
+parlamentares <-
+  read_csv(here::here("data/parlamentares.csv")) %>% 
+  process_parlamentares()
+
+autores <- fetch_csv(URL_AUTORES)
+
+proposicoes <- fetch_csv(URL_PROPOSICOES) %>% 
+  select(siglaTipo, numero, ano, id) %>% 
   filter(siglaTipo %in% c("PEC", "PL", "PDL", "MPV")) %>% 
-  mutate(choice = paste0(siglaTipo, " - ", numero, "/", ano))
+  mutate(choice = paste0(siglaTipo, " - ", numero, "/", ano),
+         id = as.character(id))
 ```
 
 ## Escolhendo uma proposição para análise
@@ -40,7 +44,7 @@ selectInput("proposition", label = "Selecione a proposição:",
 br()
 
 selectInput("min_peso", "Valor mínimo dos pesos:",
-              choices = seq(0.1, 1, 0.1), selected = c hoices[1])
+              choices = seq(0.1, 1, 0.1), selected = choices[1])
 br()
 
 plotOutput("hist")
@@ -63,40 +67,44 @@ DT::DTOutput("dt")
 
 output$hist <- renderPlot({
   proposicao <- (proposicoes %>% filter(choice == input$proposition))$id
-  relacionadas <- getRelacionadas(proposicao)
-  autorias %>%
-    filter(id_req %in% relacionadas | id_req == proposicao) %>%
-    group_by(id.x, id.y) %>% 
-    summarise(peso = sum(peso_arestas),
-              max = max(peso)) %>% 
+  relacionadas <- fetch_relacionadas(proposicao)
+   getCoautorias()[[1]] %>%
+    filter(id_req %in% relacionadas$id | id_req == proposicao) %>%
+    group_by(id.x, id.y) %>%
+    summarise(peso = sum(peso_arestas)) %>%
     ggplot(aes(x = peso)) +
-    geom_histogram(binwidth = 0.5)
+    geom_histogram()
 
 })
 
 getCoautorias <- reactive({
-  proposicao <- proposicoes %>% filter(choice == input$proposition)
-  co_autorias <- generateAutoriasConjuntas(proposicao$id, input$min_peso)
-  return(co_autorias)
+  proposicao <- 
+    proposicoes %>% 
+    filter(choice == input$proposition)
+  coautorias <- 
+    generate_autorias_conjuntas(
+      proposicao$id, 
+      as.double(input$min_peso),
+      autores, 
+      parlamentares)
+  return(coautorias)
 })
 
-output$dt <- DT::renderDataTable(getCoautorias()[[1]], options = list(
-  pageLength = 5
-  ))
+output$dt <- 
+  DT::renderDataTable(
+    getCoautorias()[[1]] %>% 
+      group_by(id.x, id.y, nome_eleitoral.x, nome_eleitoral.y) %>% 
+      mutate(peso_total = sum(peso_arestas)), 
+    options = list(pageLength = 5))
   
-output$grafo <- networkD3::renderForceNetwork({
-  autorias <- getCoautorias()
-  nodes <- autorias[[2]]
-  edges <- autorias[[3]]
-  if (nrow(nodes) > 0 && nrow(edges) > 0){
-      forceNetwork(
-      Links = edges, Nodes = nodes,
-      Source = "source", Target = "target",
-      Value = "peso_arestas", NodeID = "nome_eleitoral",
-      Group ="sg_partido",
-      opacity = 0.8, zoom = T,
-      linkColour = "#808080")
-  }
-})
+output$grafo <- 
+  networkD3::renderForceNetwork({
+    autorias <- getCoautorias()
+    nodes <- autorias[[2]]
+    edges <- autorias[[3]]
+    if (nrow(nodes) > 0 && nrow(edges) > 0){
+      generate_graph(nodes, edges)
+    }
+  })
 
 ```
