@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS "proposicoes" (
     "tema_id" INTEGER REFERENCES "temas" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
     "status_proposicao" VARCHAR(40) DEFAULT 'Inativa',
     "id_proposicao" VARCHAR(40), 
+    "casa" VARCHAR(40),
     PRIMARY KEY ("id_votacao"));
 
 CREATE TABLE IF NOT EXISTS "votacoes" (     
