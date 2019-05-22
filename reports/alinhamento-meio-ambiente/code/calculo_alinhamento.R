@@ -39,7 +39,8 @@ calcula_alinhamento <- function(posicao_a, posicao_b) {
   
   perguntas_iguais <- length(which(posicao_merge %>% dplyr::pull(match) %in% c(-1, 1)))
   respostas_iguais <- length(which(posicao_merge %>% dplyr::pull(match) == 1))
-  alinhamento <- respostas_iguais / perguntas_iguais
+  alinhamento <- dplyr::if_else(perguntas_iguais <= 2, 0, respostas_iguais / perguntas_iguais)
+  
   
   id_parlamentar_a <- posicao_a %>% dplyr::pull(id_parlamentar_voz) %>% dplyr::first()
   id_parlamentar_b <- posicao_b %>% dplyr::pull(id_parlamentar_voz) %>% dplyr::first()

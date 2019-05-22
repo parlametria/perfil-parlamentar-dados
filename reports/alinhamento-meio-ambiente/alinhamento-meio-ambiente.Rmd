@@ -17,8 +17,15 @@ knitr::opts_chunk$set(
 ```{r}
 library(tidyverse)
 library(here)
+theme_set(theme_minimal())
 
 source(here::here("reports/alinhamento-meio-ambiente/code/calculo_alinhamento.R"))
+```
+
+```{r}
+deputados <- readr::read_csv(here::here("bd/data/parlamentares.csv"), col_types = cols(id_parlamentar_voz = "c")) %>% 
+  filter(casa == "camara") %>% 
+  select(id_parlamentar_voz, nome = nome_eleitoral, uf, partido, em_exercicio)
 ```
 
 ```{r}
@@ -28,7 +35,7 @@ votacoes <- readr::read_csv(here::here("bd/data/votacoes.csv"), col_types = "ncn
 posicoes_ma <- posicoes %>% 
   filter(tema == "Meio Ambiente")
 
-id_posicoes_ma <- posicoes_ma %>% distinct(id_sessao) %>% pull(id_sessao)
+id_posicoes_ma <- posicoes_ma %>% distinct(id_sessao) %>% arrange(id_sessao) %>% pull(id_sessao)
 
 votacoes_ma <- votacoes %>%
   filter(id_votacao %in% id_posicoes_ma)
@@ -38,8 +45,8 @@ rm(posicoes, votacoes)
 
 ```{r}
 votacao_ideal <- tibble::tibble(id_votacao = id_posicoes_ma,
-                                id_parlamentar_voz = rep("0", length(id_posicoes_ma)),
-                                voto = c(-1, -1, -1, -1))
+                                id_parlamentar_voz = rep("ideal", length(id_posicoes_ma)),
+                                voto = c(-1, -1, -1, -1, -1, -1, 1))
 ```
 
 ```{r}
@@ -55,6 +62,29 @@ alinhamento_deputados <- votacoes_ma %>%
   
 ```
 
+```{r}
+alin_deputados <- alinhamento_deputados %>% 
+  left_join(deputados, by = c("id_parlamentar_b" = "id_parlamentar_voz"))
+```
+
+```{r}
+alin_deputados %>% 
+  filter(em_exercicio == 1) %>% 
+  ggplot(aes(x = alinhamento)) +
+  geom_histogram(binwidth = 0.03, fill = "#8E6396", color = "#35193A") +
+  scale_y_continuous(breaks = seq(0, 80, 10)) +
+  labs(y = "Nº de parlamentares")
+```
 
 
+```{r}
+alin_deputados %>% 
+  filter(em_exercicio == 1) %>% 
+  ggplot(aes(x = alinhamento, y = perguntas_iguais)) +
+  geom_jitter(alpha = 0.5) +
+  scale_y_continuous(limits = c(0, 7), breaks = seq(0, 9, 1), oob = scales::squish) +
+  labs(x = "Alinhamento",
+       y = "Nº de posições dadas",
+       title = "Alinhamento x Número de posições dadas")
+```
 
