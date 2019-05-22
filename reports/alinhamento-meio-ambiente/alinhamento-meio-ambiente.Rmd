@@ -1,0 +1,60 @@
+---
+title: "Alinhamento dos parlamentares com posições de Meio Ambiente"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 7
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+
+source(here::here("reports/alinhamento-meio-ambiente/code/calculo_alinhamento.R"))
+```
+
+```{r}
+posicoes <- readr::read_csv(here::here("crawler/raw_data/tabela_votacoes.csv"))
+votacoes <- readr::read_csv(here::here("bd/data/votacoes.csv"), col_types = "ncn")
+
+posicoes_ma <- posicoes %>% 
+  filter(tema == "Meio Ambiente")
+
+id_posicoes_ma <- posicoes_ma %>% distinct(id_sessao) %>% pull(id_sessao)
+
+votacoes_ma <- votacoes %>%
+  filter(id_votacao %in% id_posicoes_ma)
+
+rm(posicoes, votacoes)
+```
+
+```{r}
+votacao_ideal <- tibble::tibble(id_votacao = id_posicoes_ma,
+                                id_parlamentar_voz = rep("0", length(id_posicoes_ma)),
+                                voto = c(-1, -1, -1, -1))
+```
+
+```{r}
+alinhamento_deputados <- votacoes_ma %>% 
+  count(id_parlamentar_voz) %>% 
+  select(-n) %>% 
+  mutate(dados = purrr::map(id_parlamentar_voz,
+                           calcular_alinhamento_parlamentar,
+                           votacoes_ma,
+                           votacao_ideal)) %>% 
+  unnest(dados) %>% 
+  select(-id_parlamentar_voz)
+  
+```
+
+
+
+
