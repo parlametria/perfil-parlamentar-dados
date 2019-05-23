@@ -64,27 +64,80 @@ alinhamento_deputados <- votacoes_ma %>%
 
 ```{r}
 alin_deputados <- alinhamento_deputados %>% 
-  left_join(deputados, by = c("id_parlamentar_b" = "id_parlamentar_voz"))
+  left_join(deputados, by = c("id_parlamentar_b" = "id_parlamentar_voz")) %>% 
+  mutate(nome = stringr::str_to_title(nome))
 ```
 
+# Distribuição do alinhamento dos Deputados ao Meio Ambiente
 ```{r}
 alin_deputados %>% 
   filter(em_exercicio == 1) %>% 
   ggplot(aes(x = alinhamento)) +
   geom_histogram(binwidth = 0.03, fill = "#8E6396", color = "#35193A") +
-  scale_y_continuous(breaks = seq(0, 80, 10)) +
   labs(y = "Nº de parlamentares")
 ```
 
-
+# Número de posições dadas x Alinhamento com meio ambiente
 ```{r}
+set.seed(99) # evita mudança na visualização
 alin_deputados %>% 
   filter(em_exercicio == 1) %>% 
   ggplot(aes(x = alinhamento, y = perguntas_iguais)) +
   geom_jitter(alpha = 0.5) +
-  scale_y_continuous(limits = c(0, 7), breaks = seq(0, 9, 1), oob = scales::squish) +
+  scale_y_continuous(limits = c(0, 7), breaks = seq(0, max(alin_deputados$perguntas_iguais), 1), oob = scales::squish) +
   labs(x = "Alinhamento",
        y = "Nº de posições dadas",
        title = "Alinhamento x Número de posições dadas")
 ```
+
+# Deputados com maior alinhamento ao Meio Ambiente
+```{r}
+paleta = c("#A8DBA8", "#79BD9A")
+
+deputados_top20 <- alin_deputados %>% 
+  filter(em_exercicio == 1) %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais)) %>% 
+  head(20) %>% 
+  mutate(info_alinhamento = paste0(respostas_iguais, "/", perguntas_iguais)) %>% 
+  mutate(deputado = paste0(nome, " (", partido, "/", uf, ")"))
+
+deputados_top20 %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, 
+                                         levels = unique(deputado))
+                                  ), y = alinhamento * 100)) +
+  geom_col(color = paleta[2], fill = paleta[1],  width = .5) +
+  geom_text(
+    aes(label = info_alinhamento), 
+    hjust = -0.5, size = 3,
+    position = position_dodge(width = 1),
+    inherit.aes = TRUE
+  ) +
+  coord_flip() + 
+  labs(x = "Deputados", y = "Alinhamento (%)", title = "20 deputados com maior alinhamento ao Meio Ambiente")
+```
+
+```{r}
+paleta = c("#A8DBA8", "#79BD9A")
+
+alin_deputados %>% 
+  filter(em_exercicio == 1) %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais)) %>% 
+  head(20) %>% 
+  mutate(info_alinhamento = paste0(respostas_iguais, "/", perguntas_iguais)) %>% 
+  mutate(deputado = paste0(nome, " (", partido, "/", uf, ")")) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, 
+                                         levels = unique(deputado))
+                                  ), y = alinhamento * 100)) +
+  geom_point(color = paleta[2], fill = paleta[1], size = 3, shape = 15) +
+  geom_text(aes(label = info_alinhamento), hjust = -0.5, vjust = 0.4, size = 3) + 
+  coord_flip() + 
+  scale_y_continuous(limit = c(0, 105)) +
+  labs(x = "Deputados", y = "Alinhamento (%)", title = "20 deputados com maior alinhamento ao Meio Ambiente")
+```
+
+```{r}
+
+```
+
+
 
