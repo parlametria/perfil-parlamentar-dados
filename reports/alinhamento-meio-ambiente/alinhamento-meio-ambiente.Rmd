@@ -411,7 +411,7 @@ alinhamento_partidos %>%
   mutate(info = paste0(perguntas_iguais, "/", perguntas_sem_posicao_b)) %>% 
   ggplot(aes(x = forcats::fct_rev(factor(id_parlamentar_b, levels = unique(id_parlamentar_b))), 
              y = perguntas_iguais + perguntas_sem_posicao_b)) +
-  geom_col(color = paleta[1], fill = paleta[1], width = .5) +
+  geom_col(color = paleta[3], fill = paleta[3], width = .5) +
   geom_text(aes(label = info), hjust = -0.5, vjust = 0.4, size = 3) + 
   coord_flip() + 
   scale_y_continuous(breaks = seq(0, 7, 1)) +
