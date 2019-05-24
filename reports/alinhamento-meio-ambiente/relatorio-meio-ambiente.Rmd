@@ -24,6 +24,7 @@ theme_set(theme_minimal())
 paleta <- c("#91bfda", "#E89D68", "#e06264")
 
 source(here::here("reports/alinhamento-meio-ambiente/code/calculo_alinhamento.R"))
+source(here::here("reports/alinhamento-meio-ambiente/code/fetch_orientacoes.R"))
 ```
 
 <br>
@@ -70,7 +71,7 @@ deputados <- readr::read_csv(here::here("bd/data/parlamentares.csv"), col_types 
   select(id_parlamentar_voz, nome = nome_eleitoral, uf, partido, em_exercicio)
 ```
 
-```{r}
+```{r results='hide'}
 # "Não" ~ -1
 # "Sim" ~ 1
 # "Obstrução" ~ 2
@@ -79,6 +80,7 @@ deputados <- readr::read_csv(here::here("bd/data/parlamentares.csv"), col_types 
 
 posicoes <- readr::read_csv(here::here("crawler/raw_data/tabela_votacoes.csv"))
 votacoes <- readr::read_csv(here::here("bd/data/votacoes.csv"), col_types = "ncn")
+orientacoes <- readr::read_csv(here::here("crawler/raw_data/orientacoes.csv"))
 
 posicoes_ma <- posicoes %>% 
   filter(tema == "Meio Ambiente")
@@ -88,7 +90,13 @@ id_posicoes_ma <- posicoes_ma %>% distinct(id_sessao) %>% arrange(id_sessao) %>%
 votacoes_ma <- votacoes %>%
   filter(id_votacao %in% id_posicoes_ma)
 
-rm(posicoes, votacoes)
+orientacoes <- orientacoes %>% 
+  select(id_votacao, id_parlamentar_voz, voto)
+
+orientacoes_ma <- orientacoes %>% 
+  filter(id_votacao %in% id_posicoes_ma)
+
+rm(posicoes, votacoes, orientacoes)
 ```
 
 ```{r}
@@ -227,3 +235,82 @@ Destacam-se nessa visualização os 4 primeiros deputados que votaram de acordo 
 
 A partir do 28º parlamentar na ordem, o alinhamento passa a ser menor ou igual a 50%, ou seja, a quantidade de posições a favor do Meio Ambiente passa a ser igual ou menos a quantidade de posições desfavoráveis ao Meio Ambiente.
 
+## Alinhamento dos Partidos ao Meio Ambiente
+
+Abaixo são apresentados os alinhamentos dos partidos parlamentares, baseados em suas orientações em cada uma das 7 votações do Meio Ambiente. É importante ressaltar que os blocos parlamentares são dissolvidos, transformando-se em um conjunto separado de partidos que os compõem e a orientação é mantida.
+
+Outro ponto a se informar é que os partidos entitulados de Governo, Maioria e Minoria dizem respeito aos blocos parlamentares da 55ª legislatura, que vai de 2015 a 2018.
+
+```{r}
+alinhamento_partidos <- orientacoes_ma %>% 
+  count(id_parlamentar_voz) %>% 
+  select(-n) %>% 
+  mutate(dados = purrr::map(id_parlamentar_voz,
+                           calcular_alinhamento_parlamentar,
+                           orientacoes_ma,
+                           votacao_ideal)) %>% 
+  unnest(dados) %>% 
+  select(-id_parlamentar_voz)
+```
+
+```{r fig.width = 8, fig.height = 6}
+alinhamento_partidos %>% 
+  ggplot(aes(x = alinhamento)) +
+  geom_histogram(binwidth = 0.1, fill = "#8E6396", color = "#35193A") +
+  labs(y = "Nº de partidos", title = "Distribuição dos partidos por alinhamento") +
+  theme_ipsum_rc()
+```
+<br>
+Observando o histograma acima, que exibe a distribuição dos partidos políticos e blocos parlamentares em relação ao alinhamento, percebemos que apenas 9 dentre os 35 partidos coletados (cerca de 25%) possuem alinhamento maior que 30% de posições favoráveis ao Meio Ambiente. Acima de 50% de alinhamento, temos apenas 6 partidos (aproximadamente 17%); e se considerarmos somente os que são 100% alinhados, o número de partidos favoráveis ao Meio Ambiente cai para 2 (cerca de 5%).
+
+```{r}
+alinhamento_partidos <- alinhamento_partidos %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(info_alinhamento = paste0(respostas_iguais, "/", perguntas_iguais + perguntas_sem_posicao_b))
+```
+
+```{r}
+data <- alinhamento_partidos %>%
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(respostas_discordancia_direta = perguntas_iguais - respostas_iguais) %>% 
+  mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
+  select(id_parlamentar_b, perguntas_iguais, 
+         alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+
+levels <- data %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais_), desc(perguntas_sem_posicao_b_)) %>% 
+  pull(id_parlamentar_b)
+  
+data_long <- data %>% 
+  gather("metric", "value", respostas_iguais:respostas_discordancia_direta)
+  
+data_long %>% 
+  mutate(metric = factor(metric, levels = c("respostas_iguais", 
+                                            "respostas_discordancia_direta", 
+                                            "perguntas_sem_posicao_b"))) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(id_parlamentar_b, levels = levels)), y = value, fill = metric, order = metric)) +
+  geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
+  geom_text(data = subset(data_long, value != 0),
+            aes(label = value),
+            hjust = 1.8,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  scale_fill_manual(values = c("respostas_discordancia_direta" = paleta[3],
+                               "perguntas_sem_posicao_b" = paleta[2], 
+                               "respostas_iguais" = paleta[1]),
+                    name = "", labels = c("Concordam",
+                                          "Discordam",
+                                          "Não se posicionou")) +
+  labs(x = "Partidos", 
+       y = "Nº de posições", 
+       title="Alinhamentos ao Meio Ambiente",
+       subtitle="Alinhamentos dos partidos com base em votações do meio ambiente") + 
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+A partir do gráfico acima, pode-se observar os partidos mais e menos alinhados às posições do Meio Ambiente. Com alinhamento igual a 100%, O REDE, liderado por Marina Silva, e o PMB são os partidos mais ambientalistas em todas posições coletadas. O segundo maior alinhado ao MA é o PSOL, com pouco mais de 80% de alinhamento. Em seguida vêm os partidos PV, PT, PCdoB, todos com alinhamento acima de 55%. Entre 30% e 40%, estão MINORIA (40%) e os partidos PODEMOS (33%) e PSB (33%).
+
+Os partidos que menos se alinham com as posições do Meio Ambiente são PTN, PTdoB, PTC, PSDC, PRTB, PRP, PMN, PHS e MAIORIA, com 100% dos posicionamentos contrários ao MA; o PTB, PSL, PSD, PSC, PROS, PRB, PR, PP, PMDB, PEN e o GOVERNO possuem mais de 85% dos seus posicionamentos contrários ao Meio Ambiente;  depois, temos os partidos PODEMOS e SOLIDARIEDADE, com desacordo de 71%.
