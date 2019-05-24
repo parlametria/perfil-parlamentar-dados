@@ -176,6 +176,7 @@ deputados_atuais %>%
 Outros 3 deputados também tiveram alinhamento igual a 57% e estariam empatados com outros parlamentares nessa visualização, são eles: Vander Loubet (PT/MS), João Daniel (PT/SE) e Vicentinho (PT/SP).
 
 Para aprofundar mais sobre o que representa essa porcentagem, a visualização a seguir apresenta a composição dos votos desses 25 parlamentares. 
+
 * A **barra azul** indica a quantidade de votações nas quais o **deputado votou exatamente alinhado** aos interesses do Meio Ambiente votaria. 
 * A **barra vermelha** indica a quantidade de votações nas quais o **deputado foi contrário aos interesses** do Meio Ambiente.
 * A **barra laranja** indica a quantidade votações nas quais o **deputado não compareceu para defender** a posição de interesse do Meio Ambiente.
@@ -322,13 +323,13 @@ data_long %>%
                                           "Discordam",
                                           "Não se posicionou")) +
   labs(x = "Deputados", 
-       y = "Nº de posições", 
-       title="Alinhamento de parlamentares",
-       subtitle="Alinhamento de Parlamentares ligado ao Governo e ao Presidente") + 
+       y = "Nº de posições",
+       title="Alinhamento dos Presidentes da República e da Câmara e \nde pessoas ligadas ao Governo") + 
   theme_ipsum_rc() +
   theme(legend.position = "bottom",
         plot.subtitle = element_text(size = 12))
 ```
 
 Nenhum membro desse grupo ultrapassa o valor de 30% de alinhamento.
+
 
