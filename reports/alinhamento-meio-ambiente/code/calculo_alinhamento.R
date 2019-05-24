@@ -2,7 +2,7 @@
 #' @description Compara dois votos e verifica qual o match entre eles.
 #' @param voto_a Voto a
 #' @param voto_b Voto b
-#' @return 1 se os votos forem iguais, -1 se forem diferentes, 0 em qualquer outro caso
+#' @return 1 se concordância, -1 se discordância real, -2 se discordância por falta de posição, 0 em qualquer outro caso
 #' @examples
 #' compara_votos(-1, 1)
 compara_votos <- function(voto_a, voto_b) {
@@ -13,6 +13,13 @@ compara_votos <- function(voto_a, voto_b) {
       res = dplyr::if_else(voto_a == voto_b, 1, -1)
       return(res)
     } else {
+      if (voto_b == 2) {
+        res = dplyr::if_else(voto_a == -1, 1, -1)
+        return(res)
+      }
+      if(voto_b == 0) { ## b não se posicionou o que indica discordância
+        return(-2)
+      }
       return(0)
     }
   } else {
@@ -39,13 +46,16 @@ calcula_alinhamento <- function(posicao_a, posicao_b) {
   
   perguntas_iguais <- length(which(posicao_merge %>% dplyr::pull(match) %in% c(-1, 1)))
   respostas_iguais <- length(which(posicao_merge %>% dplyr::pull(match) == 1))
-  alinhamento <- dplyr::if_else(perguntas_iguais <= 2, 0, respostas_iguais / perguntas_iguais)
+  perguntas_sem_posicao_b <- length(which(posicao_merge %>% dplyr::pull(match) == -2))
+  
+  alinhamento <- dplyr::if_else(perguntas_iguais <= 2, 0, respostas_iguais / (perguntas_iguais + perguntas_sem_posicao_b) )
   
   
   id_parlamentar_a <- posicao_a %>% dplyr::pull(id_parlamentar_voz) %>% dplyr::first()
   id_parlamentar_b <- posicao_b %>% dplyr::pull(id_parlamentar_voz) %>% dplyr::first()
   
-  return(tibble::tibble(id_parlamentar_a, id_parlamentar_b, perguntas_iguais, respostas_iguais, alinhamento))  
+  return(tibble::tibble(id_parlamentar_a, id_parlamentar_b, perguntas_iguais, respostas_iguais, 
+                        perguntas_sem_posicao_b, alinhamento))
 }
 
 #' @title Compara votações entre um parlamentar específico e uma posição ideal
