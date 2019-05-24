@@ -419,3 +419,71 @@ alinhamento_partidos %>%
   scale_y_continuous(breaks = seq(0, 7, 1)) +
   labs(x = "Partidos", y = "Quantidade de perguntas em desacordo com o Meio Ambiente", title = "Partidos em relação ao desacordo com o Meio Ambiente")
 ```
+
+
+```{r fig.height = 100, fig.width = 12}
+library(lemon)
+deputados_atuais %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, 
+                                         levels = unique(deputado))
+                                  ), y = alinhamento * 100)) +
+  geom_col(fill = paleta[1],  width = .2) +
+  geom_text(
+    aes(label = info_alinhamento), 
+    hjust = -0.5, size = 3,
+    position = position_dodge(width = 1),
+    inherit.aes = TRUE
+  ) +
+  coord_flip() + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 10)) +
+  labs(x = "Deputados", y = "Alinhamento (%)", title = "20 deputados com maior alinhamento ao Meio Ambiente") +
+  #facet_wrap(~ partido, scales = 'free_y', ncol = 2) +
+  #facet_grid(partido ~ ., scales = "free_y",  space="free_y") +
+  facet_rep_grid(partido ~ ., scales = "free_y",  space="free_y", repeat.tick.labels = TRUE) +
+  theme_ipsum_rc()
+```
+
+```{r fig.height = 100, fig.width = 12}
+data <- alin_deputados %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(respostas_discordancia_direta = perguntas_iguais - respostas_iguais) %>% 
+  mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
+  select(id_parlamentar_b, nome, uf, partido, em_exercicio, deputado, perguntas_iguais, 
+         alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+
+levels <- data %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais_), desc(perguntas_sem_posicao_b_)) %>% 
+  pull(deputado)
+  
+data_long <- data %>%
+  gather("metric", "value", respostas_iguais:respostas_discordancia_direta)
+  
+data_long %>% 
+  mutate(metric = factor(metric, levels = c("respostas_iguais", 
+                                            "respostas_discordancia_direta", 
+                                            "perguntas_sem_posicao_b"))) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, levels = levels)), y = value, fill = metric, order = metric)) +
+  geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
+  geom_text(data = subset(data_long, value != 0),
+            aes(label = value),
+            hjust = 1.8,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  scale_fill_manual(values = c("respostas_discordancia_direta" = paleta[3],
+                               "perguntas_sem_posicao_b" = paleta[2], 
+                               "respostas_iguais" = paleta[1]),
+                    name = "", labels = c("Concordam",
+                                          "Discordam",
+                                          "Não se posicionou")) +
+  labs(x = "Deputados", 
+       y = "Nº de posições",
+       title="Alinhamento dos Presidentes da República e da Câmara e \nde pessoas ligadas ao Governo") + 
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12)) +
+  facet_rep_grid(partido ~ ., scales = "free_y",  space="free_y", repeat.tick.labels = TRUE)
+```
+
+
+
