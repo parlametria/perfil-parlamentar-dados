@@ -227,3 +227,108 @@ Destacam-se nessa visualização os 4 primeiros deputados que votaram de acordo 
 
 A partir do 28º parlamentar na ordem, o alinhamento passa a ser menor ou igual a 50%, ou seja, a quantidade de posições a favor do Meio Ambiente passa a ser igual ou menos a quantidade de posições desfavoráveis ao Meio Ambiente.
 
+### Quem são os parlamentares menos alinhados ao meio ambiente?
+
+Se olharmos para o final da lista de deputados, temos acesso aos que estão menos alinhados ao Meio Ambiente. Todos os 25 deputados mostrados a seguir possuem alinhamento de 0%, ou seja, não votaram favorável ao Meio Ambiente em nenhuma das 7 votações escolhidas para esta análise.
+
+```{r}
+data <- deputados_atuais %>%
+  arrange(alinhamento, desc(perguntas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(respostas_discordancia_direta = perguntas_iguais - respostas_iguais) %>% 
+  mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
+  select(id_parlamentar_b, nome, uf, partido, em_exercicio, deputado, perguntas_iguais, 
+         alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+
+levels <- data %>% 
+  arrange(alinhamento, desc(perguntas_iguais), desc(perguntas_sem_posicao_b_)) %>% 
+  pull(deputado)
+  
+data_long <- data %>% 
+  head(25) %>% 
+  gather("metric", "value", respostas_iguais:respostas_discordancia_direta)
+  
+data_long %>% 
+  mutate(metric = factor(metric, levels = c("respostas_iguais", 
+                                            "respostas_discordancia_direta", 
+                                            "perguntas_sem_posicao_b"))) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, levels = levels)), y = value, fill = metric, order = metric)) +
+  geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
+  geom_text(data = subset(data_long, value != 0),
+            aes(label = value),
+            hjust = 1.8,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  scale_fill_manual(values = c("respostas_discordancia_direta" = paleta[3],
+                               "perguntas_sem_posicao_b" = paleta[2], 
+                               "respostas_iguais" = paleta[1]),
+                    name = "", labels = c("Concordam",
+                                          "Discordam",
+                                          "Não se posicionou")) +
+  labs(x = "Deputados", 
+       y = "Nº de posições", 
+       title="Menor Alinhamento ao Meio Ambiente",
+       subtitle="25 Deputados menos alinhados com base em votações do meio ambiente") + 
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+É possível destacar nessa visualização os 4 parlamentares que votaram de forma desfavorável aos interesses do Meio Ambiente em 6 das 7 votações escohidas. São eles: Domingos Neto (PSD/CE), José Nunes (PSD/BA), André Abdon (PP/AP), Fernando Monteiro (PP/PE).
+
+Houveram `r deputados_atuais %>% filter(alinhamento == 0) %>% nrow()` deputados com alinhamento igual a 0, isto é, sem posições favoráveis ao Meio Ambiente.
+
+Buscando responder a pergunta de **Como membros ligados ao Governo Bolsonaro se posicionaram em votações relacionadas ao Meio Ambiente?**, a visualização a seguir apresenta membros ligados diretamente ao Governo Bolsonaro, como o próprio Presidente Jair Bolsonaro e seu ministro da Casa Civil Onyx Lorenzoni. Também incluímos o presidente atual da Câmara dos Deputados: Rodrigo Maia.
+
+```{r}
+data <- alin_deputados %>% 
+  filter(nome %in% c("Jair Bolsonaro",
+                     "Eduardo Bolsonaro",
+                     "Onyx Lorenzoni", 
+                     "Tereza Cristina",
+                     "Rodrigo Maia",
+                     "Delegado Waldir",
+                     "Luciano Bivar")) %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(respostas_discordancia_direta = perguntas_iguais - respostas_iguais) %>% 
+  mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
+  select(id_parlamentar_b, nome, uf, partido, em_exercicio, deputado, perguntas_iguais, 
+         alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+
+levels <- data %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais_), desc(perguntas_sem_posicao_b_)) %>% 
+  pull(deputado)
+  
+data_long <- data %>% 
+  head(25) %>% 
+  gather("metric", "value", respostas_iguais:respostas_discordancia_direta)
+  
+data_long %>% 
+  mutate(metric = factor(metric, levels = c("respostas_iguais", 
+                                            "respostas_discordancia_direta", 
+                                            "perguntas_sem_posicao_b"))) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, levels = levels)), y = value, fill = metric, order = metric)) +
+  geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
+  geom_text(data = subset(data_long, value != 0),
+            aes(label = value),
+            hjust = 1.8,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  scale_fill_manual(values = c("respostas_discordancia_direta" = paleta[3],
+                               "perguntas_sem_posicao_b" = paleta[2], 
+                               "respostas_iguais" = paleta[1]),
+                    name = "", labels = c("Concordam",
+                                          "Discordam",
+                                          "Não se posicionou")) +
+  labs(x = "Deputados", 
+       y = "Nº de posições", 
+       title="Alinhamento de parlamentares",
+       subtitle="Alinhamento de Parlamentares ligado ao Governo e ao Presidente") + 
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+Nenhum membro desse grupo ultrapassa o valor de 30% de alinhamento.
+
