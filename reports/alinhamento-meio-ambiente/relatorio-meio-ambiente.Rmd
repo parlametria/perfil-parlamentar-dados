@@ -448,37 +448,36 @@ comissoes_count %>%
             colnames = c("Comissão", "Nº de membros", "Nº de membros com alinhamento calculado"))
 ```
 
-A visualização a seguir apresenta a distribuição do alinhamento dos Deputados nas Comissões. O eixo x indica o alinhamento calculado, quanto maior o pico da "onda" na distribuição, maior é a quantidade de deputados naquela faixa de alinhamento.
+A visualização a seguir apresenta a distribuição do alinhamento dos Deputados nas Comissões. O eixo x indica o alinhamento calculado, quanto maior a altura da "onda" na distribuição, maior é a quantidade de deputados naquela faixa de alinhamento. Cada deputado na visualização é representado por uma marca "|". Perceba que as ondas mais altas coincidem com a faixa com mais marcas "|" de deputados.
 
 ```{r fig.height=10}
 levels <- deputados_atuais_comissoes %>% 
   mutate(sigla = dplyr::if_else(is.na(sigla), "Nenhuma", sigla)) %>% 
   group_by(sigla) %>% 
-  summarise(median = median(alinhamento * 100)) %>% 
+  summarise(median = median(alinhamento)) %>% 
   arrange(desc(median)) %>% 
   pull(sigla)
 
 deputados_atuais_comissoes %>% 
   group_by(sigla) %>% 
-  mutate(median = median(alinhamento * 100)) %>% 
+  mutate(median = median(alinhamento)) %>% 
   ungroup() %>% 
   mutate(sigla = dplyr::if_else(is.na(sigla), "Nenhuma", sigla)) %>% 
-  ggplot(aes(x = alinhamento * 100, y = forcats::fct_rev(factor(sigla, levels = levels)), fill = "a")) + 
+  ggplot(aes(x = alinhamento, y = forcats::fct_rev(factor(sigla, levels = levels)), fill = "a")) + 
     geom_density_ridges(
-      scale = 1
-      # jittered_points = TRUE,
-      # position = position_points_jitter(width = 0.05, height = 0),
-      # point_shape = '°', point_size = 4, point_alpha = 0.5, alpha = 0.7,
+      scale = 1,
+      jittered_points = TRUE,
+      position = position_points_jitter(width = 0.05, height = 0),
+      point_shape = '|', point_size = 2, point_alpha = 0.5, alpha = 0.7,
     ) +
   geom_point(aes(x = median), size = 0.5) +
   labs(y = "Comissão", x = "Alinhamento (entre 0 e 1)") +
    scale_fill_manual(
     name = "", values = c("#91BFDA"), guide = FALSE
   ) +
-  scale_x_continuous(breaks = seq(0, 100, 10), expand = c(0.01, 0)) +
   theme_ipsum_rc() 
 ```
 
 O ponto preto na visualização indica a mediana dos alinhamentos dos componentes da Comissão.
 
-Pela visualização é notável que a concentração de deputados com alinhamento ao meio ambiente ocorre em valores abaixo de 50%. A Comissão com a maior mediana com relação a seus integrantes é a CCULT com 42.9% de alinhamento.
+Pela visualização é notável que a concentração de deputados com alinhamento ao meio ambiente ocorre em valores abaixo de 50%. A Comissão com a maior mediana de alinhamento com relação a seus integrantes é a CCULT com 42.9% de alinhamento.
