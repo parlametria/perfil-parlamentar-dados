@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(here)
 library(hrbrthemes)
+library(ggridges)
 theme_set(theme_minimal())
 paleta <- c("#91bfda", "#E89D68", "#e06264")
 
@@ -402,3 +403,82 @@ data_long %>%
 A partir do gráfico acima, pode-se observar os partidos mais e menos alinhados às posições do Meio Ambiente. Com alinhamento igual a 100%, O REDE, liderado por Marina Silva, e o PMB são os partidos mais ambientalistas em todas posições coletadas. O segundo maior alinhado ao MA é o PSOL, com pouco mais de 80% de alinhamento. Em seguida vêm os partidos PV, PT, PCdoB, todos com alinhamento acima de 55%. Entre 30% e 40%, estão MINORIA (40%) e os partidos PODEMOS (33%) e PSB (33%).
 
 Os partidos que menos se alinham com as posições do Meio Ambiente são PTN, PTdoB, PTC, PSDC, PRTB, PRP, PMN, PHS e MAIORIA, com 100% dos posicionamentos contrários ao MA; o PTB, PSL, PSD, PSC, PROS, PRB, PR, PP, PMDB, PEN e o GOVERNO possuem mais de 85% dos seus posicionamentos contrários ao Meio Ambiente;  depois, temos os partidos PODEMOS e SOLIDARIEDADE, com desacordo de 71%.
+
+## Alinhamento nas Comissões
+
+A seguir, iremos analisar como é a distribuição do alinhamento dos deputados nas Comissões permanentes da Câmara dos Deputados. Para isto, iremos considerar apenas os deputados atualmente em exercício e a configuração atual das comissões considerando suplentes e titulares.
+
+```{r}
+comissoes <- readr::read_csv(here::here("bd/data/comissoes.csv"))
+composicao_comissoes <- readr::read_csv(here::here("bd/data/composicao_comissoes.csv"), 
+                                        col_types = cols(id_parlamentar_voz = "c"))
+
+composicao_comissoes <- composicao_comissoes %>% 
+  left_join(comissoes, by = c("id_comissao_voz")) %>% 
+  select(id_comissao_voz, id_parlamentar_voz, cargo, sigla, nome_comissao = nome)
+```
+
+```{r}
+deputados_atuais_comissoes <- deputados_atuais %>%
+  full_join(composicao_comissoes, by = c("id_parlamentar_b" = "id_parlamentar_voz")) %>% 
+  filter(!is.na(id_parlamentar_a)) %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b))
+```
+
+Calculamos o alinhamento dos deputados para as seguintes comissões (considerando titulares e suplentes): 
+
+```{r}
+library(DT)
+
+comissoes_count <- composicao_comissoes %>% 
+  count(sigla) %>% 
+  left_join(
+    deputados_atuais_comissoes %>%
+      mutate(sigla = dplyr::if_else(is.na(sigla), "Nenhuma", sigla)) %>% 
+      count(sigla) %>% 
+      select(sigla, calculados = n),
+    by = "sigla"
+  ) %>% 
+  arrange(desc(calculados))
+
+comissoes_count %>% 
+  datatable(options = list(dom = 't'), 
+            class = 'cell-border stripe', 
+            rownames = FALSE, 
+            colnames = c("Comissão", "Nº de membros", "Nº de membros com alinhamento calculado"))
+```
+
+A visualização a seguir apresenta a distribuição do alinhamento dos Deputados nas Comissões. O eixo x indica o alinhamento calculado, quanto maior o pico da "onda" na distribuição, maior é a quantidade de deputados naquela faixa de alinhamento.
+
+```{r fig.height=10}
+levels <- deputados_atuais_comissoes %>% 
+  mutate(sigla = dplyr::if_else(is.na(sigla), "Nenhuma", sigla)) %>% 
+  group_by(sigla) %>% 
+  summarise(median = median(alinhamento * 100)) %>% 
+  arrange(desc(median)) %>% 
+  pull(sigla)
+
+deputados_atuais_comissoes %>% 
+  group_by(sigla) %>% 
+  mutate(median = median(alinhamento * 100)) %>% 
+  ungroup() %>% 
+  mutate(sigla = dplyr::if_else(is.na(sigla), "Nenhuma", sigla)) %>% 
+  ggplot(aes(x = alinhamento * 100, y = forcats::fct_rev(factor(sigla, levels = levels)), fill = "a")) + 
+    geom_density_ridges(
+      scale = 1
+      # jittered_points = TRUE,
+      # position = position_points_jitter(width = 0.05, height = 0),
+      # point_shape = '°', point_size = 4, point_alpha = 0.5, alpha = 0.7,
+    ) +
+  geom_point(aes(x = median), size = 0.5) +
+  labs(y = "Comissão", x = "Alinhamento (entre 0 e 1)") +
+   scale_fill_manual(
+    name = "", values = c("#91BFDA"), guide = FALSE
+  ) +
+  scale_x_continuous(breaks = seq(0, 100, 10), expand = c(0.01, 0)) +
+  theme_ipsum_rc() 
+```
+
+O ponto preto na visualização indica a mediana dos alinhamentos dos componentes da Comissão.
+
+Pela visualização é notável que a concentração de deputados com alinhamento ao meio ambiente ocorre em valores abaixo de 50%. A Comissão com a maior mediana com relação a seus integrantes é a CCULT com 42.9% de alinhamento.
