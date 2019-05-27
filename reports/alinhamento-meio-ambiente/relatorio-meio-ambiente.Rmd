@@ -133,7 +133,7 @@ alin_deputados <- alinhamento_deputados %>%
 alin_deputados %>% 
   filter(em_exercicio == 1) %>% 
   ggplot(aes(x = alinhamento * 100)) +
-  geom_histogram(binwidth = 10, fill = "#8E6396", color = "#35193A") +
+  geom_histogram(boundary = 0, binwidth = 10, fill = "#8E6396", color = "#35193A") +
   scale_y_continuous(limits = c(0, 80), breaks = seq(0, 80, 10)) +
   labs(x = "alinhamento", y = "Nº de parlamentares", title = "Distribuição do alinhamento") +
   theme_ipsum_rc()
@@ -159,31 +159,6 @@ alin_deputados <- alin_deputados %>%
 deputados_atuais <- alin_deputados %>% 
   filter(em_exercicio == 1)
 ```
-
-```{r}
-deputados_atuais %>% 
-  head(25) %>% 
-  ggplot(aes(x = forcats::fct_rev(factor(deputado, 
-                                         levels = unique(deputado))
-                                  ), y = alinhamento * 100)) +
-  geom_col(fill = paleta[1],  width = .5) +
-  # geom_text(
-  #   aes(label = info_alinhamento), 
-  #   hjust = -0.5, size = 3,
-  #   position = position_dodge(width = 1),
-  #   inherit.aes = TRUE
-  # ) +
-  coord_flip() + 
-  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 10)) +
-  labs(x = "Deputados", y = "Alinhamento (%)", title = "25 deputados com maior alinhamento ao Meio Ambiente") +
-  theme_ipsum_rc()
-```
-
-É possível reconhecer nomes ligados ao Meio Ambiente na lista, como o de Alessandro Molon que já foi Presidente da Frente Parlamentar Ambientalista. O eixo x (horizontal) indica o alinhamento (%) dos parlamentares com relação a posição ideal de um parlamentar com relação as 7 votações escolhidas para essa análise.
-
-Outros 3 deputados também tiveram alinhamento igual a 57% e estariam empatados com outros parlamentares nessa visualização, são eles: Vander Loubet (PT/MS), João Daniel (PT/SE) e Vicentinho (PT/SP).
-
-Para aprofundar mais sobre o que representa essa porcentagem, a visualização a seguir apresenta a composição dos votos desses 25 parlamentares. 
 
 * A **barra azul** indica a quantidade de votações nas quais o **deputado votou exatamente alinhado** aos interesses do Meio Ambiente votaria. 
 * A **barra vermelha** indica a quantidade de votações nas quais o **deputado foi contrário aos interesses** do Meio Ambiente.
@@ -232,9 +207,17 @@ data_long %>%
         plot.subtitle = element_text(size = 12))
 ```
 
+É possível reconhecer nomes ligados ao Meio Ambiente na lista, como o de Alessandro Molon que já foi Presidente da Frente Parlamentar Ambientalista. O eixo x (horizontal) indica o alinhamento (%) dos parlamentares com relação a posição ideal de um parlamentar com relação as 7 votações escolhidas para essa análise.
+
 Destacam-se nessa visualização os 4 primeiros deputados que votaram de acordo com os interesses do Meio Ambiente em 6 das 7 oportunidades que tiveram.
 
+Outros 3 deputados também tiveram alinhamento igual a 57% e estariam empatados com outros parlamentares nessa visualização, são eles: Vander Loubet (PT/MS), João Daniel (PT/SE) e Vicentinho (PT/SP).
+
+As barras de Samuel Moreita (PSDB/SP) e de Nelson Pellegrino (PT/BA) são menores pois ambos não participaram de algumas votações no período analisado (legislatura 15-18). Segundo suas biografias na Câmara ([aqui](https://www.camara.leg.br/deputados/178990/biografia
+) e [aqui](https://www.camara.leg.br/deputados/74571/biografia)) eles estavam de licença para assumir cargos de Secretários em seus respectivos estados.
+
 A partir do 28º parlamentar na ordem, o alinhamento passa a ser menor ou igual a 50%, ou seja, a quantidade de posições a favor do Meio Ambiente passa a ser igual ou menos a quantidade de posições desfavoráveis ao Meio Ambiente.
+
 ### Quem são os parlamentares menos alinhados ao meio ambiente?
 
 Se olharmos para o final da lista de deputados, temos acesso aos que estão menos alinhados ao Meio Ambiente. Todos os 25 deputados mostrados a seguir possuem alinhamento de 0%, ou seja, não votaram favorável ao Meio Ambiente em nenhuma das 7 votações escolhidas para esta análise.
@@ -246,6 +229,7 @@ data <- deputados_atuais %>%
   mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
   select(id_parlamentar_b, nome, uf, partido, em_exercicio, deputado, perguntas_iguais, 
          alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+
 levels <- data %>% 
   arrange(alinhamento, desc(perguntas_iguais), desc(perguntas_sem_posicao_b_)) %>% 
   pull(deputado)
@@ -258,7 +242,8 @@ data_long %>%
   mutate(metric = factor(metric, levels = c("respostas_iguais", 
                                             "respostas_discordancia_direta", 
                                             "perguntas_sem_posicao_b"))) %>% 
-  ggplot(aes(x = forcats::fct_rev(factor(deputado, levels = levels)), y = value, fill = metric, order = metric)) +
+  #ggplot(aes(x = forcats::fct_rev(factor(deputado, levels = levels)), y = value, fill = metric, order = metric)) +
+  ggplot(aes(x = factor(deputado, levels = levels), y = value, fill = metric, order = metric)) +
   geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
   geom_text(data = subset(data_long, value != 0),
             aes(label = value),
@@ -357,9 +342,10 @@ alinhamento_partidos <- orientacoes_ma %>%
 
 ```{r fig.width = 8, fig.height = 6}
 alinhamento_partidos %>% 
-  ggplot(aes(x = alinhamento)) +
-  geom_histogram(binwidth = 0.1, fill = "#8E6396", color = "#35193A") +
-  labs(y = "Nº de partidos", title = "Distribuição dos partidos por alinhamento") +
+  ggplot(aes(x = alinhamento * 100)) +
+  geom_histogram(boundary = 0, binwidth = 10, fill = "#8E6396", color = "#35193A") +
+  labs(x = "Alinhamento (%)", y = "Nº de partidos", title = "Distribuição dos partidos por alinhamento") +
+  scale_y_continuous(breaks = seq(0, 15, 3)) +
   theme_ipsum_rc()
 ```
 <br>
