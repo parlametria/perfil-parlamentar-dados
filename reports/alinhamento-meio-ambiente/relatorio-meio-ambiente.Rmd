@@ -1,0 +1,496 @@
+---
+title: "Alinhamento dos parlamentares com posições de Meio Ambiente"
+output: 
+  html_document:
+    css: style.css
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+library(ggridges)
+theme_set(theme_minimal())
+paleta <- c("#91bfda", "#E89D68", "#e06264")
+
+source(here::here("reports/alinhamento-meio-ambiente/code/calculo_alinhamento.R"))
+source(here::here("reports/alinhamento-meio-ambiente/code/fetch_orientacoes.R"))
+```
+
+<br>
+Com base em votações realizadas na legislatura 15-18, voltadas para o tema de **Meio Ambiente**, estamos buscando analisar o alinhamento de **Deputados Federais**, **partidos** e **Comissões** com relação a este tema. Para definir o alinhamento do parlamentar é preciso **comparar suas posições** (votos em propostas específicas) com as posições ideais dos defensores do Meio Ambiente.
+
+### Sobre as votações
+
+Foram selecionadas 7 votações importantes para calcular o alinhamento dos parlamentares.
+
+* **[PL 4148/2008](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=412728): Fim à Rotulagem de Alimentos Transgênicos**.
+A [votação](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6259&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=88&indTipoSessao=E&tipo=uf) usada é da Subemenda Substitutiva da CDEIC.
+
+* **[MPV 688/2015](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=1672065): Permissão ao Governo de cobrar outorgas no leilão de usinas hidrelétricas e o autoriza a apoiar hidrelétricas após perdas causadas pela seca**. A [votação](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6706&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=346&indTipoSessao=E&tipo=partido) usada é do Projeto de Lei de conversão.
+
+* **[MPV 756/2016](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2121839): Redução da proteção ambiental na Floresta do Jamanxim**. A [votação](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7542&numLegislatura=55&codCasa=1&numSessaoLegislativa=3&indTipoSessaoLegislativa=O&numSessao=118&indTipoSessao=E&tipo=uf) usada é do Parecer da Comissão Mista.
+
+* **[MPV 758/2016](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2121849): Redução do Parque Nacional do Jamanxim**. A [votação](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7556&numLegislatura=55&codCasa=1&numSessaoLegislativa=3&indTipoSessaoLegislativa=O&numSessao=119&indTipoSessao=E&tipo=uf) é do Parecer da Comissão Mista.
+
+* **[EMC 96/2017](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2125339): Regulamentação das Vaquejadas**. A [votação](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7603&numLegislatura=55&codCasa=1&numSessaoLegislativa=3&indTipoSessaoLegislativa=O&numSessao=142&indTipoSessao=E&tipo=partido) é a votação da PEC já no segundo turno.
+
+* **[MPV 759/2016](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2122078): Regularização fundiária sobre a liquidação de créditos concedidos aos assentados da reforma agrária e sobre a regularização fundiária no âmbito da Amazônia Legal**. A [votação](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7630&numLegislatura=55&codCasa=1&numSessaoLegislativa=3&indTipoSessaoLegislativa=O&numSessao=170&indTipoSessao=E&tipo=partido) é da Emenda do Senado Federal.
+
+* **[MPV 809/2017](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2164234): Regulamentação da Forma de Pagamento da Compensação Ambiental em Unidades de Conservação**. A [votação](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=8306&numLegislatura=55&codCasa=1&numSessaoLegislativa=4&indTipoSessaoLegislativa=O&numSessao=88&indTipoSessao=E&tipo=uf) é do Parecer da Comissão Mista.
+
+### O que é alinhamento?
+
+Para calular o alinhamento de um parlamentar é preciso calcular 3 informações principais: 
+
+* Quantidade de **respostas iguais**, ou seja, quando o parlamentar votou exatamente como um defensor dos interesses do Meio Ambiente votaria; 
+* Quantidade de **posições dadas**, isto é, o número de votações que o parlamentar participou/se posicionou;
+* Quantidade **posições não dadas**, que corresponde ao número de vezes que o parlamentar faltou a sessão e não pode se posicionar a favor do meio ambiente. 
+
+Com essas informações o cálculo do alinhamento é dado por: **respostas iguais / (posições dadas + posições não dadas)**.
+Foi considerado nessa análise que caso o parlamentar vote por obstruir a votação, está portanto votando contra a mesma. Votos de abstenção não foram considerados. O alinhamento só é calculado se o parlamentar tiver votado em pelos menos 3 votações.
+
+## Análise dos Deputados Federais com maior alinhamento ao Meio Ambiente
+<br>
+Calculamos o alinhamento para os Deputados Federais que participaram de alguma das 7 votações selecionadas. Em seguida, filtramos essa lista de deputados para considerar apenas os que estão atualmente em exercício. A partir deste ponto, consideraremos apenas os deputados em exercício.
+A visualização a seguir mostra a distribuição desses deputados com relação a variável de alinhamento.
+
+```{r}
+deputados <- readr::read_csv(here::here("bd/data/parlamentares.csv"), col_types = cols(id_parlamentar_voz = "c")) %>% 
+  filter(casa == "camara") %>% 
+  select(id_parlamentar_voz, nome = nome_eleitoral, uf, partido, em_exercicio)
+```
+
+```{r results='hide'}
+# "Não" ~ -1
+# "Sim" ~ 1
+# "Obstrução" ~ 2
+# "Abstenção" ~ 3
+# "Art. 17" ~ 4
+
+posicoes <- readr::read_csv(here::here("crawler/raw_data/tabela_votacoes.csv"))
+votacoes <- readr::read_csv(here::here("bd/data/votacoes.csv"), col_types = "ncn")
+orientacoes <- readr::read_csv(here::here("crawler/raw_data/orientacoes.csv"))
+
+posicoes_ma <- posicoes %>% 
+  filter(tema == "Meio Ambiente")
+
+id_posicoes_ma <- posicoes_ma %>% distinct(id_sessao) %>% arrange(id_sessao) %>% pull(id_sessao)
+
+votacoes_ma <- votacoes %>%
+  filter(id_votacao %in% id_posicoes_ma)
+
+orientacoes <- orientacoes %>% 
+  select(id_votacao, id_parlamentar_voz, voto)
+
+orientacoes_ma <- orientacoes %>% 
+  filter(id_votacao %in% id_posicoes_ma)
+
+rm(posicoes, votacoes, orientacoes)
+```
+
+```{r}
+votacao_ideal <- tibble::tibble(id_votacao = c(5513, 5723, 16208, 16209, 16230, 16251, 16519),
+                                posicao = c("PL 4148/2008", "MPV 688/2015", "MPV 756/2016", "MPV 758/2016", 
+                                            "EMC 96/2017", "MPV 759/2016", "MPV 809/2017"),
+                                id_parlamentar_voz = rep("ideal", length(id_posicoes_ma)),
+                                voto = c(-1, -1, -1, -1, -1, -1, 1)
+                                )
+
+votacao_ideal <- votacao_ideal %>% select(-posicao)
+```
+
+```{r}
+alinhamento_deputados <- votacoes_ma %>% 
+  count(id_parlamentar_voz) %>% 
+  select(-n) %>% 
+  mutate(dados = purrr::map(id_parlamentar_voz,
+                           calcular_alinhamento_parlamentar,
+                           votacoes_ma,
+                           votacao_ideal)) %>% 
+  unnest(dados) %>% 
+  select(-id_parlamentar_voz)
+  
+```
+
+```{r}
+alin_deputados <- alinhamento_deputados %>% 
+  left_join(deputados, by = c("id_parlamentar_b" = "id_parlamentar_voz")) %>% 
+  mutate(nome = stringr::str_to_title(nome))
+```
+
+```{r fig.width = 8, fig.height = 6}
+alin_deputados %>% 
+  filter(em_exercicio == 1) %>% 
+  ggplot(aes(x = alinhamento * 100)) +
+  geom_histogram(boundary = 0, binwidth = 10, fill = "#8E6396", color = "#35193A") +
+  scale_y_continuous(limits = c(0, 80), breaks = seq(0, 80, 10)) +
+  labs(x = "alinhamento", y = "Nº de parlamentares", title = "Distribuição do alinhamento") +
+  theme_ipsum_rc()
+
+alinhamento_maior_que_50 <- alin_deputados %>% filter(em_exercicio == 1, alinhamento > 0.5) %>% nrow()
+```
+
+<br>
+Pela visualização é possível perceber que existem poucos parlamentares acima dos 50% de alinhamento com Meio Ambiente. Apenas `r alinhamento_maior_que_50` dos `r alin_deputados %>% filter(em_exercicio == 1) %>% nrow()` estão acima de 50%, o que corresponde a `r round(alinhamento_maior_que_50 / alin_deputados %>% filter(em_exercicio == 1) %>% nrow(), 2)` dos deputados atualmente em exercício e que também participaram da legislatura passada (15-18).
+
+É vísivel que a maior parte dos deputados se concentra na faixa de alinhamento entre 0% e 30%.
+
+### Quem são os parlamentares mais alinhados ao meio ambiente?
+
+Agora que já conhecemos a distribuição dos dados de alinhamento, sabemos que existem alguns poucos parlamentares com alinhamento ao Meio Ambiente considerado alto. Os 25 com maior alinhamento estão listados a seguir.
+
+```{r}
+alin_deputados <- alin_deputados %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(info_alinhamento = paste0(respostas_iguais, "/", perguntas_iguais + perguntas_sem_posicao_b)) %>% 
+  mutate(deputado = paste0(nome, " (", partido, "/", uf, ")"))
+
+deputados_atuais <- alin_deputados %>% 
+  filter(em_exercicio == 1)
+```
+
+* A **barra azul** indica a quantidade de votações nas quais o **deputado votou exatamente alinhado** aos interesses do Meio Ambiente votaria. 
+* A **barra vermelha** indica a quantidade de votações nas quais o **deputado foi contrário aos interesses** do Meio Ambiente.
+* A **barra laranja** indica a quantidade votações nas quais o **deputado não compareceu para defender** a posição de interesse do Meio Ambiente.
+
+```{r}
+data <- deputados_atuais %>%
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(respostas_discordancia_direta = perguntas_iguais - respostas_iguais) %>% 
+  mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
+  select(id_parlamentar_b, nome, uf, partido, em_exercicio, deputado, perguntas_iguais, 
+         alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+
+levels <- data %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais_), desc(perguntas_sem_posicao_b_)) %>% 
+  pull(deputado)
+  
+data_long <- data %>% 
+  head(25) %>% 
+  gather("metric", "value", respostas_iguais:respostas_discordancia_direta)
+  
+data_long %>% 
+  mutate(metric = factor(metric, levels = c("respostas_iguais", 
+                                            "respostas_discordancia_direta", 
+                                            "perguntas_sem_posicao_b"))) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, levels = levels)), y = value, fill = metric, order = metric)) +
+  geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
+  geom_text(data = subset(data_long, value != 0),
+            aes(label = value),
+            hjust = 1.8,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  scale_fill_manual(values = c("respostas_discordancia_direta" = paleta[3],
+                               "perguntas_sem_posicao_b" = paleta[2], 
+                               "respostas_iguais" = paleta[1]),
+                    name = "", labels = c("Concordam",
+                                          "Discordam",
+                                          "Não se posicionou")) +
+  labs(x = "Deputados", 
+       y = "Nº de posições", 
+       title="Maior Alinhamento ao Meio Ambiente",
+       subtitle="25 Deputados mais alinhados com base em votações do meio ambiente") + 
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+É possível reconhecer nomes ligados ao Meio Ambiente na lista, como o de Alessandro Molon que já foi Presidente da Frente Parlamentar Ambientalista. O eixo x (horizontal) indica o alinhamento (%) dos parlamentares com relação a posição ideal de um parlamentar com relação as 7 votações escolhidas para essa análise.
+
+Destacam-se nessa visualização os 4 primeiros deputados que votaram de acordo com os interesses do Meio Ambiente em 6 das 7 oportunidades que tiveram.
+
+Outros 3 deputados também tiveram alinhamento igual a 57% e estariam empatados com outros parlamentares nessa visualização, são eles: Vander Loubet (PT/MS), João Daniel (PT/SE) e Vicentinho (PT/SP).
+
+As barras de Samuel Moreita (PSDB/SP) e de Nelson Pellegrino (PT/BA) são menores pois ambos não participaram de algumas votações no período analisado (legislatura 15-18). Segundo suas biografias na Câmara ([aqui](https://www.camara.leg.br/deputados/178990/biografia
+) e [aqui](https://www.camara.leg.br/deputados/74571/biografia)) eles estavam de licença para assumir cargos de Secretários em seus respectivos estados.
+
+A partir do 28º parlamentar na ordem, o alinhamento passa a ser menor ou igual a 50%, ou seja, a quantidade de posições a favor do Meio Ambiente passa a ser igual ou menos a quantidade de posições desfavoráveis ao Meio Ambiente.
+
+### Quem são os parlamentares menos alinhados ao meio ambiente?
+
+Se olharmos para o final da lista de deputados, temos acesso aos que estão menos alinhados ao Meio Ambiente. Todos os 25 deputados mostrados a seguir possuem alinhamento de 0%, ou seja, não votaram favorável ao Meio Ambiente em nenhuma das 7 votações escolhidas para esta análise.
+
+```{r}
+data <- deputados_atuais %>%
+  arrange(alinhamento, desc(perguntas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(respostas_discordancia_direta = perguntas_iguais - respostas_iguais) %>% 
+  mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
+  select(id_parlamentar_b, nome, uf, partido, em_exercicio, deputado, perguntas_iguais, 
+         alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+
+levels <- data %>% 
+  arrange(alinhamento, desc(perguntas_iguais), desc(perguntas_sem_posicao_b_)) %>% 
+  pull(deputado)
+  
+data_long <- data %>% 
+  head(25) %>% 
+  gather("metric", "value", respostas_iguais:respostas_discordancia_direta)
+  
+data_long %>% 
+  mutate(metric = factor(metric, levels = c("respostas_iguais", 
+                                            "respostas_discordancia_direta", 
+                                            "perguntas_sem_posicao_b"))) %>% 
+  #ggplot(aes(x = forcats::fct_rev(factor(deputado, levels = levels)), y = value, fill = metric, order = metric)) +
+  ggplot(aes(x = factor(deputado, levels = levels), y = value, fill = metric, order = metric)) +
+  geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
+  geom_text(data = subset(data_long, value != 0),
+            aes(label = value),
+            hjust = 1.8,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  scale_fill_manual(values = c("respostas_discordancia_direta" = paleta[3],
+                               "perguntas_sem_posicao_b" = paleta[2], 
+                               "respostas_iguais" = paleta[1]),
+                    name = "", labels = c("Concordam",
+                                          "Discordam",
+                                          "Não se posicionou")) +
+  labs(x = "Deputados", 
+       y = "Nº de posições", 
+       title="Menor Alinhamento ao Meio Ambiente",
+       subtitle="25 Deputados menos alinhados com base em votações do meio ambiente") + 
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+É possível destacar nessa visualização os 4 parlamentares que votaram de forma desfavorável aos interesses do Meio Ambiente em 6 das 7 votações escohidas. São eles: Domingos Neto (PSD/CE), José Nunes (PSD/BA), André Abdon (PP/AP), Fernando Monteiro (PP/PE).
+
+Houveram `r deputados_atuais %>% filter(alinhamento == 0) %>% nrow()` deputados com alinhamento igual a 0, isto é, sem posições favoráveis ao Meio Ambiente.
+
+Buscando responder a pergunta de **Como membros ligados ao Governo Bolsonaro se posicionaram em votações relacionadas ao Meio Ambiente?**, a visualização a seguir apresenta membros ligados diretamente ao Governo Bolsonaro, como o próprio Presidente Jair Bolsonaro e seu ministro da Casa Civil Onyx Lorenzoni. Também incluímos o presidente atual da Câmara dos Deputados: Rodrigo Maia.
+
+```{r}
+data <- alin_deputados %>% 
+  filter(nome %in% c("Jair Bolsonaro",
+                     "Eduardo Bolsonaro",
+                     "Onyx Lorenzoni", 
+                     "Tereza Cristina",
+                     "Rodrigo Maia",
+                     "Delegado Waldir",
+                     "Luciano Bivar")) %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(respostas_discordancia_direta = perguntas_iguais - respostas_iguais) %>% 
+  mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
+  select(id_parlamentar_b, nome, uf, partido, em_exercicio, deputado, perguntas_iguais, 
+         alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+levels <- data %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais_), desc(perguntas_sem_posicao_b_)) %>% 
+  pull(deputado)
+  
+data_long <- data %>% 
+  head(25) %>% 
+  gather("metric", "value", respostas_iguais:respostas_discordancia_direta)
+  
+data_long %>% 
+  mutate(metric = factor(metric, levels = c("respostas_iguais", 
+                                            "respostas_discordancia_direta", 
+                                            "perguntas_sem_posicao_b"))) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, levels = levels)), y = value, fill = metric, order = metric)) +
+  geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
+  geom_text(data = subset(data_long, value != 0),
+            aes(label = value),
+            hjust = 1.8,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  scale_fill_manual(values = c("respostas_discordancia_direta" = paleta[3],
+                               "perguntas_sem_posicao_b" = paleta[2], 
+                               "respostas_iguais" = paleta[1]),
+                    name = "", labels = c("Concordam",
+                                          "Discordam",
+                                          "Não se posicionou")) +
+  labs(x = "Deputados", 
+       y = "Nº de posições",
+       title="Alinhamento dos Presidentes da República e da Câmara e \nde pessoas ligadas ao Governo") + 
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+Nenhum membro desse grupo ultrapassa o valor de 30% de alinhamento.
+
+## Alinhamento dos Partidos ao Meio Ambiente
+
+Abaixo são apresentados os alinhamentos dos partidos parlamentares, baseados em suas orientações em cada uma das 7 votações do Meio Ambiente. É importante ressaltar que os blocos parlamentares são dissolvidos, transformando-se em um conjunto separado de partidos que os compõem e a orientação é mantida.
+
+Outro ponto a se informar é que os partidos entitulados de Governo, Maioria e Minoria dizem respeito aos blocos parlamentares da 55ª legislatura, que vai de 2015 a 2018.
+
+```{r}
+alinhamento_partidos <- orientacoes_ma %>% 
+  count(id_parlamentar_voz) %>% 
+  select(-n) %>% 
+  mutate(dados = purrr::map(id_parlamentar_voz,
+                           calcular_alinhamento_parlamentar,
+                           orientacoes_ma,
+                           votacao_ideal)) %>% 
+  unnest(dados) %>% 
+  select(-id_parlamentar_voz)
+```
+
+```{r fig.width = 8, fig.height = 6}
+alinhamento_partidos %>% 
+  ggplot(aes(x = alinhamento * 100)) +
+  geom_histogram(boundary = 0, binwidth = 10, fill = "#8E6396", color = "#35193A") +
+  labs(x = "Alinhamento (%)", y = "Nº de partidos", title = "Distribuição dos partidos por alinhamento") +
+  scale_y_continuous(breaks = seq(0, 15, 3)) +
+  theme_ipsum_rc()
+```
+<br>
+Observando o histograma acima, que exibe a distribuição dos partidos políticos e blocos parlamentares em relação ao alinhamento, percebemos que apenas 9 dentre os 35 partidos coletados (cerca de 25%) possuem alinhamento maior que 30% de posições favoráveis ao Meio Ambiente. Acima de 50% de alinhamento, temos apenas 6 partidos (aproximadamente 17%); e se considerarmos somente os que são 100% alinhados, o número de partidos favoráveis ao Meio Ambiente cai para 2 (cerca de 5%).
+
+```{r}
+alinhamento_partidos <- alinhamento_partidos %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(info_alinhamento = paste0(respostas_iguais, "/", perguntas_iguais + perguntas_sem_posicao_b))
+```
+
+```{r}
+data <- alinhamento_partidos %>%
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(respostas_discordancia_direta = perguntas_iguais - respostas_iguais) %>% 
+  mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
+  select(id_parlamentar_b, perguntas_iguais,
+         alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+
+levels <- data %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais_), desc(perguntas_sem_posicao_b_)) %>% 
+  pull(id_parlamentar_b)
+  
+data_long <- data %>% 
+  gather("metric", "value", respostas_iguais:respostas_discordancia_direta)
+  
+data_long %>% 
+  mutate(metric = factor(metric, levels = c("respostas_iguais", 
+                                            "respostas_discordancia_direta", 
+                                            "perguntas_sem_posicao_b"))) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(id_parlamentar_b, levels = levels)), y = value, fill = metric, order = metric)) +
+  geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
+  geom_text(data = subset(data_long, value != 0),
+            aes(label = value),
+            hjust = 1.8,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  scale_fill_manual(values = c("respostas_discordancia_direta" = paleta[3],
+                               "perguntas_sem_posicao_b" = paleta[2], 
+                               "respostas_iguais" = paleta[1]),
+                    name = "", labels = c("Concordam",
+                                          "Discordam",
+                                          "Não se posicionou")) +
+  labs(x = "Partidos", 
+       y = "Nº de posições", 
+       title="Alinhamentos ao Meio Ambiente",
+       subtitle="Alinhamentos dos partidos com base em votações do meio ambiente") + 
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+A partir do gráfico acima, pode-se observar os partidos mais e menos alinhados às posições do Meio Ambiente. Com alinhamento igual a 100%, O REDE, liderado por Marina Silva, e o PMB são os partidos mais ambientalistas em todas posições coletadas. O segundo maior alinhado ao MA é o PSOL, com pouco mais de 80% de alinhamento. Em seguida vêm os partidos PV, PT, PCdoB, todos com alinhamento acima de 55%. Entre 30% e 40%, estão MINORIA (40%) e os partidos PODEMOS (33%) e PSB (33%).
+
+Os partidos que menos se alinham com as posições do Meio Ambiente são PTN, PTdoB, PTC, PSDC, PRTB, PRP, PMN, PHS e MAIORIA, com 100% dos posicionamentos contrários ao MA; o PTB, PSL, PSD, PSC, PROS, PRB, PR, PP, PMDB, PEN e o GOVERNO possuem mais de 85% dos seus posicionamentos contrários ao Meio Ambiente;  depois, temos os partidos PODEMOS e SOLIDARIEDADE, com desacordo de 71%.
+
+Observação: Abaixo listam-se os motivos pelos quais não há todas as orientações dos partidos:
+
+ - REDE: a votação da [PL 4148/2008](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6259&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=88&indTipoSessao=E&tipo=partido) faltante ocorreu antes do seu registro definitivo, concedido em 22/09/2015;
+ - PMB: Não possui quatro votações: duas delas ocorreram antes de haver alguma filiação dos deputados, evento acontecido apenas em 18/11/2015; em uma delas (EMC 96/2017) não houve orientação do partido, mas Weliton Prado, único filiado do PMB, votou [Sim](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7603&numLegislatura=55&codCasa=1&numSessaoLegislativa=3&indTipoSessaoLegislativa=O&numSessao=142&indTipoSessao=E&tipo=partido) (contrário ao MA); e a outra ocorreu após a saída de Weliton, em 15/08/2017; 
+ - MINORIA: Não possui orientação para as votações da [MPV 759/2016](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7630&numLegislatura=55&codCasa=1&numSessaoLegislativa=3&indTipoSessaoLegislativa=O&numSessao=170&indTipoSessao=E&tipo=partido) e [MPV 809/2017](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=8306&numLegislatura=55&codCasa=1&numSessaoLegislativa=4&indTipoSessaoLegislativa=O&numSessao=88&indTipoSessao=E&tipo=partido);
+ - MAIORIA: Não possui orientação para as votações [MPV 809/2017](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=8306&numLegislatura=55&codCasa=1&numSessaoLegislativa=4&indTipoSessaoLegislativa=O&numSessao=88&indTipoSessao=E&tipo=partido), [PL 4148/2008](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6259&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=88&indTipoSessao=E&tipo=partido) e [MPV 688/2015](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6706&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=346&indTipoSessao=E&tipo=partido);
+ - PHS: Não há orientação para a [MPV 809/2017](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=8306&numLegislatura=55&codCasa=1&numSessaoLegislativa=4&indTipoSessaoLegislativa=O&numSessao=88&indTipoSessao=E&tipo=partido), mas todos os seus três filiados votaram Sim, a favor do MA;
+ - PMN: Só possui duas votações pois as outras ocorreram após a saída do último filiado, em 21/06/2016;
+ - PRP: Possui cinco orientações faltosas; duas delas ([EMC 96/2017](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7603&numLegislatura=55&codCasa=1&numSessaoLegislativa=3&indTipoSessaoLegislativa=O&numSessao=142&indTipoSessao=E&tipo=partido) e [MPV 759/2016](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=7630&numLegislatura=55&codCasa=1&numSessaoLegislativa=3&indTipoSessaoLegislativa=O&numSessao=170&indTipoSessao=E&tipo=partido)) possuem votações de seu único filiado, Nivaldo Albuquerque, que votou Sim e foi contra o Meio Ambiente em ambas;
+ - PRTB: Teve orientação apenas para uma votação, pois o único filiado mudou de partido;
+ - PSDC: Possui uma votação sem orientação mas com votos de seus filiados: a da [MPV 688/2015](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=6706&numLegislatura=55&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=346&indTipoSessao=E&tipo=partido), no restante das votações não há representantes;
+ - PTC: As outras votações ocorreram após a saída do último filiado, ocorrida em 14/3/2016.
+
+## Alinhamento nas Comissões
+
+A seguir, iremos analisar como é a distribuição do alinhamento dos deputados nas Comissões permanentes da Câmara dos Deputados. Para isto, iremos considerar apenas os deputados atualmente em exercício e a configuração atual das comissões considerando suplentes e titulares.
+
+```{r}
+comissoes <- readr::read_csv(here::here("bd/data/comissoes.csv"))
+composicao_comissoes <- readr::read_csv(here::here("bd/data/composicao_comissoes.csv"), 
+                                        col_types = cols(id_parlamentar_voz = "c"))
+
+composicao_comissoes <- composicao_comissoes %>% 
+  left_join(comissoes, by = c("id_comissao_voz")) %>% 
+  select(id_comissao_voz, id_parlamentar_voz, cargo, sigla, nome_comissao = nome)
+```
+
+```{r}
+deputados_atuais_comissoes <- deputados_atuais %>%
+  full_join(composicao_comissoes, by = c("id_parlamentar_b" = "id_parlamentar_voz")) %>% 
+  filter(!is.na(id_parlamentar_a)) %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b))
+```
+
+Calculamos o alinhamento dos deputados para as seguintes comissões (considerando titulares e suplentes): 
+
+```{r}
+library(DT)
+
+comissoes_count <- composicao_comissoes %>% 
+  count(sigla) %>% 
+  left_join(
+    deputados_atuais_comissoes %>%
+      mutate(sigla = dplyr::if_else(is.na(sigla), "Nenhuma", sigla)) %>% 
+      count(sigla) %>% 
+      select(sigla, calculados = n),
+    by = "sigla"
+  ) %>% 
+  arrange(desc(calculados))
+
+comissoes_count %>% 
+  datatable(options = list(dom = 't'), 
+            class = 'cell-border stripe', 
+            rownames = FALSE, 
+            colnames = c("Comissão", "Nº de membros", "Nº de membros com alinhamento calculado"))
+```
+
+A visualização a seguir apresenta a distribuição do alinhamento dos Deputados nas Comissões. O eixo x indica o alinhamento calculado, quanto maior a altura da "onda" na distribuição, maior é a quantidade de deputados naquela faixa de alinhamento. Cada deputado na visualização é representado por uma marca "|". Perceba que as ondas mais altas coincidem com a faixa com mais marcas "|" de deputados.
+
+```{r fig.height=10}
+levels <- deputados_atuais_comissoes %>% 
+  mutate(sigla = dplyr::if_else(is.na(sigla), "Nenhuma", sigla)) %>% 
+  group_by(sigla) %>% 
+  summarise(median = median(alinhamento)) %>% 
+  arrange(desc(median)) %>% 
+  pull(sigla)
+
+deputados_atuais_comissoes %>% 
+  group_by(sigla) %>% 
+  mutate(median = median(alinhamento)) %>% 
+  ungroup() %>% 
+  mutate(sigla = dplyr::if_else(is.na(sigla), "Nenhuma", sigla)) %>% 
+  ggplot(aes(x = alinhamento, y = forcats::fct_rev(factor(sigla, levels = levels)), fill = "a")) + 
+    geom_density_ridges(
+      scale = 1,
+      jittered_points = TRUE,
+      position = position_points_jitter(width = 0.05, height = 0),
+      point_shape = '|', point_size = 2, point_alpha = 0.5, alpha = 0.7,
+    ) +
+  geom_point(aes(x = median), size = 0.5) +
+  labs(y = "Comissão", x = "Alinhamento (entre 0 e 1)") +
+   scale_fill_manual(
+    name = "", values = c("#91BFDA"), guide = FALSE
+  ) +
+  theme_ipsum_rc() 
+```
+
+O ponto preto na visualização indica a mediana dos alinhamentos dos componentes da Comissão.
+
+Pela visualização é notável que a concentração de deputados com alinhamento ao meio ambiente ocorre em valores abaixo de 50%. A Comissão com a maior mediana de alinhamento com relação a seus integrantes é a CCULT com 42.9% de alinhamento.
