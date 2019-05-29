@@ -2,18 +2,43 @@ library(tidyverse)
 
 URL_PROPOSICOES <- "https://dadosabertos.camara.leg.br/arquivos/proposicoes/csv/proposicoes-2019.csv"
 URL_AUTORES <- "https://dadosabertos.camara.leg.br/arquivos/proposicoesAutores/csv/proposicoesAutores-2019.csv"
+URL_API_PROPOSICOES <- "https://dadosabertos.camara.leg.br/api/v2/proposicoes/"
 
-fetch_csv <- function(url) {
+get_dataset_parlamentares <- function(datapath) { 
+  df <- readr::read_csv(datapath) %>%
+    mutate(
+      nome_eleitoral = 
+        paste0(nome_eleitoral, " - ", sg_partido, "/", uf)) %>%
+    select(id, nome_eleitoral, sg_partido) %>%
+    mutate(id = as.character(id))
   
-  df <- 
-    readr::read_delim(url, delim = ";")
+  return(df)
+} 
+
+get_dataset_autores <- function(datapath) {
+  df <- readr::read_csv(datapath) %>% 
+    group_by(id_req) %>% 
+    mutate(n = n(),
+           id = as.character(id)) %>% 
+    filter(n > 1) %>% 
+    select(-n) %>% 
+    ungroup()
   
+  return(df)
+}
+
+get_dataset_proposicoes <- function(datapath) {
+  df <- read.csv(datapath, stringsAsFactors = F) %>%
+    filter(!is.na(id_camara) & tema == 'Meio Ambiente') %>%
+    select(-id_senado) %>%
+    mutate(choice = apelido,
+           id = as.character(id_camara))
   return(df)
 }
 
 fetch_relacionadas <- function(id) {
   url <-
-    paste0("https://dadosabertos.camara.leg.br/api/v2/proposicoes/",
+    paste0(URL_API_PROPOSICOES,
            id,
            '/relacionadas')
   
@@ -37,10 +62,10 @@ fetch_relacionadas <- function(id) {
 }
 
 fetch_autores <- function(id) {
-  print(paste0("Extraindo autores de ", id))
-
+  print(paste0("Extraindo autores da proposição cujo id é ", id))
+  
   url <-
-    paste0("https://dadosabertos.camara.leg.br/api/v2/proposicoes/",
+    paste0(URL_API_PROPOSICOES,
            id,
            '/autores')
   
@@ -62,14 +87,20 @@ fetch_autores <- function(id) {
   return(autores)
 }
 
-fetch_autores <- function(proposicoes) {
+fetch_all_autores <- function(proposicoes) {
   
-  all_ids <- purrr::map_df(proposicoes$id, ~ fetch_relacionadas(.x))
+  all_ids <- purrr::map_df(proposicoes$id, ~ fetch_relacionadas(.x)) %>% 
+    distinct()
   
   autores <- purrr::map_df(all_ids$id, ~ fetch_autores(.x))
   
-  autores <- process_autores(autores, parlamentares, all_ids)
+  autores <- autores %>% 
+    rename(id_req = id, id = id_deputado) %>% 
+    group_by(id_req) %>% 
+    mutate(peso_arestas = 1/n())
   
   write_csv(autores, here::here("reports/coautorias-meio-ambiente/data/autores.csv"))
   
 }
+
+

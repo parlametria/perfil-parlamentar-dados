@@ -1,5 +1,5 @@
 ---
-title: "Encontrando grupos de deputados por co-autorias"
+title: "Encontrando grupos de deputados por coautorias em proposições"
 runtime: shiny
 output:
   html_document:
@@ -25,36 +25,70 @@ library(tidyverse)
 library(hrbrthemes)
 theme_set(theme_minimal())
 
-source(here::here("reports/coautorias-meio-ambiente/scripts/analyzer_autorias.R"))
+source(here::here("scripts/analyzer_autorias.R"))
+source(here::here("scripts/fetcher_autorias.R"))
 
-autores <- read_csv(here::here("reports/coautorias-meio-ambiente/data/autores.csv")) %>% 
-  group_by(id_req) %>% 
-  mutate(n = n()) %>% 
-  filter(n > 1) %>% 
-  select(-n) %>% 
-  ungroup()
+autores <- get_dataset_autores(here::here("data/autores.csv"))
 
-parlamentares <-
-  read_csv(here::here("reports/coautorias-meio-ambiente/data/parlamentares.csv")) %>% 
-  process_parlamentares()
+parlamentares <- get_dataset_parlamentares(here::here("data/parlamentares.csv"))
 
-proposicoes <- read.csv(here::here("reports/coautorias-meio-ambiente/data/tabela_leggo.csv"), stringsAsFactors = F) %>%
-  filter(!is.na(id_camara) & tema == 'Meio Ambiente') %>% 
-  select(-id_senado) %>% 
-  mutate(choice = apelido,
-         id = as.character(id_camara))
+proposicoes <- get_dataset_proposicoes(here::here("data/tabela_leggo.csv"))
+
+coautorias <- get_coautorias(proposicoes, autores, parlamentares)
+
 ```
 
-## Escolhendo uma proposição para análise
 
-É possível exibir um grafo contendo os grupos dos parlamentares e uma tabela detalhando as proposições relacionadas (requerimentos, apensadas, emendas, etc.) de uma proposição selecionada e a partir do peso mínimo, um valor inversamente proporcional ao número de co-autores por proposição: se uma proposição possui dois co-autores, o peso das arestas será 1/2 = 0.5; já uma proposição com 100 co-autorias terá peso igual a 0.1.
+### As proposições
 
-```{r echo=FALSE, warning=FALSE}
+Para geração deste relatório foram utilizadas as proposições do Meio Ambiente disponíveis na plataforma [Leggo](https://leggo.org.br) listadas abaixo. Para cada uma delas, existe uma série de outras proposições relacionadas, como emendas, pareceres, requerimentos, etc., que também foram consideradas para a criação dos grupos parlamentares. 
+
+  - [Lei do Licenciamento Ambiental]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=257161")
+  - [PL do Veneno]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=46249")
+  - [Estatuto do Índio]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=345311")
+  - [Lei para Acabar Zona de Amortecimento]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2085536")
+  - [Política Governo de Redução de Agrotóxico]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2120775")
+  - [Indenização Propriedades Privadas em Unidades de Conservação]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2056568")
+  - [Criação da Área de Proteção Ambiental de Canavieiras]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=1738598")
+  - [Demarcações passam a ser competência exclusiva do Congresso]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=14562")
+  - [Lei do Pantanal - Molon]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2170839")
+  - [Lei do Cerrado]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=944279")
+  - [PNCMar]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=604557")
+
+<br>
+
+### A detecção dos grupos
+
+A detecção de grupos é feita da seguinte forma: inicialmente se combinam em pares os autores de todas as proposições respectivas relacionadas. Isso quer dizer que, para uma proposição do tipo requerimento que foi feito por 3 autores, x, y e z, serão criados 3 pares: um contendo x e y, um com x e z e outro com y e z. Desta forma, cada um dos deputados autores de uma proposição terá uma relação com todos os outros coautores. 
+
+<br>
+
+#### Tabela de pares
+
+A tabela abaixo lista todos os pares e respectivas relações, calculadas de acordo com o peso explicado abaixo. A partir dela podemos observar os parlamentares que mais coautoraram as proposições do Meio Ambiente entre as legislaturas 55 e 56: o trio de deputados do PT, Bohn Gass, João Daniel e Padre João é o conjunto que deputados com relação mais forte. Abaixo deles, estão os deputados do PSOL Ivan Valente, Chico Alencar e Edmilson Rodrigues. Uma coisa interessante a observar é que, apesar de Chico e Edmilson estarem fortemente relacionados com Ivan, estes dois possuem uma relação mais fraca, significando que coautoraram poucas proposições juntos ou proposições que possuem muitos outros autores.
+
+```{r echo=FALSE}
+DT::DTOutput("dt")
+```
+
+<br>
+
+#### Peso das relações 
+
+Uma vez que conectamos todos os coautores, percebemos que há casos onde o número de coautorias ou subscrições é muito alto. Um exemplo disso é um [requerimento de audiência](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2194402) sobre aposentadoria para produtores rurais familiares, um requerimento popular que normalmente é visto pelo deputados como oportunidade de aproximação com eleitores, e por isso o número de assinaturas de coautoria são tão altos.
+
+A fim de deixar os grupos mais refinados e precisamos, optamos por adicionar uma penalidade que varia de acordo com o número de pessoas envolvidas: quanto mais coautores em uma proposição, menos precisas estarão as relações entre os deputados e por isso terão pesos menores; de forma análoga, uma proposição que possua apenas dois coautores, terá o peso da relação máximo e estarão muito mais próximos.
+
+Transformamos este peso de relações em um parâmetro, entre 0.1 e 1, que é usado para a geração dos grupos: quanto maior o seu valor, mais forte serão as relações entre os deputados e, consequentemente, os grupos gerados. A partir deste peso, filtramos todas as relações que possuem valor maior ou igual a ele e executamos a criação dos grupos. 
+
+<br>
+
+```{r echo=FALSE, warning=FALSE, fig.width = 8, fig.height = 6}
 choices <- proposicoes$choice
 
-selectInput("proposition", label = "Selecione a proposição:",
-              choices = choices, selected = choices[30])
-br()
+#selectInput("proposition", label = "Selecione a proposição:",
+#              choices = choices, selected = choices[30])
+#br()
 
 selectInput("min_peso", "Valor mínimo dos pesos:",
               choices = seq(0.1, 1, 0.1), selected = choices[1])
@@ -63,63 +97,103 @@ br()
 plotOutput("hist")
 ```
 
-#### Tabela de pares de co-autorias
+Acima se encontra a distribuição das relações de acordo com o peso fornecido como entrada. Colocando o menor valor possível como entrada, 0.1, se pode visualizar os pares que possuem no mínimo uma relação igual a esse peso. Percebemos que a maior parte das relações entre os deputados se encontra entre 0.1 e 0.2. Isto indica que os autores das proposições do MA escolhidas e suas relacionadas geralmente participam de coautorias quando há muitos outros deputados coautorando ou preferem criar proposições sozinhos.
 
-```{r echo=FALSE}
-DT::DTOutput("dt")
-```
+<br>
 
 #### Grafo de grupos
+
+Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando uma técnica chamada `clusterização`, que agrupa os dados de forma automática com base na similaridade entre eles. Para o peso mínimo de 0.1 das relações, foram gerados 7 grupos no total, exibidos abaixo:
 
 ```{r echo=FALSE}
   forceNetworkOutput("grafo")
 ```
 
+O grafo é útil para visualizar quais os deputados que servem de ponte e se conectam com dois grupos de deputados que só coautoram entre si, como Nilto Tatto e Patrus Ananias. Neste mesmo grupo está o trio mais fortemente relacionado (Bohn Gass-João Daniel-Padre João), que apesar de geralmente coautorarem mais juntamente, também se relacionam com os outros deputados do grupo. 
+
+Também se podem ver os deputados que fazem parte de um grupo, mas que só coautoram com um deputado fortemente relacionado com outros deputados: Sarney Filho só possui coautorias com Alessandro Molon; Edio Lopes com Celso Maldaner e Rodrigo Maia (presidente da Câmara dos Deputados) com Nelson Marquezelli.
+
+Além destes, existem as duplinhas Paulo Abi-Ackel e Julio Lopes; Lincoln Portela e Celso Jacob e o trio Ivan Valente, Edmilson Rodrigues e Chico Alencar, que apesar de estarem conectados, a maior coautoria se dá entre Ivan e os outros deputados mas de forma separada.
+
+
+#### Grupos encontrados
+
+Abaixo têm-se a informação dos grafos em formato de tabela, com o nome dos parlamentares e o respectivo grupo.
+
+```{r echo=FALSE}
+
+DT::DTOutput("dt_nodes")
+
+```
+
+
 
 ```{r echo=FALSE, context="server"}
 
 output$hist <- renderPlot({
-  proposicao <- (proposicoes %>% filter(choice == input$proposition))$id
-  relacionadas <- fetch_relacionadas(proposicao)
-   getCoautorias()[[1]] %>%
-    filter(id_req %in% relacionadas$id | id_req == proposicao) %>%
-    group_by(id.x, id.y) %>%
-    summarise(peso = sum(peso_arestas)) %>%
-    ggplot(aes(x = peso)) +
-    geom_histogram(boundary = 0, binwidth = 2, fill = "#1BB5A9", color = "#35193A") +
+  if(nrow(coautorias) > 0) {
+    coautorias %>%
+    filter(peso_arestas >= input$min_peso) %>% 
+    ggplot(aes(x = peso_arestas)) +
+    geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#35193A") +
+    scale_x_continuous(limits = c(0, max(coautorias$peso_arestas) + 0.1), 
+                       breaks = seq(0, max(coautorias$peso_arestas), 0.1)) +
+    labs(x = "Peso das relações", y = "Número de relações") +
     theme_ipsum_rc()
-
+  }
 })
 
 getCoautorias <- reactive({
-  proposicao <- 
-    proposicoes %>% 
-    filter(choice == input$proposition)
+  # proposicao <- 
+  #   proposicoes %>% 
+  #   filter(choice == input$proposition)
   coautorias <- 
-    generate_autorias_conjuntas(
-      proposicao$id, 
+    generate_nodes_and_edges(
       as.double(input$min_peso),
       autores,
-      parlamentares)
+      parlamentares,
+      coautorias)
   return(coautorias)
 })
 
 output$dt <- 
   DT::renderDataTable(
-    getCoautorias()[[1]] %>% 
-      group_by(id.x, id.y, nome_eleitoral.x, nome_eleitoral.y) %>% 
-      mutate(peso_total = sum(peso_arestas)), 
-    options = list(pageLength = 5,
+    coautorias %>% 
+      select(nome_eleitoral.x, nome_eleitoral.y, peso_arestas) %>% 
+      distinct() %>% 
+      filter(peso_arestas >=  input$min_peso) %>% 
+      rename(peso_relacao = peso_arestas, 
+             nome_deputado_a = nome_eleitoral.x,
+             nome_deputado_b = nome_eleitoral.y) %>% 
+      arrange(desc(peso_relacao)), 
+    options = list(pageLength = 10,
                    scrollX = TRUE))
   
 output$grafo <- 
   networkD3::renderForceNetwork({
     autorias <- getCoautorias()
-    nodes <- autorias[[2]]
-    edges <- autorias[[3]]
+    nodes <- autorias[[1]]
+    edges <- autorias[[2]]
     if (nrow(nodes) > 0 && nrow(edges) > 0){
       generate_graph(nodes, edges)
     }
   })
+
+
+output$dt_nodes <- 
+  DT::renderDataTable(
+    getCoautorias()[[1]] %>% 
+      select(nome = nome_eleitoral, grupo = group), 
+    options = list(pageLength = 10,
+                   scrollX = TRUE))
+
+output$hist_nodes <- renderPlot({
+    getCoautorias()[[1]] %>%
+    ggplot(aes(x = group)) +
+    geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#35193A", stat="count") +
+    labs(x = "Peso das relações", y = "Número de relações") +
+    theme_ipsum_rc()
+  
+})
 
 ```

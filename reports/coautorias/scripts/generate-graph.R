@@ -4,12 +4,12 @@ library(tidyverse)
 generate_nodes <- function(df) {
   return(
     df %>%
-      dplyr::distinct(id, nome_eleitoral, sg_partido, peso_total_autor) %>%
+      dplyr::distinct(id, nome_eleitoral, sg_partido) %>%
       tibble::rowid_to_column("index") %>%
       dplyr::mutate(index = index - 1,
                     id = as.character(id),
                     group = as.factor(sg_partido)) %>%
-      dplyr::select(index, id, nome_eleitoral, group, peso_total_autor) %>% 
+      dplyr::select(index, id, nome_eleitoral, group) %>% 
       as.data.frame()
   )
 }

@@ -18,7 +18,6 @@ process_autores <- function(df, parlamentares_df, ids_relacionadas_df) {
     select(id_req = idProposicao, id = idDeputadoAutor, peso_arestas) %>%
     filter(!is.na(id)) %>%
     group_by(id) %>%
-    mutate(peso_total_autor = sum(peso_arestas)) %>%
     ungroup() %>%
     mutate(id = as.character(id))
   

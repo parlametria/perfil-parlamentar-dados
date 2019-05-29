@@ -1,16 +1,56 @@
 library(networkD3)
 library(tidyverse)
 
-generate_nodes <- function(df) {
+generate_nodes <- function(df, parlamentares, coautorias) {
+  library(tidygraph)
+  
+  df <- inner_join(df, parlamentares, by="id") %>% 
+    group_by(id_req) %>% 
+    filter(n() != 1) %>%
+    ungroup() %>% 
+    distinct(id, nome_eleitoral, sg_partido)
+  
+  pre_nodes <- df %>%
+    ungroup() %>% 
+    tibble::rowid_to_column("index") %>%
+    dplyr::mutate(id = as.character(id),
+                  partido = as.factor(sg_partido)) %>%
+    dplyr::select(index, id, nome_eleitoral, partido) %>% 
+    as.data.frame() 
+  
+  pre_links <- coautorias %>% 
+    dplyr::group_by(id.x, id.y) %>%
+    dplyr::summarise(
+      source = first(id.x),
+      target = first(id.y),
+      value = sum(peso_arestas)
+    ) %>%
+    ungroup() %>%
+    inner_join(pre_nodes %>% select(index, id), by = c("source" = "id")) %>%
+    inner_join(pre_nodes %>% select(index, id), by = c("target" = "id")) %>%
+    mutate(source = as.factor(source), target = as.factor(target)) %>%
+    select(source = index.x, target = index.y, value) %>%
+    arrange(target) %>%
+    as.data.frame()
+  
+  graph <- tbl_graph(nodes = pre_nodes,
+                     edges = pre_links,
+                     directed = F)
+  
+  pre_nodes <- graph %>%
+    mutate(group = as.factor(group_edge_betweenness())) %>%
+    as.data.frame() %>% 
+    group_by(group) %>% 
+    filter(n() > 1) %>% 
+    ungroup() %>% 
+    select(-index) %>% 
+    tibble::rowid_to_column("index")
+  
+  nodes <- pre_nodes %>% 
+      dplyr::mutate(index = index - 1)
+  
   return(
-    df %>%
-      dplyr::distinct(id, nome_eleitoral, sg_partido) %>%
-      tibble::rowid_to_column("index") %>%
-      dplyr::mutate(index = index - 1,
-                    id = as.character(id),
-                    group = as.factor(sg_partido)) %>%
-      dplyr::select(index, id, nome_eleitoral, group) %>% 
-      as.data.frame()
+    nodes
   )
 }
 
@@ -25,9 +65,9 @@ generate_edges <- function(df, nodes) {
       dplyr::group_by(id.x, id.y) %>% 
       dplyr::summarise(source = first(id.x), target = first(id.y), peso=sum(peso_arestas)) %>% 
       ungroup() %>% 
+      inner_join(nodes, by = c("source" = "id")) %>% 
+      inner_join(nodes, by = c("target" = "id")) %>% 
       mutate(source = as.factor(source), target = as.factor(target)) %>% 
-      left_join(nodes, by = c("source" = "id")) %>% 
-      left_join(nodes, by = c("target" = "id")) %>% 
       select(source = index.x, target = index.y, peso) %>% 
       arrange(target) %>% 
       as.data.frame()
@@ -55,48 +95,6 @@ generate_graph <- function(nodes, edges) {
 #   autores <- autores %>% 
 #     mutate(nome = paste0(nomeAutor, ' - ', siglaPartidoAutor, '/', siglaUFAutor)) %>% 
 #     select(id_req = idProposicao, nome, partido = siglaPartidoAutor)
-#   
-#   pre_nodes <- autores %>% 
-#     dplyr::select(nome, id_req, descricaoTipo) %>% 
-#     dplyr::distinct(nome) %>% 
-#     tibble::rowid_to_column("index") %>% 
-#     # dplyr::mutate(index = index - 1) %>% 
-#     dplyr::select(index, nome) %>% 
-#     as.data.frame()
-#   
-#   pre_links <- autores %>% full_join(autores, by = "id_req") %>%
-#     filter(nome.x != nome.y) %>% 
-#     # dplyr::select(-c(prop_id.x, casa.x, prop_id.y, casa.y)) %>% 
-#     dplyr::group_by(nome.x, nome.y) %>% 
-#     dplyr::summarise(source = first(nome.x), target = first(nome.y), value = 1/n()) %>% 
-#     ungroup() %>% 
-#     mutate(source = as.factor(source), target = as.factor(target)) %>% 
-#     left_join(pre_nodes %>% select(index, nome), by = c("source" = "nome")) %>% 
-#     left_join(pre_nodes %>% select(index, nome), by = c("target" = "nome")) %>% 
-#     select(source = index.x, target = index.y, value) %>% 
-#     arrange(target) %>% 
-#     as.data.frame()
-#   
-#   graph <- tbl_graph(nodes = pre_nodes,
-#                      edges = pre_links, 
-#                      directed = F)
-#   
-#   pre_nodes <- graph %>% 
-#     mutate(group = as.factor(group_edge_betweenness())) %>% 
-#     as.data.frame()
-#   
-#   nodes <- autores %>% 
-#     dplyr::select(nome, id_req, descricaoTipo) %>% 
-#     dplyr::group_by(nome) %>% 
-#     dplyr::distinct() %>% 
-#     dplyr::summarise(size = n()) %>% 
-#     dplyr::mutate(group = 1, nome = as.factor(nome)) %>% 
-#     tibble::rowid_to_column("index") %>% 
-#     #dplyr::mutate(index = index - 1) %>% 
-#     dplyr::select(index, nome, group) %>% 
-#     as.data.frame() %>% 
-#     dplyr::left_join(pre_nodes, by ="nome") %>% 
-#     select(-c(index.y, group.x), index = index.x, nome, group = group.y)
 #   
 #   links <- autores %>% full_join(autores, by = "id_req") %>%
 #     filter(nome.x != nome.y) %>% 
