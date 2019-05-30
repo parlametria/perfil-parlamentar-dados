@@ -25,14 +25,22 @@ library(tidyverse)
 library(hrbrthemes)
 theme_set(theme_minimal())
 
-source(here::here("scripts/analyzer_autorias.R"))
-source(here::here("scripts/fetcher_autorias.R"))
+env <- "dev"
+path <- ''
 
-autores <- get_dataset_autores(here::here("data/autores.csv"))
+if (env == "dev") {
+  path = "reports/coautorias-meio-ambiente/"
+} 
 
-parlamentares <- get_dataset_parlamentares(here::here("data/parlamentares.csv"))
 
-proposicoes <- get_dataset_proposicoes(here::here("data/tabela_leggo.csv"))
+source(here::here(paste0(path, "scripts/analyzer_autorias.R")))
+source(here::here(paste0(path, "scripts/fetcher_autorias.R")))
+
+autores <- get_dataset_autores(here::here(paste0(path, "data/autores.csv")))
+
+parlamentares <- get_dataset_parlamentares(here::here(paste0(path, "data/parlamentares.csv")))
+
+proposicoes <- get_dataset_proposicoes(here::here(paste0(path, "data/tabela_leggo.csv")))
 
 coautorias <- get_coautorias(proposicoes, autores, parlamentares)
 
@@ -91,7 +99,12 @@ choices <- proposicoes$choice
 #br()
 
 selectInput("min_peso", "Valor mínimo dos pesos:",
-              choices = seq(0.1, 1, 0.1), selected = choices[1])
+              choices = seq(
+                min(coautorias$peso_arestas) %>% 
+                  round(2), 
+                max(coautorias$peso_arestas) %>% 
+                  round(2),
+                0.1), selected = choices[1])
 br()
 
 plotOutput("hist")
@@ -127,7 +140,6 @@ DT::DTOutput("dt_nodes")
 ```
 
 
-
 ```{r echo=FALSE, context="server"}
 
 output$hist <- renderPlot({
@@ -144,9 +156,6 @@ output$hist <- renderPlot({
 })
 
 getCoautorias <- reactive({
-  # proposicao <- 
-  #   proposicoes %>% 
-  #   filter(choice == input$proposition)
   coautorias <- 
     generate_nodes_and_edges(
       as.double(input$min_peso),
@@ -186,14 +195,5 @@ output$dt_nodes <-
       select(nome = nome_eleitoral, grupo = group), 
     options = list(pageLength = 10,
                    scrollX = TRUE))
-
-output$hist_nodes <- renderPlot({
-    getCoautorias()[[1]] %>%
-    ggplot(aes(x = group)) +
-    geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#35193A", stat="count") +
-    labs(x = "Peso das relações", y = "Número de relações") +
-    theme_ipsum_rc()
-  
-})
 
 ```

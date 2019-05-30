@@ -1,6 +1,14 @@
 library(tidyverse)
-source(here::here("scripts/generate-graph.R"))
-source(here::here("scripts/fetcher_autorias.R"))
+
+env <- "dev"
+path <- ''
+
+if (env == "dev") {
+  path = "reports/coautorias-meio-ambiente/"
+} 
+
+source(here::here(paste0(path, "scripts/generate-graph.R")))
+
 
 get_coautorias <- function(id, autores, parlamentares) {
   if (typeof(id) == 'double') {
