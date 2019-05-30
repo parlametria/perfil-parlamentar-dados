@@ -1,0 +1,134 @@
+#' @title Lista de proposições votadas em um determinado ano
+#' @description Lista as proposições votadas em plenário para um determinado ano
+#' @param ano Ano de ocorrência das votações
+#' @return Dataframe contendo id da proposição, nome e data da votação
+#' @examples
+#' proposicoes_votadas_em_2019 <- fetch_votacoes_ano(2019)
+fetch_votacoes_ano <- function(ano = 2019) {
+  library(tidyverse)
+  library(RCurl)
+  library(xml2)
+  library(jsonlite)
+  
+  url_votacoes <- "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=%s&tipo="
+  
+  url <- url_votacoes %>% 
+    sprintf(ano)
+  
+  proposicoes <- tryCatch({
+    xml <- getURL(url) %>% read_xml()
+    
+    data <- xml_find_all(xml, ".//proposicao") %>%
+      map_df(function(x) {
+        list(
+          id = xml_find_first(x, ".//codProposicao") %>% 
+            xml_text(),
+          nome_proposicao = xml_find_first(x, ".//nomeProposicao") %>% 
+            xml_text(),
+          data_votacao = xml_find_first(x, ".//dataVotacao") %>% 
+            xml_text()
+        )
+      }) %>%
+      select(id, nome_proposicao, data_votacao)
+  }, error = function(e) {
+    message(e)
+    data <- tribble(
+      ~ id, ~ nome_proposicao, ~ data_votacao)
+    return(data)
+  })
+  
+  return(proposicoes)
+}
+
+fetch_xml_api_votacao <- function(id_proposicao) {
+  library(tidyverse)
+  library(rcongresso)
+  library(RCurl)
+  library(xml2)
+  
+  proposicao <- fetch_proposicao_camara(id_proposicao) %>%
+    select(siglaTipo, numero, ano)
+  
+  url <- paste0("https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicao?tipo=",
+                proposicao$siglaTipo, "&numero=", proposicao$numero, "&ano=", proposicao$ano)
+  
+  print(paste0("Baixando votação da ", proposicao$siglaTipo, " ", proposicao$numero, "/", proposicao$ano))
+  
+  xml <- getURL(url) %>%
+    read_xml()
+  
+  return(xml)
+}
+
+fetch_votacoes_por_proposicao <- function(id_proposicao, xml) {
+  library(tidyverse)
+  library(xml2)
+  
+  votacoes <- xml_find_all(xml, ".//Votacao") %>%
+    map_df(function(x) {
+      list(
+        obj_votacao = xml_attr(x, "ObjVotacao"),
+        resumo = xml_attr(x, "Resumo"),
+        cod_sessao = xml_attr(x, "codSessao"),
+        hora = xml_attr(x, "Hora"),
+        data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
+      )
+    })
+  
+  return(votacoes)
+}
+
+fetch_votos_por_sessao <- function(cod_sessao, hora, xml) {
+  library(tidyverse)
+  library(xml2)
+
+  votos <- xml_find_all(xml, paste0(".//Votacao[@codSessao = '",
+                                    cod_sessao,"' and @Hora = '", hora,"']",
+                                    "//votos//Deputado")) %>%
+    map_df(function(x) {
+      list(
+        id_deputado = xml_attr(x, "ideCadastro"),
+        voto = xml_attr(x, "Voto") %>%
+          gsub(" ", "", .),
+        partido = xml_attr(x, "Partido"))
+    }) %>%
+    select(id_deputado,
+           voto,
+           partido)
+}
+
+fetch_votacoes_por_ano <- function(id_proposicao, ano = 2019) {
+  library(tidyverse)
+  source(here("crawler/votacoes/utils_votacoes.R"))
+
+  xml <- fetch_xml_api_votacao(id_proposicao)
+  
+  votacoes <- fetch_votacoes_por_proposicao(id_proposicao, xml)
+  
+  votacoes_filtradas <- votacoes %>% 
+    mutate(ano_votacao = format(data, "%Y")) %>% 
+    filter(ano_votacao == ano) %>% 
+    mutate(id_votacao = paste0(cod_sessao, str_remove(hora, ":"))) %>% 
+    select(obj_votacao, data, cod_sessao, hora, id_votacao)
+  
+  votos_raw <- tibble(cod_sessao = votacoes_filtradas$cod_sessao,
+                      hora = votacoes_filtradas$hora,
+                      ) %>%
+    mutate(dados = map2(
+      cod_sessao,
+      hora,
+      fetch_votos_por_sessao,
+      xml
+    )) %>% 
+    unnest(dados)
+  
+  votos <- votos_raw %>% 
+    mutate(partido = padroniza_sigla(partido)) %>% 
+    enumera_voto() %>% 
+    mutate(id_votacao = paste0(cod_sessao, str_remove(hora, ":"))) %>% 
+    select(id_votacao, id_deputado, voto, partido) %>% 
+    distinct()
+  
+  return(votos)
+}
+

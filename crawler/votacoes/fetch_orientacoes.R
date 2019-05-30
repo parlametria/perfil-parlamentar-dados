@@ -16,6 +16,8 @@ fetch_orientacoes_camara <-
            resumo_votacao,
            objeto_votacao) {
     library(xml2)
+    source(here("crawler/votacoes/utils_votacoes.R"))
+    
     proposicoes <-
       rcongresso::fetch_proposicao_camara(id_proposicao) %>%
       select(siglaTipo, numero, ano)
@@ -89,19 +91,7 @@ fetch_orientacoes_camara <-
     orientacoes <-
       purrr::map2_df(orientacoes$sigla, orientacoes$voto, ~ mutate_sigla(.x, .y)) %>%
       mutate(
-        sigla = toupper(sigla),
-        sigla =
-          case_when(
-            str_detect(tolower(sigla), "ptdob") ~ "AVANTE",
-            str_detect(tolower(sigla), "pcdob") ~ "PCdoB",
-            str_detect(tolower(sigla), "ptn") ~ "PODEMOS",
-            str_detect(tolower(sigla), "pmdb") ~ "MDB",
-            str_detect(sigla, "SOLID.*") ~ "SOLIDARIEDADE",
-            str_detect(sigla, "PODE.*") ~ "PODEMOS",
-            str_detect(sigla, "GOV.") ~ "GOVERNO",
-            TRUE ~ sigla
-          ) %>%
-          stringr::str_replace("REPR.", ""),
+        sigla = padroniza_sigla(sigla),
         id_votacao = id_votacao,
         data = votacao$data
       ) %>%
@@ -143,6 +133,8 @@ mutate_sigla <- function(sigla, orientacao) {
 #' @examples
 #' fetch_orientacoes_votacoes(here::here("crawler/raw_data/tabela_votacoes.csv"))
 fetch_orientacoes_votacoes <- function(votacoes_datapath = here::here("crawler/raw_data/tabela_votacoes.csv")) {
+  source(here("crawler/votacoes/utils_votacoes.R"))
+  
   votacoes <-
     readr::read_csv(votacoes_datapath, col_types = "cicccccccc")
   
@@ -178,24 +170,4 @@ fetch_all_orientacoes <- function(votacoes_datapath = here::here("crawler/raw_da
                      here::here("crawler/raw_data/orientacoes.csv"))
     
     return(orientacoes)
-  }
-
-#' @title Enumera votações
-#' @description Recebe um dataframe com coluna orientacao e enumera o valor para um número
-#' @param df Dataframe com a coluna orientacao
-#' @return Dataframe com coluna orientacao enumerada
-#' @examples
-#' enumera_votacoes(df)
-enumera_voto <- function(df) {
-  df %>%
-    mutate(
-      voto = case_when(
-        str_detect(voto, "Não") ~ -1,
-        str_detect(voto, "Sim") ~ 1,
-        str_detect(voto, "Obstrução") ~ 2,
-        str_detect(voto, "Abstenção") ~ 3,
-        str_detect(voto, "Art. 17") ~ 4,
-        TRUE ~ 0
-      )
-    )
 }

@@ -102,7 +102,8 @@ fetch_votos_camara <- function(id_proposicao, id_votacao, resumo_votacao, objeto
       list(
         id_deputado = xml_attr(x, "ideCadastro"),
         voto = xml_attr(x, "Voto") %>%
-          gsub(" ", "", .))
+          gsub(" ", "", .),
+        partido = xml_attr(x, "Partido"))
       }) %>%
     mutate(obj_votacao = votacao$obj_votacao,
            resumo = votacao$resumo,
@@ -113,6 +114,7 @@ fetch_votos_camara <- function(id_proposicao, id_votacao, resumo_votacao, objeto
            resumo,
            id_votacao,
            id_deputado,
+           partido,
            voto)
 
   return(votos)
@@ -146,12 +148,9 @@ processa_votos_camara <- function(votacoes) {
     parlamentares <- purrr::map_df(legislaturas_list, ~ fetch_deputados(.x))
   }
 
-  print("Cruzando informações de votos com parlamentares...")
-  
   votos_alt <- votos %>% 
-    dplyr::mutate(casa = "camara") %>% 
-    dplyr::inner_join(parlamentares, by = c("id_deputado" = "id", "casa" = "casa")) %>% 
-    dplyr::select(id_votacao, id_parlamentar = id_deputado, casa, voto) %>% 
+    dplyr::mutate(casa = "camara") %>%
+    dplyr::select(id_votacao, id_parlamentar = id_deputado, casa, partido, voto) %>% 
     enumera_votacoes() %>% 
     dplyr::distinct()
 
@@ -173,7 +172,8 @@ processa_votos <- function(votacoes_datapath) {
   votacoes_senado <- votacoes_all %>% 
     dplyr::filter(casa == "senado")
   
-  votacoes <- processa_votos_camara(votacoes_camara)
+  votacoes <- processa_votos_camara(votacoes_camara) %>% 
+    select(id_votacao, id_parlamentar, casa, voto)
   
   return(votacoes)
 }

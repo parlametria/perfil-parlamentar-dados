@@ -1,0 +1,44 @@
+---
+title: "Grau de dependência entre o Parlamentar e seu Partido"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+theme_set(theme_minimal())
+
+source(here("crawler/votacoes/analyzer_votos.R"))
+source(here("crawler/votacoes/fetch_orientacoes.R"))
+source(here("crawler/votacoes/fetcher_votacoes.R"))
+```
+
+```{r}
+proposicoes_votadas <- fetch_votacoes_ano(2019)
+
+proposicoes <- proposicoes_votadas %>% 
+  distinct(id, nome_proposicao)
+```
+
+```{r}
+votos <- tibble(id = proposicoes$id) %>%
+  mutate(dados = map(
+    id,
+    fetch_votacoes_por_ano,
+    2019
+  )) %>% 
+  unnest(dados)
+```
