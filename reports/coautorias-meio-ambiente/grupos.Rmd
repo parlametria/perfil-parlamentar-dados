@@ -35,6 +35,7 @@ if (env == "dev") {
 
 source(here::here(paste0(path, "scripts/analyzer_autorias.R")))
 source(here::here(paste0(path, "scripts/fetcher_autorias.R")))
+source(here::here(paste0(path, "scripts/generate-graph.R")))
 
 autores <- get_dataset_autores(here::here(paste0(path, "data/autores.csv")))
 
@@ -114,12 +115,68 @@ Acima se encontra a distribuição das relações de acordo com o peso fornecido
 
 <br>
 
-#### Grafo de grupos
+#### Rede de grupos
 
-Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando uma técnica chamada `agrupamento`, que agrupa os dados de forma automática com base na similaridade entre eles. Para o peso mínimo de 0.1 das relações, foram gerados 7 grupos no total, exibidos abaixo:
+Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando uma técnica chamada `agrupamento`, que agrupa os dados de forma automática com base na similaridade entre eles. **Para o peso mínimo de 0.01 das relações**, considerando todas as coautorias, foram gerados 7 grupos no total, mas a quantidade de grupos pode ser menor conforme o peso aumentar. Os grupos encontrados são exibidos a seguir.
 
-```{r echo=FALSE}
-  forceNetworkOutput("grafo")
+<br>
+
+##### Grupo 1: Tudo junto e misturado
+Este é o maior agrupamento encontrado e corresponde aos deputados que coautoram juntos em requerimentos mais populares, e geralmente como uma estratégia de aproximação com seus eleitores ou porque "tá todo mundo participando".
+
+```{r echo=FALSE, fig.width = 2, fig.height = 2}
+  forceNetworkOutput("grafo_grupo1")
+```
+
+Observando a rede acima, não dá pra saber quais são os partidos predominantes, então veremos a distribuição partidária deste grupo no histograma abaixo:
+
+```{r echo=FALSE, fig.width = 4, fig.height = 3}
+plotOutput("hist_grupo1")
+
+```
+
+Os partidos cujos deputados mais coautoram em requerimentos com muitos coautores são PTB e MDB, partidos do "centrão" que juntos compõem quase 29% da rede acima; em segundo lugar estão PP, PR e DEM, partidos de centro-direita que juntos totalizam 27% dos deputados desse grupo; em terceiro lugar, estão os partidos de orientação esquerda e centro-esquerda: PT, PSBD, PSB e PDT, com quase 23% do grupo.
+
+<br>
+
+##### Grupo 2: A panelinha do PT
+A rede abaixo é totalmente composta pelo partido do PT. É possível notar dois subgrupos onde os deputados só coautoram entre si, apesar de dois deputados estarem conectados com todos da rede: Nilto Tatto e Patrus Ananias. Outra coisa também que se nota é o trio de deputados Bohn Gass, Padre João e João Daniel, que apesar de estarem conectados em uma dos subgrupos, geralmente coautoram mais entre si.
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+  forceNetworkOutput("grafo_grupo2")
+```
+
+<br>
+
+##### Grupo 3: 
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+  forceNetworkOutput("grafo_grupo3")
+```
+
+<br>
+
+##### Grupo 4: 
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+  forceNetworkOutput("grafo_grupo4")
+```
+
+<br>
+
+##### Grupo 5: 
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+  forceNetworkOutput("grafo_grupo5")
+```
+<br>
+
+##### Grupo 6: 
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+  forceNetworkOutput("grafo_grupo6")
+```
+
+<br>
+
+##### Grupo 7: 
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+  forceNetworkOutput("grafo_grupo7")
 ```
 
 #### Grupos encontrados
@@ -132,6 +189,22 @@ DT::DTOutput("dt_nodes")
 
 ```
 
+```{r echo=FALSE}
+
+generate_graph_by_group <- function(df, id_group) {
+  nodes <- df[[1]] %>%
+  filter(group == id_group) %>% 
+    select(-index) %>% 
+    rowid_to_column("index") %>% 
+    mutate(index = index - 1)
+  
+  edges <- generate_edges(coautorias, nodes)
+  
+  return(list(nodes, edges))
+}
+
+```
+
 ```{r echo=FALSE, context="server"}
 
 output$hist <- renderPlot({
@@ -139,7 +212,7 @@ output$hist <- renderPlot({
     coautorias %>%
     filter(peso_arestas >= input$min_peso) %>% 
     ggplot(aes(x = peso_arestas)) +
-    geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#35193A") +
+    geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#10726B") +
     scale_x_continuous(limits = c(0, max(coautorias$peso_arestas) + 0.1), 
                        breaks = seq(0, max(coautorias$peso_arestas) + 0.1, 0.1)) +
     labs(x = "Peso das relações", y = "Número de relações") +
@@ -148,13 +221,13 @@ output$hist <- renderPlot({
 })
 
 getCoautorias <- reactive({
-  coautorias <- 
+  nodes_edges <- 
     generate_nodes_and_edges(
       as.double(input$min_peso),
       autores,
       parlamentares,
       coautorias)
-  return(coautorias)
+  return(nodes_edges)
 })
 
 output$dt <- 
@@ -171,21 +244,63 @@ output$dt <-
     options = list(pageLength = 10,
                    scrollX = TRUE))
   
-output$grafo <- 
+output$grafo_grupo1 <- 
   networkD3::renderForceNetwork({
-    autorias <- getCoautorias()
-    nodes <- autorias[[1]]
-    edges <- autorias[[2]]
-    if (nrow(nodes) > 0 && nrow(edges) > 0){
-      generate_graph(nodes, edges)
-    }
+    graph <- generate_graph_by_group(getCoautorias(), 1)
+    generate_graph(graph[[1]], graph[[2]])
   })
 
-output$dt_nodes <- 
-  DT::renderDataTable(
-    getCoautorias()[[1]] %>% 
-      select(nome = nome_eleitoral, grupo = group), 
-    options = list(pageLength = 10,
-                   scrollX = TRUE))
+output$hist_grupo1 <- renderPlot({
+  nodes <- generate_graph_by_group(getCoautorias(), 1)[[1]]
+  if(nrow(nodes) > 0) {
+    nodes <- nodes %>%
+      group_by(partido) %>% 
+      count() 
+    
+    nodes %>% 
+    ggplot(aes(x = reorder(partido, n), y = n)) +
+      geom_bar(fill = "#1BB5A9", color="#10726B", stat="identity") +
+      coord_flip() +
+      labs(x = "Partido", y = "Número de deputados") +
+      scale_y_continuous(breaks = seq(0, max(nodes$n), 1)) +
+      theme_ipsum_rc()
+  }
+})
+  
 
+output$grafo_grupo2 <- 
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 2)
+    generate_graph(graph[[1]], graph[[2]])
+  })
+
+output$grafo_grupo3 <- 
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 3)
+    generate_graph(graph[[1]], graph[[2]])
+  })
+
+output$grafo_grupo4 <- 
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 4)
+    generate_graph(graph[[1]], graph[[2]])
+  })
+
+output$grafo_grupo5 <- 
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 5)
+    generate_graph(graph[[1]], graph[[2]])
+  })
+
+output$grafo_grupo6 <- 
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 6)
+    generate_graph(graph[[1]], graph[[2]])
+  })
+
+output$grafo_grupo7 <- 
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 7)
+    generate_graph(graph[[1]], graph[[2]])
+  })
 ```

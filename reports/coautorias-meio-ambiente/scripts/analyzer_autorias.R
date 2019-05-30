@@ -1,15 +1,5 @@
 library(tidyverse)
 
-env <- "dev"
-path <- ''
-
-if (env == "dev") {
-  path = "reports/coautorias-meio-ambiente/"
-} 
-
-source(here::here(paste0(path, "scripts/generate-graph.R")))
-
-
 get_coautorias <- function(id, autores, parlamentares) {
   if (typeof(id) == 'double') {
     relacionadas <- fetch_relacionadas(id)
