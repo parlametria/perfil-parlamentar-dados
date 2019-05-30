@@ -40,6 +40,12 @@ fetch_votacoes_ano <- function(ano = 2019) {
   return(proposicoes)
 }
 
+#' @title Recupera xml com votações de uma proposição específica
+#' @description A partir do id da prosição recupera o xml com as votações em plenário da proposição
+#' @param id_proposicao ID da proposição
+#' @return XML com as votações da proposição
+#' @examples
+#' votacoes_mpv8712019 <- fetch_xml_api_votacao(2190355)
 fetch_xml_api_votacao <- function(id_proposicao) {
   library(tidyverse)
   library(rcongresso)
@@ -60,6 +66,13 @@ fetch_xml_api_votacao <- function(id_proposicao) {
   return(xml)
 }
 
+#' @title Recupera informações de votações a partir de um xml
+#' @description A partir do xml das votações recupera dados de todas as votações disponíveis
+#' @param id_proposicao ID da proposição
+#' @param xml xml com votações
+#' @return Info sobre as votações
+#' @examples
+#' votacoes_mpv8712019 <- fetch_votacoes_por_proposicao(2190355, xml)
 fetch_votacoes_por_proposicao <- function(id_proposicao, xml) {
   library(tidyverse)
   library(xml2)
@@ -78,6 +91,14 @@ fetch_votacoes_por_proposicao <- function(id_proposicao, xml) {
   return(votacoes)
 }
 
+#' @title Recupera votos de um xml de votações a partir do código da sessão e da hora
+#' @description Votos dos deputados a partir do código da sessão e da hora
+#' @param cod_sessao Código da sessão da votação
+#' @param hora Hora da sessão da votação
+#' @param xml xml com votações
+#' @return Votos dos parlamentares na votação específica
+#' @examples
+#' votos <- fetch_votos_por_sessao("16821", "19:57", xml)
 fetch_votos_por_sessao <- function(cod_sessao, hora, xml) {
   library(tidyverse)
   library(xml2)
@@ -97,6 +118,13 @@ fetch_votos_por_sessao <- function(cod_sessao, hora, xml) {
            partido)
 }
 
+#' @title Recupera informações de votos de todas as votações de uma determinada proposição para um determinado ano
+#' @description A partir do id da proposição e do ano recupera votos que aconteceram na Câmara dos Deputados
+#' @param id_proposicao ID da proposição
+#' @param ano Ano para o período de votações
+#' @return Votos dos parlametares para a proposição (inclui várias votações)
+#' @examples
+#' votos <- fetch_votacoes_por_ano(2190355, 2019)
 fetch_votacoes_por_ano <- function(id_proposicao, ano = 2019) {
   library(tidyverse)
   source(here("crawler/votacoes/utils_votacoes.R"))

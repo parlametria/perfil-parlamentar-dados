@@ -1,7 +1,7 @@
 #' @title Enumera votações
-#' @description Recebe um dataframe com coluna orientacao e enumera o valor para um número
-#' @param df Dataframe com a coluna orientacao
-#' @return Dataframe com coluna orientacao enumerada
+#' @description Recebe um dataframe com coluna voto e enumera o valor para um número
+#' @param df Dataframe com a coluna voto
+#' @return Dataframe com coluna voto enumerada
 #' @examples
 #' enumera_votacoes(df)
 enumera_voto <- function(df) {
@@ -13,6 +13,7 @@ enumera_voto <- function(df) {
         str_detect(voto, "Obstrução") ~ 2,
         str_detect(voto, "Abstenção") ~ 3,
         str_detect(voto, "Art. 17") ~ 4,
+        str_detect(voto, "Liberado") ~ 5,
         TRUE ~ 0
       )
     )
@@ -37,6 +38,7 @@ padroniza_sigla <- function(sigla) {
     TRUE ~ sigla
   ) %>%
     stringr::str_replace("REPR.", "") %>% 
+    stringr::str_replace_all("[[:punct:]]", "") %>% 
     trimws(which = c("both"))
   
   return(sigla_padronizada)

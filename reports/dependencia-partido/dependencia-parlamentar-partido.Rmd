@@ -34,11 +34,34 @@ proposicoes <- proposicoes_votadas %>%
 ```
 
 ```{r}
-votos <- tibble(id = proposicoes$id) %>%
+votos <- tibble(id_proposicao = proposicoes$id) %>%
   mutate(dados = map(
-    id,
+    id_proposicao,
     fetch_votacoes_por_ano,
     2019
   )) %>% 
-  unnest(dados)
+  unnest(dados) %>% 
+  distinct()
 ```
+
+```{r}
+orientacao <- tibble(id_proposicao = proposicoes$id) %>%
+  mutate(dados = map(
+    id_proposicao,
+    fetch_orientacoes_por_proposicao,
+    2019
+  )) %>% 
+  unnest(dados) %>% 
+  distinct()
+```
+
+```{r}
+orientacao %>% 
+  group_by(partido, voto) %>% 
+  summarise(n = n()) %>% 
+  ggplot(aes(x = n, y = partido, color = as.factor(voto))) +
+  geom_point()
+```
+
+
+
