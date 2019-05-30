@@ -32,14 +32,15 @@ get_coautorias <- function(id, autores, parlamentares) {
   
   coautorias <- coautorias %>%
     remove_duplicated_edges() %>%
-    mutate(peso_arestas = sum(peso_arestas)) %>%
+    mutate(peso_arestas = sum(peso_arestas),
+           num_coautorias = n()) %>%
     ungroup() %>%
     mutate(id_req = as.character(id_req))
   
   coautorias <- coautorias %>% 
     inner_join(parlamentares, by = c("id.x" = "id")) %>% 
     inner_join(parlamentares, by = c("id.y" = "id")) %>% 
-    select(-c(sg_partido.x, sg_partido.y)) %>% 
+    select(-c(sg_partido.x, sg_partido.y, id_req)) %>% 
     distinct()
   
   return(coautorias)
@@ -47,14 +48,12 @@ get_coautorias <- function(id, autores, parlamentares) {
   
 generate_nodes_and_edges <- function(min_peso, autores, parlamentares, coautorias) {
     coautorias <- coautorias %>% 
-      filter(min_peso <= peso_arestas) %>% 
-      ungroup() %>% 
-      mutate(id_req = as.character(id_req))
+      filter(min_peso <= peso_arestas)
     
     nodes <- generate_nodes(autores, parlamentares, coautorias)
     
     edges <-
-      generate_edges(coautorias %>% select(id_req, id.x, id.y, peso_arestas), nodes)
+      generate_edges(coautorias %>% select(id.x, id.y, peso_arestas), nodes)
   
   return(list(nodes, edges))
 }

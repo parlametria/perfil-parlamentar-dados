@@ -83,7 +83,7 @@ DT::DTOutput("dt")
 
 #### Peso das relações 
 
-Uma vez que conectamos todos os coautores, percebemos que há casos onde o número de coautorias ou subscrições é muito alto. Um exemplo disso é um [requerimento de audiência](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2194402) sobre aposentadoria para produtores rurais familiares, um requerimento popular que normalmente é visto pelo deputados como oportunidade de aproximação com eleitores, e por isso o número de assinaturas de coautoria são tão altos.
+Processando os dados, observamos que há requerimentos que são coautorados por muitos deputados. Um exemplo disso é um [requerimento de audiência](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2194402) sobre aposentadoria para produtores rurais familiares, um requerimento popular que normalmente é visto pelo deputados como oportunidade de aproximação com eleitores, e por isso o número de assinaturas de coautoria são tão altos.
 
 A fim de deixar os grupos mais refinados e precisamos, optamos por adicionar uma penalidade que varia de acordo com o número de pessoas envolvidas: quanto mais coautores em uma proposição, menos precisas estarão as relações entre os deputados e por isso terão pesos menores; de forma análoga, uma proposição que possua apenas dois coautores, terá o peso da relação máximo e estarão muito mais próximos.
 
@@ -116,18 +116,11 @@ Acima se encontra a distribuição das relações de acordo com o peso fornecido
 
 #### Grafo de grupos
 
-Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando uma técnica chamada `clusterização`, que agrupa os dados de forma automática com base na similaridade entre eles. Para o peso mínimo de 0.1 das relações, foram gerados 7 grupos no total, exibidos abaixo:
+Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando uma técnica chamada `agrupamento`, que agrupa os dados de forma automática com base na similaridade entre eles. Para o peso mínimo de 0.1 das relações, foram gerados 7 grupos no total, exibidos abaixo:
 
 ```{r echo=FALSE}
   forceNetworkOutput("grafo")
 ```
-
-O grafo é útil para visualizar quais os deputados que servem de ponte e se conectam com dois grupos de deputados que só coautoram entre si, como Nilto Tatto e Patrus Ananias. Neste mesmo grupo está o trio mais fortemente relacionado (Bohn Gass-João Daniel-Padre João), que apesar de geralmente coautorarem mais juntamente, também se relacionam com os outros deputados do grupo. 
-
-Também se podem ver os deputados que fazem parte de um grupo, mas que só coautoram com um deputado fortemente relacionado com outros deputados: Sarney Filho só possui coautorias com Alessandro Molon; Edio Lopes com Celso Maldaner e Rodrigo Maia (presidente da Câmara dos Deputados) com Nelson Marquezelli.
-
-Além destes, existem as duplinhas Paulo Abi-Ackel e Julio Lopes; Lincoln Portela e Celso Jacob e o trio Ivan Valente, Edmilson Rodrigues e Chico Alencar, que apesar de estarem conectados, a maior coautoria se dá entre Ivan e os outros deputados mas de forma separada.
-
 
 #### Grupos encontrados
 
@@ -139,7 +132,6 @@ DT::DTOutput("dt_nodes")
 
 ```
 
-
 ```{r echo=FALSE, context="server"}
 
 output$hist <- renderPlot({
@@ -149,7 +141,7 @@ output$hist <- renderPlot({
     ggplot(aes(x = peso_arestas)) +
     geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#35193A") +
     scale_x_continuous(limits = c(0, max(coautorias$peso_arestas) + 0.1), 
-                       breaks = seq(0, max(coautorias$peso_arestas), 0.1)) +
+                       breaks = seq(0, max(coautorias$peso_arestas) + 0.1, 0.1)) +
     labs(x = "Peso das relações", y = "Número de relações") +
     theme_ipsum_rc()
   }
@@ -168,12 +160,13 @@ getCoautorias <- reactive({
 output$dt <- 
   DT::renderDataTable(
     coautorias %>% 
-      select(nome_eleitoral.x, nome_eleitoral.y, peso_arestas) %>% 
+      select(nome_eleitoral.x, nome_eleitoral.y, peso_arestas, num_coautorias) %>% 
       distinct() %>% 
       filter(peso_arestas >=  input$min_peso) %>% 
       rename(peso_relacao = peso_arestas, 
              nome_deputado_a = nome_eleitoral.x,
-             nome_deputado_b = nome_eleitoral.y) %>% 
+             nome_deputado_b = nome_eleitoral.y,
+             coautorias_conjuntas = num_coautorias) %>% 
       arrange(desc(peso_relacao)), 
     options = list(pageLength = 10,
                    scrollX = TRUE))
@@ -187,7 +180,6 @@ output$grafo <-
       generate_graph(nodes, edges)
     }
   })
-
 
 output$dt_nodes <- 
   DT::renderDataTable(
