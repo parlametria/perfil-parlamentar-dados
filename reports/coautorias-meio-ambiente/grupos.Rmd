@@ -25,7 +25,7 @@ library(tidyverse)
 library(hrbrthemes)
 theme_set(theme_minimal())
 
-env <- "dev"
+env <- "prod"
 path <- ''
 
 if (env == "dev") {
@@ -140,54 +140,69 @@ Os partidos cujos deputados mais coautoram em requerimentos com muitos coautores
 <br>
 
 ##### Grupo 2: A panelinha do PT
+
 A rede abaixo é totalmente composta pelo partido do PT. É possível notar dois subgrupos onde os deputados só coautoram entre si, apesar de dois deputados estarem conectados com todos da rede: Nilto Tatto e Patrus Ananias. Outra coisa também que se nota é o trio de deputados Bohn Gass, Padre João e João Daniel, que apesar de estarem conectados em uma dos subgrupos, geralmente coautoram mais entre si.
+
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo2")
 ```
 
 <br>
 
-##### Grupo 3: 
+##### Grupo 3: PSOL e o centrão
+
+Aqui podemos ver o trio do PSOL, Ivan Valente, Chico Alencar e Edmilson Rodrigues. Chico inclusive coautorou uma proposição com outros partidos considerados de centro, como PV e SOLIDARIEDADE; Apesar de ser do PRB atualmente, Lindomar Garçon fazia parte do PV quando a proposição foi criada.
+
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo3")
 ```
 
+Pesquisamos a proposição assinada pelo grupo misto de partidos de esquerda e centro, disponível neste [link](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=352792), se tratando de uma proposição atualmente apensada à Lei do Licenciamento Ambiental. 
+
 <br>
 
-##### Grupo 4: 
+##### Grupo 4: Juntos na urgência
+
+O grupo abaixo foi gerado a partir da coautoria de um [requerimento](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2055513) de audiência pública relacionada à Lei do Licenciamento Ambiental.
+
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo4")
 ```
 
 <br>
 
-##### Grupo 5: 
+##### Grupo 5: A panelinha do (P)MDB
+
+Vitor Valim, o deputado com a cor diferente, está atualmente no PROS mas era do MDB na 55ª legislatura, então existe mais um grupo onde todos os seus componentes fazem parte do mesmo partido.
+
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo5")
 ```
+
+O grupo acima se uniu para a criação de um [requerimento](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=1513916) de desapensação da proposição PL 1546/2015, apensada à Lei do Licenciamento Ambiental. 
+
 <br>
 
-##### Grupo 6: 
+##### Grupo 6: Centrão meio direita
+
+Este grupo, composto de partidos de centro ou centro-direita, se uniu para a criação de um [requerimento](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=608448) de audiência pública para a proposição que decreta que as demarcações de terras indígenas passam a ser competência exclusiva do Congresso.
+
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo6")
 ```
 
+Além do grupo autor do requerimento acima, há um deputado neste grupo que coautorou com apenas um deputado: Edio Lopes, com a criação de uma [proposição](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=359502), atualmente apensada à proposição de demarcações de terras indígenas.
+
 <br>
 
-##### Grupo 7: 
+##### Grupo 7: O último par
+
+Paulo Abi-Ackel e Julio Lopes se uniram na criação de uma [proposição](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=491763), atualmente apensada à Lei do Licenciamento Ambiental.
+
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo7")
 ```
 
-#### Grupos encontrados
-
-Abaixo têm-se a informação dos grafos em formato de tabela, com o nome dos parlamentares e o respectivo grupo.
-
-```{r echo=FALSE}
-
-DT::DTOutput("dt_nodes")
-
-```
 
 ```{r echo=FALSE}
 
