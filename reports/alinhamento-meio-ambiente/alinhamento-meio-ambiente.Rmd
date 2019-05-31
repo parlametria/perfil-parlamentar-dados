@@ -24,7 +24,7 @@ theme_set(theme_minimal())
 paleta <- c("#91bfda", "#E89D68", "#e06264")
 
 source(here::here("reports/alinhamento-meio-ambiente/code/calculo_alinhamento.R"))
-source(here::here("reports/alinhamento-meio-ambiente/code/fetch_orientacoes.R"))
+source(here::here("crawler/votacoes/fetch_orientacoes.R"))
 ```
 
 ```{r}

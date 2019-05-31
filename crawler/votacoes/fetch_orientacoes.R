@@ -136,25 +136,43 @@ mutate_sigla <- function(sigla, orientacao) {
   }
 }
 
+#' @title Recupera informações da orientação dos partidos para um conjunto de votações
+#' @description Recupera para cada votação informações sobre a orientação dos partidos
+#' @param votacoes_datapath Caminho para o arquivo csv com as votações
+#' @return Dataframe contendo a orientação dos partidos
+#' @examples
+#' fetch_orientacoes_votacoes(here::here("crawler/raw_data/tabela_votacoes.csv"))
+fetch_orientacoes_votacoes <- function(votacoes_datapath = here::here("crawler/raw_data/tabela_votacoes.csv")) {
+  votacoes <-
+    readr::read_csv(votacoes_datapath, col_types = "cicccccccc")
+  
+  votacoes <- votacoes %>%
+    dplyr::filter(casa == "camara") %>%
+    dplyr::filter(!is.na(id_sessao)) %>%
+    dplyr::select(id_proposicao, id_sessao, resumo, objeto_votacao)
+  
+  orientacoes <- purrr::pmap_dfr(
+    list(
+      votacoes$id_proposicao,
+      votacoes$id_sessao,
+      votacoes$resumo,
+      votacoes$objeto_votacao
+    ),
+    ~ fetch_orientacoes_camara(..1, ..2, ..3, ..4)
+  ) %>%
+    enumera_voto()
+  
+  return(orientacoes)
+}
+
+#' @title Recupera informações da orientação dos partidos e salva num csv
+#' @description Recupera para cada votação informações sobre a orientação dos partidos e salva num csv
+#' @param votacoes_datapath Caminho para o arquivo csv com as votações
+#' @return Dataframe contendo a orientação dos partidos
+#' @examples
+#' fetch_all_orientacoes(here::here("crawler/raw_data/tabela_votacoes.csv"))
 fetch_all_orientacoes <- function(votacoes_datapath = here::here("crawler/raw_data/tabela_votacoes.csv")) {
-    votacoes <-
-      readr::read_csv(votacoes_datapath, col_types = "cicccccccc")
-    
-    votacoes <- votacoes %>%
-      dplyr::filter(casa == "camara") %>%
-      dplyr::filter(!is.na(id_sessao)) %>%
-      dplyr::select(id_proposicao, id_sessao, resumo, objeto_votacao)
-    
-    orientacoes <- purrr::pmap_dfr(
-      list(
-        votacoes$id_proposicao,
-        votacoes$id_sessao,
-        votacoes$resumo,
-        votacoes$objeto_votacao
-      ),
-      ~ fetch_orientacoes_camara(..1, ..2, ..3, ..4)
-    ) %>%
-      enumera_voto()
+    orientacoes <- fetch_orientacoes_votacoes()
     
     readr::write_csv(orientacoes,
                      here::here("crawler/raw_data/orientacoes.csv"))

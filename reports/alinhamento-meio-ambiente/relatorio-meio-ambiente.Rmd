@@ -25,7 +25,7 @@ theme_set(theme_minimal())
 paleta <- c("#91bfda", "#E89D68", "#e06264")
 
 source(here::here("reports/alinhamento-meio-ambiente/code/calculo_alinhamento.R"))
-source(here::here("reports/alinhamento-meio-ambiente/code/fetch_orientacoes.R"))
+source(here::here("crawler/votacoes/fetch_orientacoes.R"))
 ```
 
 <br>
@@ -52,7 +52,7 @@ A [votação](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVo
 
 ### O que é alinhamento?
 
-Para calular o alinhamento de um parlamentar é preciso calcular 3 informações principais: 
+Para calcular o alinhamento de um parlamentar é preciso calcular 3 informações principais: 
 
 * Quantidade de **respostas iguais**, ou seja, quando o parlamentar votou exatamente como um defensor dos interesses do Meio Ambiente votaria; 
 * Quantidade de **posições dadas**, isto é, o número de votações que o parlamentar participou/se posicionou;
@@ -145,7 +145,7 @@ alinhamento_maior_que_50 <- alin_deputados %>% filter(em_exercicio == 1, alinham
 <br>
 Pela visualização é possível perceber que existem poucos parlamentares acima dos 50% de alinhamento com Meio Ambiente. Apenas `r alinhamento_maior_que_50` dos `r alin_deputados %>% filter(em_exercicio == 1) %>% nrow()` estão acima de 50%, o que corresponde a `r round(alinhamento_maior_que_50 / alin_deputados %>% filter(em_exercicio == 1) %>% nrow(), 2)` dos deputados atualmente em exercício e que também participaram da legislatura passada (15-18).
 
-É vísivel que a maior parte dos deputados se concentra na faixa de alinhamento entre 0% e 30%.
+É visível que a maior parte dos deputados se concentra na faixa de alinhamento entre 0% e 30%.
 
 ### Quem são os parlamentares mais alinhados ao meio ambiente?
 
@@ -214,7 +214,7 @@ Destacam-se nessa visualização os 4 primeiros deputados que votaram de acordo 
 
 Outros 3 deputados também tiveram alinhamento igual a 57% e estariam empatados com outros parlamentares nessa visualização, são eles: Vander Loubet (PT/MS), João Daniel (PT/SE) e Vicentinho (PT/SP).
 
-As barras de Samuel Moreita (PSDB/SP) e de Nelson Pellegrino (PT/BA) são menores pois ambos não participaram de algumas votações no período analisado (legislatura 15-18). Segundo suas biografias na Câmara ([aqui](https://www.camara.leg.br/deputados/178990/biografia
+As barras de Samuel Moreira (PSDB/SP) e de Nelson Pellegrino (PT/BA) são menores pois ambos não participaram de algumas votações no período analisado (legislatura 15-18). Segundo suas biografias na Câmara ([aqui](https://www.camara.leg.br/deputados/178990/biografia
 ) e [aqui](https://www.camara.leg.br/deputados/74571/biografia)) eles estavam de licença para assumir cargos de Secretários em seus respectivos estados.
 
 A partir do 28º parlamentar na ordem, o alinhamento passa a ser menor ou igual a 50%, ou seja, a quantidade de posições a favor do Meio Ambiente passa a ser igual ou menos a quantidade de posições desfavoráveis ao Meio Ambiente.
@@ -267,7 +267,7 @@ data_long %>%
         plot.subtitle = element_text(size = 12))
 ```
 
-É possível destacar nessa visualização os 4 parlamentares que votaram de forma desfavorável aos interesses do Meio Ambiente em 6 das 7 votações escohidas. São eles: Domingos Neto (PSD/CE), José Nunes (PSD/BA), André Abdon (PP/AP), Fernando Monteiro (PP/PE).
+É possível destacar nessa visualização os 4 parlamentares que votaram de forma desfavorável aos interesses do Meio Ambiente em 6 das 7 votações escolhidas. São eles: Domingos Neto (PSD/CE), José Nunes (PSD/BA), André Abdon (PP/AP), Fernando Monteiro (PP/PE).
 
 Houveram `r deputados_atuais %>% filter(alinhamento == 0) %>% nrow()` deputados com alinhamento igual a 0, isto é, sem posições favoráveis ao Meio Ambiente.
 
@@ -327,7 +327,7 @@ Nenhum membro desse grupo ultrapassa o valor de 30% de alinhamento.
 
 Abaixo são apresentados os alinhamentos dos partidos parlamentares, baseados em suas orientações em cada uma das 7 votações do Meio Ambiente. É importante ressaltar que os blocos parlamentares são dissolvidos, transformando-se em um conjunto separado de partidos que os compõem e a orientação é mantida.
 
-Outro ponto a se informar é que os partidos entitulados de Governo, Maioria e Minoria dizem respeito aos blocos parlamentares da 55ª legislatura, que vai de 2015 a 2018.
+Outro ponto a se informar é que os partidos em titulados de Governo, Maioria e Minoria dizem respeito aos blocos parlamentares da 55ª legislatura, que vai de 2015 a 2018.
 
 ```{r}
 alinhamento_partidos <- orientacoes_ma %>% 
