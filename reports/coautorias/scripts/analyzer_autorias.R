@@ -1,83 +1,26 @@
 library(tidyverse)
-source(here::here("scripts/generate-graph.R"))
-source(here::here("scripts/fetcher_autorias.R"))
 
-process_parlamentares <- function(df) {
- df <- df %>%
-    mutate(nome_eleitoral = paste0(nome_eleitoral, " - ", sg_partido, "/", uf)) %>%
-    select(id, nome_eleitoral, sg_partido) %>%
-    mutate(id = as.character(id))
- 
- return(df)
+env <- "dev"
+path <- ''
+
+if (env == "dev") {
+  path = "reports/coautorias/"
 } 
 
-process_autores <- function(df, parlamentares_df, ids_relacionadas_df) {
-  df <- df %>%
-    mutate(idProposicao = as.character(idProposicao)) %>% 
-    processa_autores_proposicoes(ids_relacionadas_df) %>%
-    select(id_req = idProposicao, id = idDeputadoAutor, peso_arestas) %>%
-    filter(!is.na(id)) %>%
-    group_by(id) %>%
-    mutate(peso_total_autor = sum(peso_arestas)) %>%
-    ungroup() %>%
-    mutate(id = as.character(id))
-  
-  df <- inner_join(df, parlamentares_df, by = "id")
-  
-  return(df)
-}
+source(here::here(paste0(path, "scripts/fetcher_autorias.R")))
 
-add_url <- function(df) {
-  link_para_detalhes_camara <-
-    "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao="
+generate_nodes_and_edges <- function(autores, parlamentares, coautorias) {
   
-  df <- df %>%
-    ungroup() %>% 
-    mutate(
-      url = paste0(link_para_detalhes_camara,
-                   id_req),
-      nome_eleitoral.y =
-        if_else(id.x == id.y,
-                '-',
-                nome_eleitoral.y),
-      id.y =
-        if_else(id.x == id.y,
-                '-',
-                id.y)
-    )
+  coautorias <- coautorias %>% 
+    select(id.x, id.y, peso_arestas) %>% 
+    distinct()
   
-  return(df)
-}
-
-generate_autorias_conjuntas <- function(id, min_peso, autores, parlamentares) {
-  ids_relacionadas <- fetch_relacionadas(id)
+  nodes <- generate_nodes(autores, parlamentares, coautorias)
   
-  autores <- process_autores(autores, parlamentares, ids_relacionadas)
-  
-  nodes <- generate_nodes(autores)
-  
-  autores <- autores %>%
-    select(-sg_partido)
-  
-  autores <- autores %>% 
-    full_join(autores, by = c("id_req", "peso_arestas")) %>%
-    filter((id.x != id.y &
-              peso_arestas != 1) | (peso_arestas == 1))
-  
-  autores <- autores %>%
-    filter(min_peso <= peso_arestas) %>%
-    remove_duplicated_edges() %>%
-    distinct() %>%
-    mutate(id_req = as.character(id_req))
-
   edges <-
-    generate_edges(autores %>% select(id_req, id.x, id.y, peso_arestas), nodes)
+    generate_edges(coautorias %>% select(id.x, id.y, peso_arestas), nodes)
   
-  autores <- autores %>% 
-    add_url()
-  
- 
-  return(list(autores, nodes, edges))
+  return(list(nodes, edges))
 }
 
 paste_cols <- function(x, y, sep = ":") {
@@ -103,20 +46,27 @@ remove_duplicated_edges <- function(df) {
     distinct()
 }
 
-processa_autores_proposicoes <- function(autores, proposicoes) {
-  autores <-
-    autores %>%
-    group_by(idProposicao) %>%
-    mutate(num_autores = n(),
-           peso_arestas = 1/num_autores)
-
-  return(join_autores_proposicoes(autores, proposicoes))
-}
-
-join_autores_proposicoes <- function(autores, proposicoes) {
-  df <-
-    inner_join(autores, proposicoes,
-               by = c("idProposicao" = "id"))
+add_url <- function(df) {
+  link_para_detalhes_camara <-
+    "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao="
+  
+  df <- df %>%
+    ungroup() %>% 
+    mutate(
+      url = 
+        paste0(
+          link_para_detalhes_camara,
+          id_req)
+    )
   
   return(df)
+}
+
+filter_coautorias <- function(ids, min_peso){
+  coautorias <- get_dataset_coautorias(here::here(paste0(path, "data/coautorias.csv"))) %>% 
+    filter(id_req %in% ids & peso_arestas >= min_peso) %>% 
+    select(id.x, id.y, peso_arestas) %>% 
+    distinct()
+  
+  return(coautorias)
 }
