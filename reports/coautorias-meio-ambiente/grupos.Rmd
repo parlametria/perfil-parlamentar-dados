@@ -25,7 +25,7 @@ library(tidyverse)
 library(hrbrthemes)
 theme_set(theme_minimal())
 
-env <- "prod"
+env <- "dev"
 path <- ''
 
 if (env == "dev") {
@@ -137,6 +137,8 @@ plotOutput("hist_grupo1")
 
 Os partidos cujos deputados mais coautoram em requerimentos com muitos coautores são PTB e MDB, partidos do "centrão" que juntos compõem quase 29% da rede acima; em segundo lugar estão PP, PR e DEM, partidos de centro-direita que juntos totalizam 27% dos deputados desse grupo; em terceiro lugar, estão os partidos de orientação esquerda e centro-esquerda: PT, PSBD, PSB e PDT, com quase 23% do grupo.
 
+As coautorias deste grupo se tratam de proposições que foram apensadas à PEC das demarcações, que passam a ser competência exclusiva do Congresso.
+
 <br>
 
 ##### Grupo 2: A panelinha do PT
@@ -146,6 +148,8 @@ A rede abaixo é totalmente composta pelo partido do PT. É possível notar dois
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo2")
 ```
+
+Todas as coautoras estão relacionadas à PL do Veneno. Os dois grandes subgrupos coautoram na criação de voto em separado; o trio do PT coautora também na criação de requerimentos de audiências públicas.
 
 <br>
 
