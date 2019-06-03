@@ -1,6 +1,8 @@
 ---
 title: "Grau de dependência entre o Parlamentar e seu Partido"
-output: html_document
+output: 
+  html_document:
+    css: style.css
 ---
 
 ```{r setup, include=FALSE}
@@ -116,6 +118,17 @@ deputados_summary_freq_wide <- deputados_summary_freq_wide %>%
   filter(partido %in% partidos_count)
 ```
 
+## Aderência de deputados à orientação dos partidos
+
+Nesta análise estamos interessados em entender um pouco mais sobre como os Deputados Federais atuam em votações realizadas em Plenário. Quais os deputados que mais seguem a orientação do partido? E os que menos seguem? Quais os partidos que possuem deputados mais aderentes?
+
+Essas são algumas perguntas que podemos responder olhando os dados de **votações realizadas em plenário** para o ano de **2019**. Portanto, todos os deputados analisados aqui participaram da legislatura atual da Câmara dos Deputados (legislatura 56).
+
+Foram consideradas `r nrow(proposicoes)` proposições que, segundo a API da Câmara dos Deputados, tiveram votações realizadas em plenário no ano de 2019. Lista completa disponível [aqui](https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2019&tipo=).
+
+Essas proposições geraram `r nrow(deputados_votos %>% count(id_votacao))` votações em plenário. Capturamos os resultados de todas essas votações observando principalmente: o **voto do deputado** e a **orientação do partido**.
+
+Para cada votação de cada deputado calculamos se ele seguiu a orientação do partido ou não. Em seguida, calculamos o grau de aderência dos deputados a seus respectivos partidos através da equação: *nº de votações em que seguiu / (nº de votações em que seguiu +  nº de votacoes em que não seguiu)*.
 ```{r}
 ## Variáveis de configuração para as visualizações
 range_votacoes <- nrow(proposicoes_votadas) + (10 - nrow(proposicoes_votadas) %% 10)
@@ -125,6 +138,10 @@ match_valido <- c("seguiu", "nao_seguiu")
 ```{r}
 lbls = as.character(c(seq(range_votacoes, 10, -10), seq(0, range_votacoes, 10)))
 
+levels <- deputados_summary_freq_wide %>%
+  arrange(freq) %>% 
+  pull(nome)
+
 deputados_summary_freq_wide %>%
   arrange(freq) %>% 
   head(20) %>% 
@@ -132,7 +149,7 @@ deputados_summary_freq_wide %>%
   mutate(n = if_else(match == "nao_seguiu", -n, n)) %>% 
   arrange(n) %>% 
   filter(match %in% match_valido) %>%
-  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = unique(nome))), 
+  ggplot(aes(x = factor(nome, levels = levels), 
              y = n, 
              fill = match)) + 
   geom_bar(stat = "identity", width = .6) +
@@ -144,6 +161,10 @@ deputados_summary_freq_wide %>%
   theme_ipsum_rc() +
   theme(legend.position="bottom")
 ```
+
+Acima temos a informações dos 20 deputados que possuem menor aderência com o partido. Ou seja, que menos seguem a orientação do partido considerando o total de votações em que participou. Podemos usar o exemplo de Átila Lira PSB/PI para entender como ler a visualização. Ele seguiu o partido em 16 votações e não seguiu em 54 votações. A aderência para Átila é de 16 / (16 + 54), isto é `r round(16 / (16 + 54), 2) * 100`%. Para resumir, em 23% das votações Átila segue o partido.
+
+As barras têm comprimento diferente pois os deputados tem um número diferente de votações nas quais participaram. A ordenação definida coloca os deputados da maior aderência para a menor. **Não foram mostradas na visualização votações em que o partido liberou seus membros para votar como preferir.**
 
 ```{r}
 lbls = as.character(c(seq(range_votacoes, 10, -10), seq(0, range_votacoes, 10)))
@@ -167,6 +188,9 @@ deputados_summary_freq_wide %>%
   theme(legend.position="bottom")
 ```
 
+Se olharmos para os deputados com maiores valores de aderência (apenas os 20 primeiros) temos a lista apresentada acima. Todos estes deputados tiveram aderência igual a 100%, ou seja, seguiram todas as orientações propostas pelo partido nas votações.
+
+As visualizações anteriores apresentam valores absolutos para o número de votações em que o deputado seguiu ou não a orientação do partido. Se mudarmos o foco para o valor da aderência em si temos o seguinte resultado:
 ```{r}
 deputados_summary_freq_wide %>% 
   arrange(freq) %>% 
@@ -186,6 +210,8 @@ deputados_summary_freq_wide %>%
        x = "Deputado") +
     theme_ipsum_rc()
 ```
+
+Acima estão os 20 deputados com menor aderência. A menor aderência é de Átila Lira do PSB do PI com menos de 25%.
 
 ```{r}
 paleta <- c("#91bfda", "#E89D68", "#e06264", "#BA7E53")
@@ -234,15 +260,7 @@ data_long %>%
         plot.subtitle = element_text(size = 12))
 ```
 
-```{r}
-deputados_summary_freq_wide %>% 
-  mutate(freq = round(freq, 2)) %>% 
-  select(id_deputado, nome, partido, freq, seguiu, nao_seguiu, faltou, partido_liberou) %>% 
-  datatable(class = 'cell-border stripe',
-            filter = 'top',
-            rownames = FALSE, 
-            colnames = c("id", "Nome", "Partido", "Aderência", "Seguiu", "Não Seguiu", "Faltou", "Partido liberou"))
-```
+Se olharmos com mais detalhes para essa lista de 20 deputados podemos destrinchar como ocorreram as votações para cada deputado. Átila Lira, mostrado na visualização anterior com menos de 25% de aderência, teve 16 votações em que seguiu o partido, 54 em que não seguiu o partido, 12 em que o partido liberou o voto e outras 11 em que faltou.
 
 ```{r}
 partidos_summary <- deputados_summary_freq_wide %>% 
@@ -258,6 +276,9 @@ levels <- partidos_summary %>%
   pull(partido)
 ```
 
+## Aderência por partido
+
+Subindo o nível de visão, podemos analisar a aderência dos deputados por partido. Na visualização abaixo são apresentados os pontos (deputados) e o boxplot com medidas como mediana, mínimo, máximo, dentre outras.
 ```{r fig.height=12}
 deputados_summary_freq_wide %>% 
   filter(partido %in% (partidos_summary %>% pull(partido))) %>% 
@@ -268,12 +289,18 @@ deputados_summary_freq_wide %>%
   scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
   scale_color_manual(values = rep(c("#71cddd", "#fe8500"), 15)) +
   coord_flip() +
-  labs(x = "", y = "Frequência de aderência ao partido (%)",
+  labs(x = "", y = "Aderência ao partido (%)",
        title = "Distribuição da aderência dos deputados \npor partido") +
   guides(color = FALSE) +
   theme_ipsum_rc()
 ```
 
+Os partidos estão ordenados pela mediana, portanto, o PCdoB é considerando o partido com deputados mais aderentes, seguido de perto pelo NOVO. As maiores amplitudes (diferença entre o máximo e o mínimo) são observadas para o PROS e o PSB. Existem deputados que nesses partidos que são muito aderentes e outros que são pouco aderentes.
+
+As cores na visualização apenas ajudam a diferenciar deputados vizinhos um ao outro (na própria visualização).
+
+A visualização abaixo ajuda a entender melhor a distribuição dos pontos (deputados) ao longo do eixo de aderência.
+A mediana é apresentada pela marca "|" e define a ordenação dos partidos.
 ```{r fig.height=10}
 deputados_summary_freq_wide %>% 
   group_by(partido) %>% 
@@ -289,38 +316,52 @@ deputados_summary_freq_wide %>%
   coord_flip() +
   scale_shape_identity() +
   geom_point(aes(y = median), size = 4, color = "#6D6D6D", shape = 124) +
-  labs(x = "", y = "Frequência de aderência ao partido (%)",
+  labs(x = "", y = "Aderência ao partido (%)",
        title = "Distribuição da aderência dos deputados \npor partido") +
   guides(color = FALSE, size = FALSE) +
   theme_ipsum_rc()
 ```
 
+Interessante observar que o PT não apresenta uma alta mediana de aderência quando comparado a outros partidos que ganharam mais vagas no parlamento na última eleição, como o PSL. Talvez a causa disso seja a presença de todas as votações que foram votadas em 2019, sem nenhum tipo de filtro para definição das mais relevantes.
+
+Abaixo apresentamos uma tabela (pesquisável) com os dados de todos os deputados que participaram de votações no ano de 2019.
+
 ```{r}
-deputados_votos %>% 
-  filter(id_deputado == "74459") %>% 
-  rowwise() %>% 
-  mutate(match = compara_voto_com_orientacao(voto_deputado, voto_partido)) %>% 
-  arrange(match) %>% 
-  ungroup() %>% 
-  mutate(x = rep(1:10, nrow(.))[1:nrow(.)]) %>% 
-  group_by(x) %>% 
-  mutate(y = row_number()) %>% 
-  ungroup() %>% 
-  ggplot(aes(x = factor(x), y = y, fill = factor(match))) +
-  geom_tile(color = "black", size = 0.5) +
-  scale_y_reverse() +
-  scale_fill_brewer(palette = "Set3", direction = -1, labels = c("Não seguiu", "Não calculado", "Seguiu")) +
-  labs(fill = "Aderência", title = "Átila Lira - PSB/PI") +
-  theme_ipsum_rc() +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank())
+deputados_summary_freq_wide %>% 
+  mutate(freq = round(freq, 2)) %>% 
+  select(id_deputado, nome, partido, freq, seguiu, nao_seguiu, faltou, partido_liberou) %>% 
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE, 
+            colnames = c("id", "Nome", "Partido", "Aderência", "Seguiu", "Não Seguiu", "Faltou", "Partido liberou"))
+```
+
+```{r}
+# deputados_votos %>% 
+#   filter(id_deputado == "74459") %>% 
+#   rowwise() %>% 
+#   mutate(match = compara_voto_com_orientacao(voto_deputado, voto_partido)) %>% 
+#   arrange(match) %>% 
+#   ungroup() %>% 
+#   mutate(x = rep(1:10, nrow(.))[1:nrow(.)]) %>% 
+#   group_by(x) %>% 
+#   mutate(y = row_number()) %>% 
+#   ungroup() %>% 
+#   ggplot(aes(x = factor(x), y = y, fill = factor(match))) +
+#   geom_tile(color = "black", size = 0.5) +
+#   scale_y_reverse() +
+#   scale_fill_brewer(palette = "Set3", direction = -1, labels = c("Não seguiu", "Não calculado", "Seguiu")) +
+#   labs(fill = "Aderência", title = "Átila Lira - PSB/PI") +
+#   theme_ipsum_rc() +
+#   theme(axis.title.x=element_blank(),
+#         axis.text.x=element_blank(),
+#         axis.ticks.x=element_blank(),
+#         axis.title.y=element_blank(),
+#         axis.text.y=element_blank(),
+#         axis.ticks.y=element_blank(),
+#         panel.grid.major = element_blank(), 
+#         panel.grid.minor = element_blank(),
+#         panel.background = element_blank())
 ```
 
 
