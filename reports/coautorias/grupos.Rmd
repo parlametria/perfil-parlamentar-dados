@@ -36,34 +36,28 @@ source(here::here(paste0(path, "scripts/analyzer_autorias.R")))
 source(here::here(paste0(path, "scripts/fetcher_autorias.R")))
 source(here::here(paste0(path, "scripts/generate-graph.R")))
 
-URL_AUTORES <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vRbKSW1aX8iyQ6Y7zl8zwluFUJ2nCoFunDvtZQ5gicXrpCpjRulWGsSjwUzhwrpIGfOr1Pb8KmaZVU9/pub?gid=563462053&single=true&output=csv"
-
 URL_PROPOSICOES <-
   "https://dadosabertos.camara.leg.br/arquivos/proposicoes/csv/proposicoes-2019.csv"
 
-URL_COAUTORIAS <- ""
-URL_RELACIONADAS <- ""
-URL_PARLAMENTARES <- ""
+URL_RELACIONADAS <- here::here(paste0(path, "data/relacionadas.csv"))
 
+PATH_PARLAMENTARES <- here::here(paste0(path, "data/parlamentares.csv"))
+
+PATH_AUTORES <- here::here(paste0(path, "data/autorias.csv.zip"))
+
+PATH_METADADO_COAUTORIAS <- here::here(paste0(path, "data/coautorias_metadata.csv"))
 ```
 
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
-
-proposicoes <- get_dataset_proposicoes(URL_PROPOSICOES)
-
-parlamentares <- get_dataset_parlamentares(URL_PARLAMENTARES)
-
-autores <- get_dataset_autores(URL_AUTORES)
-
-coautorias <- get_dataset_coautorias(URL_COAUTORIAS)
-
 relacionadas <- get_dataset_relacionadas(URL_RELACIONADAS)
 
-min_range <- min(coautorias$peso_arestas)
-max_range <- max(coautorias$peso_arestas)
+proposicoes <- get_dataset_proposicoes(URL_PROPOSICOES, relacionadas)
 
-rm(coautorias)
+parlamentares <- get_dataset_parlamentares(PATH_PARLAMENTARES)
 
+autores <- get_dataset_autores(PATH_AUTORES)
+
+coautorias_metadata <- get_dataset_coautorias_metadata(PATH_METADADO_COAUTORIAS)
 ```
 
 ## Escolhendo uma proposição para análise
@@ -73,18 +67,21 @@ rm(coautorias)
 ```{r echo=FALSE, warning=FALSE}
 choices <- c(proposicoes$choice)
 
-selectInput("proposition", label = "Selecione a proposição:",
+shiny::selectInput("proposition", label = "Selecione a proposição:",
               choices = choices, selected = choices[30])
 br()
 
-selectInput("min_peso", "Valor mínimo dos pesos:",
-              choices = seq(
-               min_range %>% 
-                  round(2), 
-                max_range %>% 
-                  round(2),
-                0.5), 
-            selected = choices[1])
+# uiOutput("slider")
+
+
+# selectInput("min_peso", "Valor mínimo dos pesos:",
+#               choices = seq(
+#                coautorias_metadata$min_range %>% 
+#                   round(3), 
+#                 coautorias_metadata$max_range %>% 
+#                   round(3),
+#                 0.5), 
+#             selected = choices[1])
 br()
 
 plotOutput("hist")
@@ -99,7 +96,7 @@ DT::DTOutput("dt")
 #### Grafo de grupos
 
 ```{r echo=FALSE}
-  forceNetworkOutput("grafo")
+  # forceNetworkOutput("grafo")
 ```
 
 
@@ -118,15 +115,31 @@ output$hist <- renderPlot({
   }
 })
 
+# output$slider <- renderUI({
+#   # print(getCoautorias()[[1]])
+#   # if(nrow(coautorias) > 0) {
+#   #   selectInput("min_peso", "Valor mínimo dos pesos:",
+#   #             choices = seq(
+#   #              min(coautorias$peso_arestas) %>%
+#   #                 round(3),
+#   #                max(coautorias$peso_arestas) %>%
+#   #                 round(3),
+#   #               0.5),
+#   #           selected = choices[1])
+#   # }
+# })
+
 getCoautorias <- reactive({
   proposicao <- 
     proposicoes %>% 
     filter(choice == input$proposition)
   
   rels <- relacionadas %>% 
-    filter(id_principal == proposicao$id)
+    filter(id_principal == proposicao$id | id_relacionada == proposicao$id)
   
-  coautores <- filter_coautorias(rels, input$min_peso)
+  coautores <- get_coautorias(parlamentares, autores, rels, input$min_peso)
+  
+  print(coautores)
   
   if(nrow(coautores) > 0) {
      nodes_and_edges <- 
@@ -144,26 +157,25 @@ getCoautorias <- reactive({
 output$dt <- 
   DT::renderDataTable(
     getCoautorias()[[1]] %>% 
-      # select(nome_eleitoral.x, nome_eleitoral.y, peso_arestas, num_coautorias) %>% 
+      select(nome_eleitoral.x, nome_eleitoral.y, peso_arestas, num_coautorias) %>% 
       distinct() %>% 
-      filter(peso_arestas >=  input$min_peso) %>% 
-      rename(peso_relacao = peso_arestas#, 
-             # nome_deputado_a = nome_eleitoral.x,
-             # nome_deputado_b = nome_eleitoral.y,
-            # coautorias_conjuntas = num_coautorias
+      filter(peso_arestas >= input$min_peso) %>% 
+      rename(peso_relacao = peso_arestas, 
+            nome_deputado_a = nome_eleitoral.x,
+            nome_deputado_b = nome_eleitoral.y,
+            coautorias_conjuntas = num_coautorias
              ) %>% 
       arrange(desc(peso_relacao)), 
     options = list(pageLength = 10,
                    scrollX = TRUE))
   
-output$grafo_grupo1 <- 
-  networkD3::renderForceNetwork({
-    autorias <- getCoautorias()[[2]]
-    nodes <- autorias[[1]]
-    edges <- autorias[[2]]
-    if (nrow(nodes) > 0 && nrow(edges) > 0){
-      generate_graph(nodes, edges)
-    }
-  })
-
+# output$grafo_grupo1 <- 
+#   networkD3::renderForceNetwork({
+#     autorias <- getCoautorias()[[2]]
+#     nodes <- autorias[[1]]
+#     edges <- autorias[[2]]
+#     if (nrow(nodes) > 0 && nrow(edges) > 0) {
+#       generate_graph(nodes, edges)
+#     }
+#   })
 ```

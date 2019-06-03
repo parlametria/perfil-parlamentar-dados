@@ -1,12 +1,5 @@
 library(tidyverse)
 
-
-#URL_AUTORES <-
-#  "https://dadosabertos.camara.leg.br/arquivos/proposicoesAutores/csv/proposicoesAutores-2019.csv"
-URL_API_PROPOSICOES <-
-  "https://dadosabertos.camara.leg.br/api/v2/proposicoes/"
-
-
 fetch_csv <- function(url) {
   return(read_delim(url, delim = ";"))
 }
@@ -22,7 +15,7 @@ get_dataset_parlamentares <- function(datapath) {
 }
 
 get_dataset_autores <- function(datapath) {
-  df <- readr::read_csv(datapath) %>%
+  df <- readr::read_csv(datapath, col_types = "ccd") %>%
     group_by(id_req) %>%
     mutate(n = n(),
            id = as.character(id)) %>%
@@ -34,7 +27,7 @@ get_dataset_autores <- function(datapath) {
   return(df)
 }
 
-get_dataset_proposicoes <- function(datapath) {
+get_dataset_proposicoes <- function(datapath, relacionadas) {
   
   mpv_869_18 <- tribble(~siglaTipo, ~numero, ~ano, ~id,
                         "MPV", 869, 2018, 2190283)
@@ -44,8 +37,10 @@ get_dataset_proposicoes <- function(datapath) {
     bind_rows(mpv_869_18) %>% 
     filter(siglaTipo %in% c("PEC", "PL", "MPV")) %>% 
     mutate(choice = paste0(siglaTipo, " - ", numero, "/", ano),
-           id = as.character(id))
-  
+           id = as.character(id)) %>% 
+    select(id, choice) %>% 
+    arrange(choice) %>% 
+    inner_join(relacionadas %>% select(id = id_principal) %>% distinct(), by = "id")
   return(df)
 }
 
@@ -54,9 +49,12 @@ get_dataset_coautorias <- function(datapath) {
   return(df)
 }
 
+get_dataset_coautorias_metadata <- function(datapath) {
+  return(read_csv(datapath, col_types = "dd"))
+}
+
 get_dataset_relacionadas <- function(datapath) {
   df <- read_csv(datapath, col_types = "cc")
-  
 }
 
 fetch_relacionadas <- function(id_prop) {
@@ -69,10 +67,16 @@ fetch_relacionadas <- function(id_prop) {
   ids_relacionadas <-
     (RCurl::getURI(url) %>%
        jsonlite::fromJSON())$dados %>%
-    as.data.frame() %>%
-    mutate(id_relacionada = as.character(id),
-           id_principal = as.character(id_prop)) %>%
-    select(id_principal, id_relacionada)
+    as.data.frame() 
+  
+  
+  if (nrow(ids_relacionadas) > 0) {
+    ids_relacionadas <- 
+      ids_relacionadas %>%
+      mutate(id_relacionada = as.character(id),
+             id_principal = as.character(id_prop)) %>%
+      select(id_principal, id_relacionada)
+  }
   
   ids_relacionadas <-
     ids_relacionadas %>% rbind(dplyr::tribble( ~ id_relacionada, ~ id_principal, id_prop, id_prop)) %>%
@@ -112,15 +116,15 @@ fetch_all_autores <- function(relacionadas) {
   
   autores <- autores %>%
     rename(id_req = id, id = id_deputado) %>%
+    distinct() %>% 
     group_by(id_req) %>%
     mutate(peso_arestas = 1 / n())
   
-  write_csv(autores,
-            here::here("reports/coautorias/data/autores.csv"))
+  return(autores)
   
 }
 
-get_coautorias <- function(parlamentares, autores, relacionadas = NULL, min_peso) {
+get_coautorias <- function(parlamentares, autores, relacionadas, min_peso) {
   
   autores <- autores %>% 
     filter(id_req %in% relacionadas$id_relacionada) %>% 
@@ -147,8 +151,6 @@ get_coautorias <- function(parlamentares, autores, relacionadas = NULL, min_peso
     inner_join(parlamentares, by = c("id.y" = "id")) %>% 
     select(-c(sg_partido.x, sg_partido.y)) %>% 
     distinct()
-  
-  # write_csv(coautorias, here::here("reports/coautorias/data/coautorias.csv"))
   
   return(coautorias)
 }
