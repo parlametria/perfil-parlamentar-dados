@@ -48,11 +48,11 @@ fetch_votacoes_ano <- function(ano = 2019) {
 #' votacoes_mpv8712019 <- fetch_xml_api_votacao(2190355)
 fetch_xml_api_votacao <- function(id_proposicao) {
   library(tidyverse)
-  library(rcongresso)
   library(RCurl)
   library(xml2)
+  source(here("crawler/votacoes/utils_votacoes.R"))
   
-  proposicao <- fetch_proposicao_camara(id_proposicao) %>%
+  proposicao <- get_sigla_by_id(id_proposicao) %>%
     select(siglaTipo, numero, ano)
   
   url <- paste0("https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicao?tipo=",

@@ -31,6 +31,7 @@ padroniza_sigla <- function(sigla) {
     str_detect(tolower(sigla), "pcdob") ~ "PCdoB",
     str_detect(tolower(sigla), "ptn") ~ "PODEMOS",
     str_detect(tolower(sigla), "pmdb") ~ "MDB",
+    tolower(sigla) == "pr" ~ "PL",
     str_detect(sigla, "SOLID.*") ~ "SOLIDARIEDADE",
     str_detect(sigla, "PODE.*") ~ "PODEMOS",
     str_detect(sigla, "GOV.") ~ "GOVERNO",
@@ -42,4 +43,42 @@ padroniza_sigla <- function(sigla) {
     trimws(which = c("both"))
   
   return(sigla_padronizada)
+}
+
+#' @title Recupera descrição do voto a partir do código enumerado do voto
+#' @description Recebe um integer que representa o código do voto e retorna a descrição do mesmo
+#' @param voto Voto para descrição
+#' @return Descrição do voto apssado como parâmetro
+#' @examples
+#' get_descricao_voto(2)
+get_descricao_voto <- function(voto) {
+  voto_descricao <- case_when(
+    voto == -1 ~ "Não",
+    voto == 1 ~ "Sim",
+    voto == 2 ~ "Obstrução",
+    voto == 3 ~ "Abstenção",
+    voto == 4 ~ "Art. 17",
+    voto == 5 ~ "Liberado",
+    TRUE ~ "Não votou")
+  
+  return(voto_descricao)
+}
+
+get_sigla_by_id <- function(id_proposicao) {
+  library(tidyverse)
+  library(RCurl)
+  library(xml2)
+  
+  url <- paste0("https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterProposicaoPorID?IdProp=", id_proposicao)
+  
+  xml <- getURL(url) %>%
+    read_xml()
+  
+  atributos <- xml_attrs(xml, "id") %>% 
+    as.list() %>% 
+    data.frame(stringsAsFactors = F) %>% 
+    mutate(tipo = trimws(tipo, which = c("both"))) %>% 
+    select(siglaTipo = tipo, numero, ano)
+    
+  return(atributos)
 }

@@ -19,11 +19,20 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(here)
 library(hrbrthemes)
+library(DT)
 theme_set(theme_minimal())
 
+source(here("reports/dependencia-partido/calcula_aderencia.R"))
 source(here("crawler/votacoes/analyzer_votos.R"))
 source(here("crawler/votacoes/fetch_orientacoes.R"))
 source(here("crawler/votacoes/fetcher_votacoes.R"))
+source(here("crawler/votacoes/utils_votacoes.R"))
+```
+
+```{r}
+deputados <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")) %>% 
+  filter(casa == "camara") %>% 
+  mutate(sg_partido = padroniza_sigla(sg_partido))
 ```
 
 ```{r}
@@ -33,22 +42,23 @@ proposicoes <- proposicoes_votadas %>%
   distinct(id, nome_proposicao)
 ```
 
-```{r}
+```{r results='hide', cache=FALSE}
 votos <- tibble(id_proposicao = proposicoes$id) %>%
   mutate(dados = map(
     id_proposicao,
-    fetch_votacoes_por_ano,
+    fetch_votacoes_por_ano, 
     2019
   )) %>% 
   unnest(dados) %>% 
-  distinct()
+  mutate(partido = padroniza_sigla(partido)) %>% 
+  distinct() 
 ```
 
-```{r}
+```{r results='hide', cache=FALSE}
 orientacao <- tibble(id_proposicao = proposicoes$id) %>%
   mutate(dados = map(
     id_proposicao,
-    fetch_orientacoes_por_proposicao,
+    fetch_orientacoes_por_proposicao, 
     2019
   )) %>% 
   unnest(dados) %>% 
@@ -56,12 +66,261 @@ orientacao <- tibble(id_proposicao = proposicoes$id) %>%
 ```
 
 ```{r}
-orientacao %>% 
-  group_by(partido, voto) %>% 
+deputados_votos <- votos %>% 
+  left_join(orientacao, 
+            by = c("id_proposicao", "id_votacao", "partido")) %>% 
+  rename(voto_deputado = voto.x,
+         voto_partido = voto.y)
+
+deputados_votos_match <- deputados_votos %>%
+  rowwise() %>% 
+  mutate(match = compara_voto_com_orientacao(voto_deputado, voto_partido)) %>% 
+  ungroup()
+         
+deputados_summary_long <- deputados_votos_match %>% 
+  group_by(id_deputado, partido, match) %>% 
   summarise(n = n()) %>% 
-  ggplot(aes(x = n, y = partido, color = as.factor(voto))) +
-  geom_point()
+  mutate(match = case_when(
+    match == -2 ~ "faltou",
+    match == -1 ~ "nao_seguiu",
+    match == 0 ~ "nao_calculado",
+    match == 1 ~ "seguiu",
+    match == 2 ~ "partido_liberou"
+  )) %>% 
+  left_join(deputados %>% select(id, nome_eleitoral, uf), by = c("id_deputado" = "id")) %>% 
+  mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", partido, "/", uf)) %>% 
+  ungroup() %>% 
+  select(id_deputado, nome, partido, match, n)
+
+minimo_votacoes_por_deputado <- 10
+
+deputados_summary_freq_wide <- deputados_summary_long %>% 
+  spread(key = match, value = n) %>% 
+  replace(is.na(.), 0) %>% 
+  mutate(total_votacoes = seguiu + nao_seguiu + partido_liberou) %>% 
+  filter(total_votacoes >= 10) %>% 
+  mutate(freq = (seguiu / (seguiu + nao_seguiu)) * 100) %>% 
+  filter(!is.na(freq)) %>% 
+  arrange(freq) %>% 
+  select(id_deputado, nome, partido, faltou, partido_liberou, nao_seguiu, seguiu, total_votacoes, freq)
+
+minimo_membros_partido <- 5
+
+partidos_count <- deputados_summary_freq_wide %>% 
+  group_by(partido) %>% 
+  summarise(n = n()) %>% 
+  filter(n >= 5) %>% 
+  pull(partido)
+
+deputados_summary_freq_wide <- deputados_summary_freq_wide %>% 
+  filter(partido %in% partidos_count)
 ```
 
+```{r}
+## Variáveis de configuração para as visualizações
+range_votacoes <- nrow(proposicoes_votadas) + (10 - nrow(proposicoes_votadas) %% 10)
+match_valido <- c("seguiu", "nao_seguiu")
+```
+
+```{r}
+lbls = as.character(c(seq(range_votacoes, 10, -10), seq(0, range_votacoes, 10)))
+
+deputados_summary_freq_wide %>%
+  arrange(freq) %>% 
+  head(20) %>% 
+  gather(key = "match", value = "n", faltou:seguiu) %>% 
+  mutate(n = if_else(match == "nao_seguiu", -n, n)) %>% 
+  arrange(n) %>% 
+  filter(match %in% match_valido) %>%
+  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = unique(nome))), 
+             y = n, 
+             fill = match)) + 
+  geom_bar(stat = "identity", width = .6) +
+  coord_flip() +
+  scale_fill_brewer(palette = "Dark2", direction = -1, labels = c("Não seguiu", "Seguiu")) +  
+  scale_y_continuous(breaks = seq(-range_votacoes, range_votacoes, 10), labels = lbls) +
+  labs(y = "Nº de votações", x = "Deputado", fill = "", 
+       title = "Deputados que menos seguiram à \n orientação do partido") +
+  theme_ipsum_rc() +
+  theme(legend.position="bottom")
+```
+
+```{r}
+lbls = as.character(c(seq(range_votacoes, 10, -10), seq(0, range_votacoes, 10)))
+
+deputados_summary_freq_wide %>%
+  arrange(desc(freq), desc(seguiu)) %>% 
+  head(20) %>% 
+  gather(key = "match", value = "n", faltou:seguiu) %>% 
+  mutate(n = if_else(match == "nao_seguiu", -n, n)) %>% 
+  arrange(desc(n)) %>% 
+  filter(match %in% match_valido) %>%
+  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = unique(nome))), 
+             y = n, 
+             fill = match)) + 
+  geom_bar(stat = "identity", width = .6) +
+  coord_flip() +
+  scale_fill_brewer(palette = "Dark2", direction = -1, labels = c("Não seguiu", "Seguiu")) +
+  scale_y_continuous(breaks = seq(-range_votacoes, range_votacoes, 10), labels = lbls) +
+  labs(y = "Nº de votações", x = "Deputado", fill = "", title = "Deputados que mais seguiram à \norientação do partido") +
+  theme_ipsum_rc() +
+  theme(legend.position="bottom")
+```
+
+```{r}
+deputados_summary_freq_wide %>% 
+  arrange(freq) %>% 
+  head(20) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = unique(nome))), y = freq)) + 
+  geom_point(col="tomato3", size = 3) + 
+  geom_segment(aes(x = nome, 
+                   xend = nome, 
+                   y = min(freq), 
+                   yend = max(freq)), 
+               linetype = "dashed", 
+               size = 0.1) +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 100, 5)) +
+  labs(title="Deputados com menos aderência à \n orientação do partido", 
+       y = "Frequência de aderência ao Partido (%)",
+       x = "Deputado") +
+    theme_ipsum_rc()
+```
+
+```{r}
+paleta <- c("#91bfda", "#E89D68", "#e06264", "#BA7E53")
+match_valores <- c("seguiu", "faltou", "nao_seguiu", "partido_liberou")
+
+data_long <- deputados_summary_freq_wide %>% 
+  arrange(freq) %>% 
+  head(20) %>% 
+  gather("match", "n", faltou:seguiu) %>% 
+  filter(match %in% match_valores)
+  
+levels <- deputados_summary_freq_wide %>% 
+  arrange(freq, desc(nao_seguiu)) %>% 
+  pull(nome)
+
+data_long %>% 
+  mutate(match = factor(match, 
+                        levels = c("faltou",
+                                   "partido_liberou",
+                                   "nao_seguiu",
+                                   "seguiu"),
+                        ordered = TRUE)) %>% 
+  filter(n > 0) %>% 
+  ggplot(aes(x = (factor(nome, levels = levels)), y = n, fill = match)) +
+  geom_bar(width = .7, stat = "identity", position = "stack") +
+  geom_text(aes(label = n),
+            hjust = 1.3,
+            position = "stack"
+            ) +
+  coord_flip() +
+  scale_fill_manual(values = c("partido_liberou" = paleta[4],
+                               "faltou" = paleta[2], 
+                               "nao_seguiu" = paleta[3],
+                               "seguiu" = paleta[1]),
+                    name = "", labels = c("Faltou",
+                                          "Partido liberou",
+                                          "Não seguiu",
+                                          "Seguiu")) +
+  labs(x = "Deputados", 
+       y = "Nº de votações", 
+       title = "Deputados com menos aderência ao partido",
+       subtitle = "Ordenados por frequência de aderência") + 
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+```{r}
+deputados_summary_freq_wide %>% 
+  mutate(freq = round(freq, 2)) %>% 
+  select(id_deputado, nome, partido, freq, seguiu, nao_seguiu, faltou, partido_liberou) %>% 
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE, 
+            colnames = c("id", "Nome", "Partido", "Aderência", "Seguiu", "Não Seguiu", "Faltou", "Partido liberou"))
+```
+
+```{r}
+partidos_summary <- deputados_summary_freq_wide %>% 
+  group_by(partido) %>% 
+  summarise(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>% 
+  arrange(median) %>% 
+  filter(n > minimo_membros_partido) %>% 
+  mutate(partido = factor(partido, levels = unique(partido)))
+
+levels <- partidos_summary %>% 
+  pull(partido)
+```
+
+```{r fig.height=12}
+deputados_summary_freq_wide %>% 
+  filter(partido %in% (partidos_summary %>% pull(partido))) %>% 
+  ggplot(aes(x = factor(partido, levels = levels), y = freq, color = factor(partido, levels = levels))) +
+  geom_boxplot() +
+  geom_jitter() +
+  scale_x_discrete(position = "left") +
+  scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
+  scale_color_manual(values = rep(c("#71cddd", "#fe8500"), 15)) +
+  coord_flip() +
+  labs(x = "", y = "Frequência de aderência ao partido (%)",
+       title = "Distribuição da aderência dos deputados \npor partido") +
+  guides(color = FALSE) +
+  theme_ipsum_rc()
+```
+
+```{r fig.height=10}
+deputados_summary_freq_wide %>% 
+  group_by(partido) %>% 
+  mutate(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>% 
+  filter(partido %in% (partidos_summary %>% pull(partido))) %>% 
+  ggplot(aes(x = factor(partido, levels = levels), y = freq, color = factor(partido, levels = levels))) +
+  geom_count() +
+  scale_x_discrete(position = "left") +
+  scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
+  scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
+  coord_flip() +
+  scale_shape_identity() +
+  geom_point(aes(y = median), size = 4, color = "#6D6D6D", shape = 124) +
+  labs(x = "", y = "Frequência de aderência ao partido (%)",
+       title = "Distribuição da aderência dos deputados \npor partido") +
+  guides(color = FALSE, size = FALSE) +
+  theme_ipsum_rc()
+```
+
+```{r}
+deputados_votos %>% 
+  filter(id_deputado == "74459") %>% 
+  rowwise() %>% 
+  mutate(match = compara_voto_com_orientacao(voto_deputado, voto_partido)) %>% 
+  arrange(match) %>% 
+  ungroup() %>% 
+  mutate(x = rep(1:10, nrow(.))[1:nrow(.)]) %>% 
+  group_by(x) %>% 
+  mutate(y = row_number()) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = factor(x), y = y, fill = factor(match))) +
+  geom_tile(color = "black", size = 0.5) +
+  scale_y_reverse() +
+  scale_fill_brewer(palette = "Set3", direction = -1, labels = c("Não seguiu", "Não calculado", "Seguiu")) +
+  labs(fill = "Aderência", title = "Átila Lira - PSB/PI") +
+  theme_ipsum_rc() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+```
 
 

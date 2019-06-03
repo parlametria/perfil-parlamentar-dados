@@ -19,7 +19,7 @@ fetch_orientacoes_camara <-
     source(here("crawler/votacoes/utils_votacoes.R"))
     
     proposicoes <-
-      rcongresso::fetch_proposicao_camara(id_proposicao) %>%
+      get_sigla_by_id(id_proposicao) %>%
       select(siglaTipo, numero, ano)
     
     url <-
@@ -181,12 +181,12 @@ fetch_all_orientacoes <- function(votacoes_datapath = here::here("crawler/raw_da
 #' orientacoes <- fetch_orientacoes_por_proposicao(2190355, 2019)
 fetch_orientacoes_por_proposicao <- function(id_proposicao, ano = 2019) {
     library(tidyverse)
-    library(rcongresso)
     library(xml2)
+    source(here("crawler/votacoes/utils_votacoes.R"))
 
     source(here("crawler/votacoes/utils_votacoes.R"))
     
-    proposicao <- rcongresso::fetch_proposicao_camara(id_proposicao) %>%
+    proposicao <- get_sigla_by_id(id_proposicao) %>%
       select(siglaTipo, numero, ano)
     
     url <- paste0("https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicao?tipo=", 
