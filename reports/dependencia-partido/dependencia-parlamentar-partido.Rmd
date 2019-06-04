@@ -201,10 +201,15 @@ deputados_summary_freq_wide %>%
 ### Quem são os deputados de maior aderência?
 
 ```{r fig.height=7}
-deputados_summary_freq_wide %>% 
-  arrange(-freq) %>% 
+
+levels <- deputados_summary_freq_wide %>%
+  arrange(desc(freq), desc(seguiu)) %>%  
+  pull(nome)
+
+deputados_summary_freq_wide %>%
+  arrange(desc(freq), desc(seguiu)) %>%  
   head(20) %>% 
-  ggplot(aes(x = reorder(nome, freq), y = freq)) + 
+  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = levels)), y = freq)) + 
   geom_point(col="tomato3", size = 3) + 
   geom_segment(aes(x = nome, 
                    xend = nome, 
@@ -232,7 +237,7 @@ deputados_summary_freq_wide %>%
   mutate(n = if_else(match == "nao_seguiu", -n, n)) %>% 
   arrange(desc(n)) %>% 
   filter(match %in% match_valido) %>%
-  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = unique(nome))), 
+  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = levels)), 
              y = n, 
              fill = match)) + 
   geom_bar(stat = "identity", width = .6) +
