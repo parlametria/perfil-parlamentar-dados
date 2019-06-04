@@ -2,7 +2,7 @@
 title: "Grau de dependência entre o Parlamentar e seu Partido"
 output: 
   html_document:
-    css: style.css
+    css: styles.css
 ---
 
 ```{r setup, include=FALSE}
