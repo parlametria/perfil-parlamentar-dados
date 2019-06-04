@@ -44,3 +44,4 @@ fetch_propositions_by_page <- function(page = 1, initial_date = "2017-01-01", fi
   
   return(data)
 }
+

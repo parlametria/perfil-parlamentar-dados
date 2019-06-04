@@ -1,5 +1,14 @@
 library(tidyverse)
 
+env <- "dev"
+path <- ''
+
+if (env == "dev") {
+  path = "reports/coautorias/"
+} 
+
+source(here::here(paste0(path, "scripts/authors/analyzer_autorias.R")))
+
 URL <- "https://dadosabertos.camara.leg.br/api/v2/proposicoes/"
 
 get_dataset_parlamentares <- function(datapath) {
@@ -32,21 +41,26 @@ fetch_autores <- function(id) {
            id,
            '/autores')
   
-  autores <-
-    (RCurl::getURI(url) %>%
-       jsonlite::fromJSON())$dados %>%
-    as.data.frame() %>%
-    mutate(id = as.character(id))   %>%
-    filter(codTipo == 10000)
-  
-  if (nrow(autores) == 0) {
+  autores <- tryCatch({
+    data <- 
+      (RCurl::getURI(url) %>%
+         jsonlite::fromJSON())$dados %>%
+      as.data.frame() %>%
+      mutate(id = as.character(id))   %>%
+      filter(codTipo == 10000)
+    
+    if (nrow(data) == 0) {
+      return(tribble( ~ id, ~ id_deputado))
+    }
+    
+    data <- data %>%
+      mutate(id_deputado = stringr::str_extract(uri, '[\\d]*$')) %>%
+      select(id, id_deputado)
+
+  }, error = function(e) {
     return(tribble( ~ id, ~ id_deputado))
-  }
-  
-  autores <- autores %>%
-    mutate(id_deputado = stringr::str_extract(uri, '[\\d]*$')) %>%
-    select(id, id_deputado)
-  
+  })
+
   return(autores)
 }
 
@@ -63,27 +77,21 @@ fetch_all_autores <- function(propositions) {
   
 }
 
-get_coautorias <- function(parlamentares, autores, relacionadas, min_peso) {
-  
-  autores <- autores %>% 
-    filter(id_req %in% relacionadas$id_relacionada) %>% 
-    distinct() %>% 
-    mutate(id_req = as.character(id_req),
-           id = as.character(id))
-  
+get_coautorias <- function(parlamentares, autores, min_peso) {
   coautorias <- autores %>%
+    distinct() %>% 
     full_join(autores, by = c("id_req", "peso_arestas")) %>%
-    filter(id.x != id.y)
+    filter(id.x != id.y) %>% 
+    select(-id_req) %>% 
+    distinct()
   
   coautorias <- coautorias %>%
     remove_duplicated_edges() %>%
     mutate(peso_arestas = sum(peso_arestas),
            num_coautorias = n()) %>%
     ungroup() %>%
-    mutate(id_req = as.character(id_req),
-           id.x = as.character(id.x),
-           id.y = as.character(id.y)) %>% 
-    filter(peso_arestas >= min_peso)
+    mutate(id.x = as.character(id.x),
+           id.y = as.character(id.y))
   
   coautorias <- coautorias %>% 
     inner_join(parlamentares, by = c("id.x" = "id")) %>% 
@@ -93,3 +101,11 @@ get_coautorias <- function(parlamentares, autores, relacionadas, min_peso) {
   
   return(coautorias)
 }
+
+
+#proposicoes = read_csv(here::here("reports/coautorias/data/proposicoes.csv"))
+#autores_1 = fetch_all_autores(proposicoes %>% slice(0:6000))
+#autores_2 = fetch_all_autores(proposicoes %>% slice(6001:12000))
+#autores_3 = fetch_all_autores(proposicoes %>% slice(12001:18000))
+#autores_4 = fetch_all_autores(proposicoes %>% slice(18001:24000))
+#autores_5 = fetch_all_autores(proposicoes %>% slice(24001:nrow(proposicoes)))
