@@ -1,5 +1,5 @@
 ---
-title: "Aderência entre o Parlamentar e seu Partido"
+title: "Aderência deputado - partido"
 output: 
   html_document:
     css: styles.css
@@ -22,6 +22,7 @@ library(tidyverse)
 library(here)
 library(hrbrthemes)
 library(DT)
+library(ggbeeswarm)
 theme_set(theme_minimal())
 
 source(here("reports/dependencia-partido/calcula_aderencia.R"))
@@ -98,7 +99,7 @@ minimo_votacoes_por_deputado <- 10
 deputados_summary_freq_wide <- deputados_summary_long %>% 
   spread(key = match, value = n) %>% 
   replace(is.na(.), 0) %>% 
-  mutate(total_votacoes = seguiu + nao_seguiu + partido_liberou) %>% 
+  mutate(total_votacoes = seguiu + nao_seguiu) %>% 
   filter(total_votacoes >= 10) %>% 
   mutate(freq = (seguiu / (seguiu + nao_seguiu)) * 100) %>% 
   filter(!is.na(freq)) %>% 
@@ -117,22 +118,57 @@ deputados_summary_freq_wide <- deputados_summary_freq_wide %>%
   filter(partido %in% partidos_count)
 ```
 
-## Aderência de deputados à orientação dos partidos
+<br>
 
-Nesta análise estamos interessados em entender um pouco mais sobre como os Deputados Federais atuam em votações realizadas em Plenário. Quais os deputados que mais seguem a orientação do partido? E os que menos seguem? Quais os partidos que possuem deputados mais aderentes?
+### **Resumo**
+*Analisamos quais deputados federais mais/menos seguem as orientações de seus partidos nas votações nominais em plenário da Câmara. Usamos as votações que aconteceram em 2019.*
 
-Essas são algumas perguntas que podemos responder olhando os dados de **votações realizadas em plenário** para o ano de **2019**. Portanto, todos os deputados analisados aqui participaram da legislatura atual da Câmara dos Deputados (legislatura 56).
+<br>
+<br>
 
-Foram consideradas `r nrow(proposicoes)` proposições que, segundo a API da Câmara dos Deputados, tiveram votações realizadas em plenário no ano de 2019. Lista completa disponível [aqui](https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2019&tipo=).
+## O que é aderência
+Aderência é uma faceda da atuação dos Deputados Federais na câmara em votações. Um deputado é aderente quando segue as orientações de seu partido em votações nominais.
 
-Essas proposições geraram `r nrow(deputados_votos %>% count(id_votacao))` votações em plenário. Capturamos os resultados de todas essas votações observando principalmente: o **voto do deputado** e a **orientação do partido**.
+Examinamos aderência com os dados de **votações nominais realizadas em plenário** para o ano de **2019**. Assim, todos os deputados analisados aqui participaram da legislatura atual da Câmara dos Deputados (legislatura 56).
 
-Para cada votação de cada deputado calculamos se ele seguiu a orientação do partido ou não. Em seguida, calculamos o grau de aderência dos deputados a seus respectivos partidos através da equação: *nº de votações em que seguiu / (nº de votações em que seguiu +  nº de votacoes em que não seguiu)*.
+Partimos de `r nrow(proposicoes)` proposições que, segundo a API da Câmara dos Deputados, tiveram votações realizadas em plenário no ano de 2019. A lista completa está disponível [aqui](https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2019&tipo=).
+
+Essas proposições tiveram `r nrow(deputados_votos %>% count(id_votacao))` votações em plenário. Capturamos os resultados de todas essas votações observando principalmente: o **voto do deputado** e a **orientação do partido**.
+
+Para cada votação de cada deputado, identificamos se ele seguiu a orientação do partido ou não. Em seguida, calculamos o grau de aderência como *a proporção das votações em que ele seguiu a orientação do partido*. Quando o partido liberou o deputado em uma votação, essa votação não é considerada.
+
+Como os deputados não estão sempre presentes e os partidos nem sempre orientam as votações, a quantidade de votações considerada varia entre os deputados. Nesta análise, *consideramos apenas deputados que participaram em pelo menos 10 votações que o partido orientou, e apenas deputados de partidos com ao menos 5 membros na câmara*. 
+
 ```{r}
 ## Variáveis de configuração para as visualizações
 range_votacoes <- nrow(proposicoes_votadas) + (10 - nrow(proposicoes_votadas) %% 10)
 match_valido <- c("seguiu", "nao_seguiu")
 ```
+
+## Quem tem menos aderência?
+
+```{r fig.height=7}
+deputados_summary_freq_wide %>% 
+  arrange(freq) %>% 
+  head(20) %>% 
+  ggplot(aes(x = reorder(nome, freq), y = freq)) + 
+  geom_point(col="tomato3", size = 3) + 
+  geom_segment(aes(x = nome, 
+                   xend = nome, 
+                   y = 0, 
+                   yend = freq), 
+               size = 0.1) +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 100, 5)) +
+  labs(title="Deputados com menos aderência à \n orientação do partido", 
+       y = "Aderência ao Partido (%)",
+       x = "Deputado") +
+    theme_ipsum_rc()
+```
+
+Acima temos a informações dos 20 deputados que possuem **menor aderência** com seu partido. Átila Lira (PSB/PI) é o deputado com menor aderência da Câmara. Ele seguiu o partido em 16 votações e não seguiu em 54 votações. A aderência para Átila é de 16 / (16 + 54), isto é `r round(16 / (16 + 54), 2) * 100`%. Para resumir, em 23% das votações Átila seguiu o partido.
+
+Abaixo detalhamos o número absoluto de votações em que cada um desses deputados seguiu ou não a orientação do partido. As barras têm comprimento diferente pois os deputados tem um número diferente de votações nas quais participaram e houve orientação do partido. Os deputaods estão ordenados da maior aderência para a menor. 
 
 ```{r}
 lbls = as.character(c(seq(range_votacoes, 10, -10), seq(0, range_votacoes, 10)))
@@ -161,9 +197,30 @@ deputados_summary_freq_wide %>%
   theme(legend.position="bottom")
 ```
 
-Acima temos a informações dos 20 deputados que possuem menor aderência com o partido. Ou seja, que menos seguem a orientação do partido considerando o total de votações em que participou. Podemos usar o exemplo de Átila Lira PSB/PI para entender como ler a visualização. Ele seguiu o partido em 16 votações e não seguiu em 54 votações. A aderência para Átila é de 16 / (16 + 54), isto é `r round(16 / (16 + 54), 2) * 100`%. Para resumir, em 23% das votações Átila segue o partido.
 
-As barras têm comprimento diferente pois os deputados tem um número diferente de votações nas quais participaram. A ordenação definida coloca os deputados da maior aderência para a menor. **Não foram mostradas na visualização votações em que o partido liberou seus membros para votar como preferir.**
+### Quem são os deputados de maior aderência?
+
+```{r fig.height=7}
+deputados_summary_freq_wide %>% 
+  arrange(-freq) %>% 
+  head(20) %>% 
+  ggplot(aes(x = reorder(nome, freq), y = freq)) + 
+  geom_point(col="tomato3", size = 3) + 
+  geom_segment(aes(x = nome, 
+                   xend = nome, 
+                   y = 0, 
+                   yend = freq), 
+               size = 0.1) +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 100, 5)) +
+  labs(title="Deputados com menos aderência à \n orientação do partido", 
+       y = "Aderência ao Partido (%)",
+       x = "Deputado") +
+    theme_ipsum_rc()
+```
+
+Na lista dos 20 deputados com maior valor de aderência todos têm aderência de 100%; ou seja, seguiram todas as orientações propostas pelo seu partido. Abaixo detalhamos em quantas votações cada um esteve.
+
 
 ```{r}
 lbls = as.character(c(seq(range_votacoes, 10, -10), seq(0, range_votacoes, 10)))
@@ -187,30 +244,10 @@ deputados_summary_freq_wide %>%
   theme(legend.position="bottom")
 ```
 
-Se olharmos para os deputados com maiores valores de aderência (apenas os 20 primeiros) temos a lista apresentada acima. Todos estes deputados tiveram aderência igual a 100%, ou seja, seguiram todas as orientações propostas pelo partido nas votações.
+### Mais detalhes sobre quem não adere
 
-As visualizações anteriores apresentam valores absolutos para o número de votações em que o deputado seguiu ou não a orientação do partido. Se mudarmos o foco para o valor da aderência em si temos o seguinte resultado:
-```{r}
-deputados_summary_freq_wide %>% 
-  arrange(freq) %>% 
-  head(20) %>% 
-  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = unique(nome))), y = freq)) + 
-  geom_point(col="tomato3", size = 3) + 
-  geom_segment(aes(x = nome, 
-                   xend = nome, 
-                   y = min(freq), 
-                   yend = max(freq)), 
-               linetype = "dashed", 
-               size = 0.1) +
-  coord_flip() +
-  scale_y_continuous(breaks = seq(0, 100, 5)) +
-  labs(title="Deputados com menos aderência à \n orientação do partido", 
-       y = "Frequência de aderência ao Partido (%)",
-       x = "Deputado") +
-    theme_ipsum_rc()
-```
+Se olharmos com mais detalhes para a lista de 20 deputados que menos adere, podemos destrinchar como ocorreram as votações para cada deputado. Átila Lira, mostrado na visualização anterior com menos de 25% de aderência, teve 16 votações em que seguiu o partido, 54 em que não seguiu o partido, 12 em que o partido liberou o voto e outras 11 em que faltou.
 
-Acima estão os 20 deputados com menor aderência. A menor aderência é de Átila Lira do PSB do PI com menos de 25%.
 
 ```{r}
 paleta <- c("#91bfda", "#E89D68", "#e06264", "#BA7E53")
@@ -259,7 +296,6 @@ data_long %>%
         plot.subtitle = element_text(size = 12))
 ```
 
-Se olharmos com mais detalhes para essa lista de 20 deputados podemos destrinchar como ocorreram as votações para cada deputado. Átila Lira, mostrado na visualização anterior com menos de 25% de aderência, teve 16 votações em que seguiu o partido, 54 em que não seguiu o partido, 12 em que o partido liberou o voto e outras 11 em que faltou.
 
 ```{r}
 partidos_summary <- deputados_summary_freq_wide %>% 
@@ -277,29 +313,12 @@ levels <- partidos_summary %>%
 
 ## Aderência por partido
 
-Subindo o nível de visão, podemos analisar a aderência dos deputados por partido. Na visualização abaixo são apresentados os pontos (deputados) e o boxplot com medidas como mediana, mínimo, máximo, dentre outras.
-```{r fig.height=12}
-deputados_summary_freq_wide %>% 
-  filter(partido %in% (partidos_summary %>% pull(partido))) %>% 
-  ggplot(aes(x = factor(partido, levels = levels), y = freq, color = factor(partido, levels = levels))) +
-  geom_boxplot() +
-  geom_jitter() +
-  scale_x_discrete(position = "left") +
-  scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
-  scale_color_manual(values = rep(c("#71cddd", "#fe8500"), 15)) +
-  coord_flip() +
-  labs(x = "", y = "Aderência ao partido (%)",
-       title = "Distribuição da aderência dos deputados \npor partido") +
-  guides(color = FALSE) +
-  theme_ipsum_rc()
-```
+Subindo o nível de visão, podemos analisar a aderência dos deputados por partido. 
 
-Os partidos estão ordenados pela mediana, portanto, o PCdoB é considerando o partido com deputados mais aderentes, seguido de perto pelo NOVO. As maiores amplitudes (diferença entre o máximo e o mínimo) são observadas para o PROS e o PSB. Existem deputados que nesses partidos que são muito aderentes e outros que são pouco aderentes.
+O gráfico abaixo ajuda a entender melhor a distribuição dos pontos (deputados) ao longo do eixo de aderência.Os partidos estão ordenados pela mediana, portanto, o PCdoB é considerando o partido com deputados mais aderentes, seguido de perto pelo NOVO. As maiores amplitudes (diferença entre o máximo e o mínimo) são observadas para o PROS e o PSB. Existem deputados que nesses partidos que são muito aderentes e outros que são pouco aderentes.
 
 As cores na visualização apenas ajudam a diferenciar deputados vizinhos um ao outro (na própria visualização).
 
-A visualização abaixo ajuda a entender melhor a distribuição dos pontos (deputados) ao longo do eixo de aderência.
-A mediana é apresentada pela marca "|" e define a ordenação dos partidos.
 ```{r fig.height=10}
 deputados_summary_freq_wide %>% 
   group_by(partido) %>% 
@@ -314,16 +333,17 @@ deputados_summary_freq_wide %>%
   scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
   coord_flip() +
   scale_shape_identity() +
-  geom_point(aes(y = median), size = 4, color = "#6D6D6D", shape = 124) +
+  geom_point(aes(y = median), size = 5, color = "black", shape = 124) +
   labs(x = "", y = "Aderência ao partido (%)",
        title = "Distribuição da aderência dos deputados \npor partido") +
   guides(color = FALSE, size = FALSE) +
   theme_ipsum_rc()
 ```
 
-Interessante observar que o PT não apresenta uma alta mediana de aderência quando comparado a outros partidos que ganharam mais vagas no parlamento na última eleição, como o PSL. Talvez a causa disso seja a presença de todas as votações que foram votadas em 2019, sem nenhum tipo de filtro para definição das mais relevantes.
+Interessante observar que o PT não apresenta uma alta mediana de aderência quando comparado a outros partidos que ganharam mais vagas no parlamento na última eleição, como o PSL. 
+<!-- Talvez a causa disso seja a presença de todas as votações que foram votadas em 2019, sem nenhum tipo de filtro para definição das mais relevantes. -->
 
-Abaixo apresentamos uma tabela (pesquisável) com os dados de todos os deputados que participaram de votações no ano de 2019.
+Abaixo apresentamos uma tabela pesquisável com os dados de todos os deputados que participaram de votações no ano de 2019.
 
 ```{r}
 deputados_summary_freq_wide %>% 
