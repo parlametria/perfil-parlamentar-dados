@@ -1,5 +1,5 @@
 ---
-title: "Grau de dependência entre o Parlamentar e seu Partido"
+title: "Aderência entre o Parlamentar e seu Partido"
 output: 
   html_document:
     css: styles.css
@@ -25,7 +25,6 @@ library(DT)
 theme_set(theme_minimal())
 
 source(here("reports/dependencia-partido/calcula_aderencia.R"))
-source(here("crawler/votacoes/analyzer_votos.R"))
 source(here("crawler/votacoes/fetch_orientacoes.R"))
 source(here("crawler/votacoes/fetcher_votacoes.R"))
 source(here("crawler/votacoes/utils_votacoes.R"))
