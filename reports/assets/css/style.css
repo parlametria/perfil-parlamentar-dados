@@ -1,0 +1,41 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:500,700");
+
+body {
+  font-family: Montserrat;
+}
+
+a:link,
+a:visited {
+  color: #20201e;
+}
+
+a:hover,
+a:active {
+  text-decoration: none;
+  color: #6c757d;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  h3 {
+    font-size: 1.3rem;
+  }
+}
+
+.navbar {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #20201e;
+  margin-bottom: 3rem;
+}
+
+.reports {
+  margin-bottom: 2rem;
+}
+
+.img-reports {
+  margin-bottom: 1.5rem;
+}
