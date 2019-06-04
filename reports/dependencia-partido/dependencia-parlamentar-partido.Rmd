@@ -26,7 +26,6 @@ library(ggbeeswarm)
 theme_set(theme_minimal())
 
 source(here("reports/dependencia-partido/calcula_aderencia.R"))
-source(here("crawler/votacoes/analyzer_votos.R"))
 source(here("crawler/votacoes/fetch_orientacoes.R"))
 source(here("crawler/votacoes/fetcher_votacoes.R"))
 source(here("crawler/votacoes/utils_votacoes.R"))
@@ -100,7 +99,7 @@ minimo_votacoes_por_deputado <- 10
 deputados_summary_freq_wide <- deputados_summary_long %>% 
   spread(key = match, value = n) %>% 
   replace(is.na(.), 0) %>% 
-  mutate(total_votacoes = seguiu + nao_seguiu + partido_liberou) %>% 
+  mutate(total_votacoes = seguiu + nao_seguiu) %>% 
   filter(total_votacoes >= 10) %>% 
   mutate(freq = (seguiu / (seguiu + nao_seguiu)) * 100) %>% 
   filter(!is.na(freq)) %>% 
@@ -220,7 +219,7 @@ deputados_summary_freq_wide %>%
     theme_ipsum_rc()
 ```
 
-Na lista dos 20 deputados com maior valor de aderência todos os têm aderência de 100%; ou seja, seguiram todas as orientações propostas pelo seu partido. Abaixo detalhamos em quantas votações cada um esteve.
+Na lista dos 20 deputados com maior valor de aderência todos têm aderência de 100%; ou seja, seguiram todas as orientações propostas pelo seu partido. Abaixo detalhamos em quantas votações cada um esteve.
 
 
 ```{r}
