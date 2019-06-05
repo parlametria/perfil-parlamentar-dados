@@ -5,8 +5,8 @@ account: hadrizia
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 935333
-bundleId: 2098938
+bundleId: 2131051
 url: https://hadrizia.shinyapps.io/grupos-deputados/
-when: 1558447459.80541
+when: 1559695172.46531
 asMultiple: TRUE
 asStatic: FALSE

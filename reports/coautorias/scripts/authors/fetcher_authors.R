@@ -1,6 +1,6 @@
 library(tidyverse)
 
-env <- "dev"
+env <- "prod"
 path <- ''
 
 if (env == "dev") {

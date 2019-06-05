@@ -25,7 +25,7 @@ library(tidyverse)
 library(hrbrthemes)
 theme_set(theme_minimal())
 
-env <- "dev"
+env <- "prod"
 path <- ''
 
 if (env == "dev") {
@@ -53,7 +53,7 @@ parlamentares <- read_csv(PATH_PARLAMENTARES, col_types = "ccc")
 autores <- get_dataset_autores(PATH_AUTORES)
 
 coautorias <- read_csv(PATH_COAUTORIAS, col_types = "dccicc") %>% 
-  filter(num_coautorias > 1) %>% 
+  # filter(num_coautorias > 1) %>% 
   mutate(partido.x = str_extract(nome_eleitoral.x, "- .*(?=/)") %>% str_remove("- "),
          partido.y = str_extract(nome_eleitoral.y, "- .*(?=/)") %>% str_remove("- "))
 ```
@@ -131,19 +131,52 @@ Transformamos este peso de relações em um parâmetro, entre 0.3 e 2.3, que é 
 
 selectInput("min_peso", "Valor mínimo dos pesos:",
              choices,
-            selected = choices[1])
+            selected = choices[2])
 br()
 
 plotOutput("hist")
 ```
 
-Acima se encontra a distribuição das relações de acordo com o peso fornecido como entrada. Colocando o menor valor possível como entrada, 0.3, se pode visualizar os pares que possuem no mínimo uma relação igual a esse peso. Percebemos que a maior parte das relações entre os deputados se encontra entre X e Y. Isto indica que os autores das proposições coletadas geralmente participam de coautorias quando há muitos outros deputados coautorando ou preferem criar proposições sozinhos.
+Acima se encontra a distribuição das relações de acordo com o peso fornecido como entrada. Colocando 0.5 como valor de entrada, se pode visualizar os pares que possuem no mínimo uma relação igual a esse peso. Percebemos que a maior parte das relações entre os deputados se encontra entre X e Y. Isto indica que os autores das proposições coletadas geralmente participam de coautorias quando há muitos outros deputados coautorando ou preferem criar proposições sozinhos.
+
+<br>
+
+#### Os parlamentares
+
+Abaixo podemos observar quais deputados mais e menos coautoraram em proposições apresentadas ou modificadas na 56ª legislatura.
+
+A partir do gráfico acima, os deputados que mais se agruparam nas autorias das proposições coletadas são Laura Carneiro, Ivan Valente, Carmen Zanotto, Otavio Leite e Sâmia Bomfim. Laura, Carmen, Otavio e Ivan possuem um extenso histórico de mandatos na Câmara, o que pode explicar a aparição de ambos neste gráfico. Pode-se observar também que, quando não são deputados que estão a mais tempo na casa, há três "novatos" do mesmo partido que estão entre os 20 deputados mais agrupados: Sâmia Bomfim, Áurea Carolina e Marcelo Freixo, todos do PSOL.
+
+```{r}
+plotOutput("hist_parla_top_20")
+```
+
+<br>
+
+De forma análoga, abaixo podemos ver quais deputados menos se agrupam nas criações de proposições: Igor Kannário, Nilmário Miranda, Professor Sérgio de Oliveira, Helio Lopes, e Roberto Britto.
+
+```{r}
+plotOutput("hist_parla_top_minus_20")
+```
+
+<br>
+
+#### Os partidos
+
+Também é possível fazer a análise dos mais agrupados e mais isolados do ponto de vista dos partidos políticos. A partir do gráfico abaixo, percebemos que o PT é o partido que mais se agrupa na hora de criar proposições. Vale lembrar que o PT é um dos partidos com maior número de deputados na Câmara, então isto pode ter influenciado o grande valor absoluto do peso total dos agrupamentos. Em segundo lugar está o PSOL, com baixo número de deputados componentes, indicando que este pode ser o partido mais agrupado em valores proporcionais.
+
+Os partidos mais isolados são o PMN, REDE, PHS e PRP. Um motivo provável para a obtenção deste resultado é que o número de deputados que compõe estes partidos é muito baixo, muitas vezes com 1 parlamentar apenas.
+
+
+```{r}
+plotOutput("hist_part")
+```
 
 <br>
 
 #### Rede de grupos
 
-Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando uma técnica chamada `agrupamento`, que agrupa os dados de forma automática com base na similaridade entre eles. **Para o peso mínimo de 0.3 das relações**, considerando todas as coautorias, foram gerados X grupos no total, mas a quantidade de grupos pode ser menor conforme o peso aumentar. Os grupos encontrados são exibidos a seguir.
+Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando uma técnica chamada `agrupamento`, que agrupa os dados de forma automática com base na similaridade entre eles. **Para o peso mínimo de 0.5 das relações**, considerando todas as coautorias, foram gerados X grupos no total, mas a quantidade de grupos pode ser menor conforme o peso aumentar. Os grupos encontrados são exibidos a seguir.
 
 <br>
 
@@ -153,6 +186,8 @@ forceNetworkOutput("grafo")
 
 
 ##### Grupo 1
+
+A rede abaixo está fortemente conectada e se tratam de proposições mais populares, contendo vários coautores, como requerimentos de audiência pública para proposições mais polêmicas, por exemplo.
 
 ```{r echo=FALSE, fig.width = 2, fig.height = 2}
   forceNetworkOutput("grafo_grupo1")
@@ -165,9 +200,13 @@ plotOutput("hist_grupo1")
 
 ```
 
+O PT é o partido que mais possui componentes nesta rede, com mais de 40 deputados participantes; depois está o PSOL, com pouco mais de 10 deputados. Em terceiro, o PCdoB, com 9 deputados. Percebemos que boa parte dos partidos são mais de esquerda neste grupo.
+
 <br>
 
 ##### Grupo 2
+
+A rede abaixo é dominada por deputados do partido PSB que coautoraram entre si e também com diversos outros partidos, como PT, PROS, PSD, MDB, DEM e PDT. Nessa rede é notória a presença de deputados que coautoram somente com outro deputado: João Arruda, conectado somente com Aliel Machado, mesmo havendo outro deputado do seu partido; Sarney FIlho, com Alessandro Molon; e Sergio Zveiter, com Weliton Prado.
 
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo2")
@@ -176,6 +215,8 @@ plotOutput("hist_grupo1")
 <br>
 
 ##### Grupo 3
+
+Esta rede é composta predominantemente por deputados do partido PSDB, mas que possui uma topologia onde os deputados interligam grupos diferentes, como é o caso de Covatti Filho, Samuel Moreira e outros. Neste grupo também há dois deputados do PT, um dos partidos com maior número de coautorias, sem conexão.
 
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo3")
@@ -186,6 +227,9 @@ plotOutput("hist_grupo1")
 
 ##### Grupo 4
 
+O partido PRB é o que possui mais deputados, mas há conexões com outros, como PDT, PSDB, DEM, PSD, PROS, PSL e MDB, este último sendo o deputado Eduardo Cunha, conectado apenas com o deputado João Campos.
+
+
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo4")
 ```
@@ -193,6 +237,8 @@ plotOutput("hist_grupo1")
 <br>
 
 ##### Grupo 5
+
+Este grupo é composto majoritariamente por deputados do partido PSL e que se conectam com deputados dos partidos PR, PRB, PSD, PTB, PSDB, PROS, PP, SOLIDARIEDADE e PODEMOS.
 
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo5")
@@ -202,6 +248,8 @@ plotOutput("hist_grupo1")
 
 ##### Grupo 6
 
+A rede abaixo é composta de deputados dos partidos DEM, PR, PSL, PP, PSD, PDT, PSC e MDB. Aqui também existem casos de deputados que só se conectam com alguns deputados, como Dr. Jorge Silva, que se conecta apenas com os deputados Sergio Vidigal e Norma Ayub. Norma também é a única a possuir conexão com a deputada Dâmina Pereira. Além destas, o deputado Indio da Costa se conecta apenas com Hugo Leal, parceiro de partido.
+
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo6")
 ```
@@ -209,6 +257,8 @@ plotOutput("hist_grupo1")
 <br>
 
 ##### Grupo 7
+
+O grupo abaixo também é composto predominantemente por deputados do PSL, mas trazendo alguns nomes mais conhecidos, como Jair Bolsonaro, atual presidente da república; Eduardo Bolsonaro, Delegado Francischini, Marco Feliciano, Onyx Lorenzoni e outros. O presidente, apesar de estar conectado com vários outros deputados, suas conexões mais fortes são com seu filho, Eduardo, Beto Rosado e Francischini. Eduardo Bolsonaro possui conexões fortes também com os deputados Hildo Rocha, Marco Feliciano, Luiz Philippe de Orléans e Bragança e Onyx Lorenzoni.
 
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
   forceNetworkOutput("grafo_grupo7")
@@ -230,25 +280,6 @@ generate_graph_by_group <- function(df, id_group) {
 }
 
 ```
-
-
-#### Os parlamentares
-
-Abaixo podemos observar quais deputados mais e menos coautoraram em proposições apresentadas ou modificadas na 56ª legislatura.
-
-```{r}
-plotOutput("hist_parla_top_20")
-```
-
-A partir do gráfico acima, os deputados que mais se agruparam nas autorias das proposições coletadas são Laura Carneiro, Ivan Valente, Carmen Zanotto, Otavio Leite e Sâmia Bomfim. Laura, Carmen, Otavio e Ivan possuem um extenso histórico de mandatos na Câmara, o que pode explicar a aparição de ambos neste gráfico. Pode-se observar também que, quando não são deputados que estão a mais tempo na casa, 
-
-<br>
-
-```{r}
-plotOutput("hist_parla_top_minus_20")
-```
-
-De forma análoga, abaixo podemos ver quais deputados menos se agrupam nas criações de proposições: 
 
 ```{r echo=FALSE, context="server"}
 
@@ -366,6 +397,27 @@ output$hist_parla_top_minus_20 <- renderPlot({
          title="Deputados mais isolados",
          subtitle = "Os deputados que quase não se agrupam nas criações de proposições") +
     scale_y_continuous(breaks = seq(0, max(g$peso), 0.005),
+                       limits = c(0, max(g$peso))) +
+    theme_ipsum_rc()
+})
+
+output$hist_part <- renderPlot({
+  g <- autores %>% 
+    inner_join(parlamentares, by="id") %>% 
+    group_by(sg_partido) %>% 
+    summarise(peso = sum(peso_arestas)) %>% 
+    arrange(desc(peso)) %>% 
+    filter(sg_partido != 'S.PART.')
+  
+   g %>% 
+    ggplot(aes(x = reorder(sg_partido, peso), y = peso)) +
+    geom_bar(fill = "#80BDE5", color = "#5884A0", stat="identity") +
+    coord_flip() +
+    labs(x = "Partido", 
+         y = "Peso total de relações", 
+         title="Distribuição dos agrupamentos por partido",
+         subtitle = "Partidos cujo deputados agrupam nas criações de proposições") +
+    scale_y_continuous(breaks = seq(0, max(g$peso), 50),
                        limits = c(0, max(g$peso))) +
     theme_ipsum_rc()
 })

@@ -89,8 +89,7 @@ generate_graph <- function(nodes, edges) {
     Links = edges, Nodes = nodes,
     Source = "source", Target = "target",
     Value = "peso_arestas", NodeID = "nome_eleitoral",
-    Group ="partido",
-    opacity = 0.8, zoom = T,
+    Group ="partido", zoom = T,
     linkColour = "#bfbdbd",
     fontFamily = "roboto")
   
