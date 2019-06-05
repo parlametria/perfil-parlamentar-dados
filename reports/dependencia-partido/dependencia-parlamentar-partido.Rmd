@@ -25,97 +25,25 @@ library(DT)
 library(ggbeeswarm)
 theme_set(theme_minimal())
 
-source(here("reports/dependencia-partido/calcula_aderencia.R"))
-source(here("crawler/votacoes/fetch_orientacoes.R"))
-source(here("crawler/votacoes/fetcher_votacoes.R"))
-source(here("crawler/votacoes/utils_votacoes.R"))
+source(here("reports/dependencia-partido/code/processa_dados_aderencia.R"))
 ```
 
 ```{r}
-deputados <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")) %>% 
-  filter(casa == "camara") %>% 
-  mutate(sg_partido = padroniza_sigla(sg_partido))
+dados_votos_orientacao <- processa_dados_votacoes()
+
+deputados <- dados_votos_orientacao[[1]]
+proposicoes_votadas <- dados_votos_orientacao[[2]]
+votos <- dados_votos_orientacao[[3]]
+orientacao <- dados_votos_orientacao[[4]]
 ```
 
 ```{r}
-proposicoes_votadas <- fetch_votacoes_ano(2019)
+dados_aderencia <- processa_dados_deputado_aderencia(votos, orientacao, deputados)
 
-proposicoes <- proposicoes_votadas %>% 
-  distinct(id, nome_proposicao)
-```
-
-```{r results='hide', cache=FALSE}
-votos <- tibble(id_proposicao = proposicoes$id) %>%
-  mutate(dados = map(
-    id_proposicao,
-    fetch_votacoes_por_ano, 
-    2019
-  )) %>% 
-  unnest(dados) %>% 
-  mutate(partido = padroniza_sigla(partido)) %>% 
-  distinct() 
-```
-
-```{r results='hide', cache=FALSE}
-orientacao <- tibble(id_proposicao = proposicoes$id) %>%
-  mutate(dados = map(
-    id_proposicao,
-    fetch_orientacoes_por_proposicao, 
-    2019
-  )) %>% 
-  unnest(dados) %>% 
-  distinct()
-```
-
-```{r}
-deputados_votos <- votos %>% 
-  left_join(orientacao, 
-            by = c("id_proposicao", "id_votacao", "partido")) %>% 
-  rename(voto_deputado = voto.x,
-         voto_partido = voto.y)
-
-deputados_votos_match <- deputados_votos %>%
-  rowwise() %>% 
-  mutate(match = compara_voto_com_orientacao(voto_deputado, voto_partido)) %>% 
-  ungroup()
-         
-deputados_summary_long <- deputados_votos_match %>% 
-  group_by(id_deputado, partido, match) %>% 
-  summarise(n = n()) %>% 
-  mutate(match = case_when(
-    match == -2 ~ "faltou",
-    match == -1 ~ "nao_seguiu",
-    match == 0 ~ "nao_calculado",
-    match == 1 ~ "seguiu",
-    match == 2 ~ "partido_liberou"
-  )) %>% 
-  left_join(deputados %>% select(id, nome_eleitoral, uf), by = c("id_deputado" = "id")) %>% 
-  mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", partido, "/", uf)) %>% 
-  ungroup() %>% 
-  select(id_deputado, nome, partido, match, n)
-
-minimo_votacoes_por_deputado <- 10
-
-deputados_summary_freq_wide <- deputados_summary_long %>% 
-  spread(key = match, value = n) %>% 
-  replace(is.na(.), 0) %>% 
-  mutate(total_votacoes = seguiu + nao_seguiu) %>% 
-  filter(total_votacoes >= 10) %>% 
-  mutate(freq = (seguiu / (seguiu + nao_seguiu)) * 100) %>% 
-  filter(!is.na(freq)) %>% 
-  arrange(freq) %>% 
-  select(id_deputado, nome, partido, faltou, partido_liberou, nao_seguiu, seguiu, total_votacoes, freq)
+deputados_votos_match <- dados_aderencia[[1]]
+deputados_summary_freq_wide <- dados_aderencia[[2]]
 
 minimo_membros_partido <- 5
-
-partidos_count <- deputados_summary_freq_wide %>% 
-  group_by(partido) %>% 
-  summarise(n = n()) %>% 
-  filter(n >= 5) %>% 
-  pull(partido)
-
-deputados_summary_freq_wide <- deputados_summary_freq_wide %>% 
-  filter(partido %in% partidos_count)
 ```
 
 <br>
@@ -131,9 +59,9 @@ Aderência é uma faceda da atuação dos Deputados Federais na câmara em vota�
 
 Examinamos aderência com os dados de **votações nominais realizadas em plenário** para o ano de **2019**. Assim, todos os deputados analisados aqui participaram da legislatura atual da Câmara dos Deputados (legislatura 56).
 
-Partimos de `r nrow(proposicoes)` proposições que, segundo a API da Câmara dos Deputados, tiveram votações realizadas em plenário no ano de 2019. A lista completa está disponível [aqui](https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2019&tipo=).
+Partimos de `r nrow(proposicoes_votadas %>% distinct(id))` proposições que, segundo a API da Câmara dos Deputados, tiveram votações realizadas em plenário no ano de 2019. A lista completa está disponível [aqui](https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2019&tipo=).
 
-Essas proposições tiveram `r nrow(deputados_votos %>% count(id_votacao))` votações em plenário. Capturamos os resultados de todas essas votações observando principalmente: o **voto do deputado** e a **orientação do partido**.
+Essas proposições tiveram `r nrow(deputados_votos_match %>% count(id_votacao))` votações em plenário. Capturamos os resultados de todas essas votações observando principalmente: o **voto do deputado** e a **orientação do partido**.
 
 Para cada votação de cada deputado, identificamos se ele seguiu a orientação do partido ou não. Em seguida, calculamos o grau de aderência como *a proporção das votações em que ele seguiu a orientação do partido*. Quando o partido liberou o deputado em uma votação, essa votação não é considerada.
 
@@ -348,6 +276,51 @@ deputados_summary_freq_wide %>%
 Interessante observar que o PT não apresenta uma alta mediana de aderência quando comparado a outros partidos que ganharam mais vagas no parlamento na última eleição, como o PSL. 
 <!-- Talvez a causa disso seja a presença de todas as votações que foram votadas em 2019, sem nenhum tipo de filtro para definição das mais relevantes. -->
 
+## Aderência por votação
+
+Quando olhamos a aderência para cada votação do conjunto das 93 abordadas podemos analisar a proporção do nº de deputados que seguiu a orientação do partido sobre o nº de deputados que seguiu somado com o nº de deputados que não seguiu. 
+
+```{r}
+votacoes_summary <- deputados_votos_match %>% 
+  group_by(id_votacao, match) %>% 
+  summarise(n = n()) %>% 
+  ungroup() %>% 
+  mutate(match = case_when(
+      match == -2 ~ "faltou",
+      match == -1 ~ "nao_seguiu",
+      match == 0 ~ "nao_calculado",
+      match == 1 ~ "seguiu",
+      match == 2 ~ "partido_liberou"
+    )) %>% 
+  spread(key = match, value = n) %>% 
+  replace(is.na(.), 0) %>% 
+  mutate(presente = nao_seguiu + seguiu) %>% 
+  mutate(prop_seguiu = seguiu / presente)
+```
+
+```{r fig.height=6}
+votacoes_summary %>% 
+  ggplot(aes(x = prop_seguiu * 100)) +
+  geom_density(aes(y = ..count..), fill = "#91bfda") +
+  scale_shape_identity() +
+  geom_point(aes(y = 0), shape = 124, size = 3) +
+  scale_x_continuous(breaks = seq(0, 100, 5)) +
+  labs(y = "Nº de votações", x = "Aderência ao partido (%)", title = "Proporção de Aderência por votação") +
+  theme_ipsum_rc()
+```
+
+Como mostrado, a aderência por votação em geral é bem alta já que a densidade de votações com alta aderência aos partidos se concentra acima do valor de 80%. Foram excluídos do cálculo deputados com menos de 10 votações com orientação e partidos com menos de 5 membros. Ou seja, geralmente os deputados seguem a orientação do partido. Cada marca "|" no gráfico representa uma votação ocorrida em 2019. A posição dessa marca no eixo x representa o quanto de aderência aos partidos os deputados tiveram.
+
+As três votações com menos aderência são:
+
+- REQUERIMENTO DE RETIRADA DE PAUTA da [PDC 379/2016](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2083376). Aprova o texto do Acordo de Cooperação Educacional entre o Governo da República Federativa do Brasil e o Governo da Federação de São Cristóvão e Névis, assinado em Brasília, em 26 de abril de 2010.
+
+- REQ. PARA QUE TODAS AS VOTAÇÕES SEJA PELO PROCESSO NOMINAL da [MPV 870/2019](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2190288). Estabelece a organização básica dos órgãos da Presidência da República e dos Ministérios. Prejudicada por falta de quórum.
+
+- REQUERIMENTO DE RETIRADA DE PAUTA [PLP 441/2017](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2160860). Altera a Lei Complementar nº 105, de 10 de janeiro de 2001, e a Lei nº 12.414, de 9 de junho de 2011, para dispor sobre os cadastros positivos de crédito e regular a responsabilidade civil dos operadores. O requerimento foi rejeitado.
+
+- A [votação](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=8846&numLegislatura=56&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=114&indTipoSessao=E&tipo=uf) da permanência do COAF no Ministério da Justiça teve 80% de aderência.
+
 Abaixo apresentamos uma tabela pesquisável com os dados de todos os deputados que participaram de votações no ano de 2019.
 
 ```{r}
@@ -359,33 +332,3 @@ deputados_summary_freq_wide %>%
             rownames = FALSE, 
             colnames = c("id", "Nome", "Partido", "Aderência", "Seguiu", "Não Seguiu", "Faltou", "Partido liberou"))
 ```
-
-```{r}
-# deputados_votos %>% 
-#   filter(id_deputado == "74459") %>% 
-#   rowwise() %>% 
-#   mutate(match = compara_voto_com_orientacao(voto_deputado, voto_partido)) %>% 
-#   arrange(match) %>% 
-#   ungroup() %>% 
-#   mutate(x = rep(1:10, nrow(.))[1:nrow(.)]) %>% 
-#   group_by(x) %>% 
-#   mutate(y = row_number()) %>% 
-#   ungroup() %>% 
-#   ggplot(aes(x = factor(x), y = y, fill = factor(match))) +
-#   geom_tile(color = "black", size = 0.5) +
-#   scale_y_reverse() +
-#   scale_fill_brewer(palette = "Set3", direction = -1, labels = c("Não seguiu", "Não calculado", "Seguiu")) +
-#   labs(fill = "Aderência", title = "Átila Lira - PSB/PI") +
-#   theme_ipsum_rc() +
-#   theme(axis.title.x=element_blank(),
-#         axis.text.x=element_blank(),
-#         axis.ticks.x=element_blank(),
-#         axis.title.y=element_blank(),
-#         axis.text.y=element_blank(),
-#         axis.ticks.y=element_blank(),
-#         panel.grid.major = element_blank(), 
-#         panel.grid.minor = element_blank(),
-#         panel.background = element_blank())
-```
-
-
