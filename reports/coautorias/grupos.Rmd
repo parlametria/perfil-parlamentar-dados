@@ -1,111 +1,538 @@
 ---
-title: "Encontrando grupos de deputados por co-autorias"
-resource_files:
-- scripts/generate-graph.R
-- scripts/fetcher_autores_2019.R
-- scripts/analyzer-autorias.R
-- scripts/generate-graph.R
-- scripts/fetcher_autores_2019.R
+title: "Encontrando grupos de deputados por coautorias em proposições"
 runtime: shiny
 output:
   html_document:
     code_folding: hide
-    theme: sandstone
+    css: style.css
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
 
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
 library(networkD3)
 library(tidyverse)
+library(hrbrthemes)
+theme_set(theme_minimal())
 
-source(here::here("scripts/analyzer_autorias.R"))
+env <- "dev"
+path <- ''
 
-parlamentares <-
-  read_csv(here::here("data/parlamentares.csv")) %>% 
-  process_parlamentares()
+if (env == "dev") {
+  path = "reports/coautorias/"
+} 
 
-autores <- fetch_csv(URL_AUTORES)
+source(here::here(paste0(path, "scripts/propositions/fetcher_propositions.R")))
+source(here::here(paste0(path, "scripts/authors/fetcher_authors.R")))
+source(here::here(paste0(path, "scripts/generate-graph.R")))
+source(here::here(paste0(path, "scripts/authors/analyzer_autorias.R")))
 
-proposicoes <- fetch_csv(URL_PROPOSICOES) %>% 
-  select(siglaTipo, numero, ano, id) %>% 
-  filter(siglaTipo %in% c("PEC", "PL", "PDL", "MPV")) %>% 
-  mutate(choice = paste0(siglaTipo, " - ", numero, "/", ano),
-         id = as.character(id))
+URL_PROPOSICOES <- here::here(paste0(path, "data/proposicoes.csv"))
+
+PATH_PARLAMENTARES <- here::here(paste0(path, "data/parlamentares.csv"))
+
+PATH_AUTORES <- here::here(paste0(path, "data/autores.csv"))
+
+PATH_COAUTORIAS <- here::here(paste0(path, "data/coautorias.csv"))
 ```
 
-## Escolhendo uma proposição para análise
+```{r echo = FALSE, warning=FALSE, message=FALSE}
+proposicoes <- read_csv(URL_PROPOSICOES, col_types = "ccddc")
 
-É possível exibir um grafo contendo os grupos dos parlamentares e uma tabela detalhando as proposições relacionadas (requerimentos, apensadas, emendas, etc.) de uma proposição selecionada e a partir do peso mínimo, um valor inversamente proporcional ao número de co-autores por proposição: se uma proposição possui dois co-autores, o peso das arestas será 1/2 = 0.5; já uma proposição com 100 co-autorias terá peso igual a 0.1.
+parlamentares <- read_csv(PATH_PARLAMENTARES, col_types = "ccc")
 
-```{r echo=FALSE, warning=FALSE}
-choices <- c(proposicoes$choice)
+autores <- get_dataset_autores(PATH_AUTORES)
 
-selectInput("proposition", label = "Selecione a proposição:",
-              choices = choices, selected = choices[30])
-br()
-
-selectInput("min_peso", "Valor mínimo dos pesos:",
-              choices = seq(0.1, 1, 0.1), selected = choices[1])
-br()
-
-plotOutput("hist")
+coautorias <- read_csv(PATH_COAUTORIAS, col_types = "dccicc") %>% 
+  # filter(num_coautorias > 1) %>% 
+  mutate(partido.x = str_extract(nome_eleitoral.x, "- .*(?=/)") %>% str_remove("- "),
+         partido.y = str_extract(nome_eleitoral.y, "- .*(?=/)") %>% str_remove("- "))
 ```
 
-#### Tabela de pares de co-autorias
+### As proposições
+
+Para geração deste relatório foram utilizadas as proposições retornadas pela dados abertos utilizando este [endpoint](https://dadosabertos.camara.leg.br/api/v2/proposicoes?dataInicio=2019-02-01&dataFim=2019-06-03&ordem=ASC&ordenarPor=id&pagina=1&itens=100), que lista as informações básicas sobre projetos de lei, resoluções, medidas provisórias, emendas, pareceres e todos os outros tipos de proposições na Câmara que foram apresentadas ou tiveram alguma mudança de situação de 01 de fevereiro de 2019 a 03 de junho de 2019.
+
+No total, foram recuperadas mais de 28 mil proposições, e abaixo se tem uma breve análise exploratória destes dados.
+
+```{r echo=FALSE, fig.width = 4, fig.height = 3}
+
+plotOutput("hist_tipo_prop_top_10")
+
+```
+
+As proposições do tipo Projetos de Lei (PL) são de longe as mais apresentadas ou modificadas neste início de legislatura, com mais de 14 mil movimentações. Em segundo lugar, estão os requerimentos (REQ), que podem ser de audiência pública, pedido de vista, retirada de pauta, etc., com mais 4.000 movimentações. As emendas das Comissões (EMC) ocupam o terceiro lugar, com um pouco mais de 2.000 apresentações ou modificações. 
+
+```{r echo=FALSE, fig.width = 4, fig.height = 3}
+
+plotOutput("hist_tipo_prop_top_minus_10")
+
+```
+
+De forma análoga, os tipos de proposições menos comuns nesta legislatura, mas que ainda possuem um mínimo de 40 movimentações, são Medidas Provisórias (MPV), com um total de 45 apresentações ou modificações; Pareceres Proferidos em Plenário (PPP), com quase 50 movimentações; e Ofícios do Congresso Nacional (OF), com um número um pouco acima, igual a 51 movimentações na Câmara no período escolhido.
+
+```{r echo=FALSE}
+
+plotOutput("hist_ano_prop_top_10")
+
+```
+
+<br>
+
+<br>
+
+<br>
+
+As proposições de 2019 são as mais movimentadas, o que faz total sentido já que neste conjunto de proposições coletado estão contidas as proposições criadas neste ano, totalizando mais de 10 mil. Em segundo lugar estão as proposições de 2015, com quase 2.500 proposições modificadas este ano. Acredito que as proposições mais polêmicas atualmente foram apresentadas nesta época e por isso esse ano é o segundo mais movimentado, e não 2018. Depois destes, o terceiro lugar do ano de apresentação que mais teve proposições modificadas em 2019 é 2017, com quase 2 mil proposições.
+
+<br>
+
+### A detecção dos grupos
+
+A detecção de grupos é feita da seguinte forma: inicialmente se combinam em pares os autores de todas as proposições respectivas relacionadas. Isso quer dizer que, para uma proposição do tipo requerimento que foi feito por 3 autores, x, y e z, serão criados 3 pares: um contendo x e y, um com x e z e outro com y e z. Desta forma, cada um dos deputados autores de uma proposição terá uma relação com todos os outros coautores. 
+
+<br>
+
+#### Tabela de pares
+
+A tabela abaixo lista todos os pares e respectivas relações, calculadas de acordo com o peso explicado abaixo. A partir dela podemos observar os três pares de parlamentares que mais coautoraram são todos do partido PSOL, indicando que este partido possui grande organização da hora das coautorias. São eles: Ivan Valente e Luiza Erundina, com mais de 54 autorias e peso das relações igual a 2.33; Edmilson Rodrigues e IVAN VALENTE, com peso das relações igual a 2.25 e numero de coautorias igual a 57 proposições; e Gluber Braga e Luiza Erundina, com 53 coautorias e peso das relações 2.08.
 
 ```{r echo=FALSE}
 DT::DTOutput("dt")
 ```
 
-#### Grafo de grupos
+<br>
 
-```{r echo=FALSE}
-  forceNetworkOutput("grafo")
+#### Peso das relações 
+
+Processando os dados, observamos que há requerimentos que são coautorados por muitos deputados. Um exemplo disso é um [requerimento de audiência](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2194402) sobre aposentadoria para produtores rurais familiares, um requerimento popular que normalmente é visto pelo deputados como oportunidade de aproximação com eleitores, e por isso o número de assinaturas de coautoria são tão altos.
+
+A fim de deixar os grupos mais refinados e precisamos, optamos por adicionar uma penalidade que varia de acordo com o número de pessoas envolvidas: quanto mais coautores em uma proposição, menos precisas estarão as relações entre os deputados e por isso terão pesos menores; de forma análoga, uma proposição que possua apenas dois coautores, terá o peso da relação máximo e estarão muito mais próximos.
+
+Transformamos este peso de relações em um parâmetro, entre 0.3 e 2.3, que é usado para a geração dos grupos: quanto maior o seu valor, mais forte serão as relações entre os deputados e, consequentemente, os grupos gerados. A partir deste peso, filtramos todas as relações que possuem valor maior ou igual a ele e executamos a criação dos grupos. 
+
+<br>
+
+```{r echo=FALSE, warning=FALSE}
+ choices = seq(
+               0.3,
+                max(coautorias$peso_arestas) %>% 
+                 round(3),
+                0.2)
+
+selectInput("min_peso", "Valor mínimo dos pesos:",
+             choices,
+            selected = choices[2])
+br()
+
+plotOutput("hist")
+```
+
+Acima se encontra a distribuição das relações de acordo com o peso fornecido como entrada. Colocando 0.5 como valor de entrada, se pode visualizar os pares que possuem no mínimo uma relação igual a esse peso. Percebemos que a maior parte das relações entre os deputados se encontra entre X e Y. Isto indica que os autores das proposições coletadas geralmente participam de coautorias quando há muitos outros deputados coautorando ou preferem criar proposições sozinhos.
+
+<br>
+
+#### Os parlamentares
+
+Abaixo podemos observar quais deputados mais e menos coautoraram em proposições apresentadas ou modificadas na 56ª legislatura.
+
+A partir do gráfico acima, os deputados que mais se agruparam nas autorias das proposições coletadas são Laura Carneiro, Ivan Valente, Carmen Zanotto, Otavio Leite e Sâmia Bomfim. Laura, Carmen, Otavio e Ivan possuem um extenso histórico de mandatos na Câmara, o que pode explicar a aparição de ambos neste gráfico. Pode-se observar também que, quando não são deputados que estão a mais tempo na casa, há três "novatos" do mesmo partido que estão entre os 20 deputados mais agrupados: Sâmia Bomfim, Áurea Carolina e Marcelo Freixo, todos do PSOL.
+
+```{r}
+plotOutput("hist_parla_top_20")
+```
+
+<br>
+
+De forma análoga, abaixo podemos ver quais deputados menos se agrupam nas criações de proposições: Igor Kannário, Nilmário Miranda, Professor Sérgio de Oliveira, Helio Lopes, e Roberto Britto.
+
+```{r}
+plotOutput("hist_parla_top_minus_20")
+```
+
+<br>
+
+#### Os partidos
+
+Também é possível fazer a análise dos mais agrupados e mais isolados do ponto de vista dos partidos políticos. A partir do gráfico abaixo, percebemos que o PT é o partido que mais se agrupa na hora de criar proposições. Vale lembrar que o PT é um dos partidos com maior número de deputados na Câmara, então isto pode ter influenciado o grande valor absoluto do peso total dos agrupamentos. Em segundo lugar está o PSOL, com baixo número de deputados componentes, indicando que este pode ser o partido mais agrupado em valores proporcionais.
+
+Os partidos mais isolados são o PMN, REDE, PHS e PRP. Um motivo provável para a obtenção deste resultado é que o número de deputados que compõe estes partidos é muito baixo, muitas vezes com 1 parlamentar apenas.
+
+
+```{r}
+plotOutput("hist_part")
+```
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+#### Rede de grupos
+
+Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando uma técnica chamada `agrupamento`, que agrupa os dados de forma automática com base na similaridade entre eles. **Para o peso mínimo de 0.5 das relações**, considerando todas as coautorias, foram gerados X grupos no total, mas a quantidade de grupos pode ser menor conforme o peso aumentar. Os grupos encontrados são exibidos a seguir.
+
+<br>
+
+```{r echo=FALSE, fig.width = 4, fig.height = 3}
+forceNetworkOutput("grafo")
 ```
 
 
+##### Grupo 1
+
+A rede abaixo está fortemente conectada e se tratam de proposições mais populares, contendo vários coautores, como requerimentos de audiência pública para proposições mais polêmicas, por exemplo.
+
+```{r echo=FALSE, fig.width = 2, fig.height = 2}
+  forceNetworkOutput("grafo_grupo1")
+```
+
+Abaixo temos a distribuição partidária deste grupo no histograma abaixo:
+
+```{r echo=FALSE, fig.width = 4, fig.height = 3}
+plotOutput("hist_grupo1")
+
+```
+
+O PT é o partido que mais possui componentes nesta rede, com mais de 40 deputados participantes; depois está o PSOL, com pouco mais de 10 deputados. Em terceiro, o PCdoB, com 9 deputados. Percebemos que boa parte dos partidos são mais de esquerda neste grupo.
+
+<br>
+
+##### Grupo 2
+
+A rede abaixo é dominada por deputados do partido PSB que coautoraram entre si e também com diversos outros partidos, como PT, PROS, PSD, MDB, DEM e PDT. Nessa rede é notória a presença de deputados que coautoram somente com outro deputado: João Arruda, conectado somente com Aliel Machado, mesmo havendo outro deputado do seu partido; Sarney FIlho, com Alessandro Molon; e Sergio Zveiter, com Weliton Prado.
+
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+  forceNetworkOutput("grafo_grupo2")
+```
+
+<br>
+
+##### Grupo 3
+
+Esta rede é composta predominantemente por deputados do partido PSDB, mas que possui uma topologia onde os deputados interligam grupos diferentes, como é o caso de Covatti Filho, Samuel Moreira e outros. Neste grupo também há dois deputados do PT, um dos partidos com maior número de coautorias, sem conexão.
+
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+  forceNetworkOutput("grafo_grupo3")
+```
+
+
+<br>
+
+##### Grupo 4
+
+O partido PRB é o que possui mais deputados, mas há conexões com outros, como PDT, PSDB, DEM, PSD, PROS, PSL e MDB, este último sendo o deputado Eduardo Cunha, conectado apenas com o deputado João Campos.
+
+
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+  forceNetworkOutput("grafo_grupo4")
+```
+
+<br>
+
+##### Grupo 5
+
+Este grupo é composto majoritariamente por deputados do partido PSL e que se conectam com deputados dos partidos PR, PRB, PSD, PTB, PSDB, PROS, PP, SOLIDARIEDADE e PODEMOS.
+
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+  forceNetworkOutput("grafo_grupo5")
+```
+
+<br>
+
+##### Grupo 6
+
+A rede abaixo é composta de deputados dos partidos DEM, PR, PSL, PP, PSD, PDT, PSC e MDB. Aqui também existem casos de deputados que só se conectam com alguns deputados, como Dr. Jorge Silva, que se conecta apenas com os deputados Sergio Vidigal e Norma Ayub. Norma também é a única a possuir conexão com a deputada Dâmina Pereira. Além destas, o deputado Indio da Costa se conecta apenas com Hugo Leal, parceiro de partido.
+
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+  forceNetworkOutput("grafo_grupo6")
+```
+
+<br>
+
+##### Grupo 7
+
+O grupo abaixo também é composto predominantemente por deputados do PSL, mas trazendo alguns nomes mais conhecidos, como Jair Bolsonaro, atual presidente da república; Eduardo Bolsonaro, Delegado Francischini, Marco Feliciano, Onyx Lorenzoni e outros. O presidente, apesar de estar conectado com vários outros deputados, suas conexões mais fortes são com seu filho, Eduardo, Beto Rosado e Francischini. Eduardo Bolsonaro possui conexões fortes também com os deputados Hildo Rocha, Marco Feliciano, Luiz Philippe de Orléans e Bragança e Onyx Lorenzoni.
+
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+  forceNetworkOutput("grafo_grupo7")
+```
+
+
+```{r echo=FALSE}
+
+generate_graph_by_group <- function(df, id_group) {
+  nodes <- df[[1]] %>%
+  filter(group == id_group) %>% 
+    select(-index) %>% 
+    rowid_to_column("index") %>% 
+    mutate(index = index - 1)
+  
+  edges <- generate_edges(coautorias, nodes)
+  
+  return(list(nodes, edges))
+}
+
+```
+
 ```{r echo=FALSE, context="server"}
 
-output$hist <- renderPlot({
-  proposicao <- (proposicoes %>% filter(choice == input$proposition))$id
-  relacionadas <- fetch_relacionadas(proposicao)
-   getCoautorias()[[1]] %>%
-    filter(id_req %in% relacionadas$id | id_req == proposicao) %>%
-    group_by(id.x, id.y) %>%
-    summarise(peso = sum(peso_arestas)) %>%
-    ggplot(aes(x = peso)) +
-    geom_histogram() + theme_minimal()
-
+output$hist_tipo_prop_top_10 <- renderPlot({
+  p <- proposicoes %>% 
+    group_by(siglaTipo) %>% 
+    count() %>% 
+    arrange(-n) %>% 
+    head(10)
+  
+  p %>% 
+    ggplot(aes(x = reorder(siglaTipo, n), y = n)) +
+    geom_bar(fill = "#B15CB2", color = "#814382", stat="identity") +
+    coord_flip() +
+    labs(x = "Tipo", 
+         y = "Número de proposições", 
+         title="Tipos de proposições mais movimentados em 2019",
+         subtitle = "Os 10 tipos mais apresentados ou modificados na Câmara") +
+    scale_y_continuous(breaks = seq(0, max(p$n), 2000),
+                       limits = c(0, max(p$n))) +
+    theme_ipsum_rc()
+    
+    
 })
 
+output$hist_tipo_prop_top_minus_10 <- renderPlot({
+  p <- proposicoes %>% 
+    group_by(siglaTipo) %>% 
+    count() %>% 
+    filter(n > 40) %>% 
+    arrange(-n) %>% 
+    tail(10)
+  
+  p %>% 
+    ggplot(aes(x = reorder(siglaTipo, n), y = n)) +
+    geom_bar(fill = "#B15CB2", color = "#814382", stat="identity") +
+    coord_flip() +
+    labs(x = "Tipo", 
+         y = "Número de proposições", 
+         title="Tipos de proposições menos movimentados em 2019",
+         subtitle = "Os tipos com mais de 40 modificações e que foram menos apresentados ou modificados na Câmara") +
+    scale_y_continuous(breaks = seq(0, max(p$n), 20),
+                       limits = c(0, max(p$n))) +
+    theme_ipsum_rc()
+})
+
+output$hist_ano_prop_top_10 <- renderPlot({
+  p <- proposicoes %>% 
+    group_by(ano) %>% 
+    count() %>% 
+    arrange(-n) %>% 
+    filter(!is.na(ano))
+  
+  p %>% 
+    ggplot(aes(x = reorder(ano, n), y = n)) +
+    geom_bar(fill = "#1BB5A9", color = "#17847B", stat="identity") +
+    coord_flip() +
+    labs(x = "Ano de apresentação", 
+         y = "Número de proposições", 
+         title="Movimentações das proposições ",
+         subtitle = "Distribuição das proposições movimentações por ano de apresentação") +
+    scale_y_continuous(breaks = seq(0, max(p$n), 2000),
+                       limits = c(0, max(p$n))) +
+    theme_ipsum_rc()
+}, height = 500)
+
+output$hist <- renderPlot({
+  if(nrow(coautorias) > 0) {
+    coautorias %>%
+    filter(peso_arestas >= input$min_peso) %>% 
+    ggplot(aes(x = peso_arestas)) +
+    geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#10726B") +
+    scale_x_continuous(limits = c(0, max(coautorias$peso_arestas) + 0.5), 
+                       breaks = seq(0, max(coautorias$peso_arestas) + 0.1, 0.5)) +
+    labs(x = "Peso das relações", y = "Número de relações") +
+    theme_ipsum_rc()
+  }
+})
+
+output$hist_parla_top_20 <- renderPlot({
+  g <- autores %>% 
+    group_by(id) %>% 
+    summarise(peso = sum(peso_arestas)) %>% 
+    arrange(desc(peso)) %>% 
+    inner_join(parlamentares, by="id") %>% 
+    head(20)
+  
+   g %>% 
+    ggplot(aes(x = reorder(nome_eleitoral, peso), y = peso)) +
+    geom_bar(fill = "#ED9B44", color = "#B27437", stat="identity") +
+    coord_flip() +
+    labs(x = "Deputado", 
+         y = "Peso total de relações", 
+         title="Deputados mais agrupados",
+         subtitle = "Os deputados que formam mais grupos na hora de criar proposições") +
+    scale_y_continuous(breaks = seq(0, max(g$peso), 5),
+                       limits = c(0, max(g$peso))) +
+    theme_ipsum_rc()
+})
+
+output$hist_parla_top_minus_20 <- renderPlot({
+  g <- autores %>% 
+    group_by(id) %>% 
+    summarise(peso = sum(peso_arestas)) %>% 
+    arrange(desc(peso)) %>% 
+    inner_join(parlamentares, by="id") %>% 
+    tail(20)
+  
+   g %>% 
+    ggplot(aes(x = reorder(nome_eleitoral, peso), y = peso)) +
+    geom_bar(fill = "#ED9B44", color = "#B27437", stat="identity") +
+    coord_flip() +
+    labs(x = "Deputado", 
+         y = "Peso total de relações", 
+         title="Deputados mais isolados",
+         subtitle = "Os deputados que quase não se agrupam nas criações de proposições") +
+    scale_y_continuous(breaks = seq(0, max(g$peso), 0.005),
+                       limits = c(0, max(g$peso))) +
+    theme_ipsum_rc()
+})
+
+output$hist_part <- renderPlot({
+  g <- autores %>% 
+    inner_join(parlamentares, by="id") %>% 
+    group_by(sg_partido) %>% 
+    summarise(peso = sum(peso_arestas)) %>% 
+    arrange(desc(peso)) %>% 
+    filter(sg_partido != 'S.PART.')
+  
+   g %>% 
+    ggplot(aes(x = reorder(sg_partido, peso), y = peso)) +
+    geom_bar(fill = "#80BDE5", color = "#5884A0", stat="identity") +
+    coord_flip() +
+    labs(x = "Partido", 
+         y = "Peso total de relações", 
+         title="Distribuição dos agrupamentos por partido",
+         subtitle = "Partidos cujo deputados agrupam nas criações de proposições") +
+    scale_y_continuous(breaks = seq(0, max(g$peso), 50),
+                       limits = c(0, max(g$peso))) +
+    theme_ipsum_rc()
+}, height = 500)
+
 getCoautorias <- reactive({
-  proposicao <- 
-    proposicoes %>% 
-    filter(choice == input$proposition)
-  coautorias <- 
-    generate_autorias_conjuntas(
-      proposicao$id, 
-      as.double(input$min_peso),
-      autores, 
-      parlamentares)
-  return(coautorias)
+  nodes_edges <- 
+    generate_nodes_and_edges(
+      autores,
+      parlamentares,
+      coautorias %>% 
+        filter(peso_arestas >= input$min_peso))
+  return(nodes_edges)
 })
 
 output$dt <- 
   DT::renderDataTable(
-    getCoautorias()[[1]] %>% 
-      group_by(id.x, id.y, nome_eleitoral.x, nome_eleitoral.y) %>% 
-      mutate(peso_total = sum(peso_arestas)), 
-    options = list(pageLength = 5,
+    coautorias %>% 
+      mutate(peso_arestas = round(peso_arestas, 3)) %>% 
+      select(nome_eleitoral.x, nome_eleitoral.y, peso_arestas, num_coautorias) %>% 
+      distinct() %>% 
+      filter(peso_arestas >= input$min_peso) %>% 
+      rename(peso_relacao = peso_arestas, 
+             nome_deputado_a = nome_eleitoral.x,
+             nome_deputado_b = nome_eleitoral.y,
+             coautorias_conjuntas = num_coautorias) %>% 
+      arrange(desc(peso_relacao)), 
+    options = list(pageLength = 10,
                    scrollX = TRUE))
   
-output$grafo <- 
+output$grafo <-
   networkD3::renderForceNetwork({
-    autorias <- getCoautorias()
-    nodes <- autorias[[2]]
-    edges <- autorias[[3]]
-    if (nrow(nodes) > 0 && nrow(edges) > 0){
-      generate_graph(nodes, edges)
+    graph <- getCoautorias()
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
     }
   })
 
+output$grafo_grupo1 <- 
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 1)
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
+  })
+
+output$hist_grupo1 <- renderPlot({
+  nodes <- generate_graph_by_group(getCoautorias(), 1)[[1]]
+  if(nrow(nodes) > 0) {
+    nodes <- nodes %>%
+      group_by(partido) %>%
+      count()
+
+    nodes %>%
+    ggplot(aes(x = reorder(partido, n), y = n)) +
+      geom_bar(fill = "#1BB5A9", color="#10726B", stat="identity") +
+      coord_flip() +
+      labs(x = "Partido", y = "Número de deputados") +
+      scale_y_continuous(breaks = seq(0, max(nodes$n), 10)) +
+      theme_ipsum_rc()
+  }
+})
+
+
+output$grafo_grupo2 <-
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 2)
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
+  })
+
+output$grafo_grupo3 <-
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 3)
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
+  })
+
+output$grafo_grupo4 <-
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 4)
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
+  })
+
+output$grafo_grupo5 <-
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 5)
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
+  })
+
+output$grafo_grupo6 <-
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 6)
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
+  })
+
+output$grafo_grupo7 <-
+  networkD3::renderForceNetwork({
+    graph <- generate_graph_by_group(getCoautorias(), 7)
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
+  })
 ```
