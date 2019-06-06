@@ -14,27 +14,40 @@ processa_dados_votacoes <- function() {
     filter(casa == "camara") %>% 
     mutate(sg_partido = padroniza_sigla(sg_partido))
   
-  proposicoes_votadas <- fetch_votacoes_ano(2019)
+  proposicoes_votadas <- fetch_votacoes_ano(2019) %>% 
+    rbind(fetch_votacoes_ano(2020)) %>% 
+    rbind(fetch_votacoes_ano(2021)) %>% 
+    rbind(fetch_votacoes_ano(2022)) 
 
-  votos <- read_csv(here("crawler/raw_data/votos_2019.csv"))
+  votos <- read_csv(here("crawler/raw_data/votos.csv"))
   
-  orientacao <- read_csv(here("crawler/raw_data/orientacoes_2019.csv"))
+  orientacao <- read_csv(here("crawler/raw_data/orientacoes.csv"))
   
   return(list(deputados, proposicoes_votadas, votos, orientacao))
 }
 
 #' @title Processa os dados de aderência do deputado ao partido
 #' @description Retorna dados de aderência dos deputados por votação e de forma sumarizada
-#' @param ano Ano de ocorrência das votações
-#' @param ano Ano de ocorrência das votações
-#' @param ano Ano de ocorrência das votações
-#' @return Dataframe contendo id da proposição, nome e data da votação
+#' @param votos Dataframe de votos
+#' @param orientacao Dataframe de orientações
+#' @param deputados Dataframe de deputados
+#' @param filtrar TRUE se deseja filtrar fora os partidos com menos de 5 membros e os deputados com menos de 10 votações. 
+#' FALSE se quiser capturar todos os deputados
+#' @return Lista com dataframes com informações dos deputados e seus dados de aderência sumarizados e por votação
 #' @examples
 #' dados_aderencia <- processa_dados_deputado_aderencia(votos, orientacao, deputados)
-processa_dados_deputado_aderencia <- function(votos, orientacao, deputados) {
+processa_dados_deputado_aderencia <- function(votos, orientacao, deputados, filtrar = TRUE) {
   library(tidyverse)
   
   source(here("crawler/votacoes/votos_orientacao/calcula_aderencia.R"))
+  
+  if (filtrar) {
+    minimo_votacoes_por_deputado <- 10
+    minimo_membros_partido <- 5
+  } else {
+    minimo_votacoes_por_deputado <- 0
+    minimo_membros_partido <- 0
+  }
   
   deputados_votos <- votos %>% 
     left_join(orientacao, 
@@ -63,24 +76,21 @@ processa_dados_deputado_aderencia <- function(votos, orientacao, deputados) {
     ungroup() %>% 
     select(id_deputado, nome, partido, match, n)
   
-  minimo_votacoes_por_deputado <- 10
   
   deputados_summary_freq_wide <- deputados_summary_long %>% 
     spread(key = match, value = n) %>% 
     replace(is.na(.), 0) %>% 
     mutate(total_votacoes = seguiu + nao_seguiu) %>% 
-    filter(total_votacoes >= 10) %>% 
+    filter(total_votacoes >= minimo_votacoes_por_deputado) %>% 
     mutate(freq = (seguiu / (seguiu + nao_seguiu)) * 100) %>% 
     filter(!is.na(freq)) %>% 
     arrange(freq) %>% 
     select(id_deputado, nome, partido, faltou, partido_liberou, nao_seguiu, seguiu, total_votacoes, freq)
   
-  minimo_membros_partido <- 5
-  
   partidos_count <- deputados_summary_freq_wide %>% 
     group_by(partido) %>% 
     summarise(n = n()) %>% 
-    filter(n >= 5) %>% 
+    filter(n >= minimo_membros_partido) %>% 
     pull(partido)
   
   deputados_summary_freq_wide <- deputados_summary_freq_wide %>% 

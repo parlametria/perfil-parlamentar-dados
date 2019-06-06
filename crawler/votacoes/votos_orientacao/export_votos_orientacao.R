@@ -14,8 +14,9 @@ message("Use --help para mais informações\n")
 
 option_list = list(
   
-  make_option(c("-a", "--ano"), type="character", default=2019,
-              help="Ano para ocorrência das votações em plenário [default= %default]", metavar="character")
+  make_option(c("-a", "--ano"), type="character", default="2019,2020,2021,2022",
+              help="Ano para ocorrência das votações em plenário [default= %default]. 
+              Use vírgulas para separar se houver mais de um valor", metavar="character")
 );
 
 opt_parser = OptionParser(option_list=option_list);
@@ -24,12 +25,15 @@ opt = parse_args(opt_parser);
 ano = opt$ano
 
 message("Iniciando processamento...")
-votos_orientacao <- process_votos_orientacao(ano)
 
-message(paste0("Salvando o resultado em ", here(paste0("crawler/raw_data/votos_", ano))))
-write_csv(votos_orientacao[[1]], here(paste0("crawler/raw_data/votos_", ano, ".csv")))
+anos <- strsplit(ano, split=",") %>% unlist()
 
-message(paste0("Salvando o resultado em ", here(paste0("crawler/raw_data/orientacoes_", ano))))
-write_csv(votos_orientacao[[2]], here(paste0("crawler/raw_data/orientacoes_", ano, ".csv")))
+votos_orientacao <- process_votos_orientacao_anos(anos)
+
+message(paste0("Salvando o resultado em ", here("crawler/raw_data/votos.csv")))
+write_csv(votos_orientacao[[1]], here("crawler/raw_data/votos.csv"))
+
+message(paste0("Salvando o resultado em ", here("crawler/raw_data/orientacoes")))
+write_csv(votos_orientacao[[2]], here("crawler/raw_data/orientacoes.csv"))
 
 message("Concluído!")

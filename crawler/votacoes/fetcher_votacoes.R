@@ -79,17 +79,22 @@ fetch_votacoes_por_proposicao <- function(id_proposicao, xml) {
   library(tidyverse)
   library(xml2)
   
-  votacoes <- xml_find_all(xml, ".//Votacao") %>%
-    map_df(function(x) {
-      list(
-        obj_votacao = xml_attr(x, "ObjVotacao"),
-        resumo = xml_attr(x, "Resumo"),
-        cod_sessao = xml_attr(x, "codSessao"),
-        hora = xml_attr(x, "Hora"),
-        data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
-      )
-    })
-  
+  tryCatch({
+    votacoes <- xml_find_all(xml, ".//Votacao") %>%
+      map_df(function(x) {
+        list(
+          obj_votacao = xml_attr(x, "ObjVotacao"),
+          resumo = xml_attr(x, "Resumo"),
+          cod_sessao = xml_attr(x, "codSessao"),
+          hora = xml_attr(x, "Hora"),
+          data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
+        )
+      })
+  }, error = function(e) {
+    data <- tribble(~ obj_votacao, ~ resumo, ~ cod_sessao, ~ hora, ~ data)
+    return(data)
+  })
+
   return(votacoes)
 }
 
@@ -131,6 +136,11 @@ fetch_votacoes_por_ano <- function(id_proposicao, ano = 2019) {
   library(tidyverse)
   source(here("crawler/votacoes/utils_votacoes.R"))
 
+  if (is.na(id_proposicao)) {
+    data <- tribble(~ id_votacao, ~ id_deputado, ~ voto, ~ partido)
+    return(data)
+  }
+  
   xml <- fetch_xml_api_votacao(id_proposicao)
   
   votacoes <- fetch_votacoes_por_proposicao(id_proposicao, xml)
