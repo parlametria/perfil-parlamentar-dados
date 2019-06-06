@@ -25,7 +25,7 @@ library(DT)
 library(ggbeeswarm)
 theme_set(theme_minimal())
 
-source(here("reports/dependencia-partido/code/processa_dados_aderencia.R"))
+source(here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
 ```
 
 ```{r}
