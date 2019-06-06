@@ -79,8 +79,7 @@ processa_parlamentares <- function(parlamentares_data_path = here::here("crawler
   parlamentares <- read.csv(parlamentares_data_path, stringsAsFactors = FALSE, colClasses = c("cpf" = "character"))
   
   parlamentares <- parlamentares  %>%
-   dplyr::mutate(em_exercicio = dplyr::if_else(situacao == 'Exercício', 1, 0),
-                 id_parlamentar_voz = paste0(
+   dplyr::mutate(id_parlamentar_voz = paste0(
                    dplyr::if_else(casa == "camara", 1, 2), 
                    id)) %>% 
    dplyr::select(id_parlamentar_voz, 
