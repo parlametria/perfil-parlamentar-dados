@@ -1,0 +1,334 @@
+---
+title: "Aderência deputado - partido"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+library(DT)
+library(ggbeeswarm)
+theme_set(theme_minimal())
+
+source(here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
+```
+
+```{r}
+dados_votos_orientacao <- processa_dados_votacoes()
+
+deputados <- dados_votos_orientacao[[1]]
+proposicoes_votadas <- dados_votos_orientacao[[2]]
+votos <- dados_votos_orientacao[[3]]
+orientacao <- dados_votos_orientacao[[4]]
+```
+
+```{r}
+dados_aderencia <- processa_dados_deputado_aderencia(votos, orientacao, deputados)
+
+deputados_votos_match <- dados_aderencia[[1]]
+deputados_summary_freq_wide <- dados_aderencia[[2]]
+
+minimo_membros_partido <- 5
+```
+
+<br>
+
+### **Resumo**
+*Analisamos quais deputados federais mais/menos seguem as orientações de seus partidos nas votações nominais em plenário da Câmara. Usamos as votações que aconteceram em 2019.*
+
+<br>
+<br>
+
+## O que é aderência
+Aderência é uma faceda da atuação dos Deputados Federais na câmara em votações. Um deputado é aderente quando segue as orientações de seu partido em votações nominais.
+
+Examinamos aderência com os dados de **votações nominais realizadas em plenário** para o ano de **2019**. Assim, todos os deputados analisados aqui participaram da legislatura atual da Câmara dos Deputados (legislatura 56).
+
+Partimos de `r nrow(proposicoes_votadas %>% distinct(id))` proposições que, segundo a API da Câmara dos Deputados, tiveram votações realizadas em plenário no ano de 2019. A lista completa está disponível [aqui](https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2019&tipo=).
+
+Essas proposições tiveram `r nrow(deputados_votos_match %>% count(id_votacao))` votações em plenário. Capturamos os resultados de todas essas votações observando principalmente: o **voto do deputado** e a **orientação do partido**.
+
+Para cada votação de cada deputado, identificamos se ele seguiu a orientação do partido ou não. Em seguida, calculamos o grau de aderência como *a proporção das votações em que ele seguiu a orientação do partido*. Quando o partido liberou o deputado em uma votação, essa votação não é considerada.
+
+Como os deputados não estão sempre presentes e os partidos nem sempre orientam as votações, a quantidade de votações considerada varia entre os deputados. Nesta análise, *consideramos apenas deputados que participaram em pelo menos 10 votações que o partido orientou, e apenas deputados de partidos com ao menos 5 membros na câmara*. 
+
+```{r}
+## Variáveis de configuração para as visualizações
+range_votacoes <- nrow(proposicoes_votadas) + (10 - nrow(proposicoes_votadas) %% 10)
+match_valido <- c("seguiu", "nao_seguiu")
+```
+
+## Quem tem menos aderência?
+
+```{r fig.height=7}
+deputados_summary_freq_wide %>% 
+  arrange(freq) %>% 
+  head(20) %>% 
+  ggplot(aes(x = reorder(nome, freq), y = freq)) + 
+  geom_point(col="tomato3", size = 3) + 
+  geom_segment(aes(x = nome, 
+                   xend = nome, 
+                   y = 0, 
+                   yend = freq), 
+               size = 0.1) +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 100, 5)) +
+  labs(title="Deputados com menos aderência à \n orientação do partido", 
+       y = "Aderência ao Partido (%)",
+       x = "Deputado") +
+    theme_ipsum_rc()
+```
+
+Acima temos a informações dos 20 deputados que possuem **menor aderência** com seu partido. Átila Lira (PSB/PI) é o deputado com menor aderência da Câmara. Ele seguiu o partido em 16 votações e não seguiu em 54 votações. A aderência para Átila é de 16 / (16 + 54), isto é `r round(16 / (16 + 54), 2) * 100`%. Para resumir, em 23% das votações Átila seguiu o partido.
+
+Abaixo detalhamos o número absoluto de votações em que cada um desses deputados seguiu ou não a orientação do partido. As barras têm comprimento diferente pois os deputados tem um número diferente de votações nas quais participaram e houve orientação do partido. Os deputaods estão ordenados da maior aderência para a menor. 
+
+```{r}
+lbls = as.character(c(seq(range_votacoes, 10, -10), seq(0, range_votacoes, 10)))
+
+levels <- deputados_summary_freq_wide %>%
+  arrange(freq) %>% 
+  pull(nome)
+
+deputados_summary_freq_wide %>%
+  arrange(freq) %>% 
+  head(20) %>% 
+  gather(key = "match", value = "n", faltou:seguiu) %>% 
+  mutate(n = if_else(match == "nao_seguiu", -n, n)) %>% 
+  arrange(n) %>% 
+  filter(match %in% match_valido) %>%
+  ggplot(aes(x = factor(nome, levels = levels), 
+             y = n, 
+             fill = match)) + 
+  geom_bar(stat = "identity", width = .6) +
+  coord_flip() +
+  scale_fill_brewer(palette = "Dark2", direction = -1, labels = c("Não seguiu", "Seguiu")) +  
+  scale_y_continuous(breaks = seq(-range_votacoes, range_votacoes, 10), labels = lbls) +
+  labs(y = "Nº de votações", x = "Deputado", fill = "", 
+       title = "Deputados que menos seguiram à \n orientação do partido") +
+  theme_ipsum_rc() +
+  theme(legend.position="bottom")
+```
+
+
+### Quem são os deputados de maior aderência?
+
+```{r fig.height=7}
+
+levels <- deputados_summary_freq_wide %>%
+  arrange(desc(freq), desc(seguiu)) %>%  
+  pull(nome)
+
+deputados_summary_freq_wide %>%
+  arrange(desc(freq), desc(seguiu)) %>%  
+  head(20) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = levels)), y = freq)) + 
+  geom_point(col="tomato3", size = 3) + 
+  geom_segment(aes(x = nome, 
+                   xend = nome, 
+                   y = 0, 
+                   yend = freq), 
+               size = 0.1) +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 100, 5)) +
+  labs(title="Deputados com menos aderência à \n orientação do partido", 
+       y = "Aderência ao Partido (%)",
+       x = "Deputado") +
+    theme_ipsum_rc()
+```
+
+Na lista dos 20 deputados com maior valor de aderência todos têm aderência de 100%; ou seja, seguiram todas as orientações propostas pelo seu partido. Abaixo detalhamos em quantas votações cada um esteve.
+
+
+```{r}
+lbls = as.character(c(seq(range_votacoes, 10, -10), seq(0, range_votacoes, 10)))
+
+deputados_summary_freq_wide %>%
+  arrange(desc(freq), desc(seguiu)) %>% 
+  head(20) %>% 
+  gather(key = "match", value = "n", faltou:seguiu) %>% 
+  mutate(n = if_else(match == "nao_seguiu", -n, n)) %>% 
+  arrange(desc(n)) %>% 
+  filter(match %in% match_valido) %>%
+  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = levels)), 
+             y = n, 
+             fill = match)) + 
+  geom_bar(stat = "identity", width = .6) +
+  coord_flip() +
+  scale_fill_brewer(palette = "Dark2", direction = -1, labels = c("Não seguiu", "Seguiu")) +
+  scale_y_continuous(breaks = seq(-range_votacoes, range_votacoes, 10), labels = lbls) +
+  labs(y = "Nº de votações", x = "Deputado", fill = "", title = "Deputados que mais seguiram à \norientação do partido") +
+  theme_ipsum_rc() +
+  theme(legend.position="bottom")
+```
+
+### Mais detalhes sobre quem não adere
+
+Se olharmos com mais detalhes para a lista de 20 deputados que menos adere, podemos destrinchar como ocorreram as votações para cada deputado. Átila Lira, mostrado na visualização anterior com menos de 25% de aderência, teve 16 votações em que seguiu o partido, 54 em que não seguiu o partido, 12 em que o partido liberou o voto e outras 11 em que faltou.
+
+
+```{r}
+paleta <- c("#91bfda", "#E89D68", "#e06264", "#BA7E53")
+match_valores <- c("seguiu", "faltou", "nao_seguiu", "partido_liberou")
+
+data_long <- deputados_summary_freq_wide %>% 
+  arrange(freq) %>% 
+  head(20) %>% 
+  gather("match", "n", faltou:seguiu) %>% 
+  filter(match %in% match_valores)
+  
+levels <- deputados_summary_freq_wide %>% 
+  arrange(freq, desc(nao_seguiu)) %>% 
+  pull(nome)
+
+data_long %>% 
+  mutate(match = factor(match, 
+                        levels = c("faltou",
+                                   "partido_liberou",
+                                   "nao_seguiu",
+                                   "seguiu"),
+                        ordered = TRUE)) %>% 
+  filter(n > 0) %>% 
+  ggplot(aes(x = (factor(nome, levels = levels)), y = n, fill = match)) +
+  geom_bar(width = .7, stat = "identity", position = "stack") +
+  geom_text(aes(label = n),
+            hjust = 1.3,
+            position = "stack"
+            ) +
+  coord_flip() +
+  scale_fill_manual(values = c("partido_liberou" = paleta[4],
+                               "faltou" = paleta[2], 
+                               "nao_seguiu" = paleta[3],
+                               "seguiu" = paleta[1]),
+                    name = "", labels = c("Faltou",
+                                          "Partido liberou",
+                                          "Não seguiu",
+                                          "Seguiu")) +
+  labs(x = "Deputados", 
+       y = "Nº de votações", 
+       title = "Deputados com menos aderência ao partido",
+       subtitle = "Ordenados por frequência de aderência") + 
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+
+```{r}
+partidos_summary <- deputados_summary_freq_wide %>% 
+  group_by(partido) %>% 
+  summarise(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>% 
+  arrange(median) %>% 
+  filter(n > minimo_membros_partido) %>% 
+  mutate(partido = factor(partido, levels = unique(partido)))
+
+levels <- partidos_summary %>% 
+  pull(partido)
+```
+
+## Aderência por partido
+
+Subindo o nível de visão, podemos analisar a aderência dos deputados por partido. 
+
+O gráfico abaixo ajuda a entender melhor a distribuição dos pontos (deputados) ao longo do eixo de aderência.Os partidos estão ordenados pela mediana, portanto, o PCdoB é considerando o partido com deputados mais aderentes, seguido de perto pelo NOVO. As maiores amplitudes (diferença entre o máximo e o mínimo) são observadas para o PROS e o PSB. Existem deputados que nesses partidos que são muito aderentes e outros que são pouco aderentes.
+
+As cores na visualização apenas ajudam a diferenciar deputados vizinhos um ao outro (na própria visualização).
+
+```{r fig.height=10}
+deputados_summary_freq_wide %>% 
+  group_by(partido) %>% 
+  mutate(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>% 
+  filter(partido %in% (partidos_summary %>% pull(partido))) %>% 
+  ggplot(aes(x = factor(partido, levels = levels), y = freq, color = factor(partido, levels = levels))) +
+  geom_count() +
+  scale_x_discrete(position = "left") +
+  scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
+  scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
+  coord_flip() +
+  scale_shape_identity() +
+  geom_point(aes(y = median), size = 5, color = "black", shape = 124) +
+  labs(x = "", y = "Aderência ao partido (%)",
+       title = "Distribuição da aderência dos deputados \npor partido") +
+  guides(color = FALSE, size = FALSE) +
+  theme_ipsum_rc()
+```
+
+Interessante observar que o PT não apresenta uma alta mediana de aderência quando comparado a outros partidos que ganharam mais vagas no parlamento na última eleição, como o PSL. 
+<!-- Talvez a causa disso seja a presença de todas as votações que foram votadas em 2019, sem nenhum tipo de filtro para definição das mais relevantes. -->
+
+## Aderência por votação
+
+Quando olhamos a aderência para cada votação do conjunto das 93 abordadas podemos analisar a proporção do nº de deputados que seguiu a orientação do partido sobre o nº de deputados que seguiu somado com o nº de deputados que não seguiu. 
+
+```{r}
+votacoes_summary <- deputados_votos_match %>% 
+  group_by(id_votacao, match) %>% 
+  summarise(n = n()) %>% 
+  ungroup() %>% 
+  mutate(match = case_when(
+      match == -2 ~ "faltou",
+      match == -1 ~ "nao_seguiu",
+      match == 0 ~ "nao_calculado",
+      match == 1 ~ "seguiu",
+      match == 2 ~ "partido_liberou"
+    )) %>% 
+  spread(key = match, value = n) %>% 
+  replace(is.na(.), 0) %>% 
+  mutate(presente = nao_seguiu + seguiu) %>% 
+  mutate(prop_seguiu = seguiu / presente)
+```
+
+```{r fig.height=6}
+votacoes_summary %>% 
+  ggplot(aes(x = prop_seguiu * 100)) +
+  geom_density(aes(y = ..count..), fill = "#91bfda") +
+  scale_shape_identity() +
+  geom_point(aes(y = 0), shape = 124, size = 3) +
+  scale_x_continuous(breaks = seq(0, 100, 5)) +
+  labs(y = "Nº de votações", x = "Aderência ao partido (%)", title = "Proporção de Aderência por votação") +
+  theme_ipsum_rc()
+```
+
+Como mostrado, a aderência por votação em geral é bem alta já que a densidade de votações com alta aderência aos partidos se concentra acima do valor de 80%. Foram excluídos do cálculo deputados com menos de 10 votações com orientação e partidos com menos de 5 membros. Ou seja, geralmente os deputados seguem a orientação do partido. Cada marca "|" no gráfico representa uma votação ocorrida em 2019. A posição dessa marca no eixo x representa o quanto de aderência aos partidos os deputados tiveram.
+
+As três votações com menos aderência são:
+
+- REQUERIMENTO DE RETIRADA DE PAUTA da [PDC 379/2016](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2083376). Aprova o texto do Acordo de Cooperação Educacional entre o Governo da República Federativa do Brasil e o Governo da Federação de São Cristóvão e Névis, assinado em Brasília, em 26 de abril de 2010.
+
+- REQ. PARA QUE TODAS AS VOTAÇÕES SEJA PELO PROCESSO NOMINAL da [MPV 870/2019](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2190288). Estabelece a organização básica dos órgãos da Presidência da República e dos Ministérios. Prejudicada por falta de quórum.
+
+- REQUERIMENTO DE RETIRADA DE PAUTA [PLP 441/2017](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2160860). Altera a Lei Complementar nº 105, de 10 de janeiro de 2001, e a Lei nº 12.414, de 9 de junho de 2011, para dispor sobre os cadastros positivos de crédito e regular a responsabilidade civil dos operadores. O requerimento foi rejeitado.
+
+- A [votação](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=8846&numLegislatura=56&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=114&indTipoSessao=E&tipo=uf) da permanência do COAF no Ministério da Justiça teve 80% de aderência.
+
+Abaixo apresentamos uma tabela pesquisável com os dados de todos os deputados que participaram de votações no ano de 2019.
+
+```{r}
+deputados_summary_freq_wide %>% 
+  mutate(freq = round(freq, 2)) %>% 
+  select(id_deputado, nome, partido, freq, seguiu, nao_seguiu, faltou, partido_liberou) %>% 
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE, 
+            colnames = c("id", "Nome", "Partido", "Aderência", "Seguiu", "Não Seguiu", "Faltou", "Partido liberou"))
+```
