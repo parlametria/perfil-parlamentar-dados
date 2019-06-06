@@ -67,12 +67,13 @@ processa_comissoes <- function() {
                                       casa,
                                       fetch_comissao_info)) %>% 
     tidyr::unnest(dados) %>% 
-    dplyr::mutate(nome_comissao = stringr::str_to_title(nome_comissao))
+    dplyr::mutate(nome_comissao = stringr::str_to_title(nome_comissao)) %>% 
+    dplyr::filter(!stringr::str_detect(nome_comissao, "Especial"))
   
   ## Composição das Comissões
   composicao_comissoes <- comissao_composicao %>% 
     dplyr::left_join(lista_comissao, by = c("sigla", "casa")) %>% 
-    
+    dplyr::filter(!is.na(comissao_id)) %>% 
     dplyr::mutate(peso_cargo = enumera_cargo_comissao(tolower(cargo), tolower(situacao))) %>% 
     dplyr::mutate(cargo = padroniza_cargo_comissao(tolower(cargo))) %>% 
     
