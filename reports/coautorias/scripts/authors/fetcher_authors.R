@@ -1,13 +1,5 @@
 library(tidyverse)
 
-env <- "prod"
-path <- ''
-
-if (env == "dev") {
-  path = "reports/coautorias/"
-} 
-
-source(here::here(paste0(path, "scripts/authors/analyzer_autorias.R")))
 
 URL <- "https://dadosabertos.camara.leg.br/api/v2/proposicoes/"
 
@@ -37,25 +29,28 @@ fetch_autores <- function(id) {
   print(paste0("Extraindo autores da proposição cujo id é ", id))
   
   url <-
-    paste0(URL,
-           id,
-           '/autores')
+    paste0("https://www.camara.leg.br/proposicoesWeb/prop_autores?idProposicao=",
+           id)
   
   autores <- tryCatch({
     data <- 
-      (RCurl::getURI(url) %>%
-         jsonlite::fromJSON())$dados %>%
+      httr::GET(url,
+                httr::accept_json()) %>%
+      httr::content('text',
+                    encoding = 'utf-8') %>%
+      xml2::read_html()  %>%
+      rvest::html_nodes('#content') %>%
+      rvest::html_nodes('a') %>%
+      rvest::html_attr("href") %>%
       as.data.frame() %>%
-      mutate(id = as.character(id))   %>%
-      filter(codTipo == 10000)
+      filter(!is.na(.)) %>%
+      mutate(id_deputado = stringr::str_extract(., "[\\d]+"),
+             id = as.character(id)) %>%
+      select(id, id_deputado)
     
     if (nrow(data) == 0) {
       return(tribble( ~ id, ~ id_deputado))
     }
-    
-    data <- data %>%
-      mutate(id_deputado = stringr::str_extract(uri, '[\\d]*$')) %>%
-      select(id, id_deputado)
 
   }, error = function(e) {
     return(tribble( ~ id, ~ id_deputado))
@@ -64,8 +59,8 @@ fetch_autores <- function(id) {
   return(autores)
 }
 
-fetch_all_autores <- function(propositions) {
-  autores <- purrr::map_df(propositions$id, ~ fetch_autores(.x))
+fetch_all_autores <- function(proposicoes) {
+  autores <- purrr::map_df(proposicoes$id, ~ fetch_autores(.x))
   
   autores <- autores %>%
     rename(id_req = id, id = id_deputado) %>%
@@ -82,7 +77,6 @@ get_coautorias <- function(parlamentares, autores, min_peso) {
     distinct() %>% 
     full_join(autores, by = c("id_req", "peso_arestas")) %>%
     filter(id.x != id.y) %>% 
-    select(-id_req) %>% 
     distinct()
   
   coautorias <- coautorias %>%

@@ -25,7 +25,7 @@ library(tidyverse)
 library(hrbrthemes)
 theme_set(theme_minimal())
 
-env <- "prod"
+env <- "dev"
 path <- ''
 
 if (env == "dev") {
@@ -35,6 +35,7 @@ if (env == "dev") {
 source(here::here(paste0(path, "scripts/propositions/fetcher_propositions.R")))
 source(here::here(paste0(path, "scripts/authors/fetcher_authors.R")))
 source(here::here(paste0(path, "scripts/generate-graph.R")))
+source(here::here(paste0(path, "scripts/authors/analyzer_autorias.R")))
 
 URL_PROPOSICOES <- here::here(paste0(path, "data/proposicoes.csv"))
 
@@ -171,6 +172,12 @@ Os partidos mais isolados são o PMN, REDE, PHS e PRP. Um motivo provável para 
 ```{r}
 plotOutput("hist_part")
 ```
+
+<br>
+
+<br>
+
+<br>
 
 <br>
 
@@ -420,7 +427,7 @@ output$hist_part <- renderPlot({
     scale_y_continuous(breaks = seq(0, max(g$peso), 50),
                        limits = c(0, max(g$peso))) +
     theme_ipsum_rc()
-})
+}, height = 500)
 
 getCoautorias <- reactive({
   nodes_edges <- 
@@ -450,13 +457,17 @@ output$dt <-
 output$grafo <-
   networkD3::renderForceNetwork({
     graph <- getCoautorias()
-    generate_graph(graph[[1]], graph[[2]])
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
   })
 
 output$grafo_grupo1 <- 
   networkD3::renderForceNetwork({
     graph <- generate_graph_by_group(getCoautorias(), 1)
-    generate_graph(graph[[1]], graph[[2]])
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
   })
 
 output$hist_grupo1 <- renderPlot({
@@ -480,36 +491,48 @@ output$hist_grupo1 <- renderPlot({
 output$grafo_grupo2 <-
   networkD3::renderForceNetwork({
     graph <- generate_graph_by_group(getCoautorias(), 2)
-    generate_graph(graph[[1]], graph[[2]])
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
   })
 
 output$grafo_grupo3 <-
   networkD3::renderForceNetwork({
     graph <- generate_graph_by_group(getCoautorias(), 3)
-    generate_graph(graph[[1]], graph[[2]])
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
   })
 
 output$grafo_grupo4 <-
   networkD3::renderForceNetwork({
     graph <- generate_graph_by_group(getCoautorias(), 4)
-    generate_graph(graph[[1]], graph[[2]])
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
   })
 
 output$grafo_grupo5 <-
   networkD3::renderForceNetwork({
     graph <- generate_graph_by_group(getCoautorias(), 5)
-    generate_graph(graph[[1]], graph[[2]])
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
   })
 
 output$grafo_grupo6 <-
   networkD3::renderForceNetwork({
     graph <- generate_graph_by_group(getCoautorias(), 6)
-    generate_graph(graph[[1]], graph[[2]])
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
   })
 
 output$grafo_grupo7 <-
   networkD3::renderForceNetwork({
     graph <- generate_graph_by_group(getCoautorias(), 7)
-    generate_graph(graph[[1]], graph[[2]])
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
   })
 ```
