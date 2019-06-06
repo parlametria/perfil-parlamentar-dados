@@ -29,7 +29,9 @@ fetch_votacoes_ano <- function(ano = 2019) {
             xml_text()
         )
       }) %>%
-      select(id, nome_proposicao, data_votacao)
+      select(id, nome_proposicao, data_votacao) %>%
+      distinct()
+  
   }, error = function(e) {
     message(e)
     data <- tribble(
@@ -140,7 +142,7 @@ fetch_votacoes_por_ano <- function(id_proposicao, ano = 2019) {
     select(obj_votacao, data, cod_sessao, hora, id_votacao)
   
   votos_raw <- tibble(cod_sessao = votacoes_filtradas$cod_sessao,
-                      hora = votacoes_filtradas$hora,
+                      hora = votacoes_filtradas$hora
                       ) %>%
     mutate(dados = map2(
       cod_sessao,
