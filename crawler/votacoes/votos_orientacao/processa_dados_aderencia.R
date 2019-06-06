@@ -34,7 +34,7 @@ processa_dados_votacoes <- function() {
 processa_dados_deputado_aderencia <- function(votos, orientacao, deputados) {
   library(tidyverse)
   
-  source(here("reports/dependencia-partido/code/calcula_aderencia.R"))
+  source(here("crawler/votacoes/votos_orientacao/calcula_aderencia.R"))
   
   deputados_votos <- votos %>% 
     left_join(orientacao, 
