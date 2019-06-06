@@ -75,8 +75,7 @@ processa_dados_deputado_aderencia <- function(votos, orientacao, deputados, filt
     mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", partido, "/", uf)) %>% 
     ungroup() %>% 
     select(id_deputado, nome, partido, match, n)
-  
-  
+
   deputados_summary_freq_wide <- deputados_summary_long %>% 
     spread(key = match, value = n) %>% 
     replace(is.na(.), 0) %>% 

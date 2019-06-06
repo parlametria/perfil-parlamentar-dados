@@ -145,7 +145,9 @@ process_votos_orientacao_anos <- function(anos = c(2019, 2020, 2021, 2022)) {
       process_votos_por_ano
     )) %>% 
     unnest(dados) %>% 
-    distinct()
+    distinct() %>% 
+    rename(id_parlamentar = id_deputado) %>% 
+    mutate(casa = "camara")
   
   orientacao <- tibble(ano = anos) %>%
     mutate(dados = map(
