@@ -29,8 +29,8 @@ fetch_votacoes_ano <- function(ano = 2019) {
             xml_text()
         )
       }) %>%
-      select(id, nome_proposicao, data_votacao) %>%
-      distinct()
+      select(id, nome_proposicao, data_votacao)# %>%
+      #distinct()
   
   }, error = function(e) {
     message(e)
@@ -52,7 +52,7 @@ fetch_xml_api_votacao <- function(id_proposicao) {
   library(tidyverse)
   library(RCurl)
   library(xml2)
-  source(here("crawler/votacoes/utils_votacoes.R"))
+  source(here::here("crawler/votacoes/utils_votacoes.R"))
   
   proposicao <- get_sigla_by_id(id_proposicao) %>%
     select(siglaTipo, numero, ano)
@@ -120,25 +120,48 @@ fetch_votos_por_sessao <- function(cod_sessao, hora, xml) {
            partido)
 }
 
+#' @title Recupera informações das votações de uma determinada proposição para um determinado ano
+#' @description A partir do id da proposição e do ano recupera dados de votações que aconteceram na Câmara dos Deputados
+#' @param id_proposicao ID da proposição
+#' @param ano Ano para o período de votações
+#' @return Votações da proposição em um ano
+#' @examples
+#' votacoes <- fetch_votacoes_por_ano(2190355, 2019)
+fetch_votacoes_por_ano <- function(id_proposicao, ano=2019) {
+  library(tidyverse)
+  source(here::here("crawler/votacoes/utils_votacoes.R"))
+  
+  votacoes <- tryCatch({
+    xml <- fetch_xml_api_votacao(id_proposicao)
+    
+    votacoes <- fetch_votacoes_por_proposicao(id_proposicao, xml)
+    
+    votacoes <- votacoes %>% 
+      mutate(ano_votacao = format(data, "%Y")) %>% 
+      filter(ano_votacao == ano) %>% 
+      mutate(id_votacao = paste0(cod_sessao, str_remove(hora, ":")),
+             id_proposicao = id_proposicao) %>% 
+      select(id_proposicao, obj_votacao, data, cod_sessao, hora, id_votacao)
+    
+  }, error = function(e){
+    return(
+      tribble(~id_proposicao, ~ obj_votacao, ~ data, ~ cod_sessao, ~ hora, ~ id_votacao))
+  })
+  
+  return(votacoes)
+}
+
 #' @title Recupera informações de votos de todas as votações de uma determinada proposição para um determinado ano
 #' @description A partir do id da proposição e do ano recupera votos que aconteceram na Câmara dos Deputados
 #' @param id_proposicao ID da proposição
 #' @param ano Ano para o período de votações
 #' @return Votos dos parlametares para a proposição (inclui várias votações)
 #' @examples
-#' votos <- fetch_votacoes_por_ano(2190355, 2019)
-fetch_votacoes_por_ano <- function(id_proposicao, ano = 2019) {
+#' votos <- fetch_votos_por_ano(2190355, 2019)
+fetch_votos_por_ano <- function(id_proposicao, ano = 2019) {
   library(tidyverse)
-  source(here("crawler/votacoes/utils_votacoes.R"))
-
-  xml <- fetch_xml_api_votacao(id_proposicao)
   
-  votacoes <- fetch_votacoes_por_proposicao(id_proposicao, xml)
-  
-  votacoes_filtradas <- votacoes %>% 
-    mutate(ano_votacao = format(data, "%Y")) %>% 
-    filter(ano_votacao == ano) %>% 
-    mutate(id_votacao = paste0(cod_sessao, str_remove(hora, ":"))) %>% 
+  votacoes_filtradas <- fetch_votacoes_por_ano(id_proposicao, ano) %>% 
     select(obj_votacao, data, cod_sessao, hora, id_votacao)
   
   votos_raw <- tibble(cod_sessao = votacoes_filtradas$cod_sessao,
@@ -162,3 +185,30 @@ fetch_votacoes_por_ano <- function(id_proposicao, ano = 2019) {
   return(votos)
 }
 
+#' @title Recupera informações das votações nominais do plenário em um intervalo de tempo (anos)
+#' @description A partir de um ano de início e um ano de fim, recupera dados de 
+#' votações nominais de plenário que aconteceram na Câmara dos Deputados
+#' @param ano_inicial Ano inicial do período de votações
+#' @param ano_final Ano final do período de votações
+#' @return Votações da proposição em um intervalo de tempo (anos)
+#' @examples
+#' votacoes <- fetch_all_votacoes_por_intervalo()
+fetch_all_votacoes_por_intervalo <- function(ano_inicial = 2015, ano_final = 2019) {
+  anos <- seq(ano_inicial, ano_final, 1)
+  
+  proposicoes_votadas <-
+    purrr::map_df(anos, ~ fetch_votacoes_ano(.x)) %>%
+    mutate(ano_votacao = lubridate::dmy(data_votacao) %>%
+             lubridate::year()) %>%
+    distinct(id, ano_votacao)
+  
+  votacoes <-
+    purrr::map2_df(
+      proposicoes_votadas$id,
+      proposicoes_votadas$ano_votacao,
+      ~ fetch_votacoes_por_ano(.x, .y)
+    ) %>%
+    distinct(id_proposicao, obj_votacao, data, cod_sessao, hora, id_votacao)
+  
+  return(votacoes)
+}
