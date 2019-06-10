@@ -30,6 +30,7 @@ padroniza_sigla <- function(sigla) {
     str_detect(tolower(sigla), "ptdob") ~ "AVANTE",
     str_detect(tolower(sigla), "pcdob") ~ "PCdoB",
     str_detect(tolower(sigla), "ptn") ~ "PODEMOS",
+    str_detect(tolower(sigla), "pps") ~ "CIDADANIA",
     str_detect(tolower(sigla), "pmdb") ~ "MDB",
     tolower(sigla) == "pr" ~ "PL",
     str_detect(sigla, "SOLID.*") ~ "SOLIDARIEDADE",

@@ -271,3 +271,35 @@ processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/l
   
   return(liderancas)
 }
+
+#' @title Processa dados de votos e orientações para sumarizar aderência do parlamentar ao partido
+#' @description Processa os dados dos mandatos para os parlamentares
+#' @param votos_path Caminho para o arquivo de dados de votos na legislatura atual
+#' @param orientacoes_path Caminho para o arquivo de dados de orientações na legislatura atual
+#' @param parlamentares_path Caminho para o arquivo de dados dos parlamentares
+#' @return Dataframe com informações de aderência
+processa_aderencia <- function(votos_path = here::here("crawler/raw_data/votos.csv"),
+                               orientacoes_path = here::here("crawler/raw_data/orientacoes.csv"),
+                               parlamentares_path = here::here("crawler/raw_data/parlamentares.csv")) {
+  library(tidyverse)
+  source(here("crawler/votacoes/utils_votacoes.R"))
+  source(here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
+  
+  votos <- read_csv(votos_path, col_types = cols(.default = "c", voto = "i")) %>% 
+    rename(id_deputado = id_parlamentar)
+  
+  orientacoes <- read_csv(orientacoes_path, col_types = cols(.default = "c", voto = "i"))
+  
+  deputados <- read_csv(parlamentares_path, col_types = cols(id = "c")) %>% 
+    filter(casa == "camara") %>% 
+    mutate(sg_partido = padroniza_sigla(sg_partido))
+  
+  aderencia <- processa_dados_deputado_aderencia(votos, orientacoes, deputados, filtrar = FALSE)[[2]]
+  
+  aderencia_alt <- aderencia %>% 
+    mutate(casa_enum = 1, # 1 é o código da camara. TODO: estender para senadores
+           id_parlamentar_voz = paste0(casa_enum, as.character(id_deputado))) %>% 
+    select(id_parlamentar_voz, partido, faltou, partido_liberou, nao_seguiu, seguiu, aderencia = freq)
+  
+  return(aderencia_alt)
+}
