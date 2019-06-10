@@ -78,7 +78,7 @@ process_votos_por_ano <- function(ano = 2020) {
   votos <- tibble(id_proposicao = proposicoes$id) %>%
     mutate(dados = map(
       id_proposicao,
-      fetch_votacoes_por_ano, 
+      fetch_votos_por_ano, 
       ano
     )) %>% 
     unnest(dados) %>% 
