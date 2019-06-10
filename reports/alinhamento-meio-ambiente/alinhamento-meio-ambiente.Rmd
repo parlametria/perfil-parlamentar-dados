@@ -42,7 +42,7 @@ deputados <- readr::read_csv(here::here("bd/data/parlamentares.csv"), col_types 
 
 posicoes <- readr::read_csv(here::here("crawler/raw_data/tabela_votacoes.csv"))
 votacoes <- readr::read_csv(here::here("bd/data/votacoes.csv"), col_types = "ncn")
-orientacoes <- readr::read_csv(here::here("crawler/raw_data/orientacoes.csv"))
+orientacoes <- readr::read_csv(here::here("crawler/raw_data/orientacoes_proposicoes_voz.csv"))
 
 posicoes_ma <- posicoes %>% 
   filter(tema == "Meio Ambiente")

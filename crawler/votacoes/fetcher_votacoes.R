@@ -79,17 +79,22 @@ fetch_votacoes_por_proposicao <- function(id_proposicao, xml) {
   library(tidyverse)
   library(xml2)
   
-  votacoes <- xml_find_all(xml, ".//Votacao") %>%
-    map_df(function(x) {
-      list(
-        obj_votacao = xml_attr(x, "ObjVotacao"),
-        resumo = xml_attr(x, "Resumo"),
-        cod_sessao = xml_attr(x, "codSessao"),
-        hora = xml_attr(x, "Hora"),
-        data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
-      )
-    })
-  
+  tryCatch({
+    votacoes <- xml_find_all(xml, ".//Votacao") %>%
+      map_df(function(x) {
+        list(
+          obj_votacao = xml_attr(x, "ObjVotacao"),
+          resumo = xml_attr(x, "Resumo"),
+          cod_sessao = xml_attr(x, "codSessao"),
+          hora = xml_attr(x, "Hora"),
+          data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
+        )
+      })
+  }, error = function(e) {
+    data <- tribble(~ obj_votacao, ~ resumo, ~ cod_sessao, ~ hora, ~ data)
+    return(data)
+  })
+
   return(votacoes)
 }
 
@@ -127,12 +132,14 @@ fetch_votos_por_sessao <- function(cod_sessao, hora, xml) {
 #' @return Votações da proposição em um ano
 #' @examples
 #' votacoes <- fetch_votacoes_por_ano(2190355, 2019)
-fetch_votacoes_por_ano <- function(id_proposicao, ano=2019) {
+fetch_votacoes_por_ano <- function(id_proposicao, ano = 2019, xml = NULL) {
   library(tidyverse)
   source(here::here("crawler/votacoes/utils_votacoes.R"))
   
   votacoes <- tryCatch({
-    xml <- fetch_xml_api_votacao(id_proposicao)
+    if (is.null(xml)) {
+      xml <- fetch_xml_api_votacao(id_proposicao)
+    }
     
     votacoes <- fetch_votacoes_por_proposicao(id_proposicao, xml)
     
@@ -160,8 +167,16 @@ fetch_votacoes_por_ano <- function(id_proposicao, ano=2019) {
 #' votos <- fetch_votos_por_ano(2190355, 2019)
 fetch_votos_por_ano <- function(id_proposicao, ano = 2019) {
   library(tidyverse)
+  source(here("crawler/votacoes/utils_votacoes.R"))
+
+  if (is.na(id_proposicao)) {
+    data <- tribble(~ id_votacao, ~ id_deputado, ~ voto, ~ partido)
+    return(data)
+  }
   
-  votacoes_filtradas <- fetch_votacoes_por_ano(id_proposicao, ano) %>% 
+  xml <- fetch_xml_api_votacao(id_proposicao)
+  
+  votacoes_filtradas <- fetch_votacoes_por_ano(id_proposicao, ano, xml) %>% 
     select(obj_votacao, data, cod_sessao, hora, id_votacao)
   
   votos_raw <- tibble(cod_sessao = votacoes_filtradas$cod_sessao,
