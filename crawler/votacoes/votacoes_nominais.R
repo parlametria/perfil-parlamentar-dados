@@ -46,3 +46,67 @@ export_votacoes_nominais <-
     
     return(votacoes_proposicoes)
   }
+
+fetch_sigla_tipo_documento <- function(tipo_documento_votacao) {
+  url <- 'https://dadosabertos.camara.leg.br/api/v2/referencias/proposicoes/siglaTipo'
+  
+  data <- (RCurl::getURI(url) %>% 
+    jsonlite::fromJSON())$dados %>% 
+    as_tibble()
+  
+}
+
+fetch_relacionadas <- function(prop_id, data_votacao, tipo_documento_votacao) {
+  
+  sigla_tipo_documento <- fetch_sigla_tipo_documento(tipo_documento_votacao)
+  
+  
+  relacionadas <- tryCatch({
+    url <- paste0('https://dadosabertos.camara.leg.br/api/v2/proposicoes/', prop_id, '/relacionadas')
+    
+    data <- RCurl::getURI(url) %>% 
+      jsonlite::fromJSON() %>% 
+      as_tibble()
+    
+  }, error = function(e){
+    
+  })
+  
+  
+}
+
+process_votacoes_nominais <- function(input_datapath = here::here("crawler/raw_data/votacoes_nominais_15_a_19.csv")) {
+  library(tidyverse)
+  
+  df <- read_csv(input_datapath)
+  
+  df <- df %>% 
+    filter(!str_detect(tolower(obj_votacao), 
+                         "req(uerimento|)|urgência|parecer|prorrogação|artigo por artigo|dispensa|efeito suspensivo|diretrizes|dvs|solicita|recurso|consulta|contra|convocação"))
+  
+  df <- df %>% mutate(tipo_documento_votacao = 
+                  case_when(
+                            str_detect(tolower(obj_votacao), 'dtq|destaque') ~ 'DTQ',
+                            str_detect(tolower(obj_votacao), 'redação final') ~ 'RDF',
+                            str_detect(tolower(obj_votacao), '(substitutivo|emenda) .*do senado federal') ~ 'EMS',
+                            str_detect(tolower(obj_votacao), 'proposta de emenda à constituição|pec') ~ 'PEC',
+                            str_detect(tolower(obj_votacao), 'projeto de lei complementar') ~ 'PLP',
+                            str_detect(tolower(obj_votacao), 'projeto de lei de conversão.*') ~ 'PLV',
+                            str_detect(tolower(obj_votacao), 'projeto de decreto legislativo') ~ 'PDC',
+                            str_detect(tolower(obj_votacao), 'projeto de resolução') ~ 'PRC',
+                            str_detect(tolower(obj_votacao), 'projeto de lei') ~ 'PL',
+                            str_detect(tolower(obj_votacao), 'medida provisória') ~ 'MPV',
+                            str_detect(tolower(obj_votacao), '(substitutivo|emenda) .*do senado federal') ~ 'EMS',
+                            str_detect(tolower(obj_votacao), 'substitutivo(.*comissão|.* da C.*)') ~ 'SBT-A',
+                            str_detect(tolower(obj_votacao), 'substitutivo(.*relator|)') ~ 'SBT',
+                            str_detect(tolower(obj_votacao), 'subemenda substitutiva .* de plenário') ~ 'SSP',
+                            str_detect(tolower(obj_votacao), 'subemenda substitutiva da C.*') ~ 'SBE-A',
+                            str_detect(tolower(obj_votacao), 'emenda(s|) aglutinativa(s|)') ~ 'EMA',
+                            str_detect(tolower(obj_votacao), 'emenda(s|) de plenário') ~ 'EMP',
+                            str_detect(tolower(obj_votacao), 'emenda(s|) de redação') ~ 'ERD',
+                            str_detect(tolower(obj_votacao), 'emenda substitutiva global de plenário') ~ 'ESP',
+                            str_detect(tolower(obj_votacao), 'emenda substitutiva global') ~ 'EAG',
+                            str_detect(tolower(obj_votacao), 'emenda(s|)') ~ 'EMD',
+                            TRUE ~ 'Outros')) 
+  
+}
