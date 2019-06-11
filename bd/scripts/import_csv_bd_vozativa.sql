@@ -8,3 +8,4 @@
 \copy composicao_comissoes FROM '/data/composicao_comissoes.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
 \copy mandatos FROM '/data/mandatos.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER; 
 \copy aderencia FROM '/data/aderencia.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER; 
+\copy liderancas FROM '/data/liderancas.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER; 

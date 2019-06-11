@@ -235,8 +235,8 @@ processa_composicao_comissoes <- function(composicao_path = here::here("crawler/
 }
 
 #' @title Processa dados dos mandatos
-#' @description Processa os dados dos mandatos para os parlamentares
-#' @param mandatos_path Caminho para o arquivo de dados de mandatos
+#' @description Processa os dados dos mandatos e retorna no formato  a ser utilizado pelo banco de dados
+#' @param mandatos_path Caminho para o arquivo de dados de mandatos sem tratamento
 #' @return Dataframe com informações dos mandatos
 processa_mandatos <- function(mandatos_path = here::here("crawler/raw_data/mandatos.csv")) {
   library(tidyverse)
@@ -251,6 +251,25 @@ processa_mandatos <- function(mandatos_path = here::here("crawler/raw_data/manda
                   id_legislatura, data_inicio, data_fim, situacao, 
                   cod_causa_fim_exercicio, desc_causa_fim_exercicio)
   return(mandatos)
+}
+
+#' @title Processa dados dos mandatos
+#' @description Processa os dados dos mandatos e retorna no formato  a ser utilizado pelo banco de dados
+#' @param mandatos_path Caminho para o arquivo de dados de mandatos sem tratamento
+#' @return Dataframe com informações dos mandatos
+processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/liderancas.csv")) {
+  library(tidyverse)
+  
+  liderancas <- read_csv(liderancas_path)
+  
+  liderancas <- liderancas %>%
+    mutate(
+      casa_enum = dplyr::if_else(casa == "camara", 1, 2),
+      id_parlamentar_voz = paste0(casa_enum, as.character(id))
+    ) %>%
+    select(id_parlamentar_voz, cargo, bloco_partido)
+  
+  return(liderancas)
 }
 
 #' @title Processa dados de votos e orientações para sumarizar aderência do parlamentar ao partido
