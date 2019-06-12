@@ -47,31 +47,54 @@ export_votacoes_nominais <-
     return(votacoes_proposicoes)
   }
 
-fetch_sigla_tipo_documento <- function(tipo_documento_votacao) {
-  url <- 'https://dadosabertos.camara.leg.br/api/v2/referencias/proposicoes/siglaTipo'
+fetch_relacionadas <- function(prop_id, data_votacao, tipo_documento_votacao, numero_emenda) {
   
-  data <- (RCurl::getURI(url) %>% 
-    jsonlite::fromJSON())$dados %>% 
-    as_tibble()
+  tipo_documento_votacao = gsub(' ', '', tipo_documento_votacao)
   
-}
-
-fetch_relacionadas <- function(prop_id, data_votacao, tipo_documento_votacao) {
+  paste0("Processando dados das relacionadas da proposicao ", 
+         prop_id, 
+         " na votação do dia ", 
+         data_votacao, 
+         " para o documento ", 
+         tipo_documento_votacao, 
+         " com numero de emenda ", 
+         numero_emenda) %>% 
+    print()
   
-  sigla_tipo_documento <- fetch_sigla_tipo_documento(tipo_documento_votacao)
+  tipos_emenda <- c('EMS', 'EMA', 'EMP', 'ERD', 'ESP', 'EAG', 'EMD')
   
+  url <-
+    paste0(
+      'https://dadosabertos.camara.leg.br/api/v2/proposicoes/',
+      prop_id,
+      '/relacionadas'
+    )
   
-  relacionadas <- tryCatch({
-    url <- paste0('https://dadosabertos.camara.leg.br/api/v2/proposicoes/', prop_id, '/relacionadas')
+  data <- (RCurl::getURI(url) %>%
+             jsonlite::fromJSON())$dados %>%
+    as_tibble() %>%
+    filter(siglaTipo == tipo_documento_votacao)
+  
+  rels <-
+    purrr::map_df(data$id, ~ rcongresso::fetch_proposicao_camara(.x))
+  
+  if (tipo_documento_votacao %in% tipos_emenda &&
+      !is.na(numero_emenda)) {
+    res <- rels %>%
+              filter(numero == numero_emenda) %>% head(1)
     
-    data <- RCurl::getURI(url) %>% 
-      jsonlite::fromJSON() %>% 
-      as_tibble()
-    
-  }, error = function(e){
-    
-  })
+  } else {
+    res <- rels %>%
+        filter(dataApresentacao <= lubridate::dmy(data_votacao)) %>%
+        arrange(dataApresentacao) %>%
+        tail(1)
+  }
   
+  if (nrow(res) > 0) {
+    return(res$urlInteiroTeor)
+  }
+  
+  return('-')
   
 }
 
@@ -86,27 +109,36 @@ process_votacoes_nominais <- function(input_datapath = here::here("crawler/raw_d
   
   df <- df %>% mutate(tipo_documento_votacao = 
                   case_when(
-                            str_detect(tolower(obj_votacao), 'dtq|destaque') ~ 'DTQ',
                             str_detect(tolower(obj_votacao), 'redação final') ~ 'RDF',
-                            str_detect(tolower(obj_votacao), '(substitutivo|emenda) .*do senado federal') ~ 'EMS',
                             str_detect(tolower(obj_votacao), 'proposta de emenda à constituição|pec') ~ 'PEC',
                             str_detect(tolower(obj_votacao), 'projeto de lei complementar') ~ 'PLP',
-                            str_detect(tolower(obj_votacao), 'projeto de lei de conversão.*') ~ 'PLV',
-                            str_detect(tolower(obj_votacao), 'projeto de decreto legislativo') ~ 'PDC',
-                            str_detect(tolower(obj_votacao), 'projeto de resolução') ~ 'PRC',
-                            str_detect(tolower(obj_votacao), 'projeto de lei') ~ 'PL',
-                            str_detect(tolower(obj_votacao), 'medida provisória') ~ 'MPV',
-                            str_detect(tolower(obj_votacao), '(substitutivo|emenda) .*do senado federal') ~ 'EMS',
-                            str_detect(tolower(obj_votacao), 'substitutivo(.*comissão|.* da C.*)') ~ 'SBT-A',
-                            str_detect(tolower(obj_votacao), 'substitutivo(.*relator|)') ~ 'SBT',
-                            str_detect(tolower(obj_votacao), 'subemenda substitutiva .* de plenário') ~ 'SSP',
+                            str_detect(tolower(obj_votacao), 'projeto de lei de conversão.*|plv') ~ 'PLV',
+                            str_detect(tolower(obj_votacao), 'projeto de decreto legislativo|pdc') ~ 'PDC',
+                            str_detect(tolower(obj_votacao), 'projeto de resolução|prc') ~ 'PRC',
+                            str_detect(tolower(obj_votacao), 'projeto de lei|pl|lei') ~ 'PL',
+                            str_detect(tolower(obj_votacao), 'medida provisória|mpv') ~ 'MPV',
+                            str_detect(tolower(obj_votacao), '(substitutivo|emenda(s|)) .*do senado federal') ~ 'EMS',
+                            str_detect(tolower(obj_votacao), 'substitutivo (.*comissão|da c.*)') ~ 'SBT-A',
+                            str_detect(tolower(obj_votacao), 'subst(itutivo|.)(.*relator|)') ~ 'SBT',
+                            str_detect(tolower(obj_votacao), 'subemenda subst(itutiva|.).* relator.*') ~ 'SBR',
+                            str_detect(tolower(obj_votacao), 'subemenda substitutiva(.* de plenário|)') ~ 'SSP',
                             str_detect(tolower(obj_votacao), 'subemenda substitutiva da C.*') ~ 'SBE-A',
                             str_detect(tolower(obj_votacao), 'emenda(s|) aglutinativa(s|)') ~ 'EMA',
                             str_detect(tolower(obj_votacao), 'emenda(s|) de plenário') ~ 'EMP',
                             str_detect(tolower(obj_votacao), 'emenda(s|) de redação') ~ 'ERD',
-                            str_detect(tolower(obj_votacao), 'emenda substitutiva global de plenário') ~ 'ESP',
-                            str_detect(tolower(obj_votacao), 'emenda substitutiva global') ~ 'EAG',
+                            str_detect(tolower(obj_votacao), 'emenda substitutiva global de plenário') ~ 'EMP',
+                            str_detect(tolower(obj_votacao), 'emenda substitutiva global') ~ 'EMP',
                             str_detect(tolower(obj_votacao), 'emenda(s|)') ~ 'EMD',
-                            TRUE ~ 'Outros')) 
+                            str_detect(tolower(obj_votacao), 'art(igo|.)') ~ gsub(' \\d.*', '', nome_proposicao),
+                            
+                            TRUE ~ 'Outros'),
+                  numero_emenda = gsub("?/.*", '', str_extract(tolower(obj_votacao), 'nº .*')) %>% str_extract("[\\d]+") %>% as.numeric()) 
+  
+    df %>% 
+    rowwise(.) %>% 
+    mutate(link_documento_votacao = fetch_relacionadas(id_proposicao, data_votacao, tipo_documento_votacao, numero_emenda)) -> teste
+    
+    
+    # PSordenar data de votação decrescentemente
   
 }
