@@ -35,7 +35,8 @@ fetch_info_proposicao <- function(id_prop) {
     return(dplyr::tribble(~ tema))
   })
   
-  proposicao <- rcongresso::fetch_proposicao_camara(id_prop) %>%
+  proposicao <- tryCatch({
+  rcongresso::fetch_proposicao_camara(id_prop) %>%
     mutate(
       nome = paste0(siglaTipo, " ", numero, "/", ano),
       data_apresentacao = lubridate::ymd_hm(gsub("T", " ", dataApresentacao)) %>%
@@ -64,7 +65,17 @@ fetch_info_proposicao <- function(id_prop) {
       tema,
       uri_tramitacao = uri,
       uri_documentos_importantes
-    )
+    )}, error = function(e) {
+      return(dplyr::tribble(~ id,
+                            ~ nome,
+                            ~ data_apresentacao,
+                            ~ ementa,
+                            ~ autor,
+                            ~ indexacao,
+                            ~ tema,
+                            ~ uri_tramitacao,
+                            ~ uri_documentos_importantes))
+    })
   
   return(proposicao)
 }
