@@ -26,17 +26,15 @@ processa_dados_votacoes <- function() {
   return(list(deputados, proposicoes_votadas, votos, orientacao))
 }
 
-#' @title Processa os dados de aderência do deputado ao partido
+#' @title Calcula os dados de aderência do deputado a um partido ou ao governo
 #' @description Retorna dados de aderência dos deputados por votação e de forma sumarizada
-#' @param votos Dataframe de votos
-#' @param orientacao Dataframe de orientações
-#' @param deputados Dataframe de deputados
+#' @param deputados_votos Dataframe de deputados com os votos do deputado e os do partido (pode ser GOVERNO)
 #' @param filtrar TRUE se deseja filtrar fora os partidos com menos de 5 membros e os deputados com menos de 10 votações. 
 #' FALSE se quiser capturar todos os deputados
 #' @return Lista com dataframes com informações dos deputados e seus dados de aderência sumarizados e por votação
 #' @examples
-#' dados_aderencia <- processa_dados_deputado_aderencia(votos, orientacao, deputados)
-processa_dados_deputado_aderencia <- function(votos, orientacao, deputados, filtrar = TRUE) {
+#' dados_aderencia <- processa_calculo_aderencia(votos, filtrar = FALSE)
+processa_calculo_aderencia <- function(deputados_votos, deputados, filtrar = TRUE) {
   library(tidyverse)
   
   source(here("crawler/votacoes/votos_orientacao/calcula_aderencia.R"))
@@ -49,13 +47,6 @@ processa_dados_deputado_aderencia <- function(votos, orientacao, deputados, filt
     minimo_membros_partido <- 0
   }
   
-  deputados_votos <- votos %>% 
-    left_join(orientacao, 
-              by = c("id_proposicao", "id_votacao", "partido")) %>% 
-    rename(voto_deputado = voto.x,
-           voto_partido = voto.y) %>% 
-    mutate(id_deputado = as.character(id_deputado))
-  
   deputados_votos_match <- deputados_votos %>%
     rowwise() %>% 
     mutate(match = compara_voto_com_orientacao(voto_deputado, voto_partido)) %>% 
@@ -63,7 +54,7 @@ processa_dados_deputado_aderencia <- function(votos, orientacao, deputados, filt
   
   deputados_summary_long <- deputados_votos_match %>% 
     group_by(id_deputado, partido, match) %>% 
-    summarise(n = n()) %>% 
+    summarise(n = n(), partido_parlamentar = first(partido_parlamentar)) %>% 
     mutate(match = case_when(
       match == -2 ~ "faltou",
       match == -1 ~ "nao_seguiu",
@@ -72,10 +63,10 @@ processa_dados_deputado_aderencia <- function(votos, orientacao, deputados, filt
       match == 2 ~ "partido_liberou"
     )) %>% 
     left_join(deputados %>% select(id, nome_eleitoral, uf), by = c("id_deputado" = "id")) %>% 
-    mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", partido, "/", uf)) %>% 
+    mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", partido_parlamentar, "/", uf)) %>% 
     ungroup() %>% 
     select(id_deputado, nome, partido, match, n)
-
+  
   deputados_summary_freq_wide <- deputados_summary_long %>% 
     spread(key = match, value = n) %>% 
     replace(is.na(.), 0) %>% 
@@ -96,4 +87,55 @@ processa_dados_deputado_aderencia <- function(votos, orientacao, deputados, filt
     filter(partido %in% partidos_count)
   
   return(list(deputados_votos_match, deputados_summary_freq_wide))
+}
+
+#' @title Processa os dados de aderência do deputado ao partido
+#' @description Retorna dados de aderência dos deputados por votação e de forma sumarizada
+#' @param votos Dataframe de votos
+#' @param orientacao Dataframe de orientações
+#' @param deputados Dataframe de deputados
+#' @param filtrar TRUE se deseja filtrar fora os partidos com menos de 5 membros e os deputados com menos de 10 votações. 
+#' FALSE se quiser capturar todos os deputados
+#' @return Lista com dataframes com informações dos deputados e seus dados de aderência sumarizados e por votação
+#' @examples
+#' dados_aderencia <- processa_dados_deputado_aderencia(votos, orientacao, deputados)
+processa_dados_deputado_aderencia <- function(votos, orientacao, deputados, filtrar = TRUE) {
+  library(tidyverse)
+  
+  deputados_votos <- votos %>% 
+    left_join(orientacao, 
+              by = c("id_proposicao", "id_votacao", "partido")) %>% 
+    rename(voto_deputado = voto.x,
+           voto_partido = voto.y) %>% 
+    mutate(id_deputado = as.character(id_parlamentar),
+           partido_parlamentar = partido)
+
+  return(processa_calculo_aderencia(deputados_votos, deputados, filtrar))
+}
+
+#' @title Processa os dados de aderência do deputado ao Governo
+#' @description Retorna dados de aderência dos deputados por votação e de forma sumarizada
+#' @param votos Dataframe de votos
+#' @param orientacao Dataframe de orientações
+#' @param deputados Dataframe de deputados
+#' @param filtrar TRUE se deseja filtrar fora os partidos com menos de 5 membros e os deputados com menos de 10 votações. 
+#' FALSE se quiser capturar todos os deputados
+#' @return Lista com dataframes com informações dos deputados e seus dados de aderência sumarizados e por votação
+#' @examples
+#' dados_aderencia <- processa_dados_deputado_aderencia_governo(votos, orientacao, deputados, filtrar = FALSE)
+processa_dados_deputado_aderencia_governo <- function(votos, orientacao, deputados, filtrar = TRUE) {
+  library(tidyverse)
+  
+  deputados_votos <- votos %>% 
+    left_join(orientacao %>% filter(partido == "GOVERNO"),
+              by = c("id_proposicao", "id_votacao")) %>% 
+    rename(voto_deputado = voto.x,
+           voto_partido = voto.y,
+           partido_parlamentar = partido.x,
+           partido = partido.y,
+           ano = ano.y
+           ) %>% 
+    mutate(id_deputado = as.character(id_parlamentar))
+    
+  return(processa_calculo_aderencia(deputados_votos, deputados, filtrar))
 }
