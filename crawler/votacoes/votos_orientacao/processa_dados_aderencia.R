@@ -54,7 +54,7 @@ processa_calculo_aderencia <- function(deputados_votos, deputados, filtrar = TRU
   
   deputados_summary_long <- deputados_votos_match %>% 
     group_by(id_deputado, partido, match) %>% 
-    summarise(n = n(), partido_parlamentar = first(partido_parlamentar)) %>% 
+    summarise(n = n()) %>% 
     mutate(match = case_when(
       match == -2 ~ "faltou",
       match == -1 ~ "nao_seguiu",
@@ -62,10 +62,12 @@ processa_calculo_aderencia <- function(deputados_votos, deputados, filtrar = TRU
       match == 1 ~ "seguiu",
       match == 2 ~ "partido_liberou"
     )) %>% 
-    left_join(deputados %>% select(id, nome_eleitoral, uf), by = c("id_deputado" = "id")) %>% 
-    mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", partido_parlamentar, "/", uf)) %>% 
     ungroup() %>% 
-    select(id_deputado, nome, partido, match, n)
+    left_join(deputados %>% select(id, nome_eleitoral, uf), by = c("id_deputado" = "id")) %>% 
+    mutate(nome = if_else(partido == "GOVERNO", nome_eleitoral, 
+             paste0(str_to_title(nome_eleitoral), " - ", partido, "/", uf))) %>% 
+    select(id_deputado, nome, partido, match, n) %>% 
+    filter(!is.na(id_deputado))
   
   deputados_summary_freq_wide <- deputados_summary_long %>% 
     spread(key = match, value = n) %>% 
@@ -135,7 +137,9 @@ processa_dados_deputado_aderencia_governo <- function(votos, orientacao, deputad
            partido = partido.y,
            ano = ano.y
            ) %>% 
-    mutate(id_deputado = as.character(id_parlamentar))
+    mutate(id_deputado = as.character(id_parlamentar),
+           partido = "GOVERNO") %>% 
+    mutate(!is.na(id_deputado))
     
   return(processa_calculo_aderencia(deputados_votos, deputados, filtrar))
 }

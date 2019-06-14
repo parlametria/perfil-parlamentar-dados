@@ -27,7 +27,7 @@
 178846,"camara","05727600430","ALFREDO PEREIRA DO NASCIMENTO","ALFREDO NASCIMENTO","AM","36814","PR","Partido da República","Fim de Mandato","Titular","M","Superior","dep.alfredonascimento@camara.leg.br",55
 74057,"camara","12377392504","ALICE MAZZUCO PORTUGAL","ALICE PORTUGAL","BA","36779","PCdoB","Partido Comunista do Brasil","Exercício","Titular","F","Superior","dep.aliceportugal@camara.leg.br",56
 178927,"camara","06908052923","ALIEL MACHADO BARK","ALIEL MACHADO","PR","36832","PSB","Partido Socialista Brasileiro","Exercício","Titular","M","Superior Incompleto","dep.alielmachado@camara.leg.br",56
-178937,"camara","00007487738","ALTINEU CÔRTES FREITAS COUTINHO","ALTINEU CÔRTES","RJ","36814","PR","Partido da República","Exercício","Titular","M","Ensino Médio","dep.altineucortes@camara.leg.br",56
+178937,"camara","00007487738","ALTINEU CÔRTES FREITAS COUTINHO","ALTINEU CÔRTES","RJ","37906","PL","Partido Liberal","Exercício","Titular","M","Ensino Médio","dep.altineucortes@camara.leg.br",56
 178881,"camara","66746485749","ALUISIO GUIMARAES MENDES FILHO","ALUISIO MENDES","MA","36896","PODE","Podemos","Exercício","Titular","M","Superior","dep.aluisiomendes@camara.leg.br",56
 178973,"camara","07542896806","ANA LUCIA LIPPAUS PERUGINI","ANA PERUGINI","SP","36844","PT","Partido dos Trabalhadores","Fim de Mandato","Titular","F","Pós-Graduação","dep.anaperugini@camara.leg.br",55
 160551,"camara","82501173449","ANDERSON FERREIRA RODRIGUES","ANDERSON FERREIRA","PE","36814","PR","Partido da República","Vacância","Titular","M","Superior Incompleto","dep.andersonferreira@camara.leg.br",55
@@ -41,7 +41,7 @@
 178974,"camara","07078570820","ANDRES NAVARRO SANCHEZ","ANDRES SANCHEZ","SP","36844","PT","Partido dos Trabalhadores","Fim de Mandato","Titular","M","Ensino Fundamental","dep.andressanchez@camara.leg.br",55
 192120,"camara","67442048900","ANGELA ALBINO","ANGELA ALBINO","SC","36779","PCdoB","Partido Comunista do Brasil","Suplência","Suplente","F","Superior","dep.angelaalbino@camara.leg.br",55
 178837,"camara","02820935249","RAIMUNDO ANGELIM VASCONCELOS","ANGELIM","AC","36844","PT","Partido dos Trabalhadores","Fim de Mandato","Titular","M","Pós-Graduação","dep.angelim@camara.leg.br",55
-74212,"camara","04240952387","ANÍBAL FERREIRA GOMES","ANÍBAL GOMES","CE","36769","DEM","Democratas","Fim de Mandato","Titular","M","Superior","dep.anibalgomes@camara.leg.br",55
+74212,"camara","04240952387","ANÍBAL FERREIRA GOMES","ANÍBAL GOMES","CE","36769","DEM","Democratas","Exercício","Suplente","M","Superior","dep.anibalgomes@camara.leg.br",56
 74213,"camara","05993601353","ANTONIO BALHMANN CARDOSO NUNES FILHO","ANTONIO BALHMANN","CE","36786","PDT","Partido Democrático Trabalhista","Fim de Mandato","Titular","M","Pós-Graduação","dep.antoniobalhmann@camara.leg.br",55
 160553,"camara","51488868549","ANTONIO LUIZ PARANHOS RIBEIRO LEITE DE BRITO","ANTONIO BRITO","BA","36834","PSD","Partido Social Democrático","Exercício","Titular","M","Pós-Graduação","dep.antoniobrito@camara.leg.br",56
 141383,"camara","00335868703","ANTONIO CARLOS MARTINS DE BULHÕES","ANTONIO BULHÕES","SP","36815","PRB","Partido Republicano Brasileiro","Fim de Mandato","Titular","M","Pós-Graduação","dep.antoniobulhoes@camara.leg.br",55
@@ -81,7 +81,7 @@
 141513,"camara","45561699687","OLAVO BILAC PINTO NETO","BILAC PINTO","MG","36769","DEM","Democratas","Exercício","Titular","M","Superior","dep.bilacpinto@camara.leg.br",56
 160538,"camara","12558206249","ELVINO JOSÉ BOHN GASS","BOHN GASS","RS","36844","PT","Partido dos Trabalhadores","Exercício","Titular","M","Pós-Graduação","dep.bohngass@camara.leg.br",56
 74650,"camara","00352748672","BONIFÁCIO JOSÉ TAMM DE ANDRADA","BONIFÁCIO DE ANDRADA","MG","36769","DEM","Democratas","Fim de Mandato","Titular","M","Doutorado","dep.bonifaciodeandrada@camara.leg.br",55
-74052,"camara","02235080553","JOÃO BOSCO DA COSTA","BOSCO COSTA","SE","36814","PR","Partido da República","Exercício","Titular","M","Superior Incompleto","dep.boscocosta@camara.leg.br",56
+74052,"camara","02235080553","JOÃO BOSCO DA COSTA","BOSCO COSTA","SE","37906","PL","Partido Liberal","Exercício","Titular","M","Superior Incompleto","dep.boscocosta@camara.leg.br",56
 160589,"camara","31516410831","BRUNA DIAS FURLAN","BRUNA FURLAN","SP","36835","PSDB","Partido da Social Democracia Brasileira","Exercício","Titular","F","Pós-Graduação","dep.brunafurlan@camara.leg.br",56
 178999,"camara","10931760674","BRUNIELE FERREIRA GOMES","BRUNNY","MG","36814","PR","Partido da República","Fim de Mandato","Titular","F","Superior Incompleto","dep.brunny@camara.leg.br",55
 141394,"camara","73467260497","BRUNO CAVALCANTI DE ARAÚJO","BRUNO ARAÚJO","PE","36835","PSDB","Partido da Social Democracia Brasileira","Fim de Mandato","Titular","M","Doutorado","dep.brunoaraujo@camara.leg.br",55
@@ -93,8 +93,8 @@
 178853,"camara","07409419504","LUIZ CARLOS CAETANO","CAETANO","BA","36844","PT","Partido dos Trabalhadores",NA,"Não Eleito","M","Superior","dep.caetano@camara.leg.br",56
 178891,"camara","01338190601","CAIO NARCIO RODRIGUES DA SILVEIRA","CAIO NARCIO","MG","36835","PSDB","Partido da Social Democracia Brasileira","Fim de Mandato","Titular","M","Superior","dep.caionarcio@camara.leg.br",55
 194261,"camara","37625942015","CAJAR ONESIMO RIBEIRO NARDES","CAJAR NARDES","RS","36896","PODE","Podemos","Fim de Mandato","Efetivado","M","Superior","dep.cajarnardes@camara.leg.br",55
-178829,"camara","05750251829","JOSE AUGUSTO ROSA","CAPITÃO AUGUSTO","SP","36814","PR","Partido da República","Exercício","Titular","M","Mestrado","dep.capitaoaugusto@camara.leg.br",56
-178924,"camara","48140597368","FABIO ABREU COSTA","CAPITÃO FÁBIO ABREU","PI","36814","PR","Partido da República","Licença","Titular","M","Pós-Graduação","dep.capitaofabioabreu@camara.leg.br",56
+178829,"camara","05750251829","JOSE AUGUSTO ROSA","CAPITÃO AUGUSTO","SP","37906","PL","Partido Liberal","Exercício","Titular","M","Mestrado","dep.capitaoaugusto@camara.leg.br",56
+178924,"camara","48140597368","FABIO ABREU COSTA","CAPITÃO FÁBIO ABREU","PI","37906","PL","Partido Liberal","Licença","Titular","M","Pós-Graduação","dep.capitaofabioabreu@camara.leg.br",56
 205303,"camara","32250231168","CARLA CHARBEL STEPHANINI","CARLA STEPHANINI","MS","36899","MDB","Movimento Democrático Brasileiro","Fim de Mandato","Suplente","F","Superior","dep.carlastephanini@camara.leg.br",55
 178958,"camara","18015662249","CARLOS AUGUSTO ANDRADE SILVA","CARLOS ANDRADE","RR","36793","PHS","Partido Humanista da Solidariedade","Fim de Mandato","Titular","M","Pós-Graduação","dep.carlosandrade@camara.leg.br",55
 141401,"camara","00834939134","CARLOS GOMES BEZERRA","CARLOS BEZERRA","MT","36899","MDB","Movimento Democrático Brasileiro","Licença","Titular","M","Superior","dep.carlosbezerra@camara.leg.br",56
@@ -119,7 +119,7 @@
 74171,"camara","26451379700","FRANCISCO RODRIGUES DE ALENCAR FILHO","CHICO ALENCAR","RJ","36839","PSOL","Partido Socialismo e Liberdade","Fim de Mandato","Titular","M","Mestrado","dep.chicoalencar@camara.leg.br",55
 141439,"camara","47247436700","FRANCISCO JOSÉ D'ANGELO PINTO","CHICO D'ANGELO","RJ","36786","PDT","Partido Democrático Trabalhista","Exercício","Titular","M","Pós-Graduação","dep.chicod'angelo@camara.leg.br",56
 141440,"camara","02810905304","FRANCISCO LOPES DA SILVA","CHICO LOPES","CE","36779","PCdoB","Partido Comunista do Brasil","Fim de Mandato","Titular","M","Pós-Graduação","dep.chicolopes@camara.leg.br",55
-178928,"camara","49156470991","CHRISTIANE DE SOUZA YARED","CHRISTIANE DE SOUZA YARED","PR","36814","PR","Partido da República","Exercício","Titular","F","Ensino Médio","dep.christianedesouzayared@camara.leg.br",56
+178928,"camara","49156470991","CHRISTIANE DE SOUZA YARED","CHRISTIANE DE SOUZA YARED","PR","37906","PL","Partido Liberal","Exercício","Titular","F","Ensino Médio","dep.christianedesouzayared@camara.leg.br",56
 178841,"camara","12941514449","JOSÉ CÍCERO SOARES DE ALMEIDA","CÍCERO ALMEIDA","AL","36793","PHS","Partido Humanista da Solidariedade","Fim de Mandato","Titular","M","Ensino Médio","dep.ciceroalmeida@camara.leg.br",55
 178939,"camara","09598289745","CLARISSA BARROS ASSED MATHEUS DE OLIVEIRA","CLARISSA GAROTINHO","RJ","36763","PROS","Partido Republicano da Ordem Social","Exercício","Titular","F","Superior","dep.clarissagarotinho@camara.leg.br",56
 74537,"camara","29474485534","CLÁUDIO CAJADO SAMPAIO","CLAUDIO CAJADO","BA","37903","PP","Progressistas","Exercício","Titular","M","Superior","dep.claudiocajado@camara.leg.br",56
@@ -163,7 +163,7 @@
 178994,"camara","30217865100","DULCE FERREIRA PAGANI MIRANDA","DULCE MIRANDA","TO","36899","MDB","Movimento Democrático Brasileiro","Exercício","Titular","F","Superior","dep.dulcemiranda@camara.leg.br",56
 73447,"camara","49663003804","EDSON EDINHO COELHO ARAÚJO","EDINHO ARAÚJO","SP","36899","MDB","Movimento Democrático Brasileiro","Vacância","Titular","M","Pós-Graduação","dep.edinhoaraujo@camara.leg.br",55
 73793,"camara","09629734915","EDSON BEZ DE OLIVEIRA","EDINHO BEZ","SC","36899","MDB","Movimento Democrático Brasileiro","Suplência","Suplente","M","Superior","dep.edinhobez@camara.leg.br",55
-141417,"camara","77548981872","ÉDIO VIEIRA LOPES","EDIO LOPES","RR","36814","PR","Partido da República","Exercício","Titular","M","Superior Incompleto","dep.ediolopes@camara.leg.br",56
+141417,"camara","77548981872","ÉDIO VIEIRA LOPES","EDIO LOPES","RR","37906","PL","Partido Liberal","Exercício","Titular","M","Superior Incompleto","dep.ediolopes@camara.leg.br",56
 160578,"camara","32563914949","EDMAR DE SOUZA ARRUDA","EDMAR ARRUDA","PR","36834","PSD","Partido Social Democrático","Fim de Mandato","Titular","M","Pós-Graduação","dep.edmararruda@camara.leg.br",55
 134812,"camara","09006826200","EDMILSON BRITO RODRIGUES","EDMILSON RODRIGUES","PA","36839","PSOL","Partido Socialismo e Liberdade","Exercício","Titular","M","Doutorado","dep.edmilsonrodrigues@camara.leg.br",56
 74655,"camara","27582400682","EDUARDO LUIZ BARROS BARBOSA","EDUARDO BARBOSA","MG","36835","PSDB","Partido da Social Democracia Brasileira","Exercício","Titular","M","Pós-Graduação","dep.eduardobarbosa@camara.leg.br",56
@@ -226,9 +226,9 @@
 141441,"camara","49106902553","GEORGE HILTON DOS SANTOS CECÍLIO","GEORGE HILTON","MG","36833","PSC","Partido Social Cristão","Fim de Mandato","Titular","M","Superior","dep.georgehilton@camara.leg.br",55
 178966,"camara","81095910949","Geovânia de Sá","GEOVANIA DE SÁ","SC","36835","PSDB","Partido da Social Democracia Brasileira","Exercício","Titular","F","Pós-Graduação","dep.geovaniadesa@camara.leg.br",56
 74374,"camara","12896918191","GERALDO RESENDE PEREIRA","GERALDO RESENDE","MS","36835","PSDB","Partido da Social Democracia Brasileira","Licença","Suplente","M","Pós-Graduação","dep.geraldoresende@camara.leg.br",56
-74383,"camara","71827404949","FERNANDO LÚCIO GIACOBO","GIACOBO","PR","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.giacobo@camara.leg.br",56
+74383,"camara","71827404949","FERNANDO LÚCIO GIACOBO","GIACOBO","PR","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.giacobo@camara.leg.br",56
 74270,"camara","64817407891","GILBERTO NASCIMENTO SILVA","GILBERTO NASCIMENTO","SP","36833","PSC","Partido Social Cristão","Exercício","Titular","M","Superior","dep.gilbertonascimento@camara.leg.br",56
-160673,"camara","31050778049","GIOVANI CHERINI","GIOVANI CHERINI","RS","36814","PR","Partido da República","Exercício","Titular","M","Pós-Graduação","dep.giovanicherini@camara.leg.br",56
+160673,"camara","31050778049","GIOVANI CHERINI","GIOVANI CHERINI","RS","37906","PL","Partido Liberal","Exercício","Titular","M","Pós-Graduação","dep.giovanicherini@camara.leg.br",56
 178996,"camara","26586568072","GIOVANI BATISTA FELTES","GIOVANI FELTES","RS","36899","MDB","Movimento Democrático Brasileiro","Exercício","Titular","M","Superior","dep.giovanifeltes@camara.leg.br",56
 74077,"camara","03662306115","GIOVANNI CORRÊA QUEIROZ","GIOVANNI QUEIROZ","PA","36786","PDT","Partido Democrático Trabalhista","Fim de Mandato","Efetivado","M","Superior","dep.giovanniqueiroz@camara.leg.br",55
 178878,"camara","18692141100","GIUSEPPE VECCI","GIUSEPPE VECCI","GO","36835","PSDB","Partido da Social Democracia Brasileira","Fim de Mandato","Titular","M","Superior","dep.giuseppevecci@camara.leg.br",55
@@ -277,7 +277,7 @@
 141503,"camara","51243946687","MARIA DO SOCORRO JÔ MORAES","JÔ MORAES","MG","36779","PCdoB","Partido Comunista do Brasil","Fim de Mandato","Titular","F","Superior Incompleto","dep.jomoraes@camara.leg.br",55
 160573,"camara","02105687989","JOÃO JOSÉ DE ARRUDA JÚNIOR","JOÃO ARRUDA","PR","36899","MDB","Movimento Democrático Brasileiro","Fim de Mandato","Titular","M","Superior","dep.joaoarruda@camara.leg.br",55
 74366,"camara","24254401191","JOÃO CAMPOS DE ARAÚJO","JOÃO CAMPOS","GO","36815","PRB","Partido Republicano Brasileiro","Exercício","Titular","M","Pós-Graduação","dep.joaocampos@camara.leg.br",56
-141458,"camara","15345931879","JOÃO CARLOS PAOLILO BACELAR FILHO","JOÃO CARLOS BACELAR","BA","36814","PR","Partido da República","Exercício","Titular","M","Pós-Graduação","dep.joaocarlosbacelar@camara.leg.br",56
+141458,"camara","15345931879","JOÃO CARLOS PAOLILO BACELAR FILHO","JOÃO CARLOS BACELAR","BA","37906","PL","Partido Liberal","Exercício","Titular","M","Pós-Graduação","dep.joaocarlosbacelar@camara.leg.br",56
 74445,"camara","00035530278","JOÃO CASTELO RIBEIRO GONÇALVES","JOÃO CASTELO","MA","36835","PSDB","Partido da Social Democracia Brasileira","Vacância","Titular","M","Superior","dep.joaocastelo@camara.leg.br",55
 178970,"camara","51625091591","JOAO SOMARIVA DANIEL","JOÃO DANIEL","SE","36844","PT","Partido dos Trabalhadores","Exercício","Titular","M","Ensino Médio","dep.joaodaniel@camara.leg.br",56
 178965,"camara","81031254072","JOAO DERLY DE OLIVEIRA NUNES JUNIOR","JOÃO DERLY","RS","36886","REDE","Rede Sustentabilidade","Fim de Mandato","Titular","M","Superior Incompleto","dep.joaoderly@camara.leg.br",55
@@ -305,7 +305,7 @@
 74395,"camara","36447374015","JOSÉ OTÁVIO GERMANO","JOSÉ OTÁVIO GERMANO","RS","37903","PP","Progressistas","Fim de Mandato","Titular","M","Superior","dep.joseotaviogermano@camara.leg.br",55
 74079,"camara","17293618204","JOSÉ BENITO PRIANTE JÚNIOR","JOSÉ PRIANTE","PA","36899","MDB","Movimento Democrático Brasileiro","Exercício","Titular","M","Superior","dep.josepriante@camara.leg.br",56
 73714,"camara","00138754349","José Reinaldo Carneiro Tavares","JOSÉ REINALDO","MA","36835","PSDB","Partido da Social Democracia Brasileira","Fim de Mandato","Titular","M","Superior","dep.josereinaldo@camara.leg.br",55
-74554,"camara","04789113515","JOSÉ ALVES ROCHA","JOSÉ ROCHA","BA","36814","PR","Partido da República","Exercício","Titular","M","Pós-Graduação","dep.joserocha@camara.leg.br",56
+74554,"camara","04789113515","JOSÉ ALVES ROCHA","JOSÉ ROCHA","BA","37906","PL","Partido Liberal","Exercício","Titular","M","Pós-Graduação","dep.joserocha@camara.leg.br",56
 160607,"camara","29446376068","JOSE LUIZ STÉDILE","JOSE STÉDILE","RS","36832","PSB","Partido Socialista Brasileiro","Fim de Mandato","Titular","M","Superior","dep.josestedile@camara.leg.br",55
 114941,"camara","28884329191","JOSINIANE BRAGA NUNES","JOSI NUNES","TO","36763","PROS","Partido Republicano da Ordem Social","Fim de Mandato","Titular","F","Mestrado","dep.josinunes@camara.leg.br",55
 74141,"camara","10452001404","JOSIAS GOMES DA SILVA","JOSIAS GOMES","BA","36844","PT","Partido dos Trabalhadores","Licença","Titular","M","Pós-Graduação","dep.josiasgomes@camara.leg.br",56
@@ -338,7 +338,7 @@
 141482,"camara","79043607649","LEONARDO LEMOS BARROS QUINTÃO","LEONARDO QUINTÃO","MG","36899","MDB","Movimento Democrático Brasileiro","Fim de Mandato","Titular","M","Superior","dep.leonardoquintao@camara.leg.br",55
 74299,"camara","12105961304","JOSÉ LEÔNIDAS DE MENEZES CRISTINO","LEÔNIDAS CRISTINO","CE","36786","PDT","Partido Democrático Trabalhista","Exercício","Titular","M","Superior","dep.leonidascristino@camara.leg.br",56
 160663,"camara","13917315904","LEOPOLDO COSTA MEYER","LEOPOLDO MEYER","PR","36832","PSB","Partido Socialista Brasileiro","Fim de Mandato","Titular","M","Pós-Graduação","dep.leopoldomeyer@camara.leg.br",55
-74585,"camara","10254730191","LINCOLN DINIZ PORTELA","LINCOLN PORTELA","MG","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.lincolnportela@camara.leg.br",56
+74585,"camara","10254730191","LINCOLN DINIZ PORTELA","LINCOLN PORTELA","MG","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.lincolnportela@camara.leg.br",56
 141483,"camara","32550685253","LINDOMAR BARBOSA ALVES","LINDOMAR GARÇON","RO","36815","PRB","Partido Republicano Brasileiro","Fim de Mandato","Titular","M","Superior","dep.lindomargarcon@camara.leg.br",55
 74277,"camara","05929116830","ANTONIO ADOLPHO LOBBE NETO","LOBBE NETO","SP","36835","PSDB","Partido da Social Democracia Brasileira","Fim de Mandato","Efetivado","M","Superior","dep.lobbeneto@camara.leg.br",55
 196358,"camara","42310580759","LOURIVAL GOMES DE ALMEIDA","LOURIVAL GOMES","RJ","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Ensino Fundamental","dep.lourivalgomes@camara.leg.br",56
@@ -360,13 +360,13 @@
 74041,"camara","02043033468","LUIZ ALBUQUERQUE COUTO","LUIZ COUTO","PB","36844","PT","Partido dos Trabalhadores","Fim de Mandato","Titular","M","Superior","dep.luizcouto@camara.leg.br",55
 141487,"camara","30736250620","LUIZ FERNANDO RAMOS FARIA","LUIZ FERNANDO FARIA","MG","37903","PP","Progressistas","Fim de Mandato","Titular","M","Superior","dep.luizfernandofaria@camara.leg.br",55
 178982,"camara","27290596870","LUIZ LAURO FERREIRA FILHO","LUIZ LAURO FILHO","SP","36832","PSB","Partido Socialista Brasileiro","Fim de Mandato","Titular","M","Pós-Graduação","dep.luizlaurofilho@camara.leg.br",55
-162332,"camara","08781460910","LUIZ HILOSHI NISHIMORI","LUIZ NISHIMORI","PR","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.luiznishimori@camara.leg.br",56
+162332,"camara","08781460910","LUIZ HILOSHI NISHIMORI","LUIZ NISHIMORI","PR","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.luiznishimori@camara.leg.br",56
 74688,"camara","44910614753","LUIZ SÉRGIO NÓBREGA DE OLIVEIRA","LUIZ SÉRGIO","RJ","36844","PT","Partido dos Trabalhadores","Fim de Mandato","Titular","M","Ensino Técnico","dep.luizsergio@camara.leg.br",55
 74784,"camara","00480584400","LUIZA ERUNDINA DE SOUSA","LUIZA ERUNDINA","SP","36839","PSOL","Partido Socialismo e Liberdade","Exercício","Titular","F","Mestrado","dep.luizaerundina@camara.leg.br",56
 178866,"camara","38208563315","LUIZIANNE DE OLIVEIRA LINS","LUIZIANNE LINS","CE","36844","PT","Partido dos Trabalhadores","Exercício","Titular","F","Mestrado Incompleto","dep.luiziannelins@camara.leg.br",56
 198198,"camara","29690617672","LUZIA MARIA FERREIRA","LUZIA FERREIRA","MG","36813","PPS","Partido Popular Socialista","Suplência","Suplente","F","Superior","dep.luziaferreira@camara.leg.br",55
 178867,"camara","19705786453","JOSE MARIA MACEDO JUNIOR","MACEDO","CE","37903","PP","Progressistas","Fim de Mandato","Titular","M","Superior Incompleto","dep.macedo@camara.leg.br",55
-166402,"camara","13205285115","MAGDA MOFATTO HON","MAGDA MOFATTO","GO","36814","PR","Partido da República","Exercício","Titular","F",NA,"dep.magdamofatto@camara.leg.br",56
+166402,"camara","13205285115","MAGDA MOFATTO HON","MAGDA MOFATTO","GO","37906","PL","Partido Liberal","Exercício","Titular","F",NA,"dep.magdamofatto@camara.leg.br",56
 151965,"camara","70258635304","JOSÉ DE ANDRADE MAIA FILHO","MAIA FILHO","PI","37903","PP","Progressistas","Suplência","Suplente","M","Superior","dep.maiafilho@camara.leg.br",55
 178826,"camara","00502302801","SERGIO OLIMPIO GOMES","MAJOR OLIMPIO","SP","36837","PSL","Partido Social Liberal","Fim de Mandato","Titular","M","Pós-Graduação","dep.majorolimpio@camara.leg.br",55
 160633,"camara","51942143168","LUIZ HENRIQUE MANDETTA","MANDETTA","MS","36769","DEM","Democratas","Fim de Mandato","Titular","M","Pós-Graduação","dep.mandetta@camara.leg.br",55
@@ -382,7 +382,7 @@
 76287,"camara","90838920772","MARCELO VIVIANI GONÇALVES","MARCELO MATOS","RJ","36834","PSD","Partido Social Democrático","Fim de Mandato","Titular","M","Ensino Médio","dep.marcelomatos@camara.leg.br",55
 74278,"camara","01832778800","FRANCISCO MARCELO ORTIZ FILHO","MARCELO ORTIZ","SP","36896","PODE","Podemos","Suplência","Suplente","M","Superior","dep.marceloortiz@camara.leg.br",55
 118594,"camara","08363754838","MARCELO SQUASSONI","MARCELO SQUASSONI","SP","36815","PRB","Partido Republicano Brasileiro","Fim de Mandato","Titular","M","Superior","dep.marcelosquassoni@camara.leg.br",55
-178983,"camara","10115711880","MARCIO LUIZ ALVINO DE SOUZA","MARCIO ALVINO","SP","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.marcioalvino@camara.leg.br",56
+178983,"camara","10115711880","MARCIO LUIZ ALVINO DE SOUZA","MARCIO ALVINO","SP","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.marcioalvino@camara.leg.br",56
 179001,"camara","80686958004","MARCIO DELLA VALLE BIOLCHI","MÁRCIO BIOLCHI","RS","36899","MDB","Movimento Democrático Brasileiro","Exercício","Titular","M","Superior","dep.marciobiolchi@camara.leg.br",56
 150418,"camara","01895263786","MÁRCIO CARLOS MARINHO","MÁRCIO MARINHO","BA","36815","PRB","Partido Republicano Brasileiro","Exercício","Titular","M","Superior","dep.marciomarinho@camara.leg.br",56
 178899,"camara","99234440820","MARCIO CAMPOS MONTEIRO","MARCIO MONTEIRO","MS","36852","S.PART.","Sem Partido","Vacância","Titular","M","Superior","dep.marciomonteiro@camara.leg.br",55
@@ -397,7 +397,7 @@
 178852,"camara","10744096200","MARCOS JOSE REATEGUI SOUZA","MARCOS REATEGUI","AP","36834","PSD","Partido Social Democrático","Fim de Mandato","Titular","M","Pós-Graduação","dep.marcosreategui@camara.leg.br",55
 167722,"camara","60232064253","MARCOS ROGÉRIO DA SILVA BRITO","MARCOS ROGÉRIO","RO","36769","DEM","Democratas","Fim de Mandato","Titular","M","Superior","dep.marcosrogerio@camara.leg.br",55
 178850,"camara","49274350910","MARCOS SERGIO ROTTA","MARCOS ROTTA","AM","36899","MDB","Movimento Democrático Brasileiro","Vacância","Titular","M","Superior","dep.marcosrotta@camara.leg.br",55
-178943,"camara","05217856777","MARCOS BEZERRA RIBEIRO SOARES","MARCOS SOARES","RJ","36769","DEM","Democratas","Fim de Mandato","Titular","M","Superior","dep.marcossoares@camara.leg.br",55
+178943,"camara","05217856777","MARCOS BEZERRA RIBEIRO SOARES","MARCOS SOARES","RJ","36769","DEM","Democratas","Suplência","Suplente","M","Superior","dep.marcossoares@camara.leg.br",56
 159238,"camara","38194350697","MARCUS VINÍCIUS CAETANO PESTANA DA SILVA","MARCUS PESTANA","MG","36835","PSDB","Partido da Social Democracia Brasileira","Fim de Mandato","Titular","M","Superior","dep.marcuspestana@camara.leg.br",55
 74235,"camara","31693113791","MARCUS ANTÔNIO VICENTE","MARCUS VICENTE","ES","37903","PP","Progressistas","Fim de Mandato","Titular","M","Superior","dep.marcusvicente@camara.leg.br",55
 205297,"camara","65851099291","MARFIZA DE LIMA GALVÃO","MARFIZA GALVÃO","AC","36834","PSD","Partido Social Democrático","Fim de Mandato","Efetivado","F","Superior","dep.marfizagalvao@camara.leg.br",55
@@ -419,10 +419,10 @@
 178827,"camara","98941917700","MAX FREITAS MAURO FILHO","MAX FILHO","ES","36835","PSDB","Partido da Social Democracia Brasileira","Vacância","Titular","M","Mestrado","dep.maxfilho@camara.leg.br",55
 74428,"camara","40530086468","JOSÉ MENDONÇA BEZERRA FILHO","MENDONÇA FILHO","PE","36769","DEM","Democratas","Fim de Mandato","Titular","M","Pós-Graduação","dep.mendoncafilho@camara.leg.br",55
 74056,"camara","34247351591","JOSÉ DE ARAÚJO MENDONÇA SOBRINHO","MENDONÇA PRADO","SE","36769","DEM","Democratas","Suplência","Suplente","M","Superior","dep.mendoncaprado@camara.leg.br",55
-188097,"camara","13891820372","MERLONG SOLANO NOGUEIRA","MERLONG SOLANO","PI","36844","PT","Partido dos Trabalhadores","Exercício","Suplente","M","Mestrado","dep.merlongsolano@camara.leg.br",56
+188097,"camara","13891820372","MERLONG SOLANO NOGUEIRA","MERLONG SOLANO","PI","36844","PT","Partido dos Trabalhadores","Licença","Suplente","M","Mestrado","dep.merlongsolano@camara.leg.br",56
 141509,"camara","03053788640","MIGUEL CORRÊA DA SILVA JÚNIOR","MIGUEL CORRÊA","MG","36844","PT","Partido dos Trabalhadores","Fim de Mandato","Titular","M","Pós-Graduação","dep.miguelcorrea@camara.leg.br",55
 178984,"camara","96476850849","MIGUEL MOUBADDA HADDAD","MIGUEL HADDAD","SP","36835","PSDB","Partido da Social Democracia Brasileira","Fim de Mandato","Titular","M","Superior","dep.miguelhaddad@camara.leg.br",55
-178985,"camara","05209979806","MIGUEL LOMBARDI","MIGUEL LOMBARDI","SP","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.miguellombardi@camara.leg.br",56
+178985,"camara","05209979806","MIGUEL LOMBARDI","MIGUEL LOMBARDI","SP","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.miguellombardi@camara.leg.br",56
 74787,"camara","02980372897","MILTON ANTONIO CASQUEL MONTI","MILTON MONTI","SP","36814","PR","Partido da República","Fim de Mandato","Titular","M","Superior","dep.miltonmonti@camara.leg.br",55
 74862,"camara","03690288720","MIRO TEIXEIRA","MIRO TEIXEIRA","RJ","36886","REDE","Rede Sustentabilidade","Fim de Mandato","Titular","M","Superior","dep.miroteixeira@camara.leg.br",55
 178895,"camara","28492803649","MISAEL ARTUR FERREIRA VARELLA","MISAEL VARELLA","MG","36834","PSD","Partido Social Democrático","Exercício","Titular","M","Pós-Graduação","dep.misaelvarella@camara.leg.br",56
@@ -456,8 +456,8 @@
 202063,"camara","50946170959","OSVALDO OLAVIO MAFRA","OSVALDO MAFRA","SC","37904","SOLIDARIEDADE","Solidariedade","Suplência","Suplente","M","Ensino Fundamental","dep.osvaldomafra@camara.leg.br",55
 141515,"camara","20163452504","OTAVIO SANTOS SILVA LEITE","OTAVIO LEITE","RJ","36835","PSDB","Partido da Social Democracia Brasileira","Fim de Mandato","Titular","M","Mestrado Incompleto","dep.otavioleite@camara.leg.br",55
 160556,"camara","72425610600","JOÃO CARLOS SIQUEIRA","PADRE JOÃO","MG","36844","PT","Partido dos Trabalhadores","Exercício","Titular","M","Superior","dep.padrejoao@camara.leg.br",56
-74319,"camara","00309745187","JOSÉ FRANCISCO PAES LANDIM","PAES LANDIM","PI","36845","PTB","Partido Trabalhista Brasileiro","Fim de Mandato","Titular","M","Pós-Graduação","dep.paeslandim@camara.leg.br",55
-160642,"camara","23340541434","FRANCISCO EURICO DA SILVA","PASTOR EURICO","PE","37900","PATRI","Patriota","Exercício","Titular","M","Superior Incompleto","dep.pastoreurico@camara.leg.br",56
+74319,"camara","00309745187","JOSÉ FRANCISCO PAES LANDIM","PAES LANDIM","PI","36845","PTB","Partido Trabalhista Brasileiro","Exercício","Suplente","M","Pós-Graduação","dep.paeslandim@camara.leg.br",56
+160642,"camara","23340541434","FRANCISCO EURICO DA SILVA","PASTOR EURICO","PE","37907","PATRIOTA","Patriota","Exercício","Titular","M","Superior Incompleto","dep.pastoreurico@camara.leg.br",56
 193982,"camara","32693940397","LUCIANO FRED BRAGA PENHA","PASTOR LUCIANO BRAGA","BA","36815","PRB","Partido Republicano Brasileiro","Suplência","Suplente","M","Superior Incompleto","dep.pastorlucianobraga@camara.leg.br",55
 74160,"camara","17486440687","PATRUS ANANIAS DE SOUSA","PATRUS ANANIAS","MG","36844","PT","Partido dos Trabalhadores","Exercício","Titular","M","Mestrado","dep.patrusananias@camara.leg.br",56
 74095,"camara","03465268253","PAUDERNEY TOMAZ AVELINO","PAUDERNEY AVELINO","AM","36769","DEM","Democratas","Fim de Mandato","Titular","M","Superior","dep.pauderneyavelino@camara.leg.br",55
@@ -466,7 +466,7 @@
 178860,"camara","28870646572","PAULO VELLOSO DANTAS AZI","PAULO AZI","BA","36769","DEM","Democratas","Exercício","Titular","M","Superior","dep.pauloazi@camara.leg.br",56
 74017,"camara","52118037791","PAULO FERNANDO FEIJO TORRES","PAULO FEIJÓ","RJ","36814","PR","Partido da República","Fim de Mandato","Titular","M","Superior","dep.paulofeijo@camara.leg.br",55
 160517,"camara","47909463715","PAULO ROBERTO FOLETTO","PAULO FOLETTO","ES","36832","PSB","Partido Socialista Brasileiro","Licença","Titular","M","Superior","dep.paulofoletto@camara.leg.br",56
-160558,"camara","93876912849","PAULO ROBERTO FREIRE DA COSTA","PAULO FREIRE COSTA","SP","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.paulofreirecosta@camara.leg.br",56
+160558,"camara","93876912849","PAULO ROBERTO FREIRE DA COSTA","PAULO FREIRE COSTA","SP","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.paulofreirecosta@camara.leg.br",56
 141517,"camara","39934179172","PAULO HENRIQUE ELLERY LUSTOSA DA COSTA","PAULO HENRIQUE LUSTOSA","CE","37903","PP","Progressistas","Suplência","Suplente","M","Mestrado","dep.paulohenriquelustosa@camara.leg.br",55
 74574,"camara","06015530553","PAULO SÉRGIO PARANHOS DE MAGALHÃES","PAULO MAGALHÃES","BA","36834","PSD","Partido Social Democrático","Exercício","Suplente","M",NA,"dep.paulomagalhaes@camara.leg.br",56
 132056,"camara","00768782872","PAULO SALIM MALUF","PAULO MALUF","SP","37903","PP","Progressistas","Vacância","Titular","M","Superior","dep.paulomaluf@camara.leg.br",55
@@ -551,7 +551,7 @@
 160621,"camara","77535405991","SANDRO ALEX CRUZ DE OLIVEIRA","SANDRO ALEX","PR","36834","PSD","Partido Social Democrático","Licença","Titular","M","Superior","dep.sandroalex@camara.leg.br",56
 74762,"camara","27018938600","JOSÉ SARAIVA FELIPE","SARAIVA FELIPE","MG","36899","MDB","Movimento Democrático Brasileiro","Fim de Mandato","Titular","M","Mestrado","dep.saraivafelipe@camara.leg.br",55
 74210,"camara","14737418315","JOSÉ SARNEY FILHO","SARNEY FILHO","MA","36851","PV","Partido Verde","Fim de Mandato","Titular","M","Superior","dep.sarneyfilho@camara.leg.br",55
-178921,"camara","73387789491","SEBASTIAO IGNACIO DE OLIVEIRA JUNIOR","SEBASTIÃO OLIVEIRA","PE","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.sebastiaooliveira@camara.leg.br",56
+178921,"camara","73387789491","SEBASTIAO IGNACIO DE OLIVEIRA JUNIOR","SEBASTIÃO OLIVEIRA","PE","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.sebastiaooliveira@camara.leg.br",56
 73808,"camara","18635458591","SÉRGIO LUÍS LACERDA BRITO","SÉRGIO BRITO","BA","36834","PSD","Partido Social Democrático","Licença","Titular","M","Superior","dep.sergiobrito@camara.leg.br",56
 141542,"camara","20504225049","SÉRGIO IVAN MORAES","SÉRGIO MORAES","RS","36845","PTB","Partido Trabalhista Brasileiro","Fim de Mandato","Titular","M",NA,"dep.sergiomoraes@camara.leg.br",55
 178991,"camara","06976140859","SERGIO BAVINI","SÉRGIO REIS","SP","36815","PRB","Partido Republicano Brasileiro","Fim de Mandato","Titular","M","Ensino Médio","dep.sergioreis@camara.leg.br",55
@@ -568,7 +568,7 @@
 73560,"camara","03336123887","SILVIO FRANÇA TORRES","SILVIO TORRES","SP","36835","PSDB","Partido da Social Democracia Brasileira","Fim de Mandato","Titular","M","Superior","dep.silviotorres@camara.leg.br",55
 73424,"camara","03441067720","SIMÃO SESSIM","SIMÃO SESSIM","RJ","37903","PP","Progressistas","Fim de Mandato","Titular","M","Superior","dep.simaosessim@camara.leg.br",55
 178911,"camara","22336680220","SIMONE MARIA MORGADO FERREIRA","SIMONE MORGADO","PA","36899","MDB","Movimento Democrático Brasileiro","Fim de Mandato","Titular","F","Superior","dep.simonemorgado@camara.leg.br",55
-178946,"camara","49125290797","SORAYA ALENCAR DOS SANTOS","SORAYA SANTOS","RJ","36814","PR","Partido da República","Exercício","Titular","F","Superior","dep.sorayasantos@camara.leg.br",56
+178946,"camara","49125290797","SORAYA ALENCAR DOS SANTOS","SORAYA SANTOS","RJ","37906","PL","Partido Liberal","Exercício","Titular","F","Superior","dep.sorayasantos@camara.leg.br",56
 178947,"camara","95188100606","SOSTENES SILVA CAVALCANTE","SÓSTENES CAVALCANTE","RJ","36769","DEM","Democratas","Exercício","Titular","M","Superior","dep.sostenescavalcante@camara.leg.br",56
 92776,"camara","00001608657","STEFANO AGUIAR DOS SANTOS","STEFANO AGUIAR","MG","36834","PSD","Partido Social Democrático","Exercício","Titular","M","Superior","dep.stefanoaguiar@camara.leg.br",56
 177282,"camara","41864883634","LUIZ GONZAGA RIBEIRO","SUBTENENTE GONZAGA","MG","36786","PDT","Partido Democrático Trabalhista","Exercício","Titular","M","Superior","dep.subtenentegonzaga@camara.leg.br",56
@@ -579,7 +579,7 @@
 178901,"camara","20969430604","TEREZA CRISTINA CORREA DA COSTA DIAS","TEREZA CRISTINA","MS","36769","DEM","Democratas","Licença","Titular","F","Superior","dep.terezacristina@camara.leg.br",56
 160617,"camara","63353385134","THIAGO MELLO PEIXOTO DA SILVEIRA","THIAGO PEIXOTO","GO","36834","PSD","Partido Social Democrático","Fim de Mandato","Titular","M","Pós-Graduação","dep.thiagopeixoto@camara.leg.br",55
 178862,"camara","66858933549","ERONILDES VASCONCELOS CARVALHO","TIA ERON","BA","36815","PRB","Partido Republicano Brasileiro","Fim de Mandato","Titular","F","Superior","dep.tiaeron@camara.leg.br",55
-160976,"camara","44833881349","FRANCISCO EVERARDO OLIVEIRA SILVA","TIRIRICA","SP","36814","PR","Partido da República","Exercício","Titular","M",NA,"dep.tiririca@camara.leg.br",56
+160976,"camara","44833881349","FRANCISCO EVERARDO OLIVEIRA SILVA","TIRIRICA","SP","37906","PL","Partido Liberal","Exercício","Titular","M",NA,"dep.tiririca@camara.leg.br",56
 160611,"camara","37031074649","ANTÔNIO PINHEIRO JÚNIOR","TONINHO PINHEIRO","MG","37903","PP","Progressistas","Fim de Mandato","Titular","M","Secundário Incompleto","dep.toninhopinheiro@camara.leg.br",55
 178934,"camara","18591035968","ANTONIO WANDSCHEER","TONINHO WANDSCHEER","PR","36763","PROS","Partido Republicano da Ordem Social","Exercício","Titular","M","Superior","dep.toninhowandscheer@camara.leg.br",56
 178863,"camara","03746803101","ULDURICO ALENCAR PINTO","ULDURICO JUNIOR","BA","36763","PROS","Partido Republicano da Ordem Social","Exercício","Titular","M","Superior Incompleto","dep.ulduricojunior@camara.leg.br",56
@@ -596,10 +596,10 @@
 74308,"camara","01009320700","VICENTE FERREIRA DE ARRUDA COELHO","VICENTE ARRUDA","CE","36814","PR","Partido da República","Fim de Mandato","Efetivado","M","Superior","dep.vicentearruda@camara.leg.br",55
 160622,"camara","11680079840","VICENTE CÂNDIDO DA SILVA","VICENTE CANDIDO","SP","36844","PT","Partido dos Trabalhadores","Fim de Mandato","Titular","M","Pós-Graduação","dep.vicentecandido@camara.leg.br",55
 74283,"camara","12995398404","VICENTE PAULO DA SILVA","VICENTINHO","SP","36844","PT","Partido dos Trabalhadores","Exercício","Titular","M","Pós-Graduação","dep.vicentinho@camara.leg.br",56
-137070,"camara","99898659149","VICENTE ALVES DE OLIVEIRA JUNIOR","VICENTINHO JÚNIOR","TO","36814","PR","Partido da República","Exercício","Titular","M","Superior Incompleto","dep.vicentinhojunior@camara.leg.br",56
+137070,"camara","99898659149","VICENTE ALVES DE OLIVEIRA JUNIOR","VICENTINHO JÚNIOR","TO","37906","PL","Partido Liberal","Exercício","Titular","M","Superior Incompleto","dep.vicentinhojunior@camara.leg.br",56
 178888,"camara","80897460391","CARLOS VICTOR GUTERRES MENDES","VICTOR MENDES","MA","36899","MDB","Movimento Democrático Brasileiro","Fim de Mandato","Titular","M","Superior","dep.victormendes@camara.leg.br",55
 141555,"camara","82286019720","VINICIUS RAPOZO DE CARVALHO","VINICIUS CARVALHO","SP","36815","PRB","Partido Republicano Brasileiro","Exercício","Titular","M","Pós-Graduação","dep.viniciuscarvalho@camara.leg.br",56
-160591,"camara","51004224249","VINICIUS DE AZEVEDO GURGEL","VINICIUS GURGEL","AP","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.viniciusgurgel@camara.leg.br",56
+160591,"camara","51004224249","VINICIUS DE AZEVEDO GURGEL","VINICIUS GURGEL","AP","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.viniciusgurgel@camara.leg.br",56
 178992,"camara","00168780860","VITOR LIPPI","VITOR LIPPI","SP","36835","PSDB","Partido da Social Democracia Brasileira","Exercício","Titular","M","Superior","dep.vitorlippi@camara.leg.br",56
 92355,"camara","72065460725","VITOR PAULO ARAÚJO DOS SANTOS","VITOR PAULO","DF","36815","PRB","Partido Republicano Brasileiro","Suplência","Suplente","M","Superior","dep.vitorpaulo@camara.leg.br",55
 178869,"camara","61593052391","VITOR PEREIRA VALIM","VITOR VALIM","CE","36763","PROS","Partido Republicano da Ordem Social","Fim de Mandato","Titular","M","Superior Incompleto","dep.vitorvalim@camara.leg.br",55
@@ -614,7 +614,7 @@
 204760,"camara","66517079149","WASHINGTON STECANELA CERQUEIRA","WASHINGTON CORAÇÃO VALENTE","RS","36786","PDT","Partido Democrático Trabalhista","Fim de Mandato","Suplente","M","Ensino Médio","dep.washingtoncoracaovalente@camara.leg.br",55
 160620,"camara","01311846794","WASHINGTON REIS DE OLIVEIRA","WASHINGTON REIS","RJ","36899","MDB","Movimento Democrático Brasileiro","Vacância","Titular","M","Ensino Médio","dep.washingtonreis@camara.leg.br",55
 160518,"camara","84719850634","WELITON FERNANDES PRADO","WELITON PRADO","MG","36763","PROS","Partido Republicano da Ordem Social","Exercício","Titular","M","Superior","dep.welitonprado@camara.leg.br",56
-74043,"camara","26254166453","JOSÉ WELLINGTON ROBERTO","WELLINGTON ROBERTO","PB","36814","PR","Partido da República","Exercício","Titular","M","Superior Incompleto","dep.wellingtonroberto@camara.leg.br",56
+74043,"camara","26254166453","JOSÉ WELLINGTON ROBERTO","WELLINGTON ROBERTO","PB","37906","PL","Partido Liberal","Exercício","Titular","M","Superior Incompleto","dep.wellingtonroberto@camara.leg.br",56
 167493,"camara","62929399368","WEVERTON ROCHA MARQUES DE SOUSA","WEVERTON ROCHA","MA","36786","PDT","Partido Democrático Trabalhista","Fim de Mandato","Titular","M","Superior","dep.wevertonrocha@camara.leg.br",55
 141563,"camara","12567332880","WILLIAM BOSS WOO","WILLIAM WOO","SP","37903","PP","Progressistas","Suplência","Suplente","M","Superior","dep.williamwoo@camara.leg.br",55
 193066,"camara","90782453791","WILSON SILVA BESERRA","WILSON BESERRA","RJ","36899","MDB","Movimento Democrático Brasileiro","Fim de Mandato","Suplente","M","Superior Incompleto","dep.wilsonbeserra@camara.leg.br",55
@@ -632,7 +632,7 @@
 178902,"camara","04064992172","JOSE ORCIRIO MIRANDA DOS SANTOS","ZECA DO PT","MS","36844","PT","Partido dos Trabalhadores","Fim de Mandato","Titular","M","Superior","dep.zecadopt@camara.leg.br",55
 178949,"camara","12352993415","ZENAIDE MAIA CALADO PEREIRA DOS SANTOS","ZENAIDE MAIA","RN","36793","PHS","Partido Humanista da Solidariedade","Fim de Mandato","Titular","F","Superior","dep.zenaidemaia@camara.leg.br",55
 74392,"camara","10536744904","ODACIR ZONTA","ZONTA","SC","36832","PSB","Partido Socialista Brasileiro","Suplência","Suplente","M","Superior","dep.zonta@camara.leg.br",55
-204554,"camara","36607606504","JOSE ABILIO SILVA DE SANTANA","ABÍLIO SANTANA","BA","36814","PR","Partido da República","Exercício","Titular","M","Superior Incompleto","dep.abiliosantana@camara.leg.br",56
+204554,"camara","36607606504","JOSE ABILIO SILVA DE SANTANA","ABÍLIO SANTANA","BA","37906","PL","Partido Liberal","Exercício","Titular","M","Superior Incompleto","dep.abiliosantana@camara.leg.br",56
 204521,"camara","08496582841","PAULO SERGIO ABOU ANNI","ABOU ANNI","SP","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior","dep.abouanni@camara.leg.br",56
 204379,"camara","74287028287","ACÁCIO DA SILVA FAVACHO NETO","ACÁCIO FAVACHO","AP","36763","PROS","Partido Republicano da Ordem Social","Exercício","Titular","M","Superior","dep.acaciofavacho@camara.leg.br",56
 204560,"camara","80123848504","ADOLFO VIANA DE CASTRO NETO","ADOLFO VIANA","BA","36835","PSDB","Partido da Social Democracia Brasileira","Exercício","Titular","M","Superior Incompleto","dep.adolfoviana@camara.leg.br",56
@@ -641,7 +641,7 @@
 74646,"camara","66728983791","Aécio Neves da Cunha","AÉCIO NEVES","MG","36835","PSDB","Partido da Social Democracia Brasileira","Exercício","Titular","M","Superior","dep.aecioneves@camara.leg.br",56
 204495,"camara","18836178200","AIRTON LUIZ FALEIRO","AIRTON FALEIRO","PA","36844","PT","Partido dos Trabalhadores","Exercício","Titular","M","Ensino Fundamental","dep.airtonfaleiro@camara.leg.br",56
 204549,"camara","97506060353","ANTONIO JOSE AGUIAR ALBUQUERQUE","AJ ALBUQUERQUE","CE","37903","PP","Progressistas","Exercício","Titular","M","Superior","dep.ajalbuquerque@camara.leg.br",56
-204413,"camara","13620983100","ALCIDES RODRIGUES FILHO","ALCIDES RODRIGUES","GO","36824","PRP","Partido Republicano Progressista","Exercício","Titular","M","Superior","dep.alcidesrodrigues@camara.leg.br",56
+204413,"camara","13620983100","ALCIDES RODRIGUES FILHO","ALCIDES RODRIGUES","GO","37907","PATRIOTA","Patriota","Exercício","Titular","M","Superior","dep.alcidesrodrigues@camara.leg.br",56
 204545,"camara","79875564915","ALESSANDRA DA SILVA","ALÊ SILVA","MG","36837","PSL","Partido Social Liberal","Exercício","Titular","F","Pós-Graduação","dep.alesilva@camara.leg.br",56
 204501,"camara","05544839808","ALENCAR SANTANA BRAGA","ALENCAR SANTANA BRAGA","SP","36844","PT","Partido dos Trabalhadores","Exercício","Titular","M","Superior","dep.alencarsantanabraga@camara.leg.br",56
 204571,"camara","64682420534","ALEX MARCO SANTANA SOUSA","ALEX SANTANA","BA","36786","PDT","Partido Democrático Trabalhista","Exercício","Titular","M","Ensino Médio","dep.alexsantana@camara.leg.br",56
@@ -659,7 +659,7 @@
 109429,"camara","40665429487","LUIZ BENES LEOCADIO DE ARAUJO","BENES LEOCÁDIO","RN","36815","PRB","Partido Republicano Brasileiro","Exercício","Titular","M","Superior","dep.benesleocadio@camara.leg.br",56
 204358,"camara","69380007191","HUMBERTO REZENDE PEREIRA","BETO PEREIRA","MS","36835","PSDB","Partido da Social Democracia Brasileira","Exercício","Titular","M","Superior","dep.betopereira@camara.leg.br",56
 207176,"camara","49200844120","BEATRIZ ROSALIA RIBEIRO CAVASSA DE OLIVEIRA","BIA CAVASSA","MS","36835","PSDB","Partido da Social Democracia Brasileira","Exercício","Suplente","F",NA,"dep.biacavassa@camara.leg.br",56
-204374,"camara","38567792134","BEATRIZ KICIS TORRENTS DE SORDI","BIA KICIS","DF","36837","PSL","Partido Social Liberal","Exercício","Titular","F",NA,"dep.biakicis@camara.leg.br",56
+204374,"camara","38567792134","BEATRIZ KICIS TORRENTS DE SORDI","BIA KICIS","DF","36837","PSL","Partido Social Liberal","Exercício","Titular","F","Superior","dep.biakicis@camara.leg.br",56
 204388,"camara","27236056049","ALCIBIO MESQUITA BIBO NUNES","BIBO NUNES","RS","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior Incompleto","dep.bibonunes@camara.leg.br",56
 204561,"camara","40903974304","UBIRAJARA DO PINDARÉ ALMEIDA SOUSA","BIRA DO PINDARÉ","MA","36832","PSB","Partido Socialista Brasileiro","Exercício","Titular","M","Mestrado","dep.biradopindare@camara.leg.br",56
 204397,"camara","84116730904","EMERSON MIGUEL PETRIV","BOCA ABERTA","PR","36763","PROS","Partido Republicano da Ordem Social","Exercício","Titular","M","Ensino Médio","dep.bocaaberta@camara.leg.br",56
@@ -669,7 +669,7 @@
 204572,"camara","66397545334","ALBERTO BARROS CAVALCANTE NETO","CAPITÃO ALBERTO NETO","AM","36815","PRB","Partido Republicano Brasileiro","Exercício","Titular","M","Pós-Graduação","dep.capitaoalbertoneto@camara.leg.br",56
 204487,"camara","61496880382","WAGNER SOUSA GOMES","CAPITÃO WAGNER","CE","36763","PROS","Partido Republicano da Ordem Social","Exercício","Titular","M","Superior","dep.capitaowagner@camara.leg.br",56
 204507,"camara","01335594671","CARLA ZAMBELLI SALGADO","CARLA ZAMBELLI","SP","36837","PSL","Partido Social Liberal","Exercício","Titular","F","Pós-Graduação","dep.carlazambelli@camara.leg.br",56
-204361,"camara","00503190942","CARLOS ALBERTO CHIODINI","CARLOS CHIODINI","SC","36899","MDB","Movimento Democrático Brasileiro","Exercício","Titular","M","Ensino Médio","dep.carloschiodini@camara.leg.br",56
+204361,"camara","00503190942","CARLOS ALBERTO CHIODINI","CARLOS CHIODINI","SC","36899","MDB","Movimento Democrático Brasileiro","Exercício","Titular","M","Superior","dep.carloschiodini@camara.leg.br",56
 204460,"camara","09650185712","Carlos Roberto Coelho de Mattos Júnior","CARLOS JORDY","RJ","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior","dep.carlosjordy@camara.leg.br",56
 204426,"camara","03987461411","JOSÉ CARLOS VERAS DOS SANTOS","CARLOS VERAS","PE","36844","PT","Partido dos Trabalhadores","Exercício","Titular","M","Superior","dep.carlosveras@camara.leg.br",56
 204369,"camara","05858392989","CAROLINE RODRIGUES DE TONI","CAROLINE DE TONI","SC","36837","PSL","Partido Social Liberal","Exercício","Titular","F","Mestrado","dep.carolinedetoni@camara.leg.br",56
@@ -687,7 +687,7 @@
 204376,"camara","49906780797","LUIZ ARMANDO SCHROEDER REIS","CORONEL ARMANDO","SC","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Pós-Graduação","dep.coronelarmando@camara.leg.br",56
 204378,"camara","70335591787","JOAO CHRISÓSTOMO DE MOURA","CORONEL CHRISÓSTOMO","RO","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Mestrado","dep.coronelchrisostomo@camara.leg.br",56
 204514,"camara","04862780857","MARCIO TADEU ANHAIA DE LEMOS","CORONEL TADEU","SP","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Mestrado","dep.coroneltadeu@camara.leg.br",56
-135054,"camara","33096473234","CRISTIANO DUTRA VALE","CRISTIANO VALE","PA","36814","PR","Partido da República","Exercício","Titular","M","Secundário","dep.cristianovale@camara.leg.br",56
+135054,"camara","33096473234","CRISTIANO DUTRA VALE","CRISTIANO VALE","PA","37906","PL","Partido Liberal","Exercício","Titular","M","Secundário","dep.cristianovale@camara.leg.br",56
 204355,"camara","98042734700","JOSIAS MARIO DA VITORIA","DA VITORIA","ES","37905","CIDADANIA","Cidadania","Exercício","Titular","M","Superior","dep.davitoria@camara.leg.br",56
 204367,"camara","03751859926","DANIEL COSTA DE FREITAS","DANIEL FREITAS","SC","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior","dep.danielfreitas@camara.leg.br",56
 204454,"camara","05700923700","DANIEL LUCIO DA SILVEIRA","DANIEL SILVEIRA","RJ","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior Incompleto","dep.danielsilveira@camara.leg.br",56
@@ -700,10 +700,10 @@
 204512,"camara","03572972612","MARCELO EDUARDO FREITAS","DELEGADO MARCELO FREITAS","MG","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Doutorado","dep.delegadomarcelofreitas@camara.leg.br",56
 204569,"camara","55926169291","PABLO OLIVA SOUZA","DELEGADO PABLO","AM","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Mestrado","dep.delegadopablo@camara.leg.br",56
 204542,"camara","62156047391","DENIS ANDERSON DA ROCHA BEZERRA","DENIS BEZERRA","CE","36832","PSB","Partido Socialista Brasileiro","Exercício","Titular","M","Superior","dep.denisbezerra@camara.leg.br",56
-204518,"camara","07422257717","FREDERICO DE CASTRO ESCALEIRA","DR. FREDERICO","MG","37900","PATRI","Patriota","Exercício","Titular","M","Superior","dep.dr.frederico@camara.leg.br",56
-204481,"camara","35761113368","JAZIEL PEREIRA DE SOUSA","DR. JAZIEL","CE","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.dr.jaziel@camara.leg.br",56
+204518,"camara","07422257717","FREDERICO DE CASTRO ESCALEIRA","DR. FREDERICO","MG","37907","PATRIOTA","Patriota","Exercício","Titular","M","Superior","dep.dr.frederico@camara.leg.br",56
+204481,"camara","35761113368","JAZIEL PEREIRA DE SOUSA","DR. JAZIEL","CE","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.dr.jaziel@camara.leg.br",56
 204439,"camara","02309274917","LEONARDO RIBEIRO ALBUQUERQUE","DR. LEONARDO","MT","37904","SOLIDARIEDADE","Solidariedade","Exercício","Titular","M","Pós-Graduação","dep.dr.leonardo@camara.leg.br",56
-204450,"camara","02319953779","LUIZ ANTONIO DE SOUZA TEIXEIRA JÚNIOR","DR. LUIZ ANTONIO TEIXEIRA JR.","RJ","37903","PP","Progressistas","Exercício","Titular","M","Mestrado","dep.dr.luizantonioteixeirajr.@camara.leg.br",56
+204450,"camara","02319953779","LUIZ ANTONIO DE SOUZA TEIXEIRA JÚNIOR","DR. LUIZ ANTONIO TEIXEIRA JR.","RJ","37903","PP","Progressistas","Exercício","Titular","M","Superior","dep.dr.luizantonioteixeirajr.@camara.leg.br",56
 204351,"camara","05134552134","LUIZ ALBERTO OVANDO","DR. LUIZ OVANDO","MS","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior","dep.dr.luizovando@camara.leg.br",56
 204412,"camara","11833050100","ZACARIAS CALIL HAMU","DR. ZACHARIAS CALIL","GO","36769","DEM","Democratas","Exercício","Titular","M","Superior","dep.dr.zachariascalil@camara.leg.br",56
 81297,"camara","82837147753","SORAYA DE SOUZA MANNATO","DRA. SORAYA MANATO","ES","36837","PSL","Partido Social Liberal","Exercício","Titular","F","Pós-Graduação","dep.dra.sorayamanato@camara.leg.br",56
@@ -724,19 +724,19 @@
 204368,"camara","04116230952","FÁBIO LUIZ SCHIOCHET FILHO","FABIO SCHIOCHET","SC","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior Incompleto","dep.fabioschiochet@camara.leg.br",56
 204477,"camara","90982843704","FELÍCIO LATERÇA DE ALMEIDA","FELÍCIO LATERÇA","RJ","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior","dep.feliciolaterca@camara.leg.br",56
 204398,"camara","08317508986","LUIS FELIPE BONATTO FRANCISCHINI","FELIPE FRANCISCHINI","PR","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior","dep.felipefrancischini@camara.leg.br",56
-204371,"camara","12838182722","FELIPE RIGONI LOPES","FELIPE RIGONI","ES","36832","PSB","Partido Socialista Brasileiro","Exercício","Titular","M",NA,"dep.feliperigoni@camara.leg.br",56
+204371,"camara","12838182722","FELIPE RIGONI LOPES","FELIPE RIGONI","ES","36832","PSB","Partido Socialista Brasileiro","Exercício","Titular","M","Mestrado","dep.feliperigoni@camara.leg.br",56
 204407,"camara","00213461005","FERNANDA MELCHIONNA E SILVA","FERNANDA MELCHIONNA","RS","36839","PSOL","Partido Socialismo e Liberdade","Exercício","Titular","F","Superior","dep.fernandamelchionna@camara.leg.br",56
 204445,"camara","17003440482","FERNANDO WANDERLEY VARGAS DA SILVA","FERNANDO MINEIRO","RN","36844","PT","Partido dos Trabalhadores",NA,"Suplente","M","Superior","dep.fernandomineiro@camara.leg.br",56
-204427,"camara","04445225495","FERNANDO RODOLFO TENORIO DE VASCONCELOS","FERNANDO RODOLFO","PE","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.fernandorodolfo@camara.leg.br",56
+204427,"camara","04445225495","FERNANDO RODOLFO TENORIO DE VASCONCELOS","FERNANDO RODOLFO","PE","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.fernandorodolfo@camara.leg.br",56
 204411,"camara","05825760911","FILIPE BARROS BAPTISTA DE TOLEDO RIBEIRO","FILIPE BARROS","PR","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior","dep.filipebarros@camara.leg.br",56
-204354,"camara","85773875187","FLÁVIA CAROLINA PÉRES","FLÁVIA ARRUDA","DF","36814","PR","Partido da República","Exercício","Titular","F","Superior","dep.flaviaarruda@camara.leg.br",56
+204354,"camara","85773875187","FLÁVIA CAROLINA PÉRES","FLÁVIA ARRUDA","DF","37906","PL","Partido Liberal","Exercício","Titular","F","Superior","dep.flaviaarruda@camara.leg.br",56
 204447,"camara","01387115774","FLORDELIS DOS SANTOS DE SOUZA","FLORDELIS","RJ","36834","PSD","Partido Social Democrático","Exercício","Titular","F","Ensino Médio","dep.flordelis@camara.leg.br",56
 204392,"camara","47594217187","FRANCISCO RODRIGUES VALE JUNIOR","FRANCISCO JR.","GO","36834","PSD","Partido Social Democrático","Exercício","Titular","M","Mestrado","dep.franciscojr.@camara.leg.br",56
 204510,"camara","01583845631","FRANCO CARTAFINA GOMES","FRANCO CARTAFINA","MG","37903","PP","Progressistas","Exercício","Titular","M","Pós-Graduação","dep.francocartafina@camara.leg.br",56
-204494,"camara","02505101620","FREDERICO BORGES DA COSTA","FRED COSTA","MG","37900","PATRI","Patriota","Exercício","Titular","M","Superior Incompleto","dep.fredcosta@camara.leg.br",56
+204494,"camara","02505101620","FREDERICO BORGES DA COSTA","FRED COSTA","MG","37907","PATRIOTA","Patriota","Exercício","Titular","M","Superior Incompleto","dep.fredcosta@camara.leg.br",56
 204393,"camara","13163663400","ANTONIO RIBEIRO","FREI ANASTACIO RIBEIRO","PB","36844","PT","Partido dos Trabalhadores","Exercício","Titular","M","Superior","dep.freianastacioribeiro@camara.leg.br",56
 74200,"camara","01196553300","GASTÃO DIAS VIEIRA","GASTÃO VIEIRA","MA","36763","PROS","Partido Republicano da Ordem Social","Exercício","Suplente","M","Superior","dep.gastaovieira@camara.leg.br",56
-115746,"camara","84610310759","GELSON DE AZEVEDO ALMEIDA","GELSON AZEVEDO","RJ","36814","PR","Partido da República","Exercício","Titular","M","Ensino Médio Incompleto","dep.gelsonazevedo@camara.leg.br",56
+115746,"camara","84610310759","GELSON DE AZEVEDO ALMEIDA","GELSON AZEVEDO","RJ","37906","PL","Partido Liberal","Exercício","Titular","M","Ensino Médio Incompleto","dep.gelsonazevedo@camara.leg.br",56
 204473,"camara","45312346772","ELIÉSER GIRÃO MONTEIRO FILHO","GENERAL GIRÃO","RN","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Doutorado","dep.generalgirao@camara.leg.br",56
 204484,"camara","91311233849","ROBERTO SEBASTIÃO PETERNELLI JUNIOR","GENERAL PETERNELLI","SP","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Doutorado","dep.generalpeternelli@camara.leg.br",56
 204527,"camara","12172894885","EUGENIO JOSÉ ZULIANI","GENINHO ZULIANI","SP","36769","DEM","Democratas","Exercício","Titular","M","Superior","dep.geninhozuliani@camara.leg.br",56
@@ -765,7 +765,7 @@
 108338,"camara","35124032200","DIRLAINE JAQUELINE CASSOL","JAQUELINE CASSOL","RO","37903","PP","Progressistas","Exercício","Titular","F","Pós-Graduação","dep.jaquelinecassol@camara.leg.br",56
 204435,"camara","58065083234","JESUS SERGIO DE MENEZES","JESUS SÉRGIO","AC","36786","PDT","Partido Democrático Trabalhista","Exercício","Titular","M","Pós-Graduação","dep.jesussergio@camara.leg.br",56
 204429,"camara","10230720412","JOÃO HENRIQUE DE ANDRADE LIMA CAMPOS","JOÃO H. CAMPOS","PE","36832","PSB","Partido Socialista Brasileiro","Exercício","Titular","M","Superior","dep.joaoh.campos@camara.leg.br",56
-141459,"camara","06662978191","JOÃO DA SILVA MAIA","JOÃO MAIA","RN","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.joaomaia@camara.leg.br",56
+141459,"camara","06662978191","JOÃO DA SILVA MAIA","JOÃO MAIA","RN","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.joaomaia@camara.leg.br",56
 204576,"camara","81968442472","JOÃO INÁCIO RIBEIRO ROMA NETO","JOÃO ROMA","BA","36815","PRB","Partido Republicano Brasileiro","Exercício","Titular","M","Superior","dep.joaoroma@camara.leg.br",56
 204468,"camara","32326998200","JOENIA BATISTA DE CARVALHO","JOENIA WAPICHANA","RR","36886","REDE","Rede Sustentabilidade","Exercício","Titular","F","Mestrado","dep.joeniawapichana@camara.leg.br",56
 204546,"camara","85655732149","JOICE CRISTINA HASSELMANN","JOICE HASSELMANN","SP","36837","PSL","Partido Social Liberal","Exercício","Titular","F","Superior","dep.joicehasselmann@camara.leg.br",56
@@ -775,18 +775,18 @@
 204391,"camara","22002570159","JOSÉ NELTO LAGARES DAS MERCEZ","JOSÉ NELTO","GO","36896","PODE","Podemos","Exercício","Titular","M","Superior","dep.josenelto@camara.leg.br",56
 204555,"camara","18660037200","JOSÉ RICARDO WENDLING","JOSÉ RICARDO","AM","36844","PT","Partido dos Trabalhadores","Exercício","Titular","M","Pós-Graduação","dep.josericardo@camara.leg.br",56
 209189,"camara","15963330572","JOSEILDO RIBEIRO RAMOS","JOSEILDO RAMOS","BA","36844","PT","Partido dos Trabalhadores","Exercício","Suplente","M","Superior","dep.joseildoramos@camara.leg.br",56
-204563,"camara","50980351200","JOSIMAR CUNHA RODRIGUES","JOSIMAR MARANHÃOZINHO","MA","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.josimarmaranhaozinho@camara.leg.br",56
+204563,"camara","50980351200","JOSIMAR CUNHA RODRIGUES","JOSIMAR MARANHÃOZINHO","MA","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.josimarmaranhaozinho@camara.leg.br",56
 204474,"camara","47843080910","JUAREZ ALVES DA COSTA","JUAREZ COSTA","MT","36899","MDB","Movimento Democrático Brasileiro","Exercício","Titular","M",NA,"dep.juarezcosta@camara.leg.br",56
 204420,"camara","61927686172","GULLIEM CHARLES BEZERRA LEMOS","JULIAN LEMOS","PB","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior","dep.julianlemos@camara.leg.br",56
 204372,"camara","15791563809","JULIO CESAR RIBEIRO","JULIO CESAR RIBEIRO","DF","36815","PRB","Partido Republicano Brasileiro","Exercício","Titular","M","Superior","dep.juliocesarribeiro@camara.leg.br",56
 204457,"camara","07845799700","ROGERIO TEIXEIRA JUNIOR","JUNINHO DO PNEU","RJ","36769","DEM","Democratas","Exercício","Titular","M","Ensino Médio","dep.juninhodopneu@camara.leg.br",56
 204502,"camara","21883547881","NICOLINO BOZZELLA JUNIOR","JÚNIOR BOZZELLA","SP","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior","dep.juniorbozzella@camara.leg.br",56
 204497,"camara","23211253220","JOÃO FERRARI JÚNIOR","JÚNIOR FERRARI","PA","36834","PSD","Partido Social Democrático","Exercício","Titular","M","Superior","dep.juniorferrari@camara.leg.br",56
-204574,"camara","78247128349","JOSE LOURENÇO BONFIM JUNIOR","JUNIOR LOURENÇO","MA","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.juniorlourenco@camara.leg.br",56
-204550,"camara","97891231320","ANTÔNIO LUIZ RODRIGUES MANO JÚNIOR","JÚNIOR MANO","CE","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.juniormano@camara.leg.br",56
+204574,"camara","78247128349","JOSE LOURENÇO BONFIM JUNIOR","JUNIOR LOURENÇO","MA","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.juniorlourenco@camara.leg.br",56
+204550,"camara","97891231320","ANTÔNIO LUIZ RODRIGUES MANO JÚNIOR","JÚNIOR MANO","CE","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.juniormano@camara.leg.br",56
 204536,"camara","39313495864","KIM PATROCA KATAGUIRI","KIM KATAGUIRI","SP","36769","DEM","Democratas","Exercício","Titular","M","Superior Incompleto","dep.kimkataguiri@camara.leg.br",56
 98057,"camara","38105195100","LAFAYETTE LUIZ DOORGAL DE ANDRADA","LAFAYETTE DE ANDRADA","MG","36815","PRB","Partido Republicano Brasileiro","Exercício","Titular","M","Doutorado Incompleto","dep.lafayettedeandrada@camara.leg.br",56
-160534,"camara","00974976733","LAURIETE RODRIGUES DE JESUS","LAURIETE","ES","36814","PR","Partido da República","Exercício","Titular","F","Ensino Médio","dep.lauriete@camara.leg.br",56
+160534,"camara","00974976733","LAURIETE RODRIGUES DE JESUS","LAURIETE","ES","37906","PL","Partido Liberal","Exercício","Titular","F","Ensino Médio","dep.lauriete@camara.leg.br",56
 204375,"camara","43025900253","LEDA MARIA SADALA BRITO","LEDA SADALA","AP","36898","AVANTE","Avante","Exercício","Titular","F","Superior","dep.ledasadala@camara.leg.br",56
 204359,"camara","04333073901","LEONARDO BARRETO DE MORAES","LÉO MORAES","RO","36896","PODE","Podemos","Exercício","Titular","M","Mestrado Incompleto","dep.leomoraes@camara.leg.br",56
 204547,"camara","85702609620","ELIEL MÁRCIO DO CARMO","LÉO MOTTA","MG","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior Incompleto","dep.leomotta@camara.leg.br",56
@@ -800,7 +800,7 @@
 204410,"camara","05823529910","LUISA CANZIANI DOS SANTOS SILVEIRA","LUISA CANZIANI","PR","36845","PTB","Partido Trabalhista Brasileiro","Exercício","Titular","F","Superior Incompleto","dep.luisacanziani@camara.leg.br",56
 204448,"camara","01563114704","LUIZ ANTONIO DA COSTA CARVALHO CORREA DA SILVA","LUIZ ANTÔNIO CORRÊA","RJ","36852","S.PART.","Sem Partido","Exercício","Titular","M","Superior","dep.luizantoniocorrea@camara.leg.br",56
 160645,"camara","63223228268","LUIZ CARLOS GOMES DOS SANTOS JUNIOR","LUIZ CARLOS","AP","36835","PSDB","Partido da Social Democracia Brasileira","Exercício","Titular","M","Pós-Graduação","dep.luizcarlos@camara.leg.br",56
-204485,"camara","03035521824","LUIZ CARLOS MOTTA","LUIZ CARLOS MOTTA","SP","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.luizcarlosmotta@camara.leg.br",56
+204485,"camara","03035521824","LUIZ CARLOS MOTTA","LUIZ CARLOS MOTTA","SP","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.luizcarlosmotta@camara.leg.br",56
 204543,"camara","70641218834","LUIZ FLAVIO GOMES","LUIZ FLÁVIO GOMES","SP","36832","PSB","Partido Socialista Brasileiro","Exercício","Titular","M","Doutorado","dep.luizflaviogomes@camara.leg.br",56
 204455,"camara","07616393730","LUIZ EDUARDO CARNEIRO DA SILVA DE SOUZA LIMA","LUIZ LIMA","RJ","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Superior","dep.luizlima@camara.leg.br",56
 204526,"camara","11844856828","LUIZ PHILIPPE DE ORLEANS BRAGANÇA","LUIZ PHILIPPE DE ORLEANS E BRAGANÇA","SP","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Mestrado","dep.luizphilippedeorleansebraganca@camara.leg.br",56
@@ -815,7 +815,7 @@
 76874,"camara","95622780772","MARCELO RIBEIRO FREIXO","MARCELO FREIXO","RJ","36839","PSOL","Partido Socialismo e Liberdade","Exercício","Titular","M","Superior","dep.marcelofreixo@camara.leg.br",56
 133810,"camara","96520418072","MARCELO PIRES MORAES","MARCELO MORAES","RS","36845","PTB","Partido Trabalhista Brasileiro","Exercício","Titular","M","Superior Incompleto","dep.marcelomoraes@camara.leg.br",56
 204558,"camara","11875194568","JOSÉ MARCELO DO NASCIMENTO NILO","MARCELO NILO","BA","36832","PSB","Partido Socialista Brasileiro","Exercício","Titular","M","Superior","dep.marcelonilo@camara.leg.br",56
-204556,"camara","43634745215","MARCELO RAMOS RODRIGUES","MARCELO RAMOS","AM","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.marceloramos@camara.leg.br",56
+204556,"camara","43634745215","MARCELO RAMOS RODRIGUES","MARCELO RAMOS","AM","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.marceloramos@camara.leg.br",56
 81055,"camara","29246830334","MÁRCIO JERRY SARAIVA BARROSO","MÁRCIO JERRY","MA","36779","PCdoB","Partido Comunista do Brasil","Exercício","Titular","M","Superior","dep.marciojerry@camara.leg.br",56
 204452,"camara","03394588790","MÁRCIO DA SILVEIRA LABRE","MÁRCIO LABRE","RJ","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Ensino Técnico","dep.marciolabre@camara.leg.br",56
 204522,"camara","09420275825","MARCO AURELIO BERTAIOLLI","MARCO BERTAIOLLI","SP","36834","PSD","Partido Social Democrático","Exercício","Titular","M","Pós-Graduação","dep.marcobertaiolli@camara.leg.br",56
@@ -826,9 +826,9 @@
 204428,"camara","05161704497","MARÍLIA VALENÇA ROCHA ARRAES DE ALENCAR","MARÍLIA ARRAES","PE","36844","PT","Partido dos Trabalhadores","Exercício","Titular","F","Superior","dep.mariliaarraes@camara.leg.br",56
 204432,"camara","03258745498","MARINA SANTOS BATISTA DIAS","MARINA SANTOS","PI","37904","SOLIDARIEDADE","Solidariedade","Exercício","Titular","F","Superior","dep.marinasantos@camara.leg.br",56
 204403,"camara","89718925015","MARLON ARATOR SANTOS DA ROSA","MARLON SANTOS","RS","36786","PDT","Partido Democrático Trabalhista","Exercício","Titular","M","Pós-Graduação","dep.marlonsantos@camara.leg.br",56
-204566,"camara","04168850390","ANTONIO DA CRUZ FILGUEIRA NETO","MARRECA FILHO","MA","37900","PATRI","Patriota","Exercício","Titular","M","Superior Incompleto","dep.marrecafilho@camara.leg.br",56
+204566,"camara","04168850390","ANTONIO DA CRUZ FILGUEIRA NETO","MARRECA FILHO","MA","37907","PATRIOTA","Patriota","Exercício","Titular","M","Superior Incompleto","dep.marrecafilho@camara.leg.br",56
 75431,"camara","95887105020","MAURÍCIO ALEXANDRE DZIEDRICKI","MAURÍCIO DZIEDRICKI","RS","36845","PTB","Partido Trabalhista Brasileiro","Exercício","Titular","M","Superior","dep.mauriciodziedricki@camara.leg.br",56
-204486,"camara","15336735191","CARLOS MAURO BENEVIDES FILHO","MAURO BENEVIDES FILHO","CE","36786","PDT","Partido Democrático Trabalhista","Exercício","Titular","M","Doutorado","dep.maurobenevidesfilho@camara.leg.br",56
+204486,"camara","15336735191","CARLOS MAURO BENEVIDES FILHO","MAURO BENEVIDES FILHO","CE","36786","PDT","Partido Democrático Trabalhista","Licença","Titular","M","Doutorado","dep.maurobenevidesfilho@camara.leg.br",56
 141508,"camara","70162000782","MAURO NAZIF RASUL","MAURO NAZIF","RO","36832","PSB","Partido Socialista Brasileiro","Exercício","Titular","M","Superior","dep.mauronazif@camara.leg.br",56
 154178,"camara","04976912809","MILTON VIEIRA PINTO","MILTON VIEIRA","SP","36815","PRB","Partido Republicano Brasileiro","Exercício","Titular","M","Superior Incompleto","dep.miltonvieira@camara.leg.br",56
 204453,"camara","05352897400","NATÁLIA BASTOS BONAVIDES","NATÁLIA BONAVIDES","RN","36844","PT","Partido dos Trabalhadores","Exercício","Titular","F","Mestrado","dep.nataliabonavides@camara.leg.br",56
@@ -845,7 +845,7 @@
 204573,"camara","67871224549","OTTO ROBERTO MENDONÇA DE ALENCAR FILHO","OTTO ALENCAR FILHO","BA","36834","PSD","Partido Social Democrático","Exercício","Titular","M","Pós-Graduação","dep.ottoalencarfilho@camara.leg.br",56
 204570,"camara","57088071304","GILDENEMIR DE LIMA SOUSA","PASTOR GILDENEMYR","MA","36801","PMN","Partido da Mobilização Nacional","Exercício","Titular","M","Superior","dep.pastorgildenemyr@camara.leg.br",56
 204553,"camara","22977040544","MANOEL ISIDORIO DE SANTANA JUNIOR","PASTOR SARGENTO ISIDÓRIO","BA","36898","AVANTE","Avante","Exercício","Titular","M","Superior Incompleto","dep.pastorsargentoisidorio@camara.leg.br",56
-205535,"camara","69305617115","PATRICIA LIMA FERRAZ","PATRICIA FERRAZ","AP","36814","PR","Partido da República",NA,"Suplente","F","Superior","dep.patriciaferraz@camara.leg.br",56
+205535,"camara","69305617115","PATRICIA LIMA FERRAZ","PATRICIA FERRAZ","AP","37906","PL","Partido Liberal",NA,"Suplente","F","Superior","dep.patriciaferraz@camara.leg.br",56
 204377,"camara","57867100172","PAULA MORENO PARO BELMONTE","PAULA BELMONTE","DF","37905","CIDADANIA","Cidadania","Exercício","Titular","F","Superior","dep.paulabelmonte@camara.leg.br",56
 204538,"camara","45417202215","PAULO EDUARDO MAESTRI BENGTSON","PAULO BENGTSON","PA","36845","PTB","Partido Trabalhista Brasileiro","Exercício","Titular","M","Superior","dep.paulobengtson@camara.leg.br",56
 204461,"camara","09911967751","PAULO GUSTAVO GANIME ALVES TEIXEIRA","PAULO GANIME","RJ","37901","NOVO","Partido Novo","Exercício","Titular","M","Pós-Graduação","dep.pauloganime@camara.leg.br",56
@@ -857,13 +857,13 @@
 204406,"camara","20040954072","PEDRO BANDARRA WESTPHALEN","PEDRO WESTPHALEN","RS","37903","PP","Progressistas","Exercício","Titular","M","Superior","dep.pedrowestphalen@camara.leg.br",56
 73943,"camara","21644063204","MARIA PERPÉTUA DE ALMEIDA","PERPÉTUA ALMEIDA","AC","36779","PCdoB","Partido Comunista do Brasil","Exercício","Titular","F","Superior Incompleto","dep.perpetuaalmeida@camara.leg.br",56
 204524,"camara","10627817670","ANTÔNIO PINHEIRO NETO","PINHEIRINHO","MG","37903","PP","Progressistas","Exercício","Titular","M","Superior Incompleto","dep.pinheirinho@camara.leg.br",56
-204529,"camara","18753977874","KATIA DA SILVA SASTRE","POLICIAL KATIA SASTRE","SP","36814","PR","Partido da República","Exercício","Titular","F","Pós-Graduação","dep.policialkatiasastre@camara.leg.br",56
+204529,"camara","18753977874","KATIA DA SILVA SASTRE","POLICIAL KATIA SASTRE","SP","37906","PL","Partido Liberal","Exercício","Titular","F","Pós-Graduação","dep.policialkatiasastre@camara.leg.br",56
 204390,"camara","09242643149","ALCIDES RIBEIRO FILHO","PROFESSOR ALCIDES","GO","37903","PP","Progressistas","Exercício","Titular","M","Pós-Graduação","dep.professoralcides@camara.leg.br",56
 204383,"camara","96311380110","ISRAEL MATOS BATISTA","PROFESSOR ISRAEL BATISTA","DF","36851","PV","Partido Verde","Exercício","Titular","M","Superior","dep.professorisraelbatista@camara.leg.br",56
 204446,"camara","00413473740","JOZIEL FERREIRA CARLOS","PROFESSOR JOZIEL","RJ","36837","PSL","Partido Social Liberal","Exercício","Titular","M","Pós-Graduação","dep.professorjoziel@camara.leg.br",56
 204565,"camara","02159737550","DAYANE JAMILLE CARNEIRO DOS SANTOS PIMENTEL","PROFESSORA DAYANE PIMENTEL","BA","36837","PSL","Partido Social Liberal","Exercício","Titular","F","Pós-Graduação","dep.professoradayanepimentel@camara.leg.br",56
 204467,"camara","29586372120","ROSA NEIDE SANDES DE ALMEIDA","PROFESSORA ROSA NEIDE","MT","36844","PT","Partido dos Trabalhadores","Exercício","Titular","F","Mestrado","dep.professorarosaneide@camara.leg.br",56
-204567,"camara","17672538500","RAIMUNDO MAGALHÃES COSTA","RAIMUNDO COSTA","BA","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.raimundocosta@camara.leg.br",56
+204567,"camara","17672538500","RAIMUNDO MAGALHÃES COSTA","RAIMUNDO COSTA","BA","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.raimundocosta@camara.leg.br",56
 141523,"camara","45877475487","RAUL JEAN LOUIS HENRY JÚNIOR","RAUL HENRY","PE","36899","MDB","Movimento Democrático Brasileiro","Exercício","Titular","M","Mestrado","dep.raulhenry@camara.leg.br",56
 205865,"camara","55194770944","REINHOLD STEPHANES JUNIOR","REINHOLD STEPHANES JUNIOR","PR","36834","PSD","Partido Social Democrático","Exercício","Suplente","M","Superior","dep.reinholdstephanesjunior@camara.leg.br",56
 73801,"camara","20936079487","RENILDO VASCONCELOS CALHEIROS","RENILDO CALHEIROS","PE","36779","PCdoB","Partido Comunista do Brasil","Exercício","Titular","M","Superior","dep.renildocalheiros@camara.leg.br",56
@@ -882,7 +882,7 @@
 90842,"camara","62281038068","RONALDO SANTINI","SANTINI","RS","36845","PTB","Partido Trabalhista Brasileiro","Exercício","Suplente","M","Superior","dep.santini@camara.leg.br",56
 204387,"camara","53447468904","GILSON CARDOSO FAHUR","SARGENTO FAHUR","PR","36834","PSD","Partido Social Democrático","Exercício","Titular","M","Ensino Fundamental","dep.sargentofahur@camara.leg.br",56
 204399,"camara","27696090925","JOSE CARLOS SCHIAVINATO","SCHIAVINATO","PR","37903","PP","Progressistas","Exercício","Titular","M","Superior","dep.schiavinato@camara.leg.br",56
-204438,"camara","33205302400","SERGIO TOLEDO DE ALBUQUERQUE","SERGIO TOLEDO","AL","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.sergiotoledo@camara.leg.br",56
+204438,"camara","33205302400","SERGIO TOLEDO DE ALBUQUERQUE","SERGIO TOLEDO","AL","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.sergiotoledo@camara.leg.br",56
 204437,"camara","66256070453","SEVERINO DE LIRA PESSÔA","SEVERINO PESSOA","AL","36815","PRB","Partido Republicano Brasileiro","Exercício","Titular","M","Ensino Médio","dep.severinopessoa@camara.leg.br",56
 204557,"camara","24067857268","SIDNEY RICARDO DE OLIVEIRA LEITE","SIDNEY LEITE","AM","36834","PSD","Partido Social Democrático","Exercício","Titular","M","Superior","dep.sidneyleite@camara.leg.br",56
 204360,"camara","01739396782","SILVIA CRISTINA AMANCIO CHAGAS","SILVIA CRISTINA","RO","36786","PDT","Partido Democrático Trabalhista","Exercício","Titular","F","Superior","dep.silviacristina@camara.leg.br",56
@@ -906,4 +906,4 @@
 74044,"camara","16159977415","JOSÉ WILSON SANTIAGO","WILSON SANTIAGO","PB","36845","PTB","Partido Trabalhista Brasileiro","Exercício","Titular","M","Superior","dep.wilsonsantiago@camara.leg.br",56
 204463,"camara","10855834730","WLADIMIR BARROS ASSED MATHEUS DE OLIVEIRA","WLADIMIR GAROTINHO","RJ","36834","PSD","Partido Social Democrático","Exercício","Titular","M","Superior","dep.wladimirgarotinho@camara.leg.br",56
 204559,"camara","38247186500","JOSÉ CERQUEIRA DE SANTANA NETO","ZÉ NETO","BA","36844","PT","Partido dos Trabalhadores","Exercício","Titular","M","Pós-Graduação","dep.zeneto@camara.leg.br",56
-204517,"camara","07284044608","JOSE VITOR DE RESENDE AGUIAR","ZÉ VITOR","MG","36814","PR","Partido da República","Exercício","Titular","M","Superior","dep.zevitor@camara.leg.br",56
+204517,"camara","07284044608","JOSE VITOR DE RESENDE AGUIAR","ZÉ VITOR","MG","37906","PL","Partido Liberal","Exercício","Titular","M","Superior","dep.zevitor@camara.leg.br",56
