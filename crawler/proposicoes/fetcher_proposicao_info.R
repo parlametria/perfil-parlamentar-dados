@@ -49,6 +49,8 @@ map_tema_camara_tema_va <- function(tema_camara) {
   
   tema_voz <- case_when(
     str_detect(tema_camara, "Meio Ambiente e Desenvolvimento Sustentável") ~ "Meio Ambiente",
+    str_detect(tema_camara, "Energia, Recursos Hídricos e Minerais") ~ "Meio Ambiente",
+    str_detect(tema_camara, "Agricultura, Pecuária, Pesca e Extrativismo") ~ "Meio Ambiente",
     str_detect(tema_camara, "Direitos Humanos e Minorias") ~ "Direitos Humanos",
     str_detect(tema_camara, "Educação") ~ "Educação",
     TRUE ~ "INDEFINIDO"
