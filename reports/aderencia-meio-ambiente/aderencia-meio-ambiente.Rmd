@@ -1,0 +1,76 @@
+---
+title: "Aderência dos deputados em votações de Meio Ambiente"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+library(DT)
+
+theme_set(theme_minimal())
+
+source(here("crawler/proposicoes/fetcher_proposicao_info.R"))
+source(here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
+```
+
+```{r}
+proposicoes_temas <- fetch_votacoes_plenario_tema()
+
+dados_votos_orientacao <- processa_dados_votacoes()
+
+deputados <- dados_votos_orientacao[[1]]
+votos <- dados_votos_orientacao[[3]] %>% 
+  mutate(id_proposicao = as.character(id_proposicao),
+         id_votacao = as.character(id_votacao),
+         id_parlamentar = as.character(id_parlamentar))
+
+orientacao <- dados_votos_orientacao[[4]] %>% 
+  mutate(id_proposicao = as.character(id_proposicao),
+         id_votacao = as.character(id_votacao))
+```
+
+```{r}
+tema_prop <- "Meio Ambiente"
+
+proposicoes_filtradas <- proposicoes_temas %>% 
+  filter(tema_vozativa == tema_prop)
+
+votos <- votos %>% 
+  filter(id_proposicao %in% proposicoes_filtradas$id)
+
+orientacao <- orientacao %>% 
+  filter(id_proposicao %in% proposicoes_filtradas$id)
+```
+
+```{r}
+dados_aderencia_partido <- processa_dados_deputado_aderencia(votos, orientacao, deputados)
+
+aderencia_partido_votacao <- dados_aderencia_partido[[1]]
+aderencia_partido_summary <- dados_aderencia_partido[[2]]
+
+minimo_membros_partido <- 5
+```
+
+```{r}
+dados_aderencia_governo <- processa_dados_deputado_aderencia_governo(votos, orientacao, deputados)
+
+aderencia_governo_votacao <- dados_aderencia_governo[[1]]
+aderencia_governo_summary <- dados_aderencia_governo[[2]]
+```
+

@@ -139,7 +139,7 @@ processa_dados_deputado_aderencia_governo <- function(votos, orientacao, deputad
            ) %>% 
     mutate(id_deputado = as.character(id_parlamentar),
            partido = "GOVERNO") %>% 
-    mutate(!is.na(id_deputado))
+    filter(!is.na(id_deputado))
     
   return(processa_calculo_aderencia(deputados_votos, deputados, filtrar))
 }
