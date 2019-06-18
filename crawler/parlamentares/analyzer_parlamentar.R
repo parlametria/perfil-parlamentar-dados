@@ -11,6 +11,7 @@ processa_dados_deputados <- function() {
   legislaturas_list <- c(55, 56)
   
   source(here::here("crawler/parlamentares/fetcher_parlamentar.R"))
+  source(here::here("crawler/votacoes/utils_votacoes.R"))
   
   deputados <- purrr::map_df(legislaturas_list, ~ fetch_deputados(.x))
   
@@ -18,6 +19,7 @@ processa_dados_deputados <- function() {
     dplyr::group_by(id) %>% 
     dplyr::rename("ultima_legislatura" = "legislatura") %>% 
     dplyr::mutate(ultima_legislatura = max(ultima_legislatura)) %>% 
+    dplyr::mutate(sg_partido = padroniza_sigla(sg_partido)) %>% 
     unique()
   
   return(deputados)
