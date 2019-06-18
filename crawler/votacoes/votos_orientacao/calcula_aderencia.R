@@ -6,6 +6,7 @@
 #' @examples
 #' orientacao <- compara_voto_com_orientacao(1, -1)
 #' Voto deputado e voto partido possibilidades
+#' "Faltou" ~ 0
 #' "Não" ~ -1
 #' "Sim" ~ 1
 #' "Obstrução" ~ 2

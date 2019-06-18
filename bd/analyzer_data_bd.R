@@ -285,8 +285,7 @@ processa_aderencia <- function(votos_path = here::here("crawler/raw_data/votos.c
   source(here("crawler/votacoes/utils_votacoes.R"))
   source(here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
   
-  votos <- read_csv(votos_path, col_types = cols(.default = "c", voto = "i")) %>% 
-    rename(id_deputado = id_parlamentar)
+  votos <- read_csv(votos_path, col_types = cols(.default = "c", voto = "i"))
   
   orientacoes <- read_csv(orientacoes_path, col_types = cols(.default = "c", voto = "i"))
   
@@ -295,8 +294,10 @@ processa_aderencia <- function(votos_path = here::here("crawler/raw_data/votos.c
     mutate(sg_partido = padroniza_sigla(sg_partido))
   
   aderencia <- processa_dados_deputado_aderencia(votos, orientacoes, deputados, filtrar = FALSE)[[2]]
+  aderencia_governo <- processa_dados_deputado_aderencia_governo(votos, orientacoes, deputados, filtrar = FALSE)[[2]]
   
   aderencia_alt <- aderencia %>% 
+    rbind(aderencia_governo) %>% 
     mutate(casa_enum = 1, # 1 é o código da camara. TODO: estender para senadores
            id_parlamentar_voz = paste0(casa_enum, as.character(id_deputado))) %>% 
     select(id_parlamentar_voz, partido, faltou, partido_liberou, nao_seguiu, seguiu, aderencia = freq)
