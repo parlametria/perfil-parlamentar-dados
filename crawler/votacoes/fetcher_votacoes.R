@@ -29,8 +29,7 @@ fetch_votacoes_ano <- function(ano = 2019) {
             xml_text()
         )
       }) %>%
-      select(id, nome_proposicao, data_votacao)# %>%
-      #distinct()
+      select(id, nome_proposicao, data_votacao)
   
   }, error = function(e) {
     message(e)
