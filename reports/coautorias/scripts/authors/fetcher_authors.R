@@ -63,7 +63,7 @@ fetch_all_autores <- function(proposicoes) {
   autores <- purrr::map_df(proposicoes$id, ~ fetch_autores(.x))
   
   autores <- autores %>%
-    rename(id_req = id, id = id_deputado) %>%
+    rename(id_req = id, id = deputado) %>%
     distinct() %>% 
     group_by(id_req) %>%
     mutate(peso_arestas = 1 / n())
