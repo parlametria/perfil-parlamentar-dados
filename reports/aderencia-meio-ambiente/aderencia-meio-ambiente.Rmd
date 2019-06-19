@@ -86,7 +86,7 @@ Aderência é uma faceta da atuação dos Deputados Federais na câmara em vota�
 
 Para cada votação de cada deputado, identificamos se ele seguiu a orientação do partido e do governo ou não. Em seguida, calculamos o grau de aderência como a proporção das votações em que ele seguiu a orientação do partido ou do governo. Quando o partido ou o governo liberou o deputado em uma votação, essa votação não é considerada.
 
-Existe 1 proposição que possui votações em plenário cujo tema é classficado como **Meio Ambiente**. A **MPV 867/2018** que prorroga o prazo para adesão de produtores rurais ao Programa de Regularização Ambiental. Essa MPV teve `r votos %>% count(id_votacao) %>% nrow()` votações em plenário.
+Existe 1 proposição que possui votações em plenário cujo tema é classificado como **Meio Ambiente**. A **MPV 867/2018** que prorroga o prazo para adesão de produtores rurais ao Programa de Regularização Ambiental. Essa MPV teve `r votos %>% count(id_votacao) %>% nrow()` votações em plenário.
 
 ## Aderência ao Governo
 
@@ -289,7 +289,7 @@ aderencia_governo_summary %>%
   coord_flip() +
   scale_shape_identity() +
   geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
-  labs(x = "", y = "Aderência ao partido (%)",
+  labs(x = "", y = "Aderência ao Governo (%)",
        title = "Distribuição da aderência dos deputados \npor partido") +
   guides(color = FALSE, size = FALSE) +
   theme_ipsum_rc()
