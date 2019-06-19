@@ -12,7 +12,7 @@ a:visited {
 a:hover,
 a:active {
   text-decoration: none;
-  color: #6c757d;
+  color: #7f3c8b;
 }
 
 h3 {
@@ -28,7 +28,7 @@ h3 {
 .navbar {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #20201e;
+  border-bottom: 2px solid #20201e;
   margin-bottom: 3rem;
 }
 
@@ -38,4 +38,49 @@ h3 {
 
 .img-reports {
   margin-bottom: 1.5rem;
+}
+
+.main-title {
+  margin: 0;
+  padding: 0;
+  padding-bottom: 3rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+@media (min-width: 768px) {
+  .main-title {
+    font-size: 1.8rem;
+  }
+}
+@media (min-width: 992px) {
+  .main-title {
+    font-size: 2rem;
+  }
+}
+@media (min-width: 1200px) {
+  .main-title {
+    font-size: 2.2rem;
+  }
+}
+
+.title {
+  border-left: 3px solid #20201e;
+  padding-left: 1rem;
+  font-size: 1rem;
+}
+
+.title > small {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 1.1rem;
+  }
+}
+@media (min-width: 992px) {
+  .title {
+    font-size: 1.3rem;
+  }
 }
