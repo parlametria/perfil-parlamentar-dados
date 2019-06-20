@@ -1,0 +1,101 @@
+{
+  "regex_tipos_documentos": [
+    {
+      "regex": "redação final",
+      "tipo_documento_votacao": "RDF"
+    },
+    {
+      "regex": "projeto de lei complementar",       
+      "tipo_documento_votacao": "PLP"
+    },
+    {
+      "regex": "projeto de lei de conversão.*|plv",
+      "tipo_documento_votacao": "PLV"
+    },
+    {
+      "regex": "projeto de decreto legislativo|pdc",  
+      "tipo_documento_votacao": "PDC"
+    },
+    {
+      "regex": "projeto de resolução|prc",
+      "tipo_documento_votacao": "PRC"
+    },
+    {
+      "regex": "medida provisória|mpv",
+      "tipo_documento_votacao": "MPV"
+    },
+    {
+      "regex": "(substitutivo|emenda(s|)) .*do senado federal",
+      "tipo_documento_votacao": "EMS"
+    },
+    {
+      "regex": "substitutivo (.*comissão|da c.*)",
+      "tipo_documento_votacao": "SBT-A"
+    },
+    {
+      "regex": "subemenda subst(itutiva|.).* relator.*",
+      "tipo_documento_votacao": "SBR"
+    },
+    {
+      "regex": "subemenda substitutiva(.* de plenário|)",
+      "tipo_documento_votacao": "SSP"
+    },
+    {
+      "regex": "projeto de lei|pl |lei ",
+      "tipo_documento_votacao": "PL"
+    },
+    {
+      "regex": "subemenda substitutiva da C.*",
+      "tipo_documento_votacao": "SBE-A"
+    },
+    {
+      "regex": "emenda(s|) aglutinativa(s|)",
+      "tipo_documento_votacao": "EMA"
+    },
+    {
+      "regex": "emenda(s|) de redação",
+      "tipo_documento_votacao": "ERD"
+    },
+    {
+      "regex": "substitutivo|subst\\.",
+      "tipo_documento_votacao": "SBT"
+    },
+    {
+      "regex": "proposta de emenda à constituição|pec ",
+      "tipo_documento_votacao": "PEC"
+    },
+    {
+      "regex": "emenda(s|).*(substitutiva|) (de plenário|)",
+      "tipo_documento_votacao": "EMP"
+    },
+    {
+      "regex": "emenda substitutiva global( de plenário|)",
+      "tipo_documento_votacao": "EMP"
+    },
+    {
+      "regex": "emenda(s|)",
+      "tipo_documento_votacao": "EMD"
+    },
+    {
+      "regex": "redação final",
+      "tipo_documento_votacao": "RDF"
+    },
+    {
+      "regex": "redação final",
+      "tipo_documento_votacao": "RDF"
+    },
+    {
+      "regex": "redação final",
+      "tipo_documento_votacao": "RDF"
+    }
+  ],
+  
+  "artigo_regex": "art(igo|\\.)",
+  "numero_artigo_regex": "?/.*|§.*|.*º",
+  "numero_detaques_regex": "dtq(.|) [\\d]+.*(:|-)",
+  "numero_emenda_regex": "(nº .*)|.*",
+  "only_numbers_regex": "[\\d]+",
+  "begin_with_number_regex": " \\d.*",
+  "empty_string": "",
+  "tipos_documentos_desnecessarios_regex": "req(uerimento|)|urgência|parecer|prorrogação|artigo por artigo|dispensa|efeito suspensivo|diretrizes|dvs|solicita|recurso|consulta|contra|convocação"
+}
