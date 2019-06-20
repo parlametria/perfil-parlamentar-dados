@@ -18,10 +18,10 @@ message("Use --help para mais informações\n")
 
 option_list = list(
 
-  make_option(c("-v", "--votacoes"), type="character", default="../raw_data/tabela_votacoes.csv",
+  make_option(c("-v", "--votacoes"), type="character", default=here::here("crawler/raw_data/tabela_votacoes.csv"),
               help="caminho para o arquivo csv contendo os dados das votações [default= %default]", metavar="character"),
 
-  make_option(c("-o", "--out"), type="character", default="../raw_data/votacoes.csv",
+  make_option(c("-o", "--out"), type="character", default=here::here("crawler/raw_data/votacoes.csv"),
               help="nome do arquivo de saída [default= %default]", metavar="character")
 );
 
