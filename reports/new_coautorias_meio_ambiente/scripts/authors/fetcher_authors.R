@@ -5,9 +5,6 @@ URL <- "https://dadosabertos.camara.leg.br/api/v2/proposicoes/"
 
 get_dataset_parlamentares <- function(datapath) {
   df <- readr::read_csv(datapath) %>%
-    mutate(nome_eleitoral =
-             paste0(nome_eleitoral, " - ", sg_partido, "/", uf)) %>%
-    select(id, nome_eleitoral, sg_partido) %>%
     mutate(id = as.character(id))
   
   return(df)
@@ -48,26 +45,29 @@ fetch_autores <- function(id) {
     })
     
   }, error = function(e) {
-    return(tribble( ~ id, ~ id_deputado))
+    return(tribble( ~ id, ~ deputado))
   })
 
   return(autores)
 }
 
-fetch_all_autores <- function(proposicoes) {
+fetch_all_autores <- function(proposicoes, parlamentares) {
   autores <- purrr::map_df(proposicoes$id, ~ fetch_autores(.x))
   
   autores <- autores %>%
-    rename(id_req = id, nome_eleitoral = id_deputado) %>%
+    rename(id_req = id, nome_eleitoral = deputado) %>%
     distinct() %>% 
     group_by(id_req) %>%
     mutate(peso_arestas = 1 / n())
   
-  return(autores)
+  autores <- autores %>% 
+    mapeia_nome_para_id(parlamentares) %>% 
+    select(id_req, id, peso_arestas)
   
+  return(autores)
 }
 
-get_coautorias <- function(parlamentares, autores, min_peso = 0.1) {
+get_coautorias <- function(parlamentares, autores) {
   coautorias <- autores %>%
     distinct() %>% 
     full_join(autores, by = c("id_req", "peso_arestas")) %>%
@@ -97,8 +97,8 @@ mapeia_nome_para_id <- function(df, parlamentares) {
   
   df <- df %>% 
     mutate(nome_eleitoral_padronizado = padroniza_nome(nome_eleitoral)) %>% 
-    fuzzyjoin::regex_left_join(parlamentares, by = "nome_eleitoral_padronizado") %>% 
-    filter(!is.na(sg_partido)) %>% select(id_req, id, nome_eleitoral = nome_eleitoral.y, sg_partido)
+    left_join(parlamentares, by = "nome_eleitoral_padronizado") %>% 
+    filter(!is.na(sg_partido))
   
   return(df)
 }
@@ -109,11 +109,4 @@ padroniza_nome <- function(nome) {
     toupper(nome) %>% 
       stringr::str_remove(' -.*')
   )
-}
-
-export_autores <- function(proposicoes, parlamentares) {
-  autores <- fetch_all_autores(proposicoes) %>%
-    mapeia_nome_para_id(parlamentares)
-  
-  return(autores)
 }
