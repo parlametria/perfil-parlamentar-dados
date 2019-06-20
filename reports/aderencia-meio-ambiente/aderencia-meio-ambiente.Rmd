@@ -59,15 +59,8 @@ orientacao <- orientacao %>%
 ```
 
 ```{r}
-dados_aderencia_partido <- processa_dados_deputado_aderencia(votos, orientacao, deputados)
-
-aderencia_partido_votacao <- dados_aderencia_partido[[1]]
-aderencia_partido_summary <- dados_aderencia_partido[[2]]
-
 minimo_membros_partido <- 5
-```
 
-```{r}
 dados_aderencia_governo <- processa_dados_deputado_aderencia_governo(votos, orientacao, deputados)
 
 aderencia_governo_votacao <- dados_aderencia_governo[[1]]
@@ -76,15 +69,15 @@ aderencia_governo_summary <- dados_aderencia_governo[[2]]
 
 ### Resumo
 
-Analisamos quais deputados federais mais/menos seguem as orientações de seus partidos e do governo nas votações nominais em plenário da Câmara. Usamos as votações que aconteceram em 2019.
+Analisamos quais deputados federais mais/menos seguem as orientações do Governo nas votações nominais em plenário da Câmara. Usamos as votações que aconteceram em 2019.
 
 <br>
 
 ### O que é aderência
 
-Aderência é uma faceta da atuação dos Deputados Federais na câmara em votações. Um deputado é aderente ao partido quando segue as orientações de seu partido em votações nominais. De forma análoga, o deputado pode ser aderente ao governo se segue suas orientações.
+Aderência é uma faceta da atuação dos Deputados Federais na câmara em votações. Um deputado é aderente ao Governo quando segue as orientações do Governo em votações nominais.
 
-Para cada votação de cada deputado, identificamos se ele seguiu a orientação do partido e do governo ou não. Em seguida, calculamos o grau de aderência como a proporção das votações em que ele seguiu a orientação do partido ou do governo. Quando o partido ou o governo liberou o deputado em uma votação, essa votação não é considerada.
+Para cada votação de cada deputado, identificamos se ele seguiu a orientação do Governo ou não. Em seguida, calculamos o grau de aderência como a proporção das votações em que ele seguiu a orientação do Governo. Quando o Governo não apresentou orientação em uma votação, essa votação não é considerada.
 
 Existe 1 proposição que possui votações em plenário cujo tema é classificado como **Meio Ambiente**. A **MPV 867/2018** que prorroga o prazo para adesão de produtores rurais ao Programa de Regularização Ambiental. Essa MPV teve `r votos %>% count(id_votacao) %>% nrow()` votações em plenário.
 
@@ -256,7 +249,7 @@ data_long %>%
         plot.subtitle = element_text(size = 12))
 ```
 
-### Aderência por partido
+### Aderência nos partidos
 
 Agora estamos interessados em analisar como os partidos e seus componentes seguem a orientação do Governo ou não para o tema de Meio Ambiente.
 
@@ -290,7 +283,7 @@ aderencia_governo_summary %>%
   scale_shape_identity() +
   geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
   labs(x = "", y = "Aderência ao Governo (%)",
-       title = "Distribuição da aderência dos deputados \npor partido") +
+       title = "Distribuição da aderência dos deputados \nnos partidos") +
   guides(color = FALSE, size = FALSE) +
   theme_ipsum_rc()
 ```
@@ -299,41 +292,57 @@ A marca "|" representa a mediana no gráfico. A mediana também é o critério d
 
 Pela visualização é possível perceber que existem claramente partidos que divergem da orientação do governo quando consideramos a mediana das aderências de seus membros. Em outras palavras, deputados do PT, PSOL e PDT e PSB pouco ou nunca aderem a orientação do Governo para as votações de Meio Ambiente. No entanto, existem outliers para esse grupo, como alguns deputados do PDT que possuem aderência superior a 60% ao Governo e dois deputados doo PSB com aderência de 100% ao Governo (Átila Lira - PSB/PI	e Rodrigo Coelho - PSB/SC).
 
-### Por votação
+### Aderência nas Comissões
 
-Olhando de forma geral se os deputados seguiram ou não a orientação do Governo para as `r votos %>% count(id_votacao) %>% nrow()` votações de Meio Ambiente que aconteceram em 2019 podemos identificar que 
+Em seguida, iremos analisar como os Deputados estão distribuídos nas comissões considerando suas aderências ao Governo em votações nominais de plenário. Foram consideradas Comissões Permanentes da Câmara e foram incluídos deputados titulares e suplentes.
 
 ```{r}
-votacoes_summary <- aderencia_governo_votacao %>% 
-  group_by(id_votacao, match) %>% 
-  summarise(n = n()) %>% 
-  ungroup() %>% 
-  mutate(match = case_when(
-      match == -2 ~ "faltou",
-      match == -1 ~ "nao_seguiu",
-      match == 0 ~ "nao_calculado",
-      match == 1 ~ "seguiu",
-      match == 2 ~ "partido_liberou"
-    )) %>% 
-  spread(key = match, value = n) %>% 
-  replace(is.na(.), 0) %>% 
-  mutate(presente = nao_seguiu + seguiu) %>% 
-  mutate(prop_seguiu = seguiu / presente)
+comissoes <- readr::read_csv(here::here("crawler/raw_data/comissoes.csv"))
+composicao_comissoes <- readr::read_csv(here::here("crawler/raw_data/composicao_comissoes.csv"), 
+                                        col_types = cols(id_parlamentar = "c"))
+
+composicao_comissoes <- composicao_comissoes %>% 
+  left_join(comissoes, by = c("comissao_id" = "id")) %>% 
+  select(comissao_id, id_parlamentar, cargo, sigla, nome_comissao = nome)
+
+deputados_comissoes <- aderencia_governo_summary %>% 
+  inner_join(composicao_comissoes, by = c("id_deputado" = "id_parlamentar"))
 ```
 
-```{r fig.height=6}
-votacoes_summary %>% 
-  filter(!is.na(prop_seguiu)) %>% 
-  ggplot(aes(x = prop_seguiu * 100)) +
-  geom_density(aes(y = ..count..), fill = "#91bfda") +
+```{r}
+comissoes_summary <- deputados_comissoes %>% 
+  group_by(sigla) %>% 
+  summarise(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>% 
+  arrange(median) %>%
+  mutate(sigla = factor(sigla, levels = unique(sigla)))
+
+levels <- comissoes_summary %>% 
+  pull(sigla)
+```
+
+```{r}
+deputados_comissoes %>% 
+  group_by(sigla) %>% 
+  mutate(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>%
+  ggplot(aes(x = factor(sigla, levels = levels), y = freq, color = factor(sigla, levels = levels))) +
+  geom_count() +
+  scale_x_discrete(position = "left") +
+  scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
+  scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
+  coord_flip() +
   scale_shape_identity() +
-  geom_point(aes(y = 0), shape = 124, size = 3) +
-  scale_x_continuous(breaks = seq(0, 100, 5), limits = c(50, 100)) +
-  labs(y = "Nº de votações", x = "Aderência ao Governo (%)", title = "Proporção de Aderência por votação") +
+  geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
+  labs(x = "", y = "Aderência ao Governo (%)",
+       title = "Distribuição da aderência dos deputados \nnas Comissões") +
+  guides(color = FALSE, size = FALSE) +
   theme_ipsum_rc()
 ```
 
-Todas as votações se concentram na faixa entre 60% e 80% de aderência ao Governo. Ou seja, o governo acaba tendo a maioria dos votos a seu favor. Foram removidas da visualização as votações nas quais o Governo não orientou.
+É possível perceber uma polarização em praticamente toads as comissões, contudo, a marca "|" que indica a mediana mostra que pelo menos 50% dos deputados na maioria das comissões é aderente ao Governo. 
 
 Abaixo apresentamos uma tabela pesquisável com os dados de todos os deputados que participaram de votações no ano de 2019.
 ```{r}
