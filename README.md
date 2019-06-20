@@ -133,7 +133,7 @@ O r-updater provê dois serviços de atualização.
 Este serviço executa o crawler que obtem os dados do Voz Ativa de diferentes fontes. Para executá-lo basta:
 
 ```
-docker exec -it r-updater sh -c "Rscript update_data.R"
+docker exec -it r-updater sh -c "Rscript bd/update_data.R"
 ```
 Obs: Esse script apenas atualiza os dados em csv e NÃO executa nenhuma operação no banco de dados.
 

@@ -16,5 +16,5 @@ RUN touch .here
 ## Instala dependências
 RUN R -e "install.packages(c('here', 'optparse', 'RCurl', 'xml2'), repos='http://cran.rstudio.com/')"
 
-RUN R -e "devtools::install_github('analytics-ufcg/leggoR', force = T)"
 RUN R -e "devtools::install_github('analytics-ufcg/rcongresso', force = T)"
+RUN R -e "devtools::install_github('analytics-ufcg/leggoR', force = T)"

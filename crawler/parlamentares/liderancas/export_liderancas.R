@@ -12,7 +12,7 @@ message("LEIA O README deste diretório")
 message("Use --help para mais informações\n")
 
 option_list = list(
-  make_option(c("-o", "--output"), type="character", default="../../raw_data/liderancas.csv",
+  make_option(c("-o", "--output"), type="character", default=here::here("crawler/raw_data/liderancas.csv"),
               help="nome do arquivo de saída para as informações de lideranças [default= %default]", metavar="character")
 );
 

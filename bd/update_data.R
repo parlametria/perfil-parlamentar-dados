@@ -38,11 +38,56 @@ tryCatch(
 
 tryCatch(
   {
+    log <- paste0(log, date(), " - Executando crawler de Lideranças...\n")
+    source(here::here("crawler/parlamentares/liderancas/export_liderancas.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Lideranças")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
+tryCatch(
+  {
+    log <- paste0(log, date(), " - Executando crawler de Mandatos...\n")
+    source(here::here("crawler/parlamentares/mandatos/export_mandatos.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Mandatos")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
+tryCatch(
+  {
     log <- paste0(log, date(), " - Executando crawler de Votações...\n")
     source(here::here("crawler/votacoes/fetcher_votos.R"))
   },
   error=function(cond) {
     log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Votações")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
+tryCatch(
+  {
+    log <- paste0(log, date(), " - Executando crawler de Votos e Orientação...\n")
+    source(here::here("crawler/votacoes/votos_orientacao/export_votos_orientacao.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Votos e Orientação")
     message(log_error)
     log <- paste0(log, date(), " ", log_error)
     send_log_to_bot(log)
