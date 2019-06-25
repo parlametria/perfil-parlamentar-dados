@@ -13,6 +13,7 @@ fetch_comissoes_composicao_camara <- function() {
   
   comissoes <- agoradigital::fetch_all_composicao_comissao() %>% 
     dplyr::filter(casa == "camara") %>% 
+    dplyr::filter(!str_detect(sigla, "PEC|PL|MPV")) %>% 
     dplyr::bind_rows(agoradigital::fetch_composicao_comissao(
       sigla = "CE", casa = "camara", 
       orgaos_camara = comissao_educacao)) %>% 

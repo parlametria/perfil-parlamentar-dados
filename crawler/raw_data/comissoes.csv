@@ -1,26 +1,27 @@
 id,casa,sigla,nome
 2001,camara,CAPADR,"Comissão de Agricultura, Pecuária, Abastecimento e Desenvolvimento Rural"
-2002,camara,CCTCI,"Comissão de Ciência e Tecnologia, Comunicação e Informática"
 2003,camara,CCJC,Comissão de Constituição e Justiça e de Cidadania
+2002,camara,CCTCI,"Comissão de Ciência e Tecnologia, Comunicação e Informática"
+536996,camara,CCULT,Comissão de Cultura
 2004,camara,CDC,Comissão de Defesa do Consumidor
-2006,camara,CDU,Comissão de Desenvolvimento Urbano
-2007,camara,CDHM,Comissão de Direitos Humanos e Minorias
 2008,camara,CDEICS,"Comissão de Desenvolvimento Econômico, Indústria, Comércio e Serviços"
-2010,camara,CFT,Comissão de Finanças e Tributação
+2007,camara,CDHM,Comissão de Direitos Humanos e Minorias
+2006,camara,CDU,Comissão de Desenvolvimento Urbano
+2009,camara,CE,Comissão de Educação
+537236,camara,CESPO,Comissão do Esporte
+538421,camara,CESUBCRE,"Comissão Especial destinada a analisar proposições que tratem da concessão de Subsídios Tributários, Financeiros e Creditícios"
 2011,camara,CFFC,Comissão de Fiscalização Financeira e Controle
+2010,camara,CFT,Comissão de Finanças e Tributação
+537871,camara,CIDOSO,Comissão de Defesa dos Direitos da Pessoa Idosa
+2017,camara,CINDRA,"Comissão de Integração Nacional, Desenvolvimento Regional e da Amazônia"
+5438,camara,CLP,Comissão de Legislação Participativa
+6174,camara,CMADS,Comissão de Meio Ambiente e Desenvolvimento Sustentável
 2012,camara,CME,Comissão de Minas e Energia
+537870,camara,CMULHER,Comissão de Defesa dos Direitos da Mulher
+537480,camara,CPD,Comissão de Defesa dos Direitos das Pessoas com Deficiência
+2018,camara,CREDN,Comissão de Relações Exteriores e de Defesa Nacional
+5503,camara,CSPCCO,Comissão de Segurança Pública e Combate ao Crime Organizado
 2014,camara,CSSF,Comissão de Seguridade Social e Família
 2015,camara,CTASP,"Comissão de Trabalho, de Administração e Serviço Público"
-2016,camara,CVT,Comissão de Viação e Transportes
-2017,camara,CINDRA,"Comissão de Integração Nacional, Desenvolvimento Regional e da Amazônia"
-2018,camara,CREDN,Comissão de Relações Exteriores e de Defesa Nacional
-5438,camara,CLP,Comissão de Legislação Participativa
-5503,camara,CSPCCO,Comissão de Segurança Pública e Combate ao Crime Organizado
 6066,camara,CTUR,Comissão de Turismo
-6174,camara,CMADS,Comissão de Meio Ambiente e Desenvolvimento Sustentável
-536996,camara,CCULT,Comissão de Cultura
-537236,camara,CESPO,Comissão do Esporte
-537480,camara,CPD,Comissão de Defesa dos Direitos das Pessoas com Deficiência
-537870,camara,CMULHER,Comissão de Defesa dos Direitos da Mulher
-537871,camara,CIDOSO,Comissão de Defesa dos Direitos da Pessoa Idosa
-2009,camara,CE,Comissão de Educação
+2016,camara,CVT,Comissão de Viação e Transportes
