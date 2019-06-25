@@ -128,18 +128,16 @@ processa_perguntas <- function(perg_data_path = here::here("crawler/raw_data/per
 #' @description Cria os dados dos temas
 #' @return Dataframe com informações dos temas (descrição e id)
 processa_temas <- function() {
-  temas <- data.frame(id = 0:5,
+  temas <- data.frame(id = c(0, 1, 2, 3, 5),
                       tema = c("Meio Ambiente", 
                         "Direitos Humanos", 
                         "Integridade e Transparência", 
                         "Agenda Nacional", 
-                        "Transversal", 
                         "Educação"), 
                       slug = c("meio-ambiente",
                                "direitos-humanos",
                                "transparencia",
                                "agenda-nacional",
-                               "transversal",
                                "educacao"),
                       stringsAsFactors = FALSE)
   
