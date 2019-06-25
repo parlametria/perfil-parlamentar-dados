@@ -97,7 +97,7 @@ Transformamos este peso de relações em um parâmetro, entre 0.1 e 0.9, que é 
                  round(3),
                 0.2)
 
-selectInput("min_peso", "Valor mínimo dos pesos:",
+selectInput("min_peso_dist", "Valor mínimo dos pesos:",
              choices,
             selected = choices[1])
 br()
@@ -157,6 +157,9 @@ Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando um
 <br>
 
 ```{r echo=FALSE, fig.width = 4, fig.height = 3}
+selectInput("min_peso", "Valor mínimo dos pesos:",
+             choices,
+            selected = choices[1])
 forceNetworkOutput("grafo")
 ```
 
@@ -166,71 +169,7 @@ Algumas análises foram encontradas ao modificar o peso das arestas e observar o
  - Mudando o peso para 0.3, já é possível notar a presença de um grupo com fortes ligações de Aliel Machado a Weliton Prado e Alessandro Molon. 
  Percebemos também as duplas fortemente conectadas: algumas compostas por deputados do mesmo partido, como Afonso Florence e Bohn Gass do PT; mas a grande maioria sendo de partidos diferentes, como Julio Lopes e Paulo Abi-Ackel, Leandre e Simone Morgado, Felipe Rigoni e Evair Vieira de Melo.
  - Aumentando ainda mais o peso mínimo para 0.7, teremos apenas duas duplas extremamente conectadas e inclusive estando no topo da tabela de relações: Afonso Florence e Bohn Gass, e Aliel Machado com Weliton Prado.
-
-
-<!-- ##### Grupo 1 -->
-
-<!-- A rede abaixo está fortemente conectada e se tratam de proposições mais populares, contendo vários coautores. -->
-
-<!-- ```{r echo=FALSE, fig.width = 2, fig.height = 2} -->
-<!--   forceNetworkOutput("grafo_grupo1") -->
-<!-- ``` -->
-
-<!-- <br> -->
-
-<!-- ##### Grupo 2 -->
-
-<!-- A rede abaixo é composta por deputados do PSB, o partido cujo deputados mais coautoraram entre si. É possível ver deputados ambientalistas conhecidos, como Alessandro Molon, Aliel Machado e Bira do Pindaré. -->
-
-<!-- ```{r echo=FALSE, fig.width = 4, fig.height = 4} -->
-<!--   forceNetworkOutput("grafo_grupo2") -->
-<!-- ``` -->
-
-<!-- <br> -->
-
-<!-- ##### Grupo 3 -->
-
-<!-- Esta rede é composta predominantemente por deputados do partido MDB, mas que possui também PROS e DEM. -->
-
-<!-- ```{r echo=FALSE, fig.width = 4, fig.height = 4} -->
-<!--   forceNetworkOutput("grafo_grupo3") -->
-<!-- ``` -->
-
-
-<!-- <br> -->
-
-<!-- ##### Grupo 4 -->
-
-<!-- ```{r echo=FALSE, fig.width = 4, fig.height = 4} -->
-<!--   forceNetworkOutput("grafo_grupo4") -->
-<!-- ``` -->
-
-<!-- <br> -->
-
-<!-- ##### Grupo 5 -->
-
-<!-- ```{r echo=FALSE, fig.width = 4, fig.height = 4} -->
-<!--   forceNetworkOutput("grafo_grupo5") -->
-<!-- ``` -->
-
-<!-- <br> -->
-
-<!-- ##### Grupo 6 -->
-
-
-<!-- ```{r echo=FALSE, fig.width = 4, fig.height = 4} -->
-<!--   forceNetworkOutput("grafo_grupo6") -->
-<!-- ``` -->
-
-<!-- <br> -->
-
-<!-- ##### Grupo 7 -->
-
-<!-- ```{r echo=FALSE, fig.width = 4, fig.height = 4} -->
-<!--   forceNetworkOutput("grafo_grupo7") -->
-<!-- ``` -->
-
-
+ 
 ```{r echo=FALSE}
 
 generate_graph_by_group <- function(df, id_group) {
@@ -252,7 +191,7 @@ generate_graph_by_group <- function(df, id_group) {
 output$hist <- renderPlot({
   if(nrow(coautorias) > 0) {
     coautorias %>%
-    filter(peso_arestas >= input$min_peso) %>% 
+    filter(peso_arestas >= input$min_peso_dist) %>% 
     ggplot(aes(x = peso_arestas)) +
     geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#10726B") +
     scale_x_continuous(limits = c(0, max(coautorias$peso_arestas)), 
@@ -343,7 +282,7 @@ output$dt <-
       mutate(peso_arestas = round(peso_arestas, 3)) %>% 
       select(nome_eleitoral.x, nome_eleitoral.y, peso_arestas, num_coautorias) %>% 
       distinct() %>% 
-      filter(peso_arestas >= input$min_peso) %>% 
+      filter(peso_arestas >= input$min_peso_dist) %>% 
       rename(peso_relacao = peso_arestas, 
              nome_deputado_a = nome_eleitoral.x,
              nome_deputado_b = nome_eleitoral.y,
@@ -355,62 +294,6 @@ output$dt <-
 output$grafo <-
   networkD3::renderForceNetwork({
     graph <- getCoautorias()
-    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
-      generate_graph(graph[[1]], graph[[2]])
-    }
-  })
-
-output$grafo_grupo1 <- 
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 1)
-    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
-      generate_graph(graph[[1]], graph[[2]])
-    }
-  })
-
-output$grafo_grupo2 <-
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 2)
-    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
-      generate_graph(graph[[1]], graph[[2]])
-    }
-  })
-
-output$grafo_grupo3 <-
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 3)
-    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
-      generate_graph(graph[[1]], graph[[2]])
-    }
-  })
-
-output$grafo_grupo4 <-
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 4)
-    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
-      generate_graph(graph[[1]], graph[[2]])
-    }
-  })
-
-output$grafo_grupo5 <-
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 5)
-    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
-      generate_graph(graph[[1]], graph[[2]])
-    }
-  })
-
-output$grafo_grupo6 <-
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 6)
-    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
-      generate_graph(graph[[1]], graph[[2]])
-    }
-  })
-
-output$grafo_grupo7 <-
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 7)
     if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
       generate_graph(graph[[1]], graph[[2]])
     }
