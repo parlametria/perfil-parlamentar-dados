@@ -1,0 +1,301 @@
+---
+title: "Grupos de coautorias em Meio Ambiente na legislatura atual"
+runtime: shiny
+output:
+  html_document:
+    code_folding: hide
+    css: style.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r echo = FALSE, warning=FALSE, message=FALSE}
+library(networkD3)
+library(tidyverse)
+library(hrbrthemes)
+theme_set(theme_minimal())
+
+env <- "dev"
+path <- ''
+
+if (env == "dev") {
+  path = "reports/new_coautorias_meio_ambiente/"
+} 
+
+source(here::here(paste0(path, "scripts/propositions/fetcher_propositions.R")))
+source(here::here(paste0(path, "scripts/authors/fetcher_authors.R")))
+source(here::here(paste0(path, "scripts/generate-graph.R")))
+source(here::here(paste0(path, "scripts/authors/analyzer_autorias.R")))
+source(here::here(paste0(path, "scripts/propositions/fetcher_votacoes.R")))
+
+URL_PROPOSICOES <- here::here(paste0(path, "data/proposicoes.csv"))
+
+PATH_PARLAMENTARES <- here::here(paste0(path, "data/parlamentares.csv"))
+
+PATH_AUTORES <- here::here(paste0(path, "data/autores.csv"))
+
+PATH_COAUTORIAS <- here::here(paste0(path, "data/coautorias.csv"))
+```
+
+```{r echo = FALSE, warning=FALSE, message=FALSE}
+proposicoes <- read_csv(URL_PROPOSICOES, col_types = "ccddc")
+
+parlamentares <- read_csv(PATH_PARLAMENTARES, col_types = "ccc")
+
+autores <- get_dataset_autores(PATH_AUTORES)
+
+coautorias <- read_csv(PATH_COAUTORIAS, col_types = "cdccicc") %>% 
+  # filter(num_coautorias > 1) %>% 
+  mutate(partido.x = str_extract(nome_eleitoral.x, "- .*(?=/)") %>% str_remove("- "),
+         partido.y = str_extract(nome_eleitoral.y, "- .*(?=/)") %>% str_remove("- "))
+```
+
+<br>
+
+#### As proposições
+
+As proposições utilizadas para a detecção dos grupos foram as apresentadas a partir do dia 2 de fevereiro de 2019, correspondentes à legislatura 56. Dentre as mais de 15 mil proposições (incluindo emendas, requerimentos, indicações, mensagens, etc.), 368 foram selecionadas por se encaixarem em Meio Ambiente, tema-alvo desta análise. A seguir são feitos alguns levantamentos sobre as coautorias destas proposições.
+
+### A detecção dos grupos
+
+A detecção de grupos é feita da seguinte forma: inicialmente se combinam em pares os autores de todas as proposições respectivas relacionadas. Isso quer dizer que, para uma proposição do tipo requerimento que foi feito por 3 autores, x, y e z, serão criados 3 pares: um contendo x e y, um com x e z e outro com y e z. Desta forma, cada um dos deputados autores de uma proposição terá uma relação com todos os outros coautores. 
+
+<br>
+
+#### Tabela de pares
+
+A tabela abaixo lista todos os pares e respectivas relações, calculadas de acordo com o peso explicado abaixo. A partir dela podemos observar os três pares de parlamentares que mais coautoraram em proposições relacionadas ao Meio Ambiente: Afonso Florence e Bohn Gass, ambos do PT, com 2 coautorias conjuntas e peso total igual a 1. Isso significa que estes deputados participaram juntos da criação de 2 proposições do Meio Ambiente. Em segundo lugar, com 2 coautorias e 0.83 de peso da relação, estão Weliton Prado e Aliel Machado, que participa também do terceiro lugar, com Alessandro Molon em 3 proposições e peso igual a 0.55.
+
+```{r echo=FALSE}
+DT::DTOutput("dt")
+```
+
+<br>
+
+#### Peso das relações 
+
+Processando os dados, observamos que há requerimentos que são coautorados por muitos deputados. A fim de deixar os grupos mais refinados e precisamos, optamos por adicionar uma penalidade que varia de acordo com o número de pessoas envolvidas: quanto mais coautores em uma proposição, menos precisas estarão as relações entre os deputados e por isso terão pesos menores; de forma análoga, uma proposição que possua apenas dois coautores, terá o peso da relação máximo e estarão muito mais próximos.
+
+Transformamos este peso de relações em um parâmetro, entre 0.1 e 0.9, que é usado para a geração dos grupos: quanto maior o seu valor, mais forte serão as relações entre os deputados e, consequentemente, os grupos gerados. A partir deste peso, filtramos todas as relações que possuem valor maior ou igual a ele e executamos a criação dos grupos. 
+
+<br>
+
+```{r echo=FALSE, warning=FALSE}
+ choices = seq(
+               0.1,
+                max(coautorias$peso_arestas) %>% 
+                 round(3),
+                0.2)
+
+selectInput("min_peso_dist", "Valor mínimo dos pesos:",
+             choices,
+            selected = choices[1])
+br()
+
+plotOutput("hist")
+```
+
+Acima se encontra a distribuição das relações de acordo com o peso fornecido como entrada. Colocando *0.1* como valor de entrada, se pode visualizar os pares que possuem no mínimo uma relação igual a esse peso. Percebemos que a maior parte das relações entre os deputados se encontra entre 0.4 e 0.6.
+
+<br>
+
+#### Os parlamentares
+
+Abaixo podemos observar quais deputados coautoraram mais e menos nas proposições do Meio Ambiente apresentadas na atual legislatura.
+
+A partir do gráfico acima, os deputados que mais se agruparam nas autorias das proposições coletadas são Aliel Machado, Bohn Gass, Afonso Florence, Weliton Prado, Alessandro Molon, Felipe Rigoni e Zé Silva. Para ver com quem estes deputados coautoraram, basta pesquisar pelo seus nomes na tabela de pares apresentada anteriormente.
+
+```{r}
+plotOutput("hist_parla_top_20")
+```
+
+<br>
+
+De forma análoga, abaixo podemos ver quais deputados preferem coautorar menos: Antonio Carlos Mendes Thame, Augusto Carvalho, Chico Alencar, Lindoma Garçon, Lucas Gonzalez e Sarney Filho.
+
+```{r}
+plotOutput("hist_parla_top_minus_20")
+```
+
+<br>
+
+#### Os partidos
+
+Também é possível fazer a análise dos mais agrupados e mais isolados do ponto de vista dos partidos políticos. A partir do gráfico abaixo, percebemos que o PSB é o partido que mais se agrupa na hora de criar proposições. Em segundo lugar está o PT, com baixo número de deputados componentes, indicando que este pode ser o partido mais agrupado em valores proporcionais.
+
+Os partidos mais isolados são o *PMN, REDE, PHS e PRP. Um motivo provável para a obtenção deste resultado é que o número de deputados que compõe estes partidos é muito baixo, muitas vezes com 1 parlamentar apenas.*
+
+
+```{r}
+plotOutput("hist_part")
+```
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+#### Rede de grupos
+
+<br>
+
+Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando uma técnica chamada `agrupamento`, que agrupa os dados de forma automática com base na similaridade entre eles. **Para o peso mínimo de 0.1 das relações**, considerando todas as coautorias, foram gerados 7 grupos no total, mas a quantidade de grupos pode ser menor conforme o valor peso aumentar. A seguir é possível visualizar as redes de grupos que coautoraram em proposições relacionadas ao Meio Ambiente na legislatura atual. 
+
+<br>
+
+```{r echo=FALSE, fig.width = 4, fig.height = 3}
+selectInput("min_peso", "Valor mínimo dos pesos:",
+             choices,
+            selected = choices[1])
+forceNetworkOutput("grafo")
+```
+
+Algumas análises foram encontradas ao modificar o peso das arestas e observar os grupos formados:
+
+ - Com peso mínimo de 0.1, é possível notar a importância de Alessandro Molon na conexão de dois grandes grupos, indicando que este deputado coautora tanto com os deputados do mesmo partido que o seu, o PSB, quanto de partidos diferentes, como PSD, PSDB, PP, PDT, DEM, PT e PTB. 
+ - Mudando o peso para 0.3, já é possível notar a presença de um grupo com fortes ligações de Aliel Machado a Weliton Prado e Alessandro Molon. 
+ Percebemos também as duplas fortemente conectadas: algumas compostas por deputados do mesmo partido, como Afonso Florence e Bohn Gass do PT; mas a grande maioria sendo de partidos diferentes, como Julio Lopes e Paulo Abi-Ackel, Leandre e Simone Morgado, Felipe Rigoni e Evair Vieira de Melo.
+ - Aumentando ainda mais o peso mínimo para 0.7, teremos apenas duas duplas extremamente conectadas e inclusive estando no topo da tabela de relações: Afonso Florence e Bohn Gass, e Aliel Machado com Weliton Prado.
+ 
+```{r echo=FALSE}
+
+generate_graph_by_group <- function(df, id_group) {
+  nodes <- df[[1]] %>%
+  filter(group == id_group) %>% 
+    select(-index) %>% 
+    rowid_to_column("index") %>% 
+    mutate(index = index - 1)
+  
+  edges <- generate_edges(coautorias, nodes)
+  
+  return(list(nodes, edges))
+}
+
+```
+
+```{r echo=FALSE, context="server"}
+
+output$hist <- renderPlot({
+  if(nrow(coautorias) > 0) {
+    coautorias %>%
+    filter(peso_arestas >= input$min_peso_dist) %>% 
+    ggplot(aes(x = peso_arestas)) +
+    geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#10726B") +
+    scale_x_continuous(limits = c(0, max(coautorias$peso_arestas)), 
+                       breaks = seq(0, max(coautorias$peso_arestas), 0.2)) +
+    labs(x = "Peso das relações", y = "Número de relações") +
+    theme_ipsum_rc()
+  }
+})
+
+output$hist_parla_top_20 <- renderPlot({
+  g <- autores %>% 
+    group_by(id) %>% 
+    summarise(peso = sum(peso_arestas)) %>% 
+    arrange(desc(peso)) %>% 
+    inner_join(parlamentares, by="id") %>% 
+    head(20)
+  
+   g %>% 
+    ggplot(aes(x = reorder(nome_eleitoral, peso), y = peso)) +
+    geom_bar(fill = "#ED9B44", color = "#B27437", stat="identity") +
+    coord_flip() +
+    labs(x = "Deputado", 
+         y = "Peso total de relações", 
+         title="Deputados mais agrupados",
+         subtitle = "Os deputados que formam mais grupos na hora de criar proposições") +
+    scale_y_continuous(breaks = seq(0, max(g$peso), 0.2),
+                       limits = c(0, max(g$peso))) +
+    theme_ipsum_rc()
+})
+
+output$hist_parla_top_minus_20 <- renderPlot({
+  g <- autores %>% 
+    group_by(id) %>% 
+    summarise(peso = sum(peso_arestas)) %>% 
+    filter(peso > 0.1) %>% 
+    arrange(desc(peso)) %>% 
+    inner_join(parlamentares, by="id") %>% 
+    tail(20)
+  
+   g %>% 
+    ggplot(aes(x = reorder(nome_eleitoral, peso), y = peso)) +
+    geom_bar(fill = "#ED9B44", color = "#B27437", stat="identity") +
+    coord_flip() +
+    labs(x = "Deputado", 
+         y = "Peso total de relações", 
+         title="Deputados mais isolados",
+         subtitle = "Os deputados que quase não se agrupam nas criações de proposições") +
+    scale_y_continuous(breaks = seq(0, max(g$peso), 0.04),
+                       limits = c(0, max(g$peso))) +
+    theme_ipsum_rc()
+})
+
+output$hist_part <- renderPlot({
+  g <- autores %>% 
+    inner_join(parlamentares, by="id") %>% 
+    group_by(sg_partido) %>% 
+    summarise(peso = sum(peso_arestas)) %>% 
+    filter(peso > 0.1) %>% 
+    arrange(desc(peso)) %>% 
+    filter(sg_partido != 'S.PART.')
+  
+   g %>% 
+    ggplot(aes(x = reorder(sg_partido, peso), y = peso)) +
+    geom_bar(fill = "#80BDE5", color = "#5884A0", stat="identity") +
+    coord_flip() +
+    labs(x = "Partido", 
+         y = "Peso total das relações", 
+         title="Distribuição dos agrupamentos por partido",
+         subtitle = "Partidos cujo deputados agrupam nas criações de proposições") +
+    scale_y_continuous(breaks = seq(0, max(g$peso), 1),
+                       limits = c(0, max(g$peso))) +
+    theme_ipsum_rc()
+}, height = 500)
+
+getCoautorias <- reactive({
+  nodes_edges <- 
+    generate_nodes_and_edges(
+      autores,
+      parlamentares,
+      coautorias %>% 
+        filter(peso_arestas >= input$min_peso))
+  return(nodes_edges)
+})
+
+output$dt <- 
+  DT::renderDataTable(
+    coautorias %>% 
+      mutate(peso_arestas = round(peso_arestas, 3)) %>% 
+      select(nome_eleitoral.x, nome_eleitoral.y, peso_arestas, num_coautorias) %>% 
+      distinct() %>% 
+      filter(peso_arestas >= input$min_peso_dist) %>% 
+      rename(peso_relacao = peso_arestas, 
+             nome_deputado_a = nome_eleitoral.x,
+             nome_deputado_b = nome_eleitoral.y,
+             coautorias_conjuntas = num_coautorias) %>% 
+      arrange(desc(peso_relacao)), 
+    options = list(pageLength = 10,
+                   scrollX = TRUE))
+  
+output$grafo <-
+  networkD3::renderForceNetwork({
+    graph <- getCoautorias()
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
+  })
+```

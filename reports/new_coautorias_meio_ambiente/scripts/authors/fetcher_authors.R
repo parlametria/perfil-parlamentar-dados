@@ -5,9 +5,6 @@ URL <- "https://dadosabertos.camara.leg.br/api/v2/proposicoes/"
 
 get_dataset_parlamentares <- function(datapath) {
   df <- readr::read_csv(datapath) %>%
-    mutate(nome_eleitoral =
-             paste0(nome_eleitoral, " - ", sg_partido, "/", uf)) %>%
-    select(id, nome_eleitoral, sg_partido) %>%
     mutate(id = as.character(id))
   
   return(df)
@@ -36,43 +33,41 @@ fetch_autores <- function(id) {
     data <- 
       httr::GET(url,
                 httr::accept_json()) %>%
-      httr::content('text',
-                    encoding = 'utf-8') %>%
+      httr::content('text', encoding = 'utf-8') %>%
       xml2::read_html()  %>%
-      rvest::html_nodes('#content') %>%
-      rvest::html_nodes('a') %>%
-      rvest::html_attr("href") %>%
-      as.data.frame() %>%
-      filter(!is.na(.)) %>%
-      mutate(id_deputado = stringr::str_extract(., "[\\d]+"),
-             id = as.character(id)) %>%
-      select(id, id_deputado)
+      rvest::html_nodes('#content') %>% 
+      rvest::html_nodes('span') %>% 
+      rvest::html_text()
     
-    if (nrow(data) == 0) {
-      return(tribble( ~ id, ~ id_deputado))
-    }
-
+    res <- 
+      purrr::map_df(data[3:length(data)], function(x) {
+        return(tribble(~ id, ~ deputado, id, x))
+    })
+    
   }, error = function(e) {
-    return(tribble( ~ id, ~ id_deputado))
+    return(tribble( ~ id, ~ deputado))
   })
 
   return(autores)
 }
 
-fetch_all_autores <- function(proposicoes) {
+fetch_all_autores <- function(proposicoes, parlamentares) {
   autores <- purrr::map_df(proposicoes$id, ~ fetch_autores(.x))
   
   autores <- autores %>%
-    rename(id_req = id, id = deputado) %>%
+    rename(id_req = id, nome_eleitoral = deputado) %>%
     distinct() %>% 
     group_by(id_req) %>%
     mutate(peso_arestas = 1 / n())
   
-  return(autores)
+  autores <- autores %>% 
+    mapeia_nome_para_id(parlamentares) %>% 
+    select(id_req, id, peso_arestas)
   
+  return(autores)
 }
 
-get_coautorias <- function(parlamentares, autores, min_peso) {
+get_coautorias <- function(parlamentares, autores) {
   coautorias <- autores %>%
     distinct() %>% 
     full_join(autores, by = c("id_req", "peso_arestas")) %>%
@@ -96,10 +91,22 @@ get_coautorias <- function(parlamentares, autores, min_peso) {
   return(coautorias)
 }
 
+mapeia_nome_para_id <- function(df, parlamentares) {
+  parlamentares <- parlamentares %>% 
+    mutate(nome_eleitoral_padronizado = padroniza_nome(nome_eleitoral))
+  
+  df <- df %>% 
+    mutate(nome_eleitoral_padronizado = padroniza_nome(nome_eleitoral)) %>% 
+    left_join(parlamentares, by = "nome_eleitoral_padronizado") %>% 
+    filter(!is.na(sg_partido))
+  
+  return(df)
+}
 
-#proposicoes = read_csv(here::here("reports/coautorias/data/proposicoes.csv"))
-#autores_1 = fetch_all_autores(proposicoes %>% slice(0:6000))
-#autores_2 = fetch_all_autores(proposicoes %>% slice(6001:12000))
-#autores_3 = fetch_all_autores(proposicoes %>% slice(12001:18000))
-#autores_4 = fetch_all_autores(proposicoes %>% slice(18001:24000))
-#autores_5 = fetch_all_autores(proposicoes %>% slice(24001:nrow(proposicoes)))
+
+padroniza_nome <- function(nome) {
+  return(
+    toupper(nome) %>% 
+      stringr::str_remove(' -.*')
+  )
+}
