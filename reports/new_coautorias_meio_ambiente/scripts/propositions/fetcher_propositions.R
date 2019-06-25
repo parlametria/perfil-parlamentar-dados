@@ -56,10 +56,6 @@ map_tema_camara_tema_va <- function(tema_camara) {
 #' @examples
 #' proposicoes_temas <- fetch_votacoes_plenario_tema()
 fetch_votacoes_plenario_tema <- function() {
-  library(tidyverse)
-  library(here)
-  source(here("crawler/votacoes/fetcher_votacoes.R"))
-  
   proposicoes_votadas <-
     purrr::map_df(
       c(2019, 2020, 2021, 2022),

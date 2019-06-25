@@ -36,6 +36,7 @@ source(here::here(paste0(path, "scripts/propositions/fetcher_propositions.R")))
 source(here::here(paste0(path, "scripts/authors/fetcher_authors.R")))
 source(here::here(paste0(path, "scripts/generate-graph.R")))
 source(here::here(paste0(path, "scripts/authors/analyzer_autorias.R")))
+source(here::here(paste0(path, "scripts/propositions/fetcher_votacoes.R")))
 
 URL_PROPOSICOES <- here::here(paste0(path, "data/proposicoes.csv"))
 
@@ -158,6 +159,8 @@ Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando um
 ```{r echo=FALSE, fig.width = 4, fig.height = 3}
 forceNetworkOutput("grafo")
 ```
+
+Algumas análises foram encontradas ao modificar o peso das arestas e observar os grupos formados:
 
  - Com peso mínimo de 0.1, é possível notar a importância de Alessandro Molon na conexão de dois grandes grupos, indicando que este deputado coautora tanto com os deputados do mesmo partido que o seu, o PSB, quanto de partidos diferentes, como PSD, PSDB, PP, PDT, DEM, PT e PTB. 
  - Mudando o peso para 0.3, já é possível notar a presença de um grupo com fortes ligações de Aliel Machado a Weliton Prado e Alessandro Molon. 
