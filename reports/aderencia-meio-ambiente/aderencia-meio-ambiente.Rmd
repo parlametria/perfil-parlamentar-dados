@@ -1,0 +1,356 @@
+---
+title: "Aderência dos deputados em votações de Meio Ambiente"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+library(DT)
+
+theme_set(theme_minimal())
+
+source(here("crawler/proposicoes/fetcher_proposicao_info.R"))
+source(here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
+```
+
+```{r results='hide'}
+proposicoes_temas <- fetch_votacoes_plenario_tema()
+
+dados_votos_orientacao <- processa_dados_votacoes()
+
+deputados <- dados_votos_orientacao[[1]]
+votos <- dados_votos_orientacao[[3]] %>% 
+  mutate(id_proposicao = as.character(id_proposicao),
+         id_votacao = as.character(id_votacao),
+         id_parlamentar = as.character(id_parlamentar))
+
+orientacao <- dados_votos_orientacao[[4]] %>% 
+  mutate(id_proposicao = as.character(id_proposicao),
+         id_votacao = as.character(id_votacao))
+```
+
+```{r}
+tema_prop <- "Meio Ambiente"
+
+proposicoes_filtradas <- proposicoes_temas %>% 
+  filter(tema_vozativa == tema_prop)
+
+votos <- votos %>% 
+  filter(id_proposicao %in% proposicoes_filtradas$id)
+
+orientacao <- orientacao %>% 
+  filter(id_proposicao %in% proposicoes_filtradas$id)
+```
+
+```{r}
+minimo_membros_partido <- 5
+
+dados_aderencia_governo <- processa_dados_deputado_aderencia_governo(votos, orientacao, deputados)
+
+aderencia_governo_votacao <- dados_aderencia_governo[[1]]
+aderencia_governo_summary <- dados_aderencia_governo[[2]]
+```
+
+### Resumo
+
+Analisamos quais deputados federais mais/menos seguem as orientações do Governo nas votações nominais em plenário da Câmara. Usamos as votações que aconteceram em 2019.
+
+<br>
+
+### O que é aderência
+
+Aderência é uma faceta da atuação dos Deputados Federais na câmara em votações. Um deputado é aderente ao Governo quando segue as orientações do Governo em votações nominais.
+
+Para cada votação de cada deputado, identificamos se ele seguiu a orientação do Governo ou não. Em seguida, calculamos o grau de aderência como a proporção das votações em que ele seguiu a orientação do Governo. Quando o Governo não apresentou orientação em uma votação, essa votação não é considerada.
+
+Existe 1 proposição que possui votações em plenário cujo tema é classificado como **Meio Ambiente**. A **MPV 867/2018** que prorroga o prazo para adesão de produtores rurais ao Programa de Regularização Ambiental. Essa MPV teve `r votos %>% count(id_votacao) %>% nrow()` votações em plenário.
+
+## Aderência ao Governo
+
+### Quem tem menos aderência?
+
+```{r}
+aderencia_governo_summary <- aderencia_governo_summary %>% 
+  left_join(deputados %>% 
+              filter(ultima_legislatura == 56) %>% 
+              select(id, dep_partido = sg_partido, uf),
+            by = c("id_deputado" = "id")) %>% 
+  mutate(nome = paste0(str_to_title(nome), " - ", dep_partido, "/", uf)) %>% 
+  select(id_deputado, nome, dep_partido, uf, partido, faltou, partido_liberou, nao_seguiu,
+         seguiu, total_votacoes, freq)
+```
+
+Abaixo apresentamos a lista dos 20 deputadas e deputados que menos seguiram a orientação do Governo para as votações relacionadas ao Meio Ambiente.
+
+```{r fig.height=7}
+levels <- aderencia_governo_summary %>%
+  arrange(freq, desc(nao_seguiu), faltou) %>% 
+  pull(nome)
+
+aderencia_governo_summary %>% 
+  arrange(freq, desc(nao_seguiu), faltou) %>% 
+  head(20) %>% 
+  ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = nao_seguiu)) + 
+  geom_point(col="tomato3", size = 3) + 
+  geom_segment(aes(x = nome, 
+                   xend = nome, 
+                   y = 0, 
+                   yend = nao_seguiu), 
+               size = 0.1) +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 100, 2)) +
+  labs(title = "Deputados com menos aderência ao Governo",
+       y = "Nº de votações em que não seguiu o Governo",
+       x = "Deputado") +
+    theme_ipsum_rc()
+```
+
+Todos estes deputados possuem uma aderência de 0% ao governo e estão ordenados pelo número de votações em que não seguiu a orientação do governo.
+
+Existem outros `r aderencia_governo_summary %>% filter(freq == 0) %>% nrow()` deputados que também possuem 0% de aderência ao governo. Você pode conferir a lista no fim deste relatório.
+
+### Mais detalhes sobre quem não adere
+
+Para saber mais detalhes sobre o comportamento destes deputados nas `r votos %>% count(id_votacao) %>% nrow()` votações nominais acompanhe o gráfico abaixo.
+
+```{r}
+paleta <- c("#91bfda", "#E89D68", "#e06264", "#BA7E53")
+match_valores <- c("seguiu", "faltou", "nao_seguiu", "partido_liberou")
+
+data_long <- aderencia_governo_summary %>% 
+  arrange(freq, desc(nao_seguiu), faltou) %>% 
+  head(20) %>% 
+  gather("match", "n", faltou:seguiu) %>% 
+  filter(match %in% match_valores)
+  
+levels <- aderencia_governo_summary %>% 
+  arrange(freq, desc(nao_seguiu), faltou) %>% 
+  pull(nome)
+
+data_long %>% 
+  mutate(match = factor(match, 
+                        levels = c("faltou",
+                                   "partido_liberou",
+                                   "nao_seguiu",
+                                   "seguiu"),
+                        ordered = TRUE)) %>% 
+  filter(n > 0) %>% 
+  ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = n, fill = match)) +
+  geom_bar(width = .7, stat = "identity", position = "stack") +
+  geom_text(aes(label = n),
+            hjust = 1.3,
+            position = "stack"
+            ) +
+  coord_flip() +
+  scale_fill_manual(values = c("partido_liberou" = paleta[4],
+                               "faltou" = paleta[2], 
+                               "nao_seguiu" = paleta[3],
+                               "seguiu" = paleta[1]),
+                    name = "", labels = c("Faltou",
+                                          "Governo não orientou",
+                                          "Não seguiu",
+                                          "Seguiu")) +
+  labs(x = "Deputados", 
+       y = "Nº de votações", 
+       title = "Deputados com menos aderência ao Governo",
+       subtitle = "Ordenados por frequência de aderência") + 
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+### Quem tem mais aderência?
+
+```{r fig.height=7}
+levels <- aderencia_governo_summary %>%
+  arrange(desc(freq), desc(seguiu), faltou) %>% 
+  pull(nome)
+
+aderencia_governo_summary %>% 
+  arrange(desc(freq), desc(seguiu), faltou) %>% 
+  head(20) %>% 
+  ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = seguiu)) + 
+  geom_point(col="tomato3", size = 3) + 
+  geom_segment(aes(x = nome, 
+                   xend = nome, 
+                   y = 0, 
+                   yend = seguiu), 
+               size = 0.1) +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 100, 2)) +
+  labs(title = "Deputados com mais aderência ao Governo",
+       y = "Nº de votações em que seguiu o Governo",
+       x = "Deputado") +
+    theme_ipsum_rc()
+```
+
+Todos estes deputados possuem uma aderência de 100% ao governo nas votações de Meio Ambiente e existem outros `r aderencia_governo_summary %>% filter(freq == 100) %>% nrow()` com aderência de 100% ao governo neste tema.
+
+```{r}
+paleta <- c("#91bfda", "#E89D68", "#e06264", "#BA7E53")
+match_valores <- c("seguiu", "faltou", "nao_seguiu", "partido_liberou")
+
+data_long <- aderencia_governo_summary %>% 
+  arrange(desc(freq), desc(seguiu), faltou) %>% 
+  head(20) %>% 
+  gather("match", "n", faltou:seguiu) %>% 
+  filter(match %in% match_valores)
+  
+levels <- aderencia_governo_summary %>% 
+  arrange(desc(freq), desc(seguiu), faltou) %>% 
+  pull(nome)
+
+data_long %>% 
+  mutate(match = factor(match, 
+                        levels = c("faltou",
+                                   "partido_liberou",
+                                   "nao_seguiu",
+                                   "seguiu"),
+                        ordered = TRUE)) %>% 
+  filter(n > 0) %>% 
+  ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = n, fill = match)) +
+  geom_bar(width = .7, stat = "identity", position = "stack") +
+  geom_text(aes(label = n),
+            hjust = 1.3,
+            position = "stack"
+            ) +
+  coord_flip() +
+  scale_fill_manual(values = c("partido_liberou" = paleta[4],
+                               "faltou" = paleta[2], 
+                               "nao_seguiu" = paleta[3],
+                               "seguiu" = paleta[1]),
+                    name = "", labels = c("Governo não orientou",
+                                          "Seguiu",
+                                          "Não seguiu",
+                                          "Faltou")) +
+  labs(x = "Deputados", 
+       y = "Nº de votações", 
+       title = "Deputados com mais aderência ao Governo") + 
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+### Aderência nos partidos
+
+Agora estamos interessados em analisar como os partidos e seus componentes seguem a orientação do Governo ou não para o tema de Meio Ambiente.
+
+```{r}
+partidos_summary <- aderencia_governo_summary %>% 
+  group_by(dep_partido) %>% 
+  summarise(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>% 
+  arrange(median) %>% 
+  filter(n > minimo_membros_partido) %>% 
+  mutate(dep_partido = factor(dep_partido, levels = unique(dep_partido)))
+
+levels <- partidos_summary %>% 
+  pull(dep_partido)
+```
+
+```{r}
+aderencia_governo_summary %>% 
+  group_by(dep_partido) %>% 
+  mutate(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>% 
+  filter(dep_partido %in% (partidos_summary %>% pull(dep_partido))) %>% 
+  ggplot(aes(x = factor(dep_partido, levels = levels), y = freq, color = factor(dep_partido, levels = levels))) +
+  geom_count() +
+  scale_x_discrete(position = "left") +
+  scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
+  scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
+  coord_flip() +
+  scale_shape_identity() +
+  geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
+  labs(x = "", y = "Aderência ao Governo (%)",
+       title = "Distribuição da aderência dos deputados \nnos partidos") +
+  guides(color = FALSE, size = FALSE) +
+  theme_ipsum_rc()
+```
+
+A marca "|" representa a mediana no gráfico. A mediana também é o critério de ordenação dos partidos. A maioria dos partidos aderem em 100% de mediana
+
+Pela visualização é possível perceber que existem claramente partidos que divergem da orientação do governo quando consideramos a mediana das aderências de seus membros. Em outras palavras, deputados do PT, PSOL e PDT e PSB pouco ou nunca aderem a orientação do Governo para as votações de Meio Ambiente. No entanto, existem outliers para esse grupo, como alguns deputados do PDT que possuem aderência superior a 60% ao Governo e dois deputados doo PSB com aderência de 100% ao Governo (Átila Lira - PSB/PI	e Rodrigo Coelho - PSB/SC).
+
+### Aderência nas Comissões
+
+Em seguida, iremos analisar como os Deputados estão distribuídos nas comissões considerando suas aderências ao Governo em votações nominais de plenário. Foram consideradas Comissões Permanentes da Câmara e foram incluídos deputados titulares e suplentes.
+
+```{r}
+comissoes <- readr::read_csv(here::here("crawler/raw_data/comissoes.csv"))
+composicao_comissoes <- readr::read_csv(here::here("crawler/raw_data/composicao_comissoes.csv"), 
+                                        col_types = cols(id_parlamentar = "c"))
+
+composicao_comissoes <- composicao_comissoes %>% 
+  left_join(comissoes, by = c("comissao_id" = "id")) %>% 
+  select(comissao_id, id_parlamentar, cargo, sigla, nome_comissao = nome)
+
+deputados_comissoes <- aderencia_governo_summary %>% 
+  inner_join(composicao_comissoes, by = c("id_deputado" = "id_parlamentar"))
+```
+
+```{r}
+comissoes_summary <- deputados_comissoes %>% 
+  group_by(sigla) %>% 
+  summarise(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>% 
+  arrange(median) %>%
+  mutate(sigla = factor(sigla, levels = unique(sigla)))
+
+levels <- comissoes_summary %>% 
+  pull(sigla)
+```
+
+```{r}
+deputados_comissoes %>% 
+  group_by(sigla) %>% 
+  mutate(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>%
+  ggplot(aes(x = factor(sigla, levels = levels), y = freq, color = factor(sigla, levels = levels))) +
+  geom_count() +
+  scale_x_discrete(position = "left") +
+  scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
+  scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
+  coord_flip() +
+  scale_shape_identity() +
+  geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
+  labs(x = "", y = "Aderência ao Governo (%)",
+       title = "Distribuição da aderência dos deputados \nnas Comissões") +
+  guides(color = FALSE, size = FALSE) +
+  theme_ipsum_rc()
+```
+
+É possível perceber uma polarização em praticamente todas as comissões, contudo, a marca "|" que indica a mediana mostra que pelo menos 50% dos deputados na maioria das comissões é aderente ao Governo. 
+
+Abaixo apresentamos uma tabela pesquisável com os dados de todos os deputados que participaram de votações no ano de 2019.
+```{r}
+aderencia_governo_summary %>% 
+  mutate(freq = round(freq, 2)) %>% 
+  select(id_deputado, nome, dep_partido, freq, seguiu, nao_seguiu, faltou, partido_liberou) %>% 
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE, 
+            colnames = c("id", "Nome", "Partido", "Aderência", "Seguiu", "Não Seguiu", "Faltou", "Governo liberou"))
+```
