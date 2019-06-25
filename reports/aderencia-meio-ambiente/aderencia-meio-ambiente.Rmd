@@ -201,7 +201,7 @@ aderencia_governo_summary %>%
     theme_ipsum_rc()
 ```
 
-Todos estes deputados possuem uma aderência de 1000% ao governo nas votações de Meio Ambiente e existem outros `r aderencia_governo_summary %>% filter(freq == 100) %>% nrow()` com aderência de 100% ao governo neste tema.
+Todos estes deputados possuem uma aderência de 100% ao governo nas votações de Meio Ambiente e existem outros `r aderencia_governo_summary %>% filter(freq == 100) %>% nrow()` com aderência de 100% ao governo neste tema.
 
 ```{r}
 paleta <- c("#91bfda", "#E89D68", "#e06264", "#BA7E53")
@@ -342,7 +342,7 @@ deputados_comissoes %>%
   theme_ipsum_rc()
 ```
 
-É possível perceber uma polarização em praticamente toads as comissões, contudo, a marca "|" que indica a mediana mostra que pelo menos 50% dos deputados na maioria das comissões é aderente ao Governo. 
+É possível perceber uma polarização em praticamente todas as comissões, contudo, a marca "|" que indica a mediana mostra que pelo menos 50% dos deputados na maioria das comissões é aderente ao Governo. 
 
 Abaixo apresentamos uma tabela pesquisável com os dados de todos os deputados que participaram de votações no ano de 2019.
 ```{r}
