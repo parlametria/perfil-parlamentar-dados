@@ -97,6 +97,7 @@ id_parlamentar_voz,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_ex
 174212,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 174212,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 174212,55,2015-02-01,2016-04-28,Titular,7,Licença para Tratamento de Saúde
+174212,56,2019-05-28,NA,Suplente,NA,NA
 174213,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 174213,55,2015-02-01,2015-08-06,Titular,12,Secretário de Estado
 1160553,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
@@ -1043,7 +1044,7 @@ id_parlamentar_voz,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_ex
 174056,53,2007-02-01,2008-08-06,Titular,20,Licença Conjunta Consecutiva
 174056,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 1188097,55,2015-03-25,2015-05-12,Suplente,12,Secretário de Estado
-1188097,56,2019-03-28,NA,Suplente,NA,NA
+1188097,56,2019-03-28,2019-06-11,Suplente,12,Secretário de Estado
 1141509,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 1141509,54,2011-02-01,2015-01-02,Titular,12,Secretário de Estado
 1141509,55,2015-02-01,2015-02-06,Titular,12,Secretário de Estado
@@ -1143,6 +1144,7 @@ id_parlamentar_voz,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_ex
 174319,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 174319,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 174319,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
+174319,56,2019-06-11,NA,Suplente,NA,NA
 1160642,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 1160642,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
 1160642,56,2019-02-01,NA,Titular,NA,NA
@@ -1783,7 +1785,7 @@ id_parlamentar_voz,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_ex
 1204566,56,2019-02-01,NA,Titular,NA,NA
 175431,54,2011-02-08,2011-02-15,Suplente,12,Secretário de Estado
 175431,56,2019-02-01,NA,Titular,NA,NA
-1204486,56,2019-02-01,NA,Titular,NA,NA
+1204486,56,2019-02-01,2019-05-28,Titular,12,Secretário de Estado
 1141508,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 1141508,54,2011-02-01,2013-01-01,Titular,16,Renúncia
 1141508,56,2019-02-01,NA,Titular,NA,NA
