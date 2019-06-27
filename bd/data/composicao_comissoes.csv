@@ -411,7 +411,7 @@ id_comissao_voz,id_parlamentar_voz,cargo,situacao
 12008,1141555,Suplente,Suplente
 12008,1178992,Suplente,Suplente
 12008,1204559,Titular,Titular
-12007,1204554,Titular,Titular
+12007,1178937,Titular,Titular
 12007,1204414,Titular,Titular
 12007,1207176,Titular,Titular
 12007,1204561,Suplente,Suplente
@@ -422,6 +422,7 @@ id_comissao_voz,id_parlamentar_voz,cargo,situacao
 12007,1204364,Titular,Titular
 12007,1160575,Titular,Titular
 12007,1204411,Titular,Titular
+12007,1204354,Suplente,Suplente
 12007,1204447,Suplente,Suplente
 12007,1204393,Suplente,Suplente
 12007,1204531,Suplente,Suplente
@@ -439,7 +440,6 @@ id_comissao_voz,id_parlamentar_voz,cargo,situacao
 12007,1154178,Suplente,Suplente
 12007,1160556,NA,Titular
 12007,174160,Suplente,Suplente
-12007,1204529,Suplente,Suplente
 12007,1160601,Suplente,Suplente
 12007,1204480,Suplente,Suplente
 12007,1178961,Suplente,Suplente
@@ -730,6 +730,7 @@ id_comissao_voz,id_parlamentar_voz,cargo,situacao
 12010,1178896,Suplente,Suplente
 12010,1204363,Titular,Titular
 12010,1204573,Titular,Titular
+12010,174319,Titular,Titular
 12010,1204377,Suplente,Suplente
 12010,1178860,Suplente,Suplente
 12010,1204461,Titular,Titular
@@ -1303,6 +1304,7 @@ id_comissao_voz,id_parlamentar_voz,cargo,situacao
 12015,1160575,Titular,Titular
 12015,1178871,Suplente,Suplente
 12015,1178969,Titular,Titular
+12015,1204411,Titular,Titular
 12015,1160598,NA,Titular
 12015,1204548,Suplente,Suplente
 12015,1178964,Suplente,Suplente

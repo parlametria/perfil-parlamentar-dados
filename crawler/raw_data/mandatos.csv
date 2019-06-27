@@ -97,6 +97,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 74212,camara,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 74212,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 74212,camara,55,2015-02-01,2016-04-28,Titular,7,Licença para Tratamento de Saúde
+74212,camara,56,2019-05-28,NA,Suplente,NA,NA
 74213,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 74213,camara,55,2015-02-01,2015-08-06,Titular,12,Secretário de Estado
 160553,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
@@ -1043,7 +1044,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 74056,camara,53,2007-02-01,2008-08-06,Titular,20,Licença Conjunta Consecutiva
 74056,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 188097,camara,55,2015-03-25,2015-05-12,Suplente,12,Secretário de Estado
-188097,camara,56,2019-03-28,NA,Suplente,NA,NA
+188097,camara,56,2019-03-28,2019-06-11,Suplente,12,Secretário de Estado
 141509,camara,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 141509,camara,54,2011-02-01,2015-01-02,Titular,12,Secretário de Estado
 141509,camara,55,2015-02-01,2015-02-06,Titular,12,Secretário de Estado
@@ -1143,6 +1144,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 74319,camara,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 74319,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 74319,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
+74319,camara,56,2019-06-11,NA,Suplente,NA,NA
 160642,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 160642,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
 160642,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1783,7 +1785,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204566,camara,56,2019-02-01,NA,Titular,NA,NA
 75431,camara,54,2011-02-08,2011-02-15,Suplente,12,Secretário de Estado
 75431,camara,56,2019-02-01,NA,Titular,NA,NA
-204486,camara,56,2019-02-01,NA,Titular,NA,NA
+204486,camara,56,2019-02-01,2019-05-28,Titular,12,Secretário de Estado
 141508,camara,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 141508,camara,54,2011-02-01,2013-01-01,Titular,16,Renúncia
 141508,camara,56,2019-02-01,NA,Titular,NA,NA

@@ -1,40 +1,40 @@
 id_parlamentar_voz,cargo,bloco_partido
-1178975,Lider,"Bloco PP, MDB, PTB"
+1122974,Lider,"Bloco PP, MDB, PTB"
 1160541,Vice-lider,"Bloco PP, MDB, PTB"
 1204459,Vice-lider,"Bloco PP, MDB, PTB"
 1171623,Vice-lider,"Bloco PP, MDB, PTB"
 1178954,Vice-lider,"Bloco PP, MDB, PTB"
 1179001,Vice-lider,"Bloco PP, MDB, PTB"
-1122974,Vice-lider,"Bloco PP, MDB, PTB"
 1204549,Vice-lider,"Bloco PP, MDB, PTB"
-193083,Vice-lider,"Bloco PP, MDB, PTB"
 166828,Vice-lider,"Bloco PP, MDB, PTB"
 1108338,Vice-lider,"Bloco PP, MDB, PTB"
 1151208,Vice-lider,"Bloco PP, MDB, PTB"
-1204430,Vice-lider,"Bloco PP, MDB, PTB"
 1204406,Vice-lider,"Bloco PP, MDB, PTB"
 1204524,Vice-lider,"Bloco PP, MDB, PTB"
 1204380,Vice-lider,"Bloco PP, MDB, PTB"
 1204539,Vice-lider,"Bloco PP, MDB, PTB"
 1178884,Vice-lider,"Bloco PP, MDB, PTB"
-1198783,Vice-lider,"Bloco PP, MDB, PTB"
 1178959,Vice-lider,"Bloco PP, MDB, PTB"
 1204500,Vice-lider,"Bloco PP, MDB, PTB"
+1198783,Vice-lider,"Bloco PP, MDB, PTB"
+193083,Vice-lider,"Bloco PP, MDB, PTB"
+1178975,Vice-lider,"Bloco PP, MDB, PTB"
+1204430,Vice-lider,"Bloco PP, MDB, PTB"
 174400,Lider,PT
 173604,Vice-lider,PT
 1204503,Vice-lider,PT
 1204559,Vice-lider,PT
-1204428,Vice-lider,PT
-1178986,Vice-lider,PT
-1204495,Vice-lider,PT
 1160575,Vice-lider,PT
-1160535,Vice-lider,PT
 174161,Vice-lider,PT
 174398,Vice-lider,PT
-1132504,Vice-lider,PT
 1204480,Vice-lider,PT
 1160604,Vice-lider,PT
-1178873,Vice-lider,PT
+1132504,Vice-lider,PT
+1178986,Vice-lider,PT
+1204428,Vice-lider,PT
+1204495,Vice-lider,PT
+1160535,Vice-lider,PT
+173482,Vice-lider,PT
 1164359,Lider,PSL
 1204477,Vice-lider,PSL
 1204479,Vice-lider,PSL
@@ -45,11 +45,11 @@ id_parlamentar_voz,cargo,bloco_partido
 1204455,Vice-lider,PSL
 1204544,Vice-lider,PSL
 1204388,Vice-lider,PSL
-1204367,Vice-lider,PSL
 1204411,Vice-lider,PSL
 1204502,Vice-lider,PSL
 1204569,Vice-lider,PSL
-1204351,Vice-lider,PSL
+1204367,Vice-lider,PSL
+1204378,Vice-lider,PSL
 174043,Lider,PL
 1204556,Vice-lider,PL
 1160673,Vice-lider,PL
@@ -67,8 +67,8 @@ id_parlamentar_voz,cargo,bloco_partido
 1160587,Vice-lider,PSD
 174317,Vice-lider,PSD
 1141450,Vice-lider,PSD
-1204522,Vice-lider,PSD
 1204447,Vice-lider,PSD
+1204522,Vice-lider,PSD
 1204392,Vice-lider,PSD
 1178930,Vice-lider,PSD
 1178922,Lider,PSB
@@ -78,8 +78,8 @@ id_parlamentar_voz,cargo,bloco_partido
 1204405,Vice-lider,PSB
 1204558,Vice-lider,PSB
 1204561,Vice-lider,PSB
-1204525,Vice-lider,PSB
-174419,Vice-lider,PSB
+1206231,Vice-lider,PSB
+173586,Vice-lider,PSB
 1160531,Lider,PRB
 1204576,Vice-lider,PRB
 1204572,Vice-lider,PRB
@@ -87,8 +87,8 @@ id_parlamentar_voz,cargo,bloco_partido
 1204425,Vice-lider,PRB
 198057,Vice-lider,PRB
 1204491,Vice-lider,PRB
-1204373,Vice-lider,PRB
-1141408,Vice-lider,PRB
+1160674,Vice-lider,PRB
+174366,Vice-lider,PRB
 174262,Lider,PSDB
 1204358,Vice-lider,PSDB
 1204560,Vice-lider,PSDB
@@ -98,6 +98,13 @@ id_parlamentar_voz,cargo,bloco_partido
 1204496,Vice-lider,PSDB
 1204471,Vice-lider,PSDB
 1160635,Vice-lider,PSDB
+1178854,Lider,DEM
+1141422,Vice-lider,DEM
+1204536,Vice-lider,DEM
+1160545,Vice-lider,DEM
+1178947,Vice-lider,DEM
+1204498,Vice-lider,DEM
+1204527,Vice-lider,DEM
 1133439,Lider,PDT
 1178835,Vice-lider,PDT
 1133968,Vice-lider,PDT
@@ -106,17 +113,11 @@ id_parlamentar_voz,cargo,bloco_partido
 173460,Vice-lider,PDT
 174299,Vice-lider,PDT
 1204533,Vice-lider,PDT
-1178854,Lider,DEM
-1141422,Vice-lider,DEM
-1204536,Vice-lider,DEM
-1160545,Vice-lider,DEM
-1178947,Vice-lider,DEM
-1204498,Vice-lider,DEM
 1160665,Lider,SOLIDARIEDADE
 1204439,Vice-lider,SOLIDARIEDADE
 1204408,Vice-lider,SOLIDARIEDADE
-1204364,Vice-lider,SOLIDARIEDADE
 1160632,Vice-lider,SOLIDARIEDADE
+1141518,Vice-lider,SOLIDARIEDADE
 1204391,Lider,PODE
 1204508,Vice-lider,PODE
 1204359,Vice-lider,PODE
@@ -128,11 +129,11 @@ id_parlamentar_voz,cargo,bloco_partido
 1178934,Lider,PROS
 1204487,Vice-lider,PROS
 1178939,Vice-lider,PROS
-1204379,Vice-lider,PROS
+1160640,Vice-lider,PROS
 174060,Lider,PCdoB
 173801,Vice-lider,PCdoB
-181055,Vice-lider,PCdoB
 173943,Vice-lider,PCdoB
+181055,Vice-lider,PCdoB
 1204423,Lider,PSC
 1204441,Vice-lider,PSC
 1204482,Vice-lider,PSC
@@ -140,14 +141,14 @@ id_parlamentar_voz,cargo,bloco_partido
 1204355,Vice-lider,CIDADANIA
 1204377,Vice-lider,CIDADANIA
 1156190,Lider,NOVO
-1204519,Vice-lider,NOVO
 1204461,Vice-lider,NOVO
+1204365,Vice-lider,NOVO
 1160510,Lider,AVANTE
 1204553,Vice-lider,AVANTE
 1198197,Vice-lider,AVANTE
 1204494,Lider,PATRIOTA
-1160642,Vice-lider,PATRIOTA
 1204518,Vice-lider,PATRIOTA
+1204566,Vice-lider,PATRIOTA
 1178832,Lider,PV
 1204488,Vice-lider,PV
 1204552,Representante,PMN
@@ -163,6 +164,7 @@ id_parlamentar_voz,cargo,bloco_partido
 1178993,Vice-lider,Governo
 1204531,Vice-lider,Governo
 174554,Vice-lider,Governo
+1178981,Vice-lider,Governo
 1160527,Lider,Maioria
 1160511,Lider,Oposição
 1204394,Vice-lider,Oposição
