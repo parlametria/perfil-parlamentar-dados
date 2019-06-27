@@ -151,29 +151,22 @@ processa_temas <- function() {
 processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/tabela_votacoes.csv")) {
   library(tidyverse)
   library(here)
+  source(here("crawler/proposicoes/fetch_proposicoes_voz_ativa.R"))
   
-  proposicoes <- read_csv(prop_data_path)
+  proposicoes_questionario <- fetch_proposicoes_questionario()
   
-  colnames(proposicoes) <- c("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema", 
-                             "id_proposicao", "resumo", "objeto_votacao", "casa", "no_ar_vozativa")
-
-  proposicoes_alt <- proposicoes %>% 
-    dplyr::mutate(tema_id = dplyr::case_when(
-      tema == "Meio Ambiente" ~ 0,
-      tema == "Direitos Humanos" ~ 1,
-      tema == "Integridade e Transparência" ~ 2,
-      tema == "Agenda Nacional" ~ 3,
-      tema == "Transversal" ~ 4,
-      TRUE ~ 5
-    )) %>% 
-    dplyr::select(-tema) %>% 
-    dplyr::distinct(id_votacao, .keep_all= TRUE) %>% 
-    dplyr::filter(!is.na(id_votacao)) %>% 
-    dplyr::mutate(id_proposicao = as.character(id_proposicao)) %>% 
-    dplyr::mutate(status_proposicao = "Ativa") %>% 
-    dplyr::select("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema_id", "status_proposicao", "id_proposicao", "casa")
+  proposicoes_plenario <- fetch_proposicoes_plenario_selecionadas()
   
-  return(proposicoes_alt)
+  proposicoes <- proposicoes_questionario %>% 
+    rbind(proposicoes_plenario) %>% 
+    group_by(id_proposicao) %>% 
+    mutate(n_prop = row_number()) %>% 
+    ungroup() %>% 
+    mutate(id_proposicao = if_else(n_prop > 1, paste0(id_proposicao, n_prop), id_proposicao)) %>% 
+    select(-n_prop) %>% 
+    mutate(id_proposicao = as.numeric(id_proposicao))
+  
+  return(proposicoes)
 }
 
 #' @title Processa dados de votações

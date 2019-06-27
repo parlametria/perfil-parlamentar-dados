@@ -38,15 +38,14 @@ CREATE TABLE IF NOT EXISTS "perguntas" (
     PRIMARY KEY ("id"));
 
 CREATE TABLE IF NOT EXISTS "proposicoes" (
-    "projeto_lei" VARCHAR(255),    
-    "id_votacao" INTEGER, 
+    "id_proposicao" INTEGER,    
+    "casa" VARCHAR(40),
+    "projeto_lei" VARCHAR(40), 
     "titulo" VARCHAR(255), 
     "descricao" VARCHAR(800), 
-    "tema_id" INTEGER REFERENCES "temas" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
     "status_proposicao" VARCHAR(40) DEFAULT 'Inativa',
-    "id_proposicao" VARCHAR(40), 
-    "casa" VARCHAR(40),
-    PRIMARY KEY ("id_votacao"));
+    "status_importante" VARCHAR(255) DEFAULT 'Inativa',
+    PRIMARY KEY ("id_proposicao"));
 
 CREATE TABLE IF NOT EXISTS "votacoes" (     
     "id_votacao" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE,
