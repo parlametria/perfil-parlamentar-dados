@@ -126,3 +126,9 @@ CREATE TABLE IF NOT EXISTS "liderancas" (
     "bloco_partido" VARCHAR(60),
     PRIMARY KEY("id_parlamentar_voz", "bloco_partido")
 );
+
+CREATE TABLE IF NOT EXISTS "partido" (    
+    "id" INTEGER,
+    "sigla" VARCHAR(40),
+    PRIMARY KEY("id")
+);

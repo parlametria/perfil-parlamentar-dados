@@ -9,3 +9,4 @@
 \copy mandatos FROM '/data/mandatos.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER; 
 \copy aderencia FROM '/data/aderencia.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER; 
 \copy liderancas FROM '/data/liderancas.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER; 
+\copy partido FROM '/data/partidos.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
