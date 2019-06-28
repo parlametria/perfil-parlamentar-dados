@@ -15,6 +15,14 @@ CREATE TABLE IF NOT EXISTS "usuarios" (
     "token" VARCHAR(255), 
     PRIMARY KEY ("id"));
 
+CREATE TABLE IF NOT EXISTS "partido" (    
+    "id" INTEGER,
+    "sigla" VARCHAR(40),
+    "tipo" VARCHAR(90),
+    "situacao" VARCHAR(60),
+    PRIMARY KEY("id")
+);
+
 CREATE TABLE IF NOT EXISTS "parlamentares" (
     "id_parlamentar_voz" VARCHAR(40),
     "id_parlamentar" VARCHAR(40) DEFAULT NULL,
@@ -125,11 +133,4 @@ CREATE TABLE IF NOT EXISTS "liderancas" (
     "cargo" VARCHAR(40),
     "bloco_partido" VARCHAR(60),
     PRIMARY KEY("id_parlamentar_voz", "bloco_partido")
-);
-
-CREATE TABLE IF NOT EXISTS "partido" (    
-    "id" INTEGER,
-    "sigla" VARCHAR(40),
-    "situacao" VARCHAR(60),
-    PRIMARY KEY("id")
 );
