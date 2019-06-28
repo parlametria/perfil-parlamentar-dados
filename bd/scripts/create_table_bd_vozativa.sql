@@ -47,6 +47,11 @@ CREATE TABLE IF NOT EXISTS "proposicoes" (
     "status_importante" VARCHAR(255) DEFAULT 'Inativa',
     PRIMARY KEY ("id_proposicao"));
 
+CREATE TABLE IF NOT EXISTS "proposicoes_temas" (
+    "id_proposicao" INTEGER REFERENCES "proposicoes" ("id_proposicao") ON DELETE SET NULL ON UPDATE CASCADE,    
+    "id_tema" INTEGER REFERENCES "temas" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    PRIMARY KEY ("id_proposicao", "id_tema"));
+
 CREATE TABLE IF NOT EXISTS "votacoes" (     
     "id_votacao" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE,
     "id_parlamentar_voz" VARCHAR REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,

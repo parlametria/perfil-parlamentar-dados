@@ -169,6 +169,26 @@ processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/t
   return(proposicoes)
 }
 
+#' @title Processa dados dos temas das proposições
+#' @description Processa os dados dos temas de proposições
+#' @return Dataframe com informações dos temas das proposições (cada tema para cada proposição é uma observação)
+processa_proposicoes_temas <- function() {
+  library(tidyverse)
+  library(here)
+  
+  source(here("crawler/proposicoes/process_proposicao_tema.R"))
+  
+  proposicoes_questionario <- process_proposicoes_questionario_temas()
+  
+  proposicoes_plenario <- process_proposicoes_plenario_selecionadas_temas()
+  
+  proposicoes <- proposicoes_questionario %>% 
+    rbind(proposicoes_plenario) %>% 
+    distinct(id_proposicao, id_tema = tema_id)
+  
+  return(proposicoes)
+}
+
 #' @title Processa dados de votações
 #' @description Processa os dados de votações e retorna no formato  a ser utilizado pelo banco de dados
 #' @param vot_data_path Caminho para o arquivo de dados de votações sem tratamento
