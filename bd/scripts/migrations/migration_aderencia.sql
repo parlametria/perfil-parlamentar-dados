@@ -3,10 +3,10 @@ CREATE TEMP TABLE temp_aderencia AS SELECT * FROM aderencia LIMIT 0;
 
 \copy temp_aderencia FROM './data/aderencia.csv' DELIMITER ',' CSV HEADER;
 
-INSERT INTO aderencia (id_parlamentar_voz, partido, faltou, partido_liberou, nao_seguiu, seguiu, aderencia)
-SELECT id_parlamentar_voz, partido, faltou, partido_liberou, nao_seguiu, seguiu, aderencia
+INSERT INTO aderencia (id_parlamentar_voz, id_partido, faltou, partido_liberou, nao_seguiu, seguiu, aderencia)
+SELECT id_parlamentar_voz, id_partido, faltou, partido_liberou, nao_seguiu, seguiu, aderencia
 FROM temp_aderencia
-ON CONFLICT (id_parlamentar_voz, partido) 
+ON CONFLICT (id_parlamentar_voz, id_partido) 
 DO
   UPDATE
   SET 
@@ -17,8 +17,8 @@ DO
     aderencia = EXCLUDED.aderencia;
 
 DELETE FROM aderencia
-WHERE (id_parlamentar_voz, partido) NOT IN
-  (SELECT id_parlamentar_voz, partido
+WHERE (id_parlamentar_voz, id_partido) NOT IN
+  (SELECT id_parlamentar_voz, id_partido
    FROM temp_aderencia); 
 
 DROP TABLE temp_aderencia;
