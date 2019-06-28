@@ -68,11 +68,11 @@ tryCatch(
 
 tryCatch(
   {
-    log <- paste0(log, date(), " - Executando crawler de Votações...\n")
-    source(here::here("crawler/votacoes/fetcher_votos.R"))
+    log <- paste0(log, date(), " - Executando crawler de Votos (posições)...\n")
+    source(here::here("crawler/votacoes/export_votos_posicoes.R"))
   },
   error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Votações")
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Votos (posições)")
     message(log_error)
     log <- paste0(log, date(), " ", log_error)
     send_log_to_bot(log)

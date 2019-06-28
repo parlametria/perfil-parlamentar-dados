@@ -6,22 +6,6 @@ source(here::here("crawler/parlamentares/fetcher_parlamentar.R"))
 library(tidyverse)
 library(rcongresso)
 
-#' @title Enumera votações
-#' @description Recebe um dataframe com coluna voto e enumera o valor para um número
-#' @param df Dataframe com a coluna voto
-#' @return Dataframe com coluna voto enumerada
-#' @examples
-#' enumera_votacoes(df)
-enumera_votacoes <- function(df) {
-  df %>%
-    mutate(voto = case_when(str_detect(voto, "Não") ~ -1,
-                            str_detect(voto, "Sim") ~ 1,
-                            str_detect(voto, "Obstrução") ~ 2,
-                            str_detect(voto, "Abstenção") ~ 3,
-                            str_detect(voto, "Art. 17") ~ 4,
-                            TRUE ~ 0))
-}
-
 #' @title Enumera tipos de objetivos de votações
 #' @description Recebe um dataframe com coluna obj_votacao e enumera o valor para um número
 #' @param df Dataframe com a coluna obj_votacao
@@ -77,7 +61,8 @@ fetch_votos_camara <- function(id_proposicao, id_votacao, resumo_votacao, objeto
         obj_votacao = xml_attr(x, "ObjVotacao"),
         resumo = xml_attr(x, "Resumo"),
         cod_sessao = xml_attr(x, "codSessao"),
-        data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
+        data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y"),
+        hora = xml_attr(x, 'Hora')
       )
     })
 
@@ -107,12 +92,15 @@ fetch_votos_camara <- function(id_proposicao, id_votacao, resumo_votacao, objeto
       }) %>%
     mutate(obj_votacao = votacao$obj_votacao,
            resumo = votacao$resumo,
-           data_hora = votacao$data,
+           hora = votacao$hora,
+           cod_sessao = votacao$cod_sessao,
            id_votacao = id_votacao,
            id_deputado = as.integer(id_deputado)) %>%
     select(obj_votacao,
            resumo,
            id_votacao,
+           hora,
+           cod_sessao,
            id_deputado,
            partido,
            voto)
@@ -127,6 +115,8 @@ fetch_votos_camara <- function(id_proposicao, id_votacao, resumo_votacao, objeto
 #' @examples
 #' processa_votos_camara(votacoes)
 processa_votos_camara <- function(votacoes) {
+  source(here::here("crawler/votacoes/utils_votacoes.R"))
+  
   proposicao_votacao <- votacoes %>% 
     dplyr::filter(!is.na(id_sessao)) %>% 
     dplyr::select(id_proposicao, id_sessao, resumo, objeto_votacao)
@@ -151,7 +141,7 @@ processa_votos_camara <- function(votacoes) {
   votos_alt <- votos %>% 
     dplyr::mutate(casa = "camara") %>%
     dplyr::select(id_votacao, id_parlamentar = id_deputado, casa, partido, voto) %>% 
-    enumera_votacoes() %>% 
+    enumera_voto() %>% 
     dplyr::distinct()
 
   return(votos_alt)
@@ -159,17 +149,20 @@ processa_votos_camara <- function(votacoes) {
 
 #' @title Processa votações dos parlamentares
 #' @description O processamento consiste em mapear as votações dos parlamentares (caso tenha votado) e tratar os casos quando ele não votou
-#' @param votacoes_datapath Datapath do csv com os dados das votações
+#' @param url Link para o csv com as posições do questionário do Voz Ativa
 #' @return Dataframe contendo o id da votação, o id do parlamentar, a casa e o voto dos parlamentares
 #' @examples
-#' processa_votos("../raw_data/tabela_votacoes.csv")
-processa_votos <- function(votacoes_datapath) {
-  votacoes_all <- readr::read_csv(votacoes_datapath, col_types = "cicccccccc")
+#' processa_votos(url)
+processa_votos <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMcbeHRm_dqX-i2gNVaCiHMFg6yoIjNl9cHj0VBIlQ5eMX3hoHB8cM8FGOukjfNajWDtfvfhqxjji7/pub?gid=0&single=true&output=csv") {
+  votacoes_lista <- read_csv(url, col_types = cols(id_proposicao = "c")) %>% 
+    filter(status_proposicao == "Ativa")
   
-  votacoes_camara <- votacoes_all %>% 
-    dplyr::filter(casa == "camara")
+  votacoes_camara <- votacoes_lista %>% 
+    dplyr::filter(tolower(iconv(casa, 
+                        from = "UTF-8", 
+                        to = "ASCII//TRANSLIT")) == "camara")
   
-  votacoes_senado <- votacoes_all %>% 
+  votacoes_senado <- votacoes_lista %>% 
     dplyr::filter(casa == "senado")
   
   votacoes <- processa_votos_camara(votacoes_camara) %>% 
