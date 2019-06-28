@@ -135,10 +135,10 @@ process_partidos_por_leg <- function(legislaturas = c(55, 56)) {
   
   governo <- 
     dplyr::tribble(~ id, ~ sigla, ~ tipo, ~ situacao, 
-                   0, "GOVERNO", "Governo", "Ativo",
-                   1, "MAIORIA", "Maioria", "Ativo",
-                   2, "MINORA", "Minoria","Ativo",
-                   3, "OPOSIÇÃO", "Oposição","Ativo")
+                   0, "Governo", "Governo", "Ativo",
+                   1, "Maioria", "Maioria", "Ativo",
+                   2, "Minoria", "Minoria","Ativo",
+                   3, "Oposição", "Oposição","Ativo")
   
   partidos <- 
     dplyr::bind_rows(governo, partidos) %>% 

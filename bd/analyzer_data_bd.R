@@ -257,15 +257,18 @@ processa_mandatos <- function(mandatos_path = here::here("crawler/raw_data/manda
 #' @return Dataframe com informações dos mandatos
 processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/liderancas.csv")) {
   library(tidyverse)
+  source(here::here("crawler/parlamentares/partidos/utils_partidos.R"))
   
   liderancas <- read_csv(liderancas_path)
   
   liderancas <- liderancas %>%
     mutate(
       casa_enum = dplyr::if_else(casa == "camara", 1, 2),
-      id_parlamentar_voz = paste0(casa_enum, as.character(id))
+      id_parlamentar_voz = paste0(casa_enum, as.character(id)),
+      bloco_partido = gsub("Bloco ", "", bloco_partido)
     ) %>%
-    select(id_parlamentar_voz, cargo, bloco_partido)
+    select(id_parlamentar_voz, cargo, partido = bloco_partido) %>% 
+    map_sigla_to_id()
   
   return(liderancas)
 }
