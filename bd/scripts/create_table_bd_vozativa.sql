@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS "parlamentares" (
     "nome_eleitoral" VARCHAR(255),
     "genero" VARCHAR(255),
     "uf" VARCHAR(255),
-    "partido" VARCHAR(255),
+    "id_partido" INTEGER REFERENCES "partido" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
     "situacao" VARCHAR(255),
     "condicao_eleitoral" VARCHAR(255),
     "ultima_legislatura" VARCHAR(255),
@@ -111,13 +111,13 @@ CREATE TABLE IF NOT EXISTS "mandatos" (
 
 CREATE TABLE IF NOT EXISTS "aderencia" (    
     "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
-    "partido" VARCHAR(20),
+    "id_partido" INTEGER REFERENCES "partido" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
     "faltou" INTEGER,
     "partido_liberou" INTEGER,
     "nao_seguiu" INTEGER,
     "seguiu" INTEGER,
     "aderencia" REAL,
-    PRIMARY KEY("id_parlamentar_voz", "partido")
+    PRIMARY KEY("id_parlamentar_voz", "id_partido")
 );
 
 CREATE TABLE IF NOT EXISTS "liderancas" (    
@@ -130,5 +130,6 @@ CREATE TABLE IF NOT EXISTS "liderancas" (
 CREATE TABLE IF NOT EXISTS "partido" (    
     "id" INTEGER,
     "sigla" VARCHAR(40),
+    "situacao" VARCHAR(60),
     PRIMARY KEY("id")
 );

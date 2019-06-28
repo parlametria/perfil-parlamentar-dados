@@ -91,7 +91,7 @@ processa_parlamentares <- function(parlamentares_data_path = here::here("crawler
                  nome_eleitoral, 
                  genero, 
                  uf, 
-                 partido = sg_partido, 
+                 id_partido = num_partido, 
                  situacao, 
                  condicao_eleitoral, 
                  ultima_legislatura, 
