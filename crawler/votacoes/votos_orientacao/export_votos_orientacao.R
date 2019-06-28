@@ -28,7 +28,7 @@ message("Iniciando processamento...")
 
 anos <- strsplit(ano, split=",") %>% unlist()
 
-votos_orientacao <- process_votos_orientacao_anos(anos)
+votos_orientacao <- process_votos_orientacao_anos_url(anos)
 
 message(paste0("Salvando o resultado em ", here("crawler/raw_data/votos.csv")))
 write_csv(votos_orientacao[[1]], here("crawler/raw_data/votos.csv"))
