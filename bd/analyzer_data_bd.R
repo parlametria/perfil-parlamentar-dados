@@ -278,38 +278,22 @@ processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/l
 #' @return Dataframe com informações de aderência
 processa_aderencia <- function(votos_path = here::here("crawler/raw_data/votos.csv"),
                                orientacoes_path = here::here("crawler/raw_data/orientacoes.csv"),
-                               parlamentares_path = here::here("crawler/raw_data/parlamentares.csv"),
-                               partidos_path = here::here("crawler/raw_data/partidos.csv")) {
+                               parlamentares_path = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
   source(here("crawler/votacoes/utils_votacoes.R"))
   source(here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
+  source(here::here("crawler/parlamentares/partidos/utils_partidos.R"))
   
   votos <- read_csv(votos_path, col_types = cols(.default = "c", voto = "i"))
   
   orientacoes <- read_csv(orientacoes_path, col_types = cols(.default = "c", voto = "i"))
   
   deputados <- read_csv(parlamentares_path, col_types = cols(id = "c")) %>% 
-    filter(casa == "camara") %>% 
-    rename(id_partido = num_partido)
-  
-  partidos <- 
-    read_csv(partidos_path, col_types = cols(.default = "c", id = "i"))
-   
-  partidos <- partidos %>% 
-    rbind(
-      anti_join(deputados %>% 
-                  select(id_partido, 
-                         sg_partido), 
-                partidos, 
-                by = c("sg_partido" = "sigla")) %>% 
-        unique() %>% 
-        mutate(situacao = NA) %>% 
-        rename(id = id_partido, sigla = sg_partido)) %>% 
-    select(-situacao)
+    filter(casa == "camara")
   
   aderencia <- processa_dados_deputado_aderencia(votos, orientacoes, deputados, filtrar = FALSE)[[2]] %>%
-    left_join(partidos, by = c("partido"="sigla")) %>% 
-    select(id_deputado, nome, id_partido = id, faltou, partido_liberou, nao_seguiu, seguiu, total_votacoes, freq)
+    map_sigla_to_id() %>% 
+    select(id_deputado, nome, id_partido, faltou, partido_liberou, nao_seguiu, seguiu, total_votacoes, freq)
     
   aderencia_governo <- processa_dados_deputado_aderencia_governo(votos, orientacoes, deputados, filtrar = FALSE)[[2]] %>% 
     rename(id_partido = partido) %>%
