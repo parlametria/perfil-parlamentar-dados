@@ -15,21 +15,21 @@ message("Use --help para mais informações\n")
 option_list = list(
   make_option(c("-o", "--out"), type="character", default=here::here("crawler/raw_data/partidos.csv"), 
               help="nome do arquivo de saída [default= %default]", metavar="character"),
-  make_option(c("-l", "--leg"), type="character", default="56", 
+  make_option(c("-l", "--leg"), type="character", default="55,56", 
               help="id de legislatura [default= %default]", metavar="character")
 ) 
 
 opt_parser = OptionParser(option_list=option_list)
 opt = parse_args(opt_parser)
 
-legislatura <- opt$leg
+legislaturas <- as.list(strsplit(opt$leg, ",")[[1]])
 saida <- opt$out
 
 message("Iniciando processamento...")
 message("Baixando dados...")
-parlamentares <- process_partidos_por_leg(legislatura)
+parlamentares <- process_partidos_por_leg(legislaturas)
 
 message(paste0("Salvando o resultado em ", saida))
 write.csv(parlamentares, saida, row.names = FALSE)
 
-message("Concluído!")
+message("Concluído")

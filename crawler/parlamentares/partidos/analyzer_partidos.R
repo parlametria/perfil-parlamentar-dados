@@ -70,19 +70,23 @@ fetch_partidos_por_leg <- function(legislatura = 56) {
   
 }
 
-#' @title Processa informações dos partidos políticos de uma legislatura
-#' @description Recebe um id de legislatura e retorna os dados dos partidos políticos brasileiros da legislatura e governo
-#' @param Id da legislatura
-#' @return Dataframe de partidos políticos de uma legislatura e governo
+#' @title Processa informações dos partidos políticos de uma ou mais legislaturas
+#' @description Recebe um conjunto de ids de legislaturas e retorna os dados dos partidos políticos brasileiros dessas legislaturas e governo
+#' @param Ids das legislaturas
+#' @return Dataframe de partidos políticos das legislaturas e governo
 #' @examples
 #' process_partidos_por_leg(55)
-process_partidos_por_leg <- function(legislatura = 56) {
-  partidos <- fetch_partidos_por_leg(legislatura)
-  governo <- dplyr::tribble(~ id, ~ sigla, ~ situacao, 0, "GOV", "Ativo")
+process_partidos_por_leg <- function(legislaturas = c(55, 56)) {
   
-  partidos <- rbind(governo,partidos) %>% 
-    dplyr::filter(situacao == "Ativo") %>% 
-    dplyr::select(-situacao)
+  partidos <- 
+    purrr::map_df(legislaturas, ~ fetch_partidos_por_leg(.x)) %>% 
+    unique()
+  
+  governo <- 
+    dplyr::tribble(~ id, ~ sigla, ~ situacao, 0, "GOV", "Ativo")
+  
+  partidos <- 
+    rbind(governo,partidos) 
   
   return(partidos)
   
