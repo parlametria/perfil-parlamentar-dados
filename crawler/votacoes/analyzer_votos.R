@@ -95,10 +95,12 @@ fetch_votos_camara <- function(id_proposicao, id_votacao, resumo_votacao, objeto
            hora = votacao$hora,
            cod_sessao = votacao$cod_sessao,
            id_votacao = id_votacao,
+           id_proposicao = id_proposicao,
            id_deputado = as.integer(id_deputado)) %>%
     select(obj_votacao,
            resumo,
            id_votacao,
+           id_proposicao,
            hora,
            cod_sessao,
            id_deputado,
@@ -140,7 +142,7 @@ processa_votos_camara <- function(votacoes) {
 
   votos_alt <- votos %>% 
     dplyr::mutate(casa = "camara") %>%
-    dplyr::select(id_votacao, id_parlamentar = id_deputado, casa, partido, voto) %>% 
+    dplyr::select(id_proposicao, id_votacao, id_parlamentar = id_deputado, casa, partido, voto) %>% 
     enumera_voto() %>% 
     dplyr::distinct()
 
@@ -166,7 +168,7 @@ processa_votos <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX
     dplyr::filter(casa == "senado")
   
   votacoes <- processa_votos_camara(votacoes_camara) %>% 
-    select(id_votacao, id_parlamentar, casa, voto)
+    select(id_proposicao, id_votacao, id_parlamentar, casa, voto)
   
   return(votacoes)
 }
