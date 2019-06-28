@@ -191,14 +191,24 @@ processa_proposicoes_temas <- function() {
 
 #' @title Processa dados de votações
 #' @description Processa os dados de votações e retorna no formato  a ser utilizado pelo banco de dados
-#' @param vot_data_path Caminho para o arquivo de dados de votações sem tratamento
+#' @param votos_posicoes_data_path Caminho para o arquivo de dados de votos das posições do questionário VA
+#' @param votos_va_data_path Caminho para o arquivo de dados de votos das proposições selecionadas na legislatura Atual
 #' @return Dataframe com informações das votações
-processa_votacoes <- function(vot_data_path = here::here("crawler/raw_data/votacoes.csv")) {
+processa_votos <- function(votos_posicoes_data_path = here::here("crawler/raw_data/votos_posicoes.csv"),
+                              votos_va_data_path = here::here("crawler/raw_data/votos.csv")) {
   library(tidyverse)
   library(here)
   
-  votacoes <- readr::read_csv(vot_data_path, col_types = cols(id_parlamentar = "i", id_votacao = "i", voto = "i"))
+  votos_posicoes <- read_csv(votos_posicoes_data_path, col_types = cols(id_parlamentar = "i", id_votacao = "i", voto = "i")) %>% 
+    select(id_votacao, id_parlamentar, casa, voto)
   
+  votos_va <- read_csv(votos_va_data_path, col_types = cols(id_parlamentar = "i", id_votacao = "i", voto = "i")) %>% 
+    select(id_votacao, id_parlamentar, casa, voto)
+  
+  votacoes <- votos_posicoes %>% 
+    rbind(votos_va) %>% 
+    distinct(id_votacao, id_parlamentar, .keep_all = TRUE)
+    
   votacoes_select <- votacoes %>%
     dplyr::mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
                                          id_parlamentar)) %>% 
