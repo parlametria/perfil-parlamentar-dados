@@ -217,6 +217,22 @@ processa_votos <- function(votos_posicoes_data_path = here::here("crawler/raw_da
   return(votacoes_select)
 }
 
+#' @title Cria tabela de orientações
+#' @description Cria tabela com as orientações dos partidos para votações realizadas em 2019
+#' @param orientacoes_data_path Caminho para o arquivo de dados de orientações
+#' @return Dataframe com informações das orientações
+processa_orientacoes <- function(orientacoes_data_path = here::here("crawler/raw_data/orientacoes.csv")) {
+  library(tidyverse)
+  library(here)
+  
+  orientacoes <- read_csv(orientacoes_data_path, col_types = cols(id_proposicao = "c", id_votacao = "i"))
+  
+  orientacoes_alt <- orientacoes %>% 
+    select(id_votacao, partido, voto)
+  
+  return(orientacoes_alt)
+}
+
 #' @title Cria tabela de votações que conecta id das votações aos ids das proposições
 #' @description Cria tabela de votações que conecta id das votações aos ids das proposições
 #' @param votos_posicoes_data_path Caminho para o arquivo de dados de votos das posições do questionário VA
