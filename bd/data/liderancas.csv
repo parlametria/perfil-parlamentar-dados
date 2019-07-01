@@ -1,6 +1,6 @@
 id_parlamentar_voz,cargo,id_partido
-1122974,Lider,575
-1160541,Vice-lider,575
+1160541,Lider,575
+1178975,Vice-lider,575
 1204459,Vice-lider,575
 1171623,Vice-lider,575
 1178954,Vice-lider,575
@@ -16,10 +16,9 @@ id_parlamentar_voz,cargo,id_partido
 1178884,Vice-lider,575
 1178959,Vice-lider,575
 1204500,Vice-lider,575
-1198783,Vice-lider,575
 193083,Vice-lider,575
-1178975,Vice-lider,575
 1204430,Vice-lider,575
+1198783,Vice-lider,575
 174400,Lider,36844
 173604,Vice-lider,36844
 1204503,Vice-lider,36844
@@ -29,12 +28,12 @@ id_parlamentar_voz,cargo,id_partido
 174398,Vice-lider,36844
 1204480,Vice-lider,36844
 1160604,Vice-lider,36844
-1132504,Vice-lider,36844
 1178986,Vice-lider,36844
 1204428,Vice-lider,36844
 1204495,Vice-lider,36844
 1160535,Vice-lider,36844
-173482,Vice-lider,36844
+1178873,Vice-lider,36844
+1132504,Vice-lider,36844
 1164359,Lider,36837
 1204477,Vice-lider,36837
 1204479,Vice-lider,36837
@@ -79,7 +78,7 @@ id_parlamentar_voz,cargo,id_partido
 1204558,Vice-lider,36832
 1204561,Vice-lider,36832
 1206231,Vice-lider,36832
-173586,Vice-lider,36832
+1204525,Vice-lider,36832
 1160531,Lider,36815
 1204576,Vice-lider,36815
 1204572,Vice-lider,36815
@@ -104,7 +103,8 @@ id_parlamentar_voz,cargo,id_partido
 1160545,Vice-lider,36769
 1178947,Vice-lider,36769
 1204498,Vice-lider,36769
-1204527,Vice-lider,36769
+1160600,Vice-lider,36769
+1178909,Vice-lider,36769
 1133439,Lider,36786
 1178835,Vice-lider,36786
 1133968,Vice-lider,36786
@@ -117,7 +117,7 @@ id_parlamentar_voz,cargo,id_partido
 1204439,Vice-lider,37904
 1204408,Vice-lider,37904
 1160632,Vice-lider,37904
-1141518,Vice-lider,37904
+1204364,Vice-lider,37904
 1204391,Lider,36896
 1204508,Vice-lider,36896
 1204359,Vice-lider,36896
@@ -129,7 +129,7 @@ id_parlamentar_voz,cargo,id_partido
 1178934,Lider,36763
 1204487,Vice-lider,36763
 1178939,Vice-lider,36763
-1160640,Vice-lider,36763
+1204379,Vice-lider,36763
 174060,Lider,36779
 173801,Vice-lider,36779
 173943,Vice-lider,36779
@@ -183,6 +183,7 @@ id_parlamentar_voz,cargo,id_partido
 1139285,Vice-lider,2
 174057,Vice-lider,2
 1204483,Vice-lider,2
+1160508,Vice-lider,2
 1160541,Lider,37903
 1178975,Lider,36899
 1122974,Lider,36845
