@@ -39,7 +39,8 @@ process_proposicoes_plenario_selecionadas_temas <- function(url = "https://docs.
     rowwise() %>% 
     mutate(tema_id = getIdfromTema(tema)) %>% 
     ungroup() %>% 
-    distinct(id_proposicao = id, tema_id)
+    mutate(id_proposicao = id) %>% 
+    distinct(id_proposicao, tema_id)
   
   return(proposicoes_va)
 }

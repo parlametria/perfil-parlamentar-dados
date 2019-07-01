@@ -182,11 +182,11 @@ processa_proposicoes_temas <- function() {
   
   proposicoes_plenario <- process_proposicoes_plenario_selecionadas_temas()
   
-  proposicoes <- proposicoes_questionario %>% 
-    rbind(proposicoes_plenario) %>% 
+  proposicoes <- proposicoes_questionario %>%
+    rbind(proposicoes_plenario) %>%
     distinct(id_proposicao, id_tema = tema_id)
-  
-  return(proposicoes)
+
+  return(proposicoes_questionario)
 }
 
 #' @title Processa dados de votos

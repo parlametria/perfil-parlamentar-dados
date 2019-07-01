@@ -69,7 +69,7 @@ process_votos_por_ano <- function(ano = 2019, url = NULL) {
   })
   
   if (!is.null(url)) {
-    proposicoes_selecionadas <- read_csv(url, col_types = c(id = "c")) %>% 
+    proposicoes_selecionadas <- read_csv(url, col_types = cols(id = "c")) %>% 
       filter(tolower(tema_va) != "não entra") %>% 
       select(id, nome_proposicao = nome)
     
@@ -123,7 +123,7 @@ process_orientacao_por_ano <- function(ano = 2019, url = NULL) {
   })
   
   if (!is.null(url)) {
-    proposicoes_selecionadas <- read_csv(url, col_types = c(id = "c")) %>% 
+    proposicoes_selecionadas <- read_csv(url, col_types = cols(id = "c")) %>% 
       filter(tolower(tema_va) != "não entra") %>% 
       select(id, nome_proposicao = nome)
     

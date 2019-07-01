@@ -54,8 +54,8 @@ CREATE TABLE IF NOT EXISTS "proposicoes_temas" (
 
 CREATE TABLE IF NOT EXISTS "votacoes" (     
     "id_proposicao" INTEGER REFERENCES "proposicoes" ("id_proposicao") ON DELETE SET NULL ON UPDATE CASCADE,
-    "id_votacao" INTEGER REFERENCES "votacoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE,
-    PRIMARY KEY ("id_proposicao", "id_votacao")
+    "id_votacao" INTEGER UNIQUE,
+    PRIMARY KEY ("id_votacao")
 );
 
 CREATE TABLE IF NOT EXISTS "votos" (     
@@ -89,7 +89,8 @@ CREATE TABLE IF NOT EXISTS "respostasus" (
 CREATE TABLE IF NOT EXISTS "votacoesus" (
     "id" SERIAL, 
     "resposta" INTEGER, "user_id" INTEGER REFERENCES "usuarios" ("id") ON DELETE SET NULL ON UPDATE CASCADE, 
-    "proposicao_id" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE, PRIMARY KEY ("id"));
+    "id_votacao" INTEGER REFERENCES "votacoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE, 
+    PRIMARY KEY ("id"));
 
 CREATE TABLE IF NOT EXISTS "temasus" (
     "id" SERIAL, 

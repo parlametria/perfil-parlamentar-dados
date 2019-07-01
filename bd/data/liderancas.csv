@@ -16,10 +16,10 @@ id_parlamentar_voz,cargo,bloco_partido
 1178884,Vice-lider,"Bloco PP, MDB, PTB"
 1178959,Vice-lider,"Bloco PP, MDB, PTB"
 1204500,Vice-lider,"Bloco PP, MDB, PTB"
-1198783,Vice-lider,"Bloco PP, MDB, PTB"
 193083,Vice-lider,"Bloco PP, MDB, PTB"
 1178975,Vice-lider,"Bloco PP, MDB, PTB"
 1204430,Vice-lider,"Bloco PP, MDB, PTB"
+1198783,Vice-lider,"Bloco PP, MDB, PTB"
 174400,Lider,PT
 173604,Vice-lider,PT
 1204503,Vice-lider,PT
@@ -29,12 +29,12 @@ id_parlamentar_voz,cargo,bloco_partido
 174398,Vice-lider,PT
 1204480,Vice-lider,PT
 1160604,Vice-lider,PT
-1132504,Vice-lider,PT
 1178986,Vice-lider,PT
 1204428,Vice-lider,PT
 1204495,Vice-lider,PT
 1160535,Vice-lider,PT
-173482,Vice-lider,PT
+1178873,Vice-lider,PT
+1132504,Vice-lider,PT
 1164359,Lider,PSL
 1204477,Vice-lider,PSL
 1204479,Vice-lider,PSL
@@ -79,7 +79,7 @@ id_parlamentar_voz,cargo,bloco_partido
 1204558,Vice-lider,PSB
 1204561,Vice-lider,PSB
 1206231,Vice-lider,PSB
-173586,Vice-lider,PSB
+1204525,Vice-lider,PSB
 1160531,Lider,PRB
 1204576,Vice-lider,PRB
 1204572,Vice-lider,PRB
@@ -104,7 +104,8 @@ id_parlamentar_voz,cargo,bloco_partido
 1160545,Vice-lider,DEM
 1178947,Vice-lider,DEM
 1204498,Vice-lider,DEM
-1204527,Vice-lider,DEM
+1160600,Vice-lider,DEM
+1178909,Vice-lider,DEM
 1133439,Lider,PDT
 1178835,Vice-lider,PDT
 1133968,Vice-lider,PDT
@@ -117,7 +118,7 @@ id_parlamentar_voz,cargo,bloco_partido
 1204439,Vice-lider,SOLIDARIEDADE
 1204408,Vice-lider,SOLIDARIEDADE
 1160632,Vice-lider,SOLIDARIEDADE
-1141518,Vice-lider,SOLIDARIEDADE
+1204364,Vice-lider,SOLIDARIEDADE
 1204391,Lider,PODE
 1204508,Vice-lider,PODE
 1204359,Vice-lider,PODE
@@ -129,7 +130,7 @@ id_parlamentar_voz,cargo,bloco_partido
 1178934,Lider,PROS
 1204487,Vice-lider,PROS
 1178939,Vice-lider,PROS
-1160640,Vice-lider,PROS
+1204379,Vice-lider,PROS
 174060,Lider,PCdoB
 173801,Vice-lider,PCdoB
 173943,Vice-lider,PCdoB
@@ -183,6 +184,7 @@ id_parlamentar_voz,cargo,bloco_partido
 1139285,Vice-lider,Minoria
 174057,Vice-lider,Minoria
 1204483,Vice-lider,Minoria
+1160508,Vice-lider,Minoria
 1160541,Lider,PP
 1178975,Lider,MDB
 1122974,Lider,PTB
