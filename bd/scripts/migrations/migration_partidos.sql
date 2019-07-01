@@ -1,7 +1,7 @@
 -- PARTIDOS POLITICOS
 CREATE TEMP TABLE temp_partido AS SELECT * FROM partido LIMIT 0;
 
-\copy temp_partido FROM './data/partidos.csv' DELIMITER ',' CSV HEADER;
+\copy temp_partido FROM './data/partidos.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
 
 INSERT INTO partido (id, sigla, tipo, situacao)
 SELECT id, sigla, tipo, situacao
