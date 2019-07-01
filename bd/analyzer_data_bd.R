@@ -268,7 +268,8 @@ processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/l
       bloco_partido = gsub("Bloco ", "", bloco_partido)
     ) %>%
     select(id_parlamentar_voz, cargo, partido = bloco_partido) %>% 
-    map_sigla_to_id()
+    map_sigla_to_id() %>% 
+    select(-partido)
   
   return(liderancas)
 }
