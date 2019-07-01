@@ -1,6 +1,6 @@
 bloco_partido,cargo,id,nome,partido,uf,casa
-"Bloco PP, MDB, PTB",Lider,122974,PEDRO LUCAS FERNANDES ,PTB,MA,camara
-"Bloco PP, MDB, PTB",Vice-lider,160541,ARTHUR LIRA,PP,AL,camara
+"Bloco PP, MDB, PTB",Lider,160541,ARTHUR LIRA,PP,AL,camara
+"Bloco PP, MDB, PTB",Vice-lider,178975,BALEIA ROSSI,MDB,SP,camara
 "Bloco PP, MDB, PTB",Vice-lider,204459,DANIELA DO WAGUINHO,MDB,RJ,camara
 "Bloco PP, MDB, PTB",Vice-lider,171623,FABIO REIS,MDB,SE,camara
 "Bloco PP, MDB, PTB",Vice-lider,178954,LUCIO MOSQUINI,MDB,RO,camara
@@ -17,7 +17,6 @@ bloco_partido,cargo,id,nome,partido,uf,casa
 "Bloco PP, MDB, PTB",Vice-lider,178959,HIRAN GONÇALVES,PP,RR,camara
 "Bloco PP, MDB, PTB",Vice-lider,204500,EDUARDO COSTA,PTB,PA,camara
 "Bloco PP, MDB, PTB",Vice-lider,93083,CACÁ LEÃO,PP,BA,camara
-"Bloco PP, MDB, PTB",Vice-lider,178975,BALEIA ROSSI,MDB,SP,camara
 "Bloco PP, MDB, PTB",Vice-lider,204430,MARGARETE COELHO,PP,PI,camara
 "Bloco PP, MDB, PTB",Vice-lider,198783,EMANUEL PINHEIRO NETO,PTB,MT,camara
 PT,Lider,74400,PAULO PIMENTA,PT,RS,camara

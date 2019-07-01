@@ -231,7 +231,7 @@ processa_orientacoes <- function(orientacoes_data_path = here::here("crawler/raw
   
   orientacoes_alt <- orientacoes %>% 
     select(id_votacao, partido, voto) %>% 
-    map_sigla_to_id() %>% 
+    map_sigla_to_id() %>%
     select(id_votacao, id_partido, voto)
   
   return(orientacoes_alt)
