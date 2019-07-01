@@ -1,4 +1,5 @@
 \copy temas FROM '/data/temas.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
+\copy partido FROM '/data/partidos.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
 \copy parlamentares FROM '/data/parlamentares.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
 \copy perguntas FROM '/data/perguntas.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
 \copy proposicoes FROM '/data/proposicoes.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
