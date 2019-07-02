@@ -143,3 +143,80 @@ processa_dados_deputado_aderencia_governo <- function(votos, orientacao, deputad
     
   return(processa_calculo_aderencia(deputados_votos, deputados, filtrar))
 }
+
+#' @title Processa os dados de aderência de parlamentares ao Governo Por TEMA
+#' @description Retorna dados de aderência dos deputados por votação e de forma sumarizada 
+#' considerando o tema passado como parâmetro
+#' @param tema_id Id do Tema para cálculo de aderência
+#' @param proposicoes Dataframe com duas colunas (id_proposicao, id_tema). Servirá como lista para filtragem das votações.
+#' @param votos Dataframe de votos nominais realiados em plenário
+#' @param orientacao Dataframe de orientações dadas pelos partidos (e pelo Governo) em votações nominais em plenário.
+#' @param deputados Dataframe de deputados com informações sobre o mesmo
+#' @param filtrar TRUE se deseja filtrar fora os partidos com menos de 5 membros e os deputados com menos de 10 votações. 
+#' FALSE se quiser capturar todos os deputados
+#' @return Lista com dataframes com informações dos deputados e seus dados de aderência sumarizados e por votação
+#' @examples
+#' dados_aderencia_meio_ambiente <- processa_dados_aderencia_por_tema(0, proposicoes, votos, orientacao, deputados, filtrar = FALSE)
+processa_dados_aderencia_por_tema <- function(tema_id, proposicoes, 
+                                              votos, orientacao, deputados, filtrar = TRUE) {
+  library(tidyverse)
+  
+  message(paste0("Calculando Aderência para o tema: ", tema_id))
+  lista_proposicoes <- proposicoes %>% 
+    filter(id_tema == tema_id) %>% 
+    pull(id_proposicao)
+
+  if (length(lista_proposicoes) == 0) {
+    return(tribble(~ id_deputado, ~ nome, ~ partido, ~ faltou, ~ partido_liberou,
+                   ~ nao_seguiu, ~ seguiu, ~ total_votacoes, ~ freq))
+  }
+  votos <- votos %>% 
+    filter(id_proposicao %in% lista_proposicoes)
+  
+  orientacao <- orientacao %>% 
+    filter(id_proposicao %in% lista_proposicoes)
+  
+  aderencia_partido <- processa_dados_deputado_aderencia(votos, orientacao, deputados, filtrar)[[2]]
+  
+  aderencia_governo <- processa_dados_deputado_aderencia_governo(votos, orientacao, deputados, filtrar)[[2]]
+  
+  aderencia_tema <- aderencia_partido %>% 
+    rbind(aderencia_governo) %>% 
+    distinct()
+  
+  return(aderencia_tema)
+}
+
+#' @title Processa os dados de aderência de parlamentares para cada tema do Voz ativa
+#' @description Retorna dados de aderência dos deputados por votação e de forma sumarizada 
+#' considerando cada tema selecionado
+#' @param proposicoes_temas Dataframe com duas colunas (id_proposicao, id_tema). Mapeamento entre prosições e temas.
+#' @param temas Dataframe com informações dos temas
+#' @param votos Dataframe de votos nominais realiados em plenário
+#' @param orientacoes Dataframe de orientações dadas pelos partidos (e pelo Governo) em votações nominais em plenário.
+#' @param deputados Dataframe de deputados com informações sobre o mesmo
+#' @param filtrar TRUE se deseja filtrar fora os partidos com menos de 5 membros e os deputados com menos de 10 votações. 
+#' FALSE se quiser capturar todos os deputados
+#' @return Lista com dataframes com informações dos deputados e seus dados de aderência sumarizados e por votação
+#' @examples
+#' dados_aderencia_temas <- processa_dados_aderencia_temas(proposicoes_temas, temas, votos, orientacao, deputados, filtrar = FALSE)
+processa_dados_aderencia_temas <- function(proposicoes_temas, temas, 
+                                           votos, orientacoes, deputados, filtrar = FALSE) {
+  library(tidyverse)
+  
+  temas_lista <- temas %>% pull(id)
+
+  aderencia_temas <- tibble::tibble(id_tema = temas_lista) %>% 
+    mutate(dados = purrr::map(
+      id_tema, 
+      processa_dados_aderencia_por_tema,
+      proposicoes_temas,
+      votos,
+      orientacoes,
+      deputados, 
+      filtrar
+    )) %>% 
+    unnest(dados)
+ 
+  return(aderencia_temas) 
+}
