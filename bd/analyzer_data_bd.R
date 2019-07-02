@@ -128,7 +128,7 @@ processa_perguntas <- function(perg_data_path = here::here("crawler/raw_data/per
 #' @description Cria os dados dos temas
 #' @return Dataframe com informações dos temas (descrição e id)
 processa_temas <- function() {
-  temas <- data.frame(id = c(0, 1, 2, 3, 5, 99),
+  temas <- data.frame(id_tema = c(0, 1, 2, 3, 5, 99),
                       tema = c("Meio Ambiente", 
                         "Direitos Humanos", 
                         "Integridade e Transparência", 
@@ -141,6 +141,7 @@ processa_temas <- function() {
                                "agenda-nacional",
                                "educacao",
                                "geral"),
+                      ativo = c(1, 1, 1, 1, 1, 0),
                       stringsAsFactors = FALSE)
   
   return(temas)
@@ -344,7 +345,7 @@ processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/l
     ) %>%
     select(id_parlamentar_voz, cargo, partido = bloco_partido) %>% 
     map_sigla_to_id() %>% 
-    select(-partido)
+    select(id_parlamentar_voz, id_partido, cargo)
   
   return(liderancas)
 }
@@ -359,6 +360,7 @@ processa_aderencia <- function(votos_path = here::here("crawler/raw_data/votos.c
                                orientacoes_path = here::here("crawler/raw_data/orientacoes.csv"),
                                parlamentares_path = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
+  library(here)
   source(here("crawler/votacoes/utils_votacoes.R"))
   source(here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
   source(here("crawler/parlamentares/partidos/utils_partidos.R"))

@@ -6,20 +6,20 @@ source(here::here("bd/send_log_to_bot.R"))
 log <- ""
 send_log_to_bot(paste0(date(), " - Atualização dos dados iniciada"))
 
-# tryCatch(
-#   {
-#     log <- paste0(log, date(), " - Executando crawler de Parlamentares...\n")
-#     source(here::here("crawler/parlamentares/export_parlamentares.R"))
-#   },
-#   error=function(cond) {
-#     log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Parlamentares")
-#     message(log_error)
-#     log <- paste0(log, date(), " ", log_error)
-#     send_log_to_bot(log)
-#     stop("A execução foi interrompida", call. = FALSE)
-#     return(NA)
-#   }
-# )
+tryCatch(
+  {
+    log <- paste0(log, date(), " - Executando crawler de Parlamentares...\n")
+    source(here::here("crawler/parlamentares/export_parlamentares.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Parlamentares")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
 
 tryCatch(
   {
@@ -51,20 +51,20 @@ tryCatch(
   }
 )
 
-# tryCatch(
-#   {
-#     log <- paste0(log, date(), " - Executando crawler de Mandatos...\n")
-#     source(here::here("crawler/parlamentares/mandatos/export_mandatos.R"))
-#   },
-#   error=function(cond) {
-#     log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Mandatos")
-#     message(log_error)
-#     log <- paste0(log, date(), " ", log_error)
-#     send_log_to_bot(log)
-#     stop("A execução foi interrompida", call. = FALSE)
-#     return(NA)
-#   }
-# )
+tryCatch(
+  {
+    log <- paste0(log, date(), " - Executando crawler de Mandatos...\n")
+    source(here::here("crawler/parlamentares/mandatos/export_mandatos.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Mandatos")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
 
 tryCatch(
   {
