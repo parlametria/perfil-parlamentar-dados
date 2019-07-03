@@ -1,12 +1,12 @@
 -- PARTIDOS POLITICOS
-CREATE TEMP TABLE temp_partido AS SELECT * FROM partido LIMIT 0;
+CREATE TEMP TABLE temp_partido AS SELECT * FROM partidos LIMIT 0;
 
 \copy temp_partido FROM './data/partidos.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
 
-INSERT INTO partido (id, sigla, tipo, situacao)
-SELECT id, sigla, tipo, situacao
+INSERT INTO partidos (id_partido, sigla, tipo, situacao)
+SELECT id_partido, sigla, tipo, situacao
 FROM temp_partido
-ON CONFLICT (id) 
+ON CONFLICT (id_partido) 
 DO
   UPDATE
   SET 
@@ -14,9 +14,9 @@ DO
     tipo = EXCLUDED.tipo,
     situacao = EXCLUDED.situacao;
 
-DELETE FROM partido
-WHERE (id, sigla, tipo, situacao) NOT IN
-  (SELECT id, sigla, tipo, situacao
+DELETE FROM partidos
+WHERE (id_partido, sigla, tipo, situacao) NOT IN
+  (SELECT id_partido, sigla, tipo, situacao
    FROM temp_partido); 
 
 DROP TABLE temp_partido;

@@ -3,8 +3,8 @@ CREATE TEMP TABLE temp_liderancas AS SELECT * FROM liderancas LIMIT 0;
 
 \copy temp_liderancas FROM './data/liderancas.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER; 
 
-INSERT INTO liderancas (id_parlamentar_voz, cargo, id_partido)
-SELECT id_parlamentar_voz, cargo, id_partido
+INSERT INTO liderancas (id_parlamentar_voz, id_partido, cargo)
+SELECT id_parlamentar_voz, id_partido, cargo
 FROM temp_liderancas
 ON CONFLICT (id_parlamentar_voz, id_partido) 
 DO

@@ -157,7 +157,7 @@ processa_votos_camara <- function(votacoes) {
 #' processa_votos(url)
 processa_votos <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMcbeHRm_dqX-i2gNVaCiHMFg6yoIjNl9cHj0VBIlQ5eMX3hoHB8cM8FGOukjfNajWDtfvfhqxjji7/pub?gid=0&single=true&output=csv") {
   votacoes_lista <- read_csv(url, col_types = cols(id_proposicao = "c")) %>% 
-    filter(status_proposicao == "Ativa")
+    filter(id_sessao != 99999) # remove votacao da PL 6299/2002 (nao possui votacoes em plenário)
   
   votacoes_camara <- votacoes_lista %>% 
     dplyr::filter(tolower(iconv(casa, 

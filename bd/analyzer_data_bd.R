@@ -197,9 +197,11 @@ processa_proposicoes_temas <- function() {
 #' @description Processa os dados de votos e retorna no formato  a ser utilizado pelo banco de dados
 #' @param votos_posicoes_data_path Caminho para o arquivo de dados de votos das posições do questionário VA
 #' @param votos_va_data_path Caminho para o arquivo de dados de votos das proposições selecionadas na legislatura Atual
+#' @param parlamentares_path Caminho para o arquivo de dados de parlamentares
 #' @return Dataframe com informações das votos
 processa_votos <- function(votos_posicoes_data_path = here::here("crawler/raw_data/votos_posicoes.csv"),
-                           votos_va_data_path = here::here("crawler/raw_data/votos.csv")) {
+                           votos_va_data_path = here::here("crawler/raw_data/votos.csv"),
+                           parlamentares_path = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
   library(here)
   
@@ -212,8 +214,12 @@ processa_votos <- function(votos_posicoes_data_path = here::here("crawler/raw_da
   votacoes <- votos_posicoes %>% 
     rbind(votos_va) %>% 
     distinct(id_votacao, id_parlamentar, .keep_all = TRUE)
+  
+  deputados <- read_csv(parlamentares_path, col_types = cols(id = "c")) %>% 
+    filter(casa == "camara")
     
   votacoes_select <- votacoes %>%
+    filter(id_parlamentar %in% (deputados %>% pull(id))) %>% ## garante que apenas deputados com info tenham seus votos salvos
     dplyr::mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
                                          id_parlamentar)) %>% 
     dplyr::select(id_votacao, id_parlamentar_voz, voto)
@@ -265,6 +271,7 @@ processa_votacoes <- function(votos_posicoes_data_path = here::here("crawler/raw
   
   votacoes <- votos_posicoes %>% 
     rbind(votos_va) %>% 
+    rbind(tibble(id_proposicao = "46249", id_votacao = 99999)) %>% ## ID especial para a PL 6299/2002
     distinct(id_proposicao, id_votacao)
   
   return(votacoes)
