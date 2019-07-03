@@ -261,6 +261,11 @@ processa_votacoes <- function(votos_posicoes_data_path = here::here("crawler/raw
                                                                         id_parlamentar = "i", 
                                                                         id_votacao = "i", 
                                                                         voto = "i")) %>% 
+    distinct(id_proposicao, id_votacao) %>% 
+    group_by(id_proposicao) %>% 
+    mutate(n_prop = row_number()) %>%
+    ungroup() %>% 
+    mutate(id_proposicao = if_else(n_prop > 1, paste0(id_proposicao, n_prop), id_proposicao)) %>% 
     select(id_proposicao, id_votacao)
   
   votos_va <- read_csv(votos_va_data_path, col_types = cols(id_proposicao = "c", 
