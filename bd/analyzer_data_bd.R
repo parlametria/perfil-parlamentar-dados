@@ -128,7 +128,7 @@ processa_perguntas <- function(perg_data_path = here::here("crawler/raw_data/per
 #' @description Cria os dados dos temas
 #' @return Dataframe com informações dos temas (descrição e id)
 processa_temas <- function() {
-  temas <- data.frame(id = c(0, 1, 2, 3, 5, 99),
+  temas <- data.frame(id_tema = c(0, 1, 2, 3, 5, 99),
                       tema = c("Meio Ambiente", 
                         "Direitos Humanos", 
                         "Integridade e Transparência", 
@@ -141,6 +141,7 @@ processa_temas <- function() {
                                "agenda-nacional",
                                "educacao",
                                "geral"),
+                      ativo = c(1, 1, 1, 1, 1, 0),
                       stringsAsFactors = FALSE)
   
   return(temas)
@@ -196,9 +197,11 @@ processa_proposicoes_temas <- function() {
 #' @description Processa os dados de votos e retorna no formato  a ser utilizado pelo banco de dados
 #' @param votos_posicoes_data_path Caminho para o arquivo de dados de votos das posições do questionário VA
 #' @param votos_va_data_path Caminho para o arquivo de dados de votos das proposições selecionadas na legislatura Atual
+#' @param parlamentares_path Caminho para o arquivo de dados de parlamentares
 #' @return Dataframe com informações das votos
 processa_votos <- function(votos_posicoes_data_path = here::here("crawler/raw_data/votos_posicoes.csv"),
-                           votos_va_data_path = here::here("crawler/raw_data/votos.csv")) {
+                           votos_va_data_path = here::here("crawler/raw_data/votos.csv"),
+                           parlamentares_path = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
   library(here)
   
@@ -211,8 +214,12 @@ processa_votos <- function(votos_posicoes_data_path = here::here("crawler/raw_da
   votacoes <- votos_posicoes %>% 
     rbind(votos_va) %>% 
     distinct(id_votacao, id_parlamentar, .keep_all = TRUE)
+  
+  deputados <- read_csv(parlamentares_path, col_types = cols(id = "c")) %>% 
+    filter(casa == "camara")
     
   votacoes_select <- votacoes %>%
+    filter(id_parlamentar %in% (deputados %>% pull(id))) %>% ## garante que apenas deputados com info tenham seus votos salvos
     dplyr::mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
                                          id_parlamentar)) %>% 
     dplyr::select(id_votacao, id_parlamentar_voz, voto)
@@ -254,6 +261,11 @@ processa_votacoes <- function(votos_posicoes_data_path = here::here("crawler/raw
                                                                         id_parlamentar = "i", 
                                                                         id_votacao = "i", 
                                                                         voto = "i")) %>% 
+    distinct(id_proposicao, id_votacao) %>% 
+    group_by(id_proposicao) %>% 
+    mutate(n_prop = row_number()) %>%
+    ungroup() %>% 
+    mutate(id_proposicao = if_else(n_prop > 1, paste0(id_proposicao, n_prop), id_proposicao)) %>% 
     select(id_proposicao, id_votacao)
   
   votos_va <- read_csv(votos_va_data_path, col_types = cols(id_proposicao = "c", 
@@ -264,6 +276,7 @@ processa_votacoes <- function(votos_posicoes_data_path = here::here("crawler/raw
   
   votacoes <- votos_posicoes %>% 
     rbind(votos_va) %>% 
+    rbind(tibble(id_proposicao = "46249", id_votacao = 99999)) %>% ## ID especial para a PL 6299/2002
     distinct(id_proposicao, id_votacao)
   
   return(votacoes)
@@ -344,7 +357,7 @@ processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/l
     ) %>%
     select(id_parlamentar_voz, cargo, partido = bloco_partido) %>% 
     map_sigla_to_id() %>% 
-    select(-partido)
+    select(id_parlamentar_voz, id_partido, cargo)
   
   return(liderancas)
 }
@@ -359,6 +372,7 @@ processa_aderencia <- function(votos_path = here::here("crawler/raw_data/votos.c
                                orientacoes_path = here::here("crawler/raw_data/orientacoes.csv"),
                                parlamentares_path = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
+  library(here)
   source(here("crawler/votacoes/utils_votacoes.R"))
   source(here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
   source(here("crawler/parlamentares/partidos/utils_partidos.R"))

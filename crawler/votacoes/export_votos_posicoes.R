@@ -9,8 +9,6 @@ if(!require(devtools)){
   install.packages("devtools")
 }
 
-suppressWarnings(suppressMessages(devtools::install_github('analytics-ufcg/rcongresso', force = T)))
-
 args = commandArgs(trailingOnly=TRUE)
 
 message("LEIA O README deste diretório")

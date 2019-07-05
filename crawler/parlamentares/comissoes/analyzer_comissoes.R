@@ -48,12 +48,12 @@ padroniza_cargo_comissao_camara <- function(cargo) {
   library(tidyverse)
   source(here::here("crawler/parlamentares/comissoes/constants/cargos.R"))
   
-  cargo_padronizado = dplyr::case_when(cargo == tolower(.PRESIDENTE) ~ "Presidente",
-                                       cargo == tolower(.PRIMEIRO_VICE_PRESIDENTE) ~ "Primeiro Vice-presidente",
-                                       cargo == tolower(.SEGUNDO_VICE_PRESIDENTE) ~ "Segundo Vice-presidente",
-                                       cargo == tolower(.TERCEIRO_VICE_PRESIDENTE) ~ "Terceiro Vice-presidente",
-                                       startsWith(cargo, .TITULAR) ~ "Titular",
-                                       startsWith(cargo, .SUPLENTE) ~ "Suplente")
+  cargo_padronizado = dplyr::case_when(tolower(cargo) == tolower(.PRESIDENTE) ~ "Presidente",
+                                       tolower(cargo) == tolower(.PRIMEIRO_VICE_PRESIDENTE) ~ "Primeiro Vice-presidente",
+                                       tolower(cargo) == tolower(.SEGUNDO_VICE_PRESIDENTE) ~ "Segundo Vice-presidente",
+                                       tolower(cargo) == tolower(.TERCEIRO_VICE_PRESIDENTE) ~ "Terceiro Vice-presidente",
+                                       startsWith(tolower(cargo), .TITULAR) ~ "Titular",
+                                       startsWith(tolower(cargo), .SUPLENTE) ~ "Suplente")
   
   return(cargo_padronizado)
 }
@@ -70,13 +70,13 @@ enumera_cargo_comissao_camara <- function(cargo, situacao) {
   library(tidyverse)
   source(here::here("crawler/parlamentares/comissoes/constants/cargos.R"))
   
-  peso = dplyr::case_when(cargo == tolower(.PRESIDENTE) ~ 7,
-                          cargo == tolower(.PRIMEIRO_VICE_PRESIDENTE) ~ 6,
-                          cargo == tolower(.SEGUNDO_VICE_PRESIDENTE) ~ 5,
-                          cargo == tolower(.TERCEIRO_VICE_PRESIDENTE) ~ 4,
-                          startsWith(cargo, .TITULAR) ~ 3,
-                          startsWith(cargo, .SUPLENTE) ~ 2,
-                          is.na(cargo) & situacao == .TITULAR ~ 1,
+  peso = dplyr::case_when(tolower(cargo) == tolower(.PRESIDENTE) ~ 7,
+                          tolower(cargo) == tolower(.PRIMEIRO_VICE_PRESIDENTE) ~ 6,
+                          tolower(cargo) == tolower(.SEGUNDO_VICE_PRESIDENTE) ~ 5,
+                          tolower(cargo) == tolower(.TERCEIRO_VICE_PRESIDENTE) ~ 4,
+                          startsWith(tolower(cargo), .TITULAR) ~ 3,
+                          startsWith(tolower(cargo), .SUPLENTE) ~ 2,
+                          is.na(tolower(cargo)) & situacao == .TITULAR ~ 1,
                           TRUE ~ 0)
   
   return(peso)

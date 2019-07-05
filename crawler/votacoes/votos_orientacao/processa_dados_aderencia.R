@@ -204,7 +204,7 @@ processa_dados_aderencia_temas <- function(proposicoes_temas, temas,
                                            votos, orientacoes, deputados, filtrar = FALSE) {
   library(tidyverse)
   
-  temas_lista <- temas %>% pull(id)
+  temas_lista <- temas %>% pull(id_tema)
 
   aderencia_temas <- tibble::tibble(id_tema = temas_lista) %>% 
     mutate(dados = purrr::map(
