@@ -1,3 +1,5 @@
+DELETE from votacoesus WHERE id_votacao = '60742347'; -- votacao nao mais usada
+
 ALTER TABLE votacoesus ADD CONSTRAINT votacoesus_proposicao_id_fkey FOREIGN KEY (id_votacao) REFERENCES votacoes (id_votacao);
 
 ALTER TABLE respostas ADD CONSTRAINT respostas_id_parlamentar_voz_fkey FOREIGN KEY (id_parlamentar_voz) REFERENCES parlamentares (id_parlamentar_voz);
