@@ -427,6 +427,7 @@ processa_aderencia <- function(votos_path = here::here("crawler/raw_data/votos.c
     rbind(aderencia_temas) %>% 
     mutate(casa_enum = 1, # 1 é o código da camara. TODO: estender para senadores
            id_parlamentar_voz = paste0(casa_enum, as.character(id_deputado))) %>% 
+    mutate(freq = freq / 100) %>% 
     select(id_parlamentar_voz, id_partido, id_tema, faltou, partido_liberou, nao_seguiu, seguiu, aderencia = freq)
   
   return(aderencia_alt)
