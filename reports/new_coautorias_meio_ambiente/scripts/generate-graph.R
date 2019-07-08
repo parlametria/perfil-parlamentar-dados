@@ -85,13 +85,18 @@ generate_edges <- function(df, nodes) {
 }
 
 generate_graph <- function(nodes, edges) {
+
   fn <- forceNetwork(
-    Links = edges, Nodes = nodes,
-    Source = "source", Target = "target",
-    Value = "peso_arestas", NodeID = "nome_eleitoral",
-    Group ="partido", zoom = T,
+    Links = edges, 
+    Nodes = nodes,
+    Source = "source", 
+    Target = "target",
+    Value = "peso_arestas", 
+    NodeID = "nome_eleitoral",
+    Group ="partido", 
+    zoom = T,
     linkColour = "#bfbdbd",
-    fontFamily = "roboto")
-  
+    fontFamily = "roboto",
+    opacity = 0.8)
   return(fn)
 }

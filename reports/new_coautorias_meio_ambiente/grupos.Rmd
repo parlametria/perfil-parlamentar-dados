@@ -295,7 +295,14 @@ output$grafo <-
   networkD3::renderForceNetwork({
     graph <- getCoautorias()
     if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
-      generate_graph(graph[[1]], graph[[2]])
+      fn <- generate_graph(graph[[1]], graph[[2]])
+      fn <- 
+        htmlwidgets::onRender(fn, 
+                              paste0("function(el,x) { ",
+                                "d3.selectAll('.node')", 
+                                ".on('mouseover', null); }")
+        )
+      fn
     }
   })
 ```
