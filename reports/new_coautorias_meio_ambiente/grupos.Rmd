@@ -48,7 +48,7 @@ PATH_COAUTORIAS <- here::here(paste0(path, "data/coautorias.csv"))
 ```
 
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
-proposicoes <- read_csv(URL_PROPOSICOES, col_types = "ccddc")
+proposicoes <- read_csv(URL_PROPOSICOES, col_types = "c")
 
 parlamentares <- read_csv(PATH_PARLAMENTARES, col_types = "ccc")
 
@@ -299,10 +299,35 @@ output$grafo <-
       # .style('fill', '#000000') para mudar a cor
       fn <- 
         htmlwidgets::onRender(fn, 
-                              paste0("function(el,x) { ",
-                                "d3.selectAll('.node')", 
-                                ".on('mouseover', function(d) { d3.select(this).select('.nodetext').style('opacity', 1); })", 
-                                ".on('mouseout', function(d) { d3.select(this).select('.nodetext').style('opacity', 0); }) ;}")
+                                '
+          function(el,x) {
+            var tooltip = d3.select("body")
+          	  .append("div")
+          	  .style("position", "absolute")
+          	  .style("z-index", "10")
+          	  .style("visibility", "hidden")
+          	  .style("background-color", "#ffffff")
+          	  .style("padding", "5px")
+          	  .style("border", "solid 2px #000")
+          	  .style("border-radius", "6px")
+          	  .style("font-size", "1.2rem")
+        
+            d3.selectAll(".node")
+              .on("mouseover", null)
+              .style("opacity", 1)
+              .style("cursor", "pointer");
+        
+            d3.selectAll("circle")
+              .on("mouseover", function(d) { 
+                  return tooltip.html(d.name )
+                    .style("visibility", "visible")
+                    .style("top",(event.pageY-10)+"px")
+                    .style("left",(event.pageX+10)+"px");})
+        	    .on("mouseout", function(d) {
+                  return tooltip.html(d.name)
+                    .style("visibility", "hidden");});
+            }
+              '
         )
       fn
     }
