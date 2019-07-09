@@ -25,7 +25,7 @@ library(tidyverse)
 library(hrbrthemes)
 theme_set(theme_minimal())
 
-env <- "prod"
+env <- "dev"
 path <- ''
 
 if (env == "dev") {
