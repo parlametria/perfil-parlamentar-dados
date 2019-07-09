@@ -296,11 +296,13 @@ output$grafo <-
     graph <- getCoautorias()
     if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
       fn <- generate_graph(graph[[1]], graph[[2]])
+      # .style('fill', '#000000') para mudar a cor
       fn <- 
         htmlwidgets::onRender(fn, 
                               paste0("function(el,x) { ",
                                 "d3.selectAll('.node')", 
-                                ".on('mouseover', null); }")
+                                ".on('mouseover', function(d) { d3.select(this).select('.nodetext').style('opacity', 1); })", 
+                                ".on('mouseout', function(d) { d3.select(this).select('.nodetext').style('opacity', 0); }) ;}")
         )
       fn
     }

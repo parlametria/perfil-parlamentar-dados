@@ -97,6 +97,7 @@ generate_graph <- function(nodes, edges) {
     zoom = T,
     linkColour = "#bfbdbd",
     fontFamily = "roboto",
+    fontSize = 12,
     opacity = 0.8)
   return(fn)
 }
