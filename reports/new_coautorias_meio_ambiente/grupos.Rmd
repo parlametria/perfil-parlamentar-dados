@@ -25,7 +25,7 @@ library(tidyverse)
 library(hrbrthemes)
 theme_set(theme_minimal())
 
-env <- "dev"
+env <- "prod"
 path <- ''
 
 if (env == "dev") {
@@ -50,7 +50,14 @@ PATH_COAUTORIAS <- here::here(paste0(path, "data/coautorias.csv"))
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
 proposicoes <- read_csv(URL_PROPOSICOES, col_types = "c")
 
-parlamentares <- read_csv(PATH_PARLAMENTARES, col_types = "ccc")
+parlamentares <- read_csv(PATH_PARLAMENTARES, col_types = "cccc") %>% 
+  mutate(nome_eleitoral = paste0(nome_eleitoral, ' - ', sg_partido, '/', uf)) %>% 
+  select(-uf)
+
+parlamentares_graph <- read_csv(PATH_PARLAMENTARES, col_types = "cccc") %>% 
+  mutate(nome_eleitoral = paste0('<strong>', nome_eleitoral, '</strong><br>', sg_partido, '/', uf)) %>% 
+  select(-uf)
+
 
 autores <- get_dataset_autores(PATH_AUTORES)
 
@@ -270,7 +277,7 @@ getCoautorias <- reactive({
   nodes_edges <- 
     generate_nodes_and_edges(
       autores,
-      parlamentares,
+      parlamentares_graph,
       coautorias %>% 
         filter(peso_arestas >= input$min_peso))
   return(nodes_edges)
