@@ -97,7 +97,8 @@ processa_comissoes_composicao_camara <- function() {
     tibble::as_tibble() %>% 
     dplyr::mutate(dados = purrr::map(sigla, 
                        fetch_comissao_info_camara)) %>% 
-    tidyr::unnest(dados)
+    tidyr::unnest(dados) %>% 
+    dplyr::filter(!str_detect(toupper(nome_comissao), 'ESPECIAL'))
   
   ## Composição das Comissões
   composicao_comissoes <- comissao_composicao %>% 
