@@ -389,7 +389,7 @@ aderencia_governo_summary %>%
                                           "60-80%",
                                           "60-80%",
                                           "60-80%")) + 
-  scale_y_continuous(breaks = seq(0, 300, 20), limits = c(0, 500)) +
+  scale_y_continuous(breaks = seq(0, 300, 20), limits = c(0, 300)) +
   guides(fill=FALSE) +
   labs(title = "Quantos deputados são aderentes ou não \nao Governo",
        x = "Faixa de Aderência",
