@@ -55,13 +55,13 @@ fetch_all_autores <- function(proposicoes, parlamentares) {
   autores <- purrr::map_df(proposicoes$id, ~ fetch_autores(.x))
   
   autores <- autores %>%
-    rename(id_req = id, nome_eleitoral = deputado) %>%
-    distinct() %>% 
-    group_by(id_req) %>%
-    mutate(peso_arestas = 1 / n())
+    rename(id_req = id, nome_eleitoral = deputado)
   
   autores <- autores %>% 
     mapeia_nome_para_id(parlamentares) %>% 
+    distinct() %>% 
+    group_by(id_req) %>%
+    mutate(peso_arestas = 1 / n()) %>% 
     select(id_req, id, peso_arestas)
   
   return(autores)
@@ -107,6 +107,6 @@ mapeia_nome_para_id <- function(df, parlamentares) {
 padroniza_nome <- function(nome) {
   return(
     toupper(nome) %>% 
-      stringr::str_remove(' -.*')
+      stringr::str_remove('( -|<).*')
   )
 }
