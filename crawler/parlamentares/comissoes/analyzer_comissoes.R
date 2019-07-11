@@ -97,7 +97,8 @@ processa_comissoes_composicao_camara <- function() {
     tibble::as_tibble() %>% 
     dplyr::mutate(dados = purrr::map(sigla, 
                        fetch_comissao_info_camara)) %>% 
-    tidyr::unnest(dados)
+    tidyr::unnest(dados) %>% 
+    dplyr::filter(!str_detect(toupper(nome_comissao), 'ESPECIAL'))
   
   ## Composição das Comissões
   composicao_comissoes <- comissao_composicao %>% 
@@ -111,7 +112,8 @@ processa_comissoes_composicao_camara <- function() {
     dplyr::filter(maximo == peso_cargo) %>% 
     
     dplyr::mutate(casa = "camara") %>% 
-    dplyr::select(comissao_id, casa, id_parlamentar = id, cargo, situacao)
+    dplyr::select(comissao_id, casa, id_parlamentar = id, cargo, situacao) %>% 
+    dplyr::filter(!is.na(comissao_id))
 
   ## Informações das Comissões
   comissoes <- lista_comissao %>% 
