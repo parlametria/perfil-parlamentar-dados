@@ -76,6 +76,7 @@ processa_calculo_aderencia <- function(deputados_votos, deputados, filtrar = TRU
     filter(total_votacoes >= minimo_votacoes_por_deputado) %>% 
     mutate(freq = (seguiu / (seguiu + nao_seguiu)) * 100) %>%
     mutate(freq = if_else(is.nan(freq), -1, freq)) %>% 
+    mutate(freq = if_else(total_votacoes >= 3, freq, -1)) %>% 
     arrange(freq) %>% 
     select(id_deputado, nome, partido, faltou, partido_liberou, nao_seguiu, seguiu, total_votacoes, freq)
   
