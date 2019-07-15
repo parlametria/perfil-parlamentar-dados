@@ -262,7 +262,8 @@ processa_orientacoes <- function(votos_path = here::here("crawler/raw_data/votos
 #' @param votos_va_data_path Caminho para o arquivo de dados de votos das proposições selecionadas na legislatura Atual
 #' @return Dataframe com informações dos links id_votacao e id_proposicao
 processa_votacoes <- function(votos_posicoes_data_path = here::here("crawler/raw_data/votos_posicoes.csv"),
-                              votos_va_data_path = here::here("crawler/raw_data/votos.csv")) {
+                              votos_va_data_path = here::here("crawler/raw_data/votos.csv"),
+                              votacoes_info_data_path = here::here("crawler/raw_data/votacoes_info.csv")) {
   library(tidyverse)
   library(here)
   
@@ -283,10 +284,14 @@ processa_votacoes <- function(votos_posicoes_data_path = here::here("crawler/raw
                                                             voto = "i")) %>% 
     select(id_proposicao, id_votacao)
   
+  votacoes_info <- read_csv(votacoes_info_data_path, col_types = cols(id_proposicao = "c", 
+                                                                      id_votacao = "i"))
+  
   votacoes <- votos_posicoes %>% 
     rbind(votos_va) %>% 
     rbind(tibble(id_proposicao = "46249", id_votacao = 99999)) %>% ## ID especial para a PL 6299/2002
-    distinct(id_proposicao, id_votacao)
+    distinct(id_proposicao, id_votacao) %>% 
+    left_join(votacoes_info, by = c("id_proposicao", "id_votacao"))
   
   return(votacoes)
 }
