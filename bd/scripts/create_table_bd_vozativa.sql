@@ -1,8 +1,9 @@
 CREATE TABLE IF NOT EXISTS "temas" (
-    "id" INTEGER, 
+    "id_tema" INTEGER, 
     "tema" VARCHAR(255),
     "slug" VARCHAR(255),
-    PRIMARY KEY ("id"));
+    "ativo" BOOLEAN,
+    PRIMARY KEY ("id_tema"));
 
 CREATE TABLE IF NOT EXISTS "usuarios" (
     "first_name" VARCHAR(255), 
@@ -15,6 +16,14 @@ CREATE TABLE IF NOT EXISTS "usuarios" (
     "token" VARCHAR(255), 
     PRIMARY KEY ("id"));
 
+CREATE TABLE IF NOT EXISTS "partidos" (    
+    "id_partido" INTEGER,
+    "sigla" VARCHAR(40),
+    "tipo" VARCHAR(90),
+    "situacao" VARCHAR(60),
+    PRIMARY KEY("id_partido")
+);
+
 CREATE TABLE IF NOT EXISTS "parlamentares" (
     "id_parlamentar_voz" VARCHAR(40),
     "id_parlamentar" VARCHAR(40) DEFAULT NULL,
@@ -24,7 +33,7 @@ CREATE TABLE IF NOT EXISTS "parlamentares" (
     "nome_eleitoral" VARCHAR(255),
     "genero" VARCHAR(255),
     "uf" VARCHAR(255),
-    "partido" VARCHAR(255),
+    "id_partido" INTEGER REFERENCES "partidos" ("id_partido") ON DELETE SET NULL ON UPDATE CASCADE,
     "situacao" VARCHAR(255),
     "condicao_eleitoral" VARCHAR(255),
     "ultima_legislatura" VARCHAR(255),
@@ -34,25 +43,42 @@ CREATE TABLE IF NOT EXISTS "parlamentares" (
 CREATE TABLE IF NOT EXISTS "perguntas" (
     "texto" VARCHAR(500), 
     "id" INTEGER, 
-    "tema_id" INTEGER REFERENCES "temas" ("id") ON DELETE SET NULL ON UPDATE CASCADE, 
+    "tema_id" INTEGER REFERENCES "temas" ("id_tema") ON DELETE SET NULL ON UPDATE CASCADE, 
     PRIMARY KEY ("id"));
 
 CREATE TABLE IF NOT EXISTS "proposicoes" (
-    "projeto_lei" VARCHAR(255),    
-    "id_votacao" INTEGER, 
+    "id_proposicao" INTEGER,    
+    "casa" VARCHAR(40),
+    "projeto_lei" VARCHAR(40), 
     "titulo" VARCHAR(255), 
     "descricao" VARCHAR(800), 
-    "tema_id" INTEGER REFERENCES "temas" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
     "status_proposicao" VARCHAR(40) DEFAULT 'Inativa',
-    "id_proposicao" VARCHAR(40), 
-    "casa" VARCHAR(40),
-    PRIMARY KEY ("id_votacao"));
+    "status_importante" VARCHAR(255) DEFAULT 'Inativa',
+    PRIMARY KEY ("id_proposicao"));
+
+CREATE TABLE IF NOT EXISTS "proposicoes_temas" (
+    "id_proposicao" INTEGER REFERENCES "proposicoes" ("id_proposicao") ON DELETE SET NULL ON UPDATE CASCADE,    
+    "id_tema" INTEGER REFERENCES "temas" ("id_tema") ON DELETE SET NULL ON UPDATE CASCADE,
+    PRIMARY KEY ("id_proposicao", "id_tema"));
 
 CREATE TABLE IF NOT EXISTS "votacoes" (     
-    "id_votacao" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE,
+    "id_proposicao" INTEGER REFERENCES "proposicoes" ("id_proposicao") ON DELETE SET NULL ON UPDATE CASCADE,
+    "id_votacao" INTEGER UNIQUE,
+    PRIMARY KEY ("id_votacao")
+);
+
+CREATE TABLE IF NOT EXISTS "votos" (     
+    "id_votacao" INTEGER REFERENCES "votacoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE,
     "id_parlamentar_voz" VARCHAR REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
     "voto" INTEGER,    
     PRIMARY KEY ("id_votacao", "id_parlamentar_voz")
+);
+
+CREATE TABLE IF NOT EXISTS "orientacoes" (     
+    "id_votacao" INTEGER REFERENCES "votacoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE,
+    "id_partido" INTEGER REFERENCES "partidos" ("id_partido") ON DELETE SET NULL ON UPDATE CASCADE,
+    "voto" INTEGER,    
+    PRIMARY KEY ("id_votacao", "id_partido")
 );
 
 CREATE TABLE IF NOT EXISTS "respostas" (
@@ -72,7 +98,8 @@ CREATE TABLE IF NOT EXISTS "respostasus" (
 CREATE TABLE IF NOT EXISTS "votacoesus" (
     "id" SERIAL, 
     "resposta" INTEGER, "user_id" INTEGER REFERENCES "usuarios" ("id") ON DELETE SET NULL ON UPDATE CASCADE, 
-    "proposicao_id" INTEGER REFERENCES "proposicoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE, PRIMARY KEY ("id"));
+    "id_votacao" INTEGER REFERENCES "votacoes" ("id_votacao") ON DELETE SET NULL ON UPDATE CASCADE, 
+    PRIMARY KEY ("id"));
 
 CREATE TABLE IF NOT EXISTS "temasus" (
     "id" SERIAL, 
@@ -109,20 +136,21 @@ CREATE TABLE IF NOT EXISTS "mandatos" (
     PRIMARY KEY ("id_parlamentar_voz", "id_legislatura")
 );
 
-CREATE TABLE IF NOT EXISTS "aderencia" (    
+CREATE TABLE IF NOT EXISTS "aderencias" (    
     "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
-    "partido" VARCHAR(20),
+    "id_partido" INTEGER REFERENCES "partidos" ("id_partido") ON DELETE SET NULL ON UPDATE CASCADE,
+    "id_tema" INTEGER REFERENCES "temas" ("id_tema") ON DELETE SET NULL ON UPDATE CASCADE,
     "faltou" INTEGER,
     "partido_liberou" INTEGER,
     "nao_seguiu" INTEGER,
     "seguiu" INTEGER,
     "aderencia" REAL,
-    PRIMARY KEY("id_parlamentar_voz", "partido")
+    PRIMARY KEY("id_parlamentar_voz", "id_partido", "id_tema")
 );
 
 CREATE TABLE IF NOT EXISTS "liderancas" (    
     "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
+    "id_partido" INTEGER REFERENCES "partidos" ("id_partido") ON DELETE SET NULL ON UPDATE CASCADE,
     "cargo" VARCHAR(40),
-    "bloco_partido" VARCHAR(60),
-    PRIMARY KEY("id_parlamentar_voz", "bloco_partido")
+    PRIMARY KEY("id_parlamentar_voz", "id_partido")
 );

@@ -10,15 +10,6 @@ generate_nodes <- function(df, parlamentares, coautorias) {
     filter(n > 1) %>%
     ungroup() %>%
     distinct(id, nome_eleitoral, sg_partido)
-  # 
-  # nodes <- df %>%
-  #   ungroup() %>%
-  #   tibble::rowid_to_column("index") %>%
-  #   dplyr::mutate(id = as.character(id),
-  #                 partido = as.factor(sg_partido),
-  #                 index = index - 1) %>%
-  #   dplyr::select(index, id, nome_eleitoral, partido) %>%
-  #   as.data.frame()
   
   pre_nodes <- df %>%
     ungroup() %>%
@@ -85,13 +76,19 @@ generate_edges <- function(df, nodes) {
 }
 
 generate_graph <- function(nodes, edges) {
+
   fn <- forceNetwork(
-    Links = edges, Nodes = nodes,
-    Source = "source", Target = "target",
-    Value = "peso_arestas", NodeID = "nome_eleitoral",
-    Group ="partido", zoom = T,
+    Links = edges, 
+    Nodes = nodes,
+    Source = "source", 
+    Target = "target",
+    Value = "peso_arestas", 
+    NodeID = "nome_eleitoral",
+    Group ="partido", 
+    zoom = T,
     linkColour = "#bfbdbd",
-    fontFamily = "roboto")
-  
+    fontFamily = "roboto",
+    fontSize = 6,
+    opacity = 0.8)
   return(fn)
 }

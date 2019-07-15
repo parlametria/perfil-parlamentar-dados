@@ -5,8 +5,8 @@ account: vozativa
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 997263
-bundleId: 2176863
+bundleId: 2215477
 url: https://vozativa.shinyapps.io/grupos-coautorias-MA/
-when: 1561464373.10584
+when: 1562695369.25174
 asMultiple: FALSE
 asStatic: FALSE

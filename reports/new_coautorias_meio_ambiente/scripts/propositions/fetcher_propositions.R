@@ -1,30 +1,19 @@
-#' @title Recupera informações dos temas de uma proposição
-#' @description A partir do id, recupera dados de uma proposição na Câmara dos Deputados,
-#' como nome e tema
-#' @param id_prop ID de uma proposição
-#' @return Dataframe contendo informações de uma proposição
+#' @title Recupera informações dos temas das proposições de um ano
+#' @description A partir do ano, recupera todos os temas das proposições
+#' @param ano Ano
+#' @return Dataframe contendo informações dos temas das proposições por ano
 #' @examples
-#' proposicao <- fetch_tema_proposicao(2193540)
-fetch_tema_proposicao <- function(id_prop) {
+#' propositions_temas <- fetch_tema_proposicoes(2019)
+fetch_tema_proposicoes <- function(ano = 2019) {
   library(tidyverse)
   
-  print(paste0("Baixando informações da proposição ", id_prop))
-  
-  temas  <- tryCatch({
-    url <-
-      paste0("https://dadosabertos.camara.leg.br/api/v2/proposicoes/",
-             id_prop,
-             "/temas")
-    data <- (RCurl::getURI(url) %>%
-               jsonlite::fromJSON())$dados %>%
-      as.data.frame() %>%
-      select(tema)
+  url <- paste0("https://dadosabertos.camara.leg.br/arquivos/proposicoesTemas/csv/proposicoesTemas-", ano, ".csv")
+  temas <-readr::read_delim(url, delim = ";")
     
-  }, error = function(e) {
-    return(dplyr::tribble(~ tema))
-  })
-  
-  temas <- paste(unlist(temas$tema), collapse = '; ')
+  temas <- temas %>% 
+    mutate(id = stringr::str_extract(uriProposicao, '\\d*$') %>% as.numeric()) %>% 
+    group_by(id) %>% 
+    summarise(tema = paste(unlist(tema), collapse = '; '))
   
   return(temas)
 }
@@ -50,30 +39,6 @@ map_tema_camara_tema_va <- function(tema_camara) {
   return(tema_voz)
 }
 
-#' @title Recupera informações dos temas para todas as proposições votadas em plenário na legislatura 56
-#' @description Classifica por tema e lista proposições votadas em plenário na legislatura 56
-#' @return Dataframe com lista de proposições e seus respectivos temas
-#' @examples
-#' proposicoes_temas <- fetch_votacoes_plenario_tema()
-fetch_votacoes_plenario_tema <- function() {
-  proposicoes_votadas <-
-    purrr::map_df(
-      c(2019, 2020, 2021, 2022),
-      fetch_votacoes_ano
-    ) %>% 
-    distinct(id, nome_proposicao)
-  
-  proposicoes_temas <- 
-    purrr::map_df(
-      proposicoes_votadas$id,
-      fetch_tema_proposicao
-    )
-  
-  proposicoes_temas_va <- proposicoes_temas %>% 
-    mutate(tema_vozativa = map_tema_camara_tema_va(tema))
-  
-}
-
 #' @title Recupera informações dos temas para todas as proposições criadas na legislatura 56
 #' @description Classifica por tema e lista proposições criadas na legislatura 56
 #' @return Dataframe com lista de proposições e seus respectivos temas
@@ -89,19 +54,20 @@ fetch_propositions <- function(initial_date = "2019-02-01") {
     filter(dataApresentacao >= initial_date) %>%
     select(id, siglaTipo, numero, ano)
   
-  propositions_themes <- propositions %>% 
-    rowwise(.) %>% 
-    mutate(tema = fetch_tema_proposicao(id))
+  ano = strsplit(initial_date, '-')[[1]][1]
+  propositions_themes <- fetch_tema_proposicoes(ano)
   
   propositions_ma <- propositions_themes %>%  
     mutate(tema_vozativa = map_tema_camara_tema_va(tema)) %>% 
     filter(tema_vozativa == 'Meio Ambiente') %>% 
-    select(-tema, -tema_vozativa)
+    select(-tema, -tema_vozativa) %>% 
+    unique() %>% 
+    inner_join(propositions, by = "id")
   
   return(propositions_ma)
 }
 
-fetch_relacionadas <- function(id_prop) {
+fetch_relacionadas <- function(id_prop, ano_prop) {
   print(paste0("Baixando proposições relacionadas a ", id_prop, "..."))
   url <-
     paste0("https://dadosabertos.camara.leg.br/api/v2/proposicoes/",
@@ -111,7 +77,8 @@ fetch_relacionadas <- function(id_prop) {
   ids_relacionadas <-
     (RCurl::getURI(url) %>%
        jsonlite::fromJSON())$dados %>%
-    as.data.frame() 
+    as.data.frame() %>% 
+    filter(ano == ano_prop)
   
   if (nrow(ids_relacionadas) == 0) {
     return(tribble(~ id, id_prop))
@@ -124,8 +91,8 @@ fetch_relacionadas <- function(id_prop) {
   return(ids_relacionadas)
 }
 
-fetch_all_relacionadas <- function(ids) {
-  relacionadas <- purrr::map_df(ids, ~ fetch_relacionadas(.x)) %>% 
+fetch_all_relacionadas <- function(ids, anos) {
+  relacionadas <- purrr::map2_df(ids, anos, ~ fetch_relacionadas(.x, .y)) %>% 
     dplyr::distinct()
   
   return(relacionadas)

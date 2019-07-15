@@ -91,7 +91,7 @@ processa_parlamentares <- function(parlamentares_data_path = here::here("crawler
                  nome_eleitoral, 
                  genero, 
                  uf, 
-                 partido = sg_partido, 
+                 id_partido = num_partido, 
                  situacao, 
                  condicao_eleitoral, 
                  ultima_legislatura, 
@@ -128,17 +128,20 @@ processa_perguntas <- function(perg_data_path = here::here("crawler/raw_data/per
 #' @description Cria os dados dos temas
 #' @return Dataframe com informações dos temas (descrição e id)
 processa_temas <- function() {
-  temas <- data.frame(id = c(0, 1, 2, 3, 5),
+  temas <- data.frame(id_tema = c(0, 1, 2, 3, 5, 99),
                       tema = c("Meio Ambiente", 
                         "Direitos Humanos", 
                         "Integridade e Transparência", 
                         "Agenda Nacional", 
-                        "Educação"), 
+                        "Educação",
+                        "Geral"), 
                       slug = c("meio-ambiente",
                                "direitos-humanos",
                                "transparencia",
                                "agenda-nacional",
-                               "educacao"),
+                               "educacao",
+                               "geral"),
+                      ativo = c(1, 1, 1, 1, 1, 0),
                       stringsAsFactors = FALSE)
   
   return(temas)
@@ -151,47 +154,132 @@ processa_temas <- function() {
 processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/tabela_votacoes.csv")) {
   library(tidyverse)
   library(here)
+  source(here("crawler/proposicoes/fetch_proposicoes_voz_ativa.R"))
   
-  proposicoes <- read_csv(prop_data_path)
+  proposicoes_questionario <- fetch_proposicoes_questionario()
   
-  colnames(proposicoes) <- c("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema", 
-                             "id_proposicao", "resumo", "objeto_votacao", "casa", "no_ar_vozativa")
-
-  proposicoes_alt <- proposicoes %>% 
-    dplyr::mutate(tema_id = dplyr::case_when(
-      tema == "Meio Ambiente" ~ 0,
-      tema == "Direitos Humanos" ~ 1,
-      tema == "Integridade e Transparência" ~ 2,
-      tema == "Agenda Nacional" ~ 3,
-      tema == "Transversal" ~ 4,
-      TRUE ~ 5
-    )) %>% 
-    dplyr::select(-tema) %>% 
-    dplyr::distinct(id_votacao, .keep_all= TRUE) %>% 
-    dplyr::filter(!is.na(id_votacao)) %>% 
-    dplyr::mutate(id_proposicao = as.character(id_proposicao)) %>% 
-    dplyr::mutate(status_proposicao = "Ativa") %>% 
-    dplyr::select("numero_proj_lei", "id_votacao", "titulo", "descricao", "tema_id", "status_proposicao", "id_proposicao", "casa")
+  proposicoes_plenario <- fetch_proposicoes_plenario_selecionadas()
   
-  return(proposicoes_alt)
+  proposicoes <- proposicoes_questionario %>% 
+    rbind(proposicoes_plenario) %>% 
+    group_by(id_proposicao) %>% 
+    mutate(n_prop = row_number()) %>% 
+    ungroup() %>% 
+    mutate(id_proposicao = if_else(n_prop > 1, paste0(id_proposicao, n_prop), id_proposicao)) %>% 
+    select(-n_prop) %>% 
+    mutate(id_proposicao = as.numeric(id_proposicao))
+  
+  return(proposicoes)
 }
 
-#' @title Processa dados de votações
-#' @description Processa os dados de votações e retorna no formato  a ser utilizado pelo banco de dados
-#' @param vot_data_path Caminho para o arquivo de dados de votações sem tratamento
-#' @return Dataframe com informações das votações
-processa_votacoes <- function(vot_data_path = here::here("crawler/raw_data/votacoes.csv")) {
+#' @title Processa dados dos temas das proposições
+#' @description Processa os dados dos temas de proposições
+#' @return Dataframe com informações dos temas das proposições (cada tema para cada proposição é uma observação)
+processa_proposicoes_temas <- function() {
   library(tidyverse)
   library(here)
   
-  votacoes <- readr::read_csv(vot_data_path, col_types = cols(id_parlamentar = "i", id_votacao = "i", voto = "i"))
+  source(here("crawler/proposicoes/process_proposicao_tema.R"))
   
+  proposicoes_questionario <- process_proposicoes_questionario_temas()
+  
+  proposicoes_plenario <- process_proposicoes_plenario_selecionadas_temas()
+  
+  proposicoes <- proposicoes_questionario %>%
+    rbind(proposicoes_plenario) %>%
+    mutate(id_tema = tema_id) %>% 
+    distinct(id_proposicao, id_tema)
+  
+  return(proposicoes)
+}
+
+#' @title Processa dados de votos
+#' @description Processa os dados de votos e retorna no formato  a ser utilizado pelo banco de dados
+#' @param votos_posicoes_data_path Caminho para o arquivo de dados de votos das posições do questionário VA
+#' @param votos_va_data_path Caminho para o arquivo de dados de votos das proposições selecionadas na legislatura Atual
+#' @param parlamentares_path Caminho para o arquivo de dados de parlamentares
+#' @return Dataframe com informações das votos
+processa_votos <- function(votos_posicoes_data_path = here::here("crawler/raw_data/votos_posicoes.csv"),
+                           votos_va_data_path = here::here("crawler/raw_data/votos.csv"),
+                           parlamentares_path = here::here("crawler/raw_data/parlamentares.csv")) {
+  library(tidyverse)
+  library(here)
+  
+  votos_posicoes <- read_csv(votos_posicoes_data_path, col_types = cols(id_parlamentar = "i", id_votacao = "i", voto = "i")) %>% 
+    select(id_votacao, id_parlamentar, casa, voto)
+  
+  votos_va <- read_csv(votos_va_data_path, col_types = cols(id_parlamentar = "i", id_votacao = "i", voto = "i")) %>% 
+    select(id_votacao, id_parlamentar, casa, voto)
+  
+  votacoes <- votos_posicoes %>% 
+    rbind(votos_va) %>% 
+    distinct(id_votacao, id_parlamentar, .keep_all = TRUE)
+  
+  deputados <- read_csv(parlamentares_path, col_types = cols(id = "c")) %>% 
+    filter(casa == "camara")
+    
   votacoes_select <- votacoes %>%
+    filter(id_parlamentar %in% (deputados %>% pull(id))) %>% ## garante que apenas deputados com info tenham seus votos salvos
     dplyr::mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa == "camara", 1, 2), 
                                          id_parlamentar)) %>% 
     dplyr::select(id_votacao, id_parlamentar_voz, voto)
   
   return(votacoes_select)
+}
+
+#' @title Cria tabela de orientações
+#' @description Cria tabela com as orientações dos partidos para votações realizadas em 2019
+#' @param orientacoes_data_path Caminho para o arquivo de dados de orientações
+#' @return Dataframe com informações das orientações
+processa_orientacoes <- function(orientacoes_data_path = here::here("crawler/raw_data/orientacoes.csv")) {
+  library(tidyverse)
+  library(here)
+  
+  source(here::here("crawler/parlamentares/partidos/utils_partidos.R"))
+  
+  orientacoes <- read_csv(orientacoes_data_path, col_types = cols(id_proposicao = "c", id_votacao = "i"))
+  
+  orientacoes_alt <- orientacoes %>% 
+    select(id_votacao, partido, voto) %>% 
+    map_sigla_to_id() %>%
+    select(id_votacao, id_partido, voto)
+  
+  return(orientacoes_alt)
+}
+
+#' @title Cria tabela de votações que conecta id das votações aos ids das proposições
+#' @description Cria tabela de votações que conecta id das votações aos ids das proposições
+#' @param votos_posicoes_data_path Caminho para o arquivo de dados de votos das posições do questionário VA
+#' @param votos_va_data_path Caminho para o arquivo de dados de votos das proposições selecionadas na legislatura Atual
+#' @return Dataframe com informações dos links id_votacao e id_proposicao
+processa_votacoes <- function(votos_posicoes_data_path = here::here("crawler/raw_data/votos_posicoes.csv"),
+                              votos_va_data_path = here::here("crawler/raw_data/votos.csv")) {
+  library(tidyverse)
+  library(here)
+  
+  votos_posicoes <- read_csv(votos_posicoes_data_path, col_types = cols(id_proposicao = "c", 
+                                                                        id_parlamentar = "i", 
+                                                                        id_votacao = "i", 
+                                                                        voto = "i")) %>% 
+    distinct(id_proposicao, id_votacao) %>% 
+    group_by(id_proposicao) %>% 
+    mutate(n_prop = row_number()) %>%
+    ungroup() %>% 
+    mutate(id_proposicao = if_else(n_prop > 1, paste0(id_proposicao, n_prop), id_proposicao)) %>% 
+    select(id_proposicao, id_votacao)
+  
+  votos_va <- read_csv(votos_va_data_path, col_types = cols(id_proposicao = "c", 
+                                                            id_parlamentar = "i", 
+                                                            id_votacao = "i", 
+                                                            voto = "i")) %>% 
+    select(id_proposicao, id_votacao)
+  
+  votacoes <- votos_posicoes %>% 
+    rbind(votos_va) %>% 
+    rbind(tibble(id_proposicao = "46249", id_votacao = 99999)) %>% ## ID especial para a PL 6299/2002
+    distinct(id_proposicao, id_votacao)
+  
+  return(votacoes)
 }
 
 #' @title Processa dados de comissões
@@ -257,15 +345,19 @@ processa_mandatos <- function(mandatos_path = here::here("crawler/raw_data/manda
 #' @return Dataframe com informações dos mandatos
 processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/liderancas.csv")) {
   library(tidyverse)
+  source(here::here("crawler/parlamentares/partidos/utils_partidos.R"))
   
   liderancas <- read_csv(liderancas_path)
   
   liderancas <- liderancas %>%
     mutate(
       casa_enum = dplyr::if_else(casa == "camara", 1, 2),
-      id_parlamentar_voz = paste0(casa_enum, as.character(id))
+      id_parlamentar_voz = paste0(casa_enum, as.character(id)),
+      bloco_partido = gsub("Bloco ", "", bloco_partido)
     ) %>%
-    select(id_parlamentar_voz, cargo, bloco_partido)
+    select(id_parlamentar_voz, cargo, partido = bloco_partido) %>% 
+    map_sigla_to_id() %>% 
+    select(id_parlamentar_voz, id_partido, cargo)
   
   return(liderancas)
 }
@@ -280,25 +372,72 @@ processa_aderencia <- function(votos_path = here::here("crawler/raw_data/votos.c
                                orientacoes_path = here::here("crawler/raw_data/orientacoes.csv"),
                                parlamentares_path = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
+  library(here)
   source(here("crawler/votacoes/utils_votacoes.R"))
   source(here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
+  source(here("crawler/parlamentares/partidos/utils_partidos.R"))
   
+  ## Preparando dados de votos, orientações e deputados
   votos <- read_csv(votos_path, col_types = cols(.default = "c", voto = "i"))
   
   orientacoes <- read_csv(orientacoes_path, col_types = cols(.default = "c", voto = "i"))
   
   deputados <- read_csv(parlamentares_path, col_types = cols(id = "c")) %>% 
-    filter(casa == "camara") %>% 
-    mutate(sg_partido = padroniza_sigla(sg_partido))
+    filter(casa == "camara")
   
-  aderencia <- processa_dados_deputado_aderencia(votos, orientacoes, deputados, filtrar = FALSE)[[2]]
-  aderencia_governo <- processa_dados_deputado_aderencia_governo(votos, orientacoes, deputados, filtrar = FALSE)[[2]]
+  ## Preparando dados de proposições e seus respectivos temas
+  proposicoes <- processa_proposicoes()
   
-  aderencia_alt <- aderencia %>% 
-    rbind(aderencia_governo) %>% 
+  proposicoes_temas <- processa_proposicoes_temas()
+  
+  proposicoes <- proposicoes %>% 
+    filter(status_importante == "Ativa")
+  
+  proposicoes_temas <- proposicoes_temas %>% 
+    filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
+    
+  temas <- processa_temas()
+  
+  ## Calcula aderência por tema
+  aderencia_temas <- processa_dados_aderencia_temas(proposicoes_temas, temas, 
+                                                    votos, orientacoes, deputados, filtrar = FALSE) %>% 
+    map_sigla_to_id() %>% 
+    select(id_tema, id_deputado, nome, id_partido, faltou, partido_liberou,
+           nao_seguiu, seguiu, total_votacoes, freq)
+    
+  
+  ## Calcula aderência geral ao Partido
+  aderencia_geral_partido <- processa_dados_deputado_aderencia(votos, orientacoes, 
+                                                               deputados, filtrar = FALSE)[[2]] %>%
+    map_sigla_to_id() %>% 
+    mutate(id_tema = 99) %>% 
+    select(id_tema, id_deputado, nome, id_partido, faltou, partido_liberou,
+           nao_seguiu, seguiu, total_votacoes, freq)
+    
+  ## Calcula aderência geral ao Governo
+  aderencia_geral_governo <- processa_dados_deputado_aderencia_governo(votos, orientacoes, 
+                                                                       deputados, filtrar = FALSE)[[2]] %>% 
+    mutate(id_partido = 0) %>% 
+    mutate(id_tema = 99) %>% 
+    select(id_tema, id_deputado, nome, id_partido, faltou, partido_liberou,
+           nao_seguiu, seguiu, total_votacoes, freq)
+  
+  aderencia_alt <- aderencia_geral_partido %>% 
+    rbind(aderencia_geral_governo) %>% 
+    rbind(aderencia_temas) %>% 
     mutate(casa_enum = 1, # 1 é o código da camara. TODO: estender para senadores
            id_parlamentar_voz = paste0(casa_enum, as.character(id_deputado))) %>% 
-    select(id_parlamentar_voz, partido, faltou, partido_liberou, nao_seguiu, seguiu, aderencia = freq)
+    mutate(freq = if_else(freq == -1, -1, freq / 100)) %>% 
+    select(id_parlamentar_voz, id_partido, id_tema, faltou, partido_liberou, nao_seguiu, seguiu, aderencia = freq)
   
   return(aderencia_alt)
+}
+
+#' @title Processa dados dos partidos
+#' @description Processa os dados dos partidos políticos
+#' @param partidos_path Caminho para o arquivo de dados dos partidos
+#' @return Dataframe com informações de partidos
+processa_partidos <- function(partidos_path = here::here("crawler/raw_data/partidos.csv")) {
+  partidos <- readr::read_csv(partidos_path)
+  return(partidos)
 }
