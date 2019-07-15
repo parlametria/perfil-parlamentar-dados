@@ -116,6 +116,45 @@ processa_dados_deputado_aderencia <- function(votos, orientacao, deputados, filt
   return(processa_calculo_aderencia(deputados_votos, deputados, filtrar))
 }
 
+
+#' @title Processa dados de orientacao do governo considerando também o voto do líder do Governo
+#' @description Retorna as orientações do Governo e usa o voto do líder como segunda opção para determinar orientação
+#' @param votos Dataframe de votos
+#' @param orientacao Dataframe de orientações
+#' @return Dataframe com orientações do Governo para votações em plenário
+#' @examples
+#' orientacao_governo <- orientacao_governo_pelo_voto_lider(votos, orientacao)
+orientacao_governo_pelo_voto_lider <- function(votos, orientacao) {
+  library(tidyverse)
+  library(here)
+  
+  lider_governo <- read_csv(here("crawler/raw_data/liderancas.csv")) %>% 
+    filter(tolower(bloco_partido) == "governo", tolower(cargo) == "lider") %>% 
+    pull(id)
+  
+  if (!is.na(lider_governo)) {
+    voto_lider <- votos %>% 
+      filter(id_parlamentar == lider_governo)
+    
+    orientacao_governo <- orientacao %>% 
+      filter(tolower(partido) == "governo")
+    
+    orientacao_merge <- voto_lider %>% 
+      select(ano, id_proposicao, id_votacao, id_parlamentar, voto) %>% 
+      full_join(orientacao_governo, by = c("id_proposicao", "id_votacao")) %>% 
+      mutate(voto_governo = if_else(is.na(voto.y), 
+                                    if_else(voto.x != 0, 
+                                            voto.x, 
+                                            voto.y), 
+                                    voto.y)) %>% 
+      mutate(partido = "GOVERNO") %>% 
+      select(ano = ano.x, id_proposicao, id_votacao, partido, voto = voto_governo)
+    
+  } else {
+    return(orientacao %>% filter(tolower(partido) == "governo"))
+  }
+}
+
 #' @title Processa os dados de aderência do deputado ao Governo
 #' @description Retorna dados de aderência dos deputados por votação e de forma sumarizada
 #' @param votos Dataframe de votos
@@ -129,8 +168,10 @@ processa_dados_deputado_aderencia <- function(votos, orientacao, deputados, filt
 processa_dados_deputado_aderencia_governo <- function(votos, orientacao, deputados, filtrar = TRUE) {
   library(tidyverse)
   
+  orientacao_governo <- orientacao_governo_pelo_voto_lider(votos, orientacao)
+  
   deputados_votos <- votos %>% 
-    left_join(orientacao %>% filter(partido == "GOVERNO"),
+    left_join(orientacao_governo,
               by = c("id_proposicao", "id_votacao")) %>% 
     rename(voto_deputado = voto.x,
            voto_partido = voto.y,
