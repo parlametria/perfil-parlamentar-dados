@@ -70,15 +70,19 @@ fetch_xml_api_votacao <- function(id_proposicao) {
 #' @title Recupera informações de votações a partir de um xml
 #' @description A partir do xml das votações recupera dados de todas as votações disponíveis
 #' @param id_proposicao ID da proposição
-#' @param xml xml com votações
+#' @param xml xml com votações. Se Null então o xml é carregado
 #' @return Info sobre as votações
 #' @examples
 #' votacoes_mpv8712019 <- fetch_votacoes_por_proposicao(2190355, xml)
-fetch_votacoes_por_proposicao <- function(id_proposicao, xml) {
+fetch_votacoes_por_proposicao <- function(id_proposicao, xml = NULL) {
   library(tidyverse)
   library(xml2)
   
   tryCatch({
+    if (is.null(xml)) {
+      xml <- fetch_xml_api_votacao(id_proposicao)
+    }
+    
     votacoes <- xml_find_all(xml, ".//Votacao") %>%
       map_df(function(x) {
         list(
