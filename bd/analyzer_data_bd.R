@@ -231,15 +231,24 @@ processa_votos <- function(votos_posicoes_data_path = here::here("crawler/raw_da
 #' @description Cria tabela com as orientações dos partidos para votações realizadas em 2019
 #' @param orientacoes_data_path Caminho para o arquivo de dados de orientações
 #' @return Dataframe com informações das orientações
-processa_orientacoes <- function(orientacoes_data_path = here::here("crawler/raw_data/orientacoes.csv")) {
+processa_orientacoes <- function(votos_path = here::here("crawler/raw_data/votos.csv"),
+                                 orientacoes_data_path = here::here("crawler/raw_data/orientacoes.csv")) {
   library(tidyverse)
   library(here)
   
   source(here::here("crawler/parlamentares/partidos/utils_partidos.R"))
+  source(here::here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
   
-  orientacoes <- read_csv(orientacoes_data_path, col_types = cols(id_proposicao = "c", id_votacao = "i"))
+  votos <- read_csv(votos_path, col_types = cols(.default = "c", id_votacao = "i", voto = "i"))
+  
+  orientacoes <- read_csv(orientacoes_data_path, col_types = cols(id_proposicao = "c", 
+                                                                  id_votacao = "i", voto = "i"))
+  
+  orientacoes_governo <- orientacao_governo_pelo_voto_lider(votos, orientacoes)
   
   orientacoes_alt <- orientacoes %>% 
+    filter(tolower(partido) != "governo") %>% 
+    rbind(orientacoes_governo) %>% 
     select(id_votacao, partido, voto) %>% 
     map_sigla_to_id() %>%
     select(id_votacao, id_partido, voto)
