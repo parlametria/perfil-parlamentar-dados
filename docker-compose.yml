@@ -1,0 +1,33 @@
+version: '3.5'
+
+services:    
+
+  rupdater:
+    build: .
+    container_name: r-updater
+    restart: always
+    environment:
+      - PASSWORD=${R_PASSWORD:-secret}      
+      - PGHOST=${POSTGRES_HOST:-postgres}
+      - PGUSER=${POSTGRES_USER:-postgres}
+      - PGDATABASE=${POSTGRES_DATABASE:-vozativa}
+      - PGPASSWORD=${POSTGRES_PASSWORD:-secret}
+      - APP_SECRET=${BOT_SECRET:-ops}      
+    volumes:
+      - ./bd:/app/bd
+      - ./crawler:/app/crawler
+    networks:
+      - voz-network
+
+networks:
+  proxynet:
+    name: voz_ativa_network
+    
+networks:
+  voz-network:
+    external:
+      name: voz_ativa_network
+  
+volumes:  
+  bd:
+  crawler:

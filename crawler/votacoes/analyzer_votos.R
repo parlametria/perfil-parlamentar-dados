@@ -6,22 +6,6 @@ source(here::here("crawler/parlamentares/fetcher_parlamentar.R"))
 library(tidyverse)
 library(rcongresso)
 
-#' @title Enumera votações
-#' @description Recebe um dataframe com coluna voto e enumera o valor para um número
-#' @param df Dataframe com a coluna voto
-#' @return Dataframe com coluna voto enumerada
-#' @examples
-#' enumera_votacoes(df)
-enumera_votacoes <- function(df) {
-  df %>%
-    mutate(voto = case_when(str_detect(voto, "Não") ~ -1,
-                            str_detect(voto, "Sim") ~ 1,
-                            str_detect(voto, "Obstrução") ~ 2,
-                            str_detect(voto, "Abstenção") ~ 3,
-                            str_detect(voto, "Art. 17") ~ 4,
-                            TRUE ~ 0))
-}
-
 #' @title Enumera tipos de objetivos de votações
 #' @description Recebe um dataframe com coluna obj_votacao e enumera o valor para um número
 #' @param df Dataframe com a coluna obj_votacao
@@ -58,64 +42,89 @@ enumera_tipos_objetivos_votacao <- function(df) {
 #' @return Dataframe contendo id da votação, id e voto dos deputados que participaram de cada votação
 #' @examples
 #' votacoes <- fetch_votos_camara(2165578, 8334)
-fetch_votos_camara <- function(id_proposicao, id_votacao, resumo_votacao, objeto_votacao) {
+fetch_votos_camara <- function(id_proposicao, numero_projeto_lei, id_votacao, resumo_votacao, objeto_votacao) {
   library(xml2)
-  proposicoes <- rcongresso::fetch_proposicao_camara(id_proposicao) %>%
-    select(siglaTipo, numero, ano)
   
+  proposicoes <- tibble(
+    siglaTipo = strsplit(numero_projeto_lei, " ")[[1]][1],
+    numero = strsplit(strsplit(numero_projeto_lei, "/")[[1]][1], " ")[[1]][2],
+    ano = strsplit(numero_projeto_lei, "/")[[1]][2]
+  )
+
   url <- paste0("https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicao?tipo=",
                 proposicoes$siglaTipo, "&numero=", proposicoes$numero, "&ano=", proposicoes$ano)
   
   print(paste0("Baixando votação da ", proposicoes$siglaTipo, " ", proposicoes$numero, "/", proposicoes$ano))
-
-  xml <- RCurl::getURL(url) %>%
-    read_xml()
-
-  votacao <- xml_find_all(xml, ".//Votacao") %>%
-    map_df(function(x) {
-      list(
-        obj_votacao = xml_attr(x, "ObjVotacao"),
-        resumo = xml_attr(x, "Resumo"),
-        cod_sessao = xml_attr(x, "codSessao"),
-        data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
-      )
-    })
-
-  ## Escolhe votação específica
-  if(nrow(votacao) > 1) {
-    if(is.na(resumo_votacao)) {
-      votacao <- votacao %>%
-        mutate(obj_votacao = trimws(obj_votacao, which = "both")) %>%  
-        filter(obj_votacao == trimws(objeto_votacao, "both"))  
-    } else {
-      votacao <- votacao %>%
-        mutate(resumo = trimws(resumo, which = "both")) %>%  
-        filter(resumo == trimws(resumo_votacao, "both"))  
+  
+  tryCatch({
+    xml <- 
+      RCurl::getURL(url) %>%
+      read_xml()
+    
+    votacao <- xml_find_all(xml, ".//Votacao") %>%
+      map_df(function(x) {
+        list(
+          obj_votacao = xml_attr(x, "ObjVotacao"),
+          resumo = xml_attr(x, "Resumo"),
+          cod_sessao = xml_attr(x, "codSessao"),
+          data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y"),
+          hora = xml_attr(x, 'Hora')
+        )
+      })
+    
+    ## Escolhe votação específica
+    if(nrow(votacao) > 1) {
+      if(is.na(resumo_votacao)) {
+        votacao <- votacao %>%
+          mutate(obj_votacao = trimws(obj_votacao, which = "both")) %>%  
+          filter(obj_votacao == trimws(objeto_votacao, "both"))  
+      } else {
+        votacao <- votacao %>%
+          mutate(resumo = trimws(resumo, which = "both")) %>%  
+          filter(resumo == trimws(resumo_votacao, "both"))  
+      }
     }
-  }
-
-  ## Captura os dados dos votos
-  votos <- xml2::xml_find_all(xml, paste0(".//Votacao[@ObjVotacao = '",
-                                          votacao$obj_votacao, "']",
-                                          "//votos//Deputado")) %>%
-    map_df(function(x) {
-      list(
-        id_deputado = xml_attr(x, "ideCadastro"),
-        voto = xml_attr(x, "Voto") %>%
-          gsub(" ", "", .))
+    
+    ## Captura os dados dos votos
+    votos <- xml2::xml_find_all(xml, paste0(".//Votacao[@ObjVotacao = '",
+                                            votacao$obj_votacao, "']",
+                                            "//votos//Deputado")) %>%
+      map_df(function(x) {
+        list(
+          id_deputado = xml_attr(x, "ideCadastro"),
+          voto = xml_attr(x, "Voto") %>%
+            gsub(" ", "", .),
+          partido = xml_attr(x, "Partido"))
       }) %>%
-    mutate(obj_votacao = votacao$obj_votacao,
-           resumo = votacao$resumo,
-           data_hora = votacao$data,
-           id_votacao = id_votacao,
-           id_deputado = as.integer(id_deputado)) %>%
-    select(obj_votacao,
-           resumo,
-           id_votacao,
-           id_deputado,
-           voto)
-
-  return(votos)
+      mutate(obj_votacao = votacao$obj_votacao,
+             resumo = votacao$resumo,
+             hora = votacao$hora,
+             cod_sessao = votacao$cod_sessao,
+             id_votacao = id_votacao,
+             id_proposicao = id_proposicao,
+             id_deputado = as.integer(id_deputado)) %>%
+      select(obj_votacao,
+             resumo,
+             id_votacao,
+             id_proposicao,
+             hora,
+             cod_sessao,
+             id_deputado,
+             partido,
+             voto)
+    return(votos)
+  }, error = function(e) {
+    return(tribble(~obj_votacao,
+                   ~resumo,
+                   ~id_votacao,
+                   ~id_proposicao,
+                   ~hora,
+                   ~cod_sessao,
+                   ~id_deputado,
+                   ~partido,
+                   ~voto))
+  })
+  
 }
 
 #' @title Processa votações e informações dos deputados
@@ -125,15 +134,18 @@ fetch_votos_camara <- function(id_proposicao, id_votacao, resumo_votacao, objeto
 #' @examples
 #' processa_votos_camara(votacoes)
 processa_votos_camara <- function(votacoes) {
+  source(here::here("crawler/votacoes/utils_votacoes.R"))
+  
   proposicao_votacao <- votacoes %>% 
     dplyr::filter(!is.na(id_sessao)) %>% 
-    dplyr::select(id_proposicao, id_sessao, resumo, objeto_votacao)
+    dplyr::select(numero_proj_lei, id_proposicao, id_sessao, resumo, objeto_votacao)
 
   votos <- purrr::pmap_dfr(list(proposicao_votacao$id_proposicao, 
-                         proposicao_votacao$id_sessao, 
-                         proposicao_votacao$resumo,
-                         proposicao_votacao$objeto_votacao), 
-                    ~ fetch_votos_camara(..1, ..2, ..3, ..4))
+                                proposicao_votacao$numero_proj_lei,
+                                proposicao_votacao$id_sessao, 
+                                proposicao_votacao$resumo,
+                                proposicao_votacao$objeto_votacao), 
+                    ~ fetch_votos_camara(..1, ..2, ..3, ..4, ..5))
 
   parlamentares_filepath = here::here("crawler/raw_data/parlamentares.csv")
   
@@ -146,13 +158,10 @@ processa_votos_camara <- function(votacoes) {
     parlamentares <- purrr::map_df(legislaturas_list, ~ fetch_deputados(.x))
   }
 
-  print("Cruzando informações de votos com parlamentares...")
-  
   votos_alt <- votos %>% 
-    dplyr::mutate(casa = "camara") %>% 
-    dplyr::inner_join(parlamentares, by = c("id_deputado" = "id", "casa" = "casa")) %>% 
-    dplyr::select(id_votacao, id_parlamentar = id_deputado, casa, voto) %>% 
-    enumera_votacoes() %>% 
+    dplyr::mutate(casa = "camara") %>%
+    dplyr::select(id_proposicao, id_votacao, id_parlamentar = id_deputado, casa, partido, voto) %>% 
+    enumera_voto() %>% 
     dplyr::distinct()
 
   return(votos_alt)
@@ -160,20 +169,25 @@ processa_votos_camara <- function(votacoes) {
 
 #' @title Processa votações dos parlamentares
 #' @description O processamento consiste em mapear as votações dos parlamentares (caso tenha votado) e tratar os casos quando ele não votou
-#' @param votacoes_datapath Datapath do csv com os dados das votações
+#' @param url Link para o csv com as posições do questionário do Voz Ativa
 #' @return Dataframe contendo o id da votação, o id do parlamentar, a casa e o voto dos parlamentares
 #' @examples
-#' processa_votos("../raw_data/tabela_votacoes.csv")
-processa_votos <- function(votacoes_datapath) {
-  votacoes_all <- readr::read_csv(votacoes_datapath, col_types = "cicccccccc")
+#' processa_votos(url)
+processa_votos <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMcbeHRm_dqX-i2gNVaCiHMFg6yoIjNl9cHj0VBIlQ5eMX3hoHB8cM8FGOukjfNajWDtfvfhqxjji7/pub?gid=0&single=true&output=csv") {
+  votacoes_lista <- read_csv(url, col_types = cols(id_proposicao = "c"))
+    # filter(status_proposicao == "Ativa") %>% 
+    # filter(id_sessao != 99999) # remove votacao da PL 6299/2002 (nao possui votacoes em plenário)
   
-  votacoes_camara <- votacoes_all %>% 
-    dplyr::filter(casa == "camara")
+  votacoes_camara <- votacoes_lista %>% 
+    dplyr::filter(tolower(iconv(casa, 
+                        from = "UTF-8", 
+                        to = "ASCII//TRANSLIT")) == "camara")
   
-  votacoes_senado <- votacoes_all %>% 
+  votacoes_senado <- votacoes_lista %>% 
     dplyr::filter(casa == "senado")
   
-  votacoes <- processa_votos_camara(votacoes_camara)
+  votacoes <- processa_votos_camara(votacoes_camara) %>% 
+    select(id_proposicao, id_votacao, id_parlamentar, casa, voto)
   
   return(votacoes)
 }

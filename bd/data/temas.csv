@@ -1,7 +1,7 @@
-"id","tema","slug"
-0,"Meio Ambiente","meio-ambiente"
-1,"Direitos Humanos","direitos-humanos"
-2,"Integridade e Transparência","transparencia"
-3,"Agenda Nacional","agenda-nacional"
-4,"Transversal","transversal"
-5,"Educação","educacao"
+id_tema,tema,slug,ativo
+0,Meio Ambiente,meio-ambiente,1
+1,Direitos Humanos,direitos-humanos,1
+2,Integridade e Transparência,transparencia,1
+3,Agenda Nacional,agenda-nacional,1
+5,Educação,educacao,1
+99,Geral,geral,0

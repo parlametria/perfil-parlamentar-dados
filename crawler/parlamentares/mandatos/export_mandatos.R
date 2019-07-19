@@ -13,10 +13,10 @@ message("LEIA O README deste diretório")
 message("Use --help para mais informações\n")
 
 option_list = list(
-  make_option(c("-i", "--input"), type="character", default="../../raw_data/parlamentares.csv", 
+  make_option(c("-i", "--input"), type="character", default=here::here("crawler/raw_data/parlamentares.csv"), 
               help="nome do arquivo de entrada [default= %default]", metavar="character"),
   
-  make_option(c("-o", "--out"), type="character", default="../../raw_data/mandatos.csv", 
+  make_option(c("-o", "--out"), type="character", default=here::here("crawler/raw_data/mandatos.csv"), 
               help="nome do arquivo de saída [default= %default]", metavar="character")
 ) 
 

@@ -20,3 +20,5 @@ candidatos_link.json
 # R
 .RData
 .Rhistory
+
+.env

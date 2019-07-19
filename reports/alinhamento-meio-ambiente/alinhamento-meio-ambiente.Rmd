@@ -1,0 +1,489 @@
+---
+title: "Alinhamento dos parlamentares com posições de Meio Ambiente"
+output: 
+  html_document:
+    css: style.css
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+theme_set(theme_minimal())
+paleta <- c("#91bfda", "#E89D68", "#e06264")
+
+source(here::here("reports/alinhamento-meio-ambiente/code/calculo_alinhamento.R"))
+source(here::here("crawler/votacoes/fetch_orientacoes.R"))
+```
+
+```{r}
+deputados <- readr::read_csv(here::here("bd/data/parlamentares.csv"), col_types = cols(id_parlamentar_voz = "c")) %>% 
+  filter(casa == "camara") %>% 
+  select(id_parlamentar_voz, nome = nome_eleitoral, uf, partido, em_exercicio)
+```
+
+```{r results='hide'}
+# "Não" ~ -1
+# "Sim" ~ 1
+# "Obstrução" ~ 2
+# "Abstenção" ~ 3
+# "Art. 17" ~ 4
+
+posicoes <- readr::read_csv(here::here("crawler/raw_data/tabela_votacoes.csv"))
+votacoes <- readr::read_csv(here::here("bd/data/votacoes.csv"), col_types = "ncn")
+orientacoes <- readr::read_csv(here::here("crawler/raw_data/orientacoes_proposicoes_voz.csv"))
+
+posicoes_ma <- posicoes %>% 
+  filter(tema == "Meio Ambiente")
+
+id_posicoes_ma <- posicoes_ma %>% distinct(id_sessao) %>% arrange(id_sessao) %>% pull(id_sessao)
+
+votacoes_ma <- votacoes %>%
+  filter(id_votacao %in% id_posicoes_ma)
+
+orientacoes <- orientacoes %>% 
+  select(id_votacao, id_parlamentar_voz, voto)
+
+orientacoes_ma <- orientacoes %>% 
+  filter(id_votacao %in% id_posicoes_ma)
+
+rm(posicoes, votacoes, orientacoes)
+```
+
+```{r}
+votacao_ideal <- tibble::tibble(id_votacao = c(5513, 5723, 16208, 16209, 16230, 16251, 16519),
+                                posicao = c("PL 4148/2008", "MPV 688/2015", "MPV 756/2016", "MPV 758/2016", 
+                                            "EMC 96/2017", "MPV 759/2016", "MPV 809/2017"),
+                                id_parlamentar_voz = rep("ideal", length(id_posicoes_ma)),
+                                voto = c(-1, -1, -1, -1, -1, -1, 1)
+                                )
+
+votacao_ideal <- votacao_ideal %>% select(-posicao)
+```
+
+```{r}
+alinhamento_deputados <- votacoes_ma %>% 
+  count(id_parlamentar_voz) %>% 
+  select(-n) %>% 
+  mutate(dados = purrr::map(id_parlamentar_voz,
+                           calcular_alinhamento_parlamentar,
+                           votacoes_ma,
+                           votacao_ideal)) %>% 
+  unnest(dados) %>% 
+  select(-id_parlamentar_voz)
+  
+```
+
+
+```{r}
+alin_deputados <- alinhamento_deputados %>% 
+  left_join(deputados, by = c("id_parlamentar_b" = "id_parlamentar_voz")) %>% 
+  mutate(nome = stringr::str_to_title(nome))
+```
+
+# Distribuição do alinhamento dos Deputados ao Meio Ambiente
+```{r}
+alin_deputados %>% 
+  filter(em_exercicio == 1) %>% 
+  ggplot(aes(x = alinhamento)) +
+  geom_histogram(binwidth = 0.1, fill = "#8E6396", color = "#35193A") +
+  labs(y = "Nº de parlamentares")
+```
+
+# Número de posições dadas x Alinhamento com meio ambiente
+```{r}
+set.seed(99) # evita mudança na visualização
+alin_deputados %>% 
+  filter(em_exercicio == 1) %>% 
+  ggplot(aes(x = alinhamento, y = perguntas_iguais)) +
+  geom_jitter(alpha = 0.5) +
+  scale_y_continuous(limits = c(0, 7), breaks = seq(0, max(alin_deputados$perguntas_iguais), 1), oob = scales::squish) +
+  labs(x = "Alinhamento",
+       y = "Nº de posições dadas",
+       title = "Alinhamento x Número de posições dadas")
+```
+
+# Dotplots Histogramas
+```{r}
+alin_deputados %>% 
+  filter(em_exercicio == 1) %>%
+  ggplot(aes(x = alinhamento)) +
+  geom_dotplot(binwidth=0.1, method="histodot", dotsize = 0.1) +
+  labs(y = "Nº de parlamentares") +
+  scale_x_continuous(breaks = seq(0, 1, 0.1))
+
+```
+
+```{r}
+alin_deputados %>% 
+  filter(em_exercicio == 1) %>% 
+  arrange(alinhamento) %>%
+  mutate(var_rounded = round(alinhamento, 1)) %>%
+  mutate(y = ave(var_rounded, var_rounded, FUN = seq_along)) %>% 
+  ggplot(aes(x = var_rounded, y = y) ) +
+  geom_point(size = 2, color = paleta[2]) +
+  scale_x_continuous(breaks = seq(0, 1, 0.1)) +
+  labs(x = "Alinhamento", y = "Nº de deputados")
+```
+
+# Deputados com maior alinhamento ao Meio Ambiente
+
+```{r}
+alin_deputados <- alin_deputados %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(info_alinhamento = paste0(respostas_iguais, "/", perguntas_iguais + perguntas_sem_posicao_b)) %>% 
+  mutate(deputado = paste0(nome, " (", partido, "/", uf, ")"))
+
+deputados_atuais <- alin_deputados %>% 
+  filter(em_exercicio == 1)
+```
+
+```{r}
+deputados_atuais %>% 
+  head(20) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, 
+                                         levels = unique(deputado))
+                                  ), y = alinhamento * 100)) +
+  geom_col(fill = paleta[1],  width = .5) +
+  geom_text(
+    aes(label = info_alinhamento), 
+    hjust = -0.5, size = 3,
+    position = position_dodge(width = 1),
+    inherit.aes = TRUE
+  ) +
+  coord_flip() + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 10)) +
+  labs(x = "Deputados", y = "Alinhamento (%)", title = "20 deputados com maior alinhamento ao Meio Ambiente") +
+  theme_ipsum_rc()
+```
+
+```{r}
+deputados_atuais %>% 
+  head(20) %>%
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, 
+                                         levels = unique(deputado))
+                                  ), y = alinhamento * 100)) +
+  geom_point(color = paleta[1], size = 3, shape = 15) +
+  geom_text(aes(label = info_alinhamento), hjust = -0.5, vjust = 0.4, size = 3) + 
+  coord_flip() + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 10)) +
+  labs(x = "Deputados", y = "Alinhamento (%)", title = "20 deputados com maior alinhamento ao Meio Ambiente") +
+  theme_ipsum_rc()
+```
+
+```{r}
+data <- deputados_atuais %>%
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(respostas_discordancia_direta = perguntas_iguais - respostas_iguais) %>% 
+  mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
+  select(id_parlamentar_b, nome, uf, partido, em_exercicio, deputado, perguntas_iguais, 
+         alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+
+levels <- data %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais_), desc(perguntas_sem_posicao_b_)) %>% 
+  pull(deputado)
+  
+data_long <- data %>% 
+  head(20) %>% 
+  gather("metric", "value", respostas_iguais:respostas_discordancia_direta)
+  
+data_long %>% 
+  mutate(metric = factor(metric, levels = c("respostas_iguais", 
+                                            "respostas_discordancia_direta", 
+                                            "perguntas_sem_posicao_b"))) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, levels = levels)), y = value, fill = metric, order = metric)) +
+  geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
+  geom_text(data = subset(data_long, value != 0),
+            aes(label = value),
+            hjust = 1.8,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  scale_fill_manual(values = c("respostas_discordancia_direta" = paleta[3],
+                               "perguntas_sem_posicao_b" = paleta[2], 
+                               "respostas_iguais" = paleta[1]),
+                    name = "", labels = c("Concordam",
+                                          "Discordam",
+                                          "Não se posicionou")) +
+  labs(x = "Deputados", 
+       y = "Nº de posições", 
+       title="Maior Alinhamento ao Meio Ambiente",
+       subtitle="20 Deputados mais alinhados com base em votações do meio ambiente") + 
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+
+# Deputados menos alinhados ao Meio Ambiente
+
+```{r}
+paleta <- c("#91bfda", "#E89D68", "#e06264")
+
+data <- deputados_atuais %>%
+  arrange(alinhamento, desc(perguntas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(respostas_discordancia_direta = perguntas_iguais - respostas_iguais) %>% 
+  mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
+  select(id_parlamentar_b, nome, uf, partido, em_exercicio, deputado, perguntas_iguais, 
+         alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+
+levels <- data %>% 
+  arrange(alinhamento, desc(perguntas_iguais), desc(perguntas_sem_posicao_b_)) %>% 
+  pull(deputado)
+  
+data_long <- data %>% 
+  head(20) %>% 
+  gather("metric", "value", respostas_iguais:respostas_discordancia_direta)
+  
+data_long %>% 
+  mutate(metric = factor(metric, levels = c("respostas_iguais", 
+                                            "respostas_discordancia_direta", 
+                                            "perguntas_sem_posicao_b"))) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, levels = levels)), y = value, fill = metric, order = metric)) +
+  geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
+  geom_text(data = subset(data_long, value != 0),
+            aes(label = value),
+            hjust = 1.8,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  scale_fill_manual(values = c("respostas_discordancia_direta" = paleta[3],
+                               "perguntas_sem_posicao_b" = paleta[2], 
+                               "respostas_iguais" = paleta[1]),
+                    name = "", labels = c("Concordam",
+                                          "Discordam",
+                                          "Não se posicionou")) +
+  labs(x = "Deputados", 
+       y = "Nº de posições", 
+       title="Menor Alinhamento ao Meio Ambiente",
+       subtitle="20 Deputados menos alinhados com base em votações do meio ambiente") + 
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+```{r}
+deputados_atuais %>% 
+  arrange(alinhamento, desc(perguntas_iguais), perguntas_sem_posicao_b) %>% 
+  mutate(info = paste0(perguntas_iguais, "/", perguntas_sem_posicao_b)) %>% 
+  head(20) %>%
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, levels = unique(deputado))), 
+             y = perguntas_iguais + perguntas_sem_posicao_b)) +
+  geom_col(color = paleta[1], fill = paleta[1], width = .5) +
+  geom_text(aes(label = info), hjust = -0.5, vjust = 0.4, size = 3) + 
+  coord_flip() + 
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  labs(x = "Deputados", y = "Quantidade de perguntas em desacordo com o Meio Ambiente", title = "20 deputados com menor alinhamento ao Meio Ambiente")
+```
+
+# Alinhamento por partido
+
+Para o cálculo do alinhamento por partido, foram consideradas as orientações das bancadas nas votações nominais.
+
+
+```{r}
+alinhamento_partidos <- orientacoes_ma %>% 
+  count(id_parlamentar_voz) %>% 
+  select(-n) %>% 
+  mutate(dados = purrr::map(id_parlamentar_voz,
+                           calcular_alinhamento_parlamentar,
+                           orientacoes_ma,
+                           votacao_ideal)) %>% 
+  unnest(dados) %>% 
+  select(-id_parlamentar_voz)
+```
+
+# Distribuição do alinhamento dos Partidos ao Meio Ambiente
+```{r}
+alinhamento_partidos %>% 
+  ggplot(aes(x = alinhamento)) +
+  geom_histogram(binwidth = 0.1, fill = "#8E6396", color = "#35193A") +
+  labs(y = "Nº de partidos")
+```
+
+# Número de posições dadas x Alinhamento com meio ambiente
+```{r}
+set.seed(99) # evita mudança na visualização
+alinhamento_partidos %>% 
+  ggplot(aes(x = alinhamento, y = perguntas_iguais)) +
+  geom_jitter(alpha = 0.5) +
+  scale_y_continuous(limits = c(0, 7), breaks = seq(0, max(alinhamento_partidos$perguntas_iguais), 1), oob = scales::squish) +
+  labs(x = "Alinhamento",
+       y = "Nº de posições dadas",
+       title = "Alinhamento x Número de posições dadas")
+```
+
+
+# Alinhamentos dos Partidos ao Meio Ambiente
+
+```{r}
+alinhamento_partidos <- alinhamento_partidos %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(info_alinhamento = paste0(respostas_iguais, "/", perguntas_iguais + perguntas_sem_posicao_b))
+```
+
+```{r}
+alinhamento_partidos %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(id_parlamentar_b, 
+                                         levels = unique(id_parlamentar_b))
+                                  ), y = alinhamento * 100)) +
+  geom_col(fill = paleta[1],  width = .5) +
+  geom_text(
+    aes(label = info_alinhamento), 
+    hjust = -0.5, size = 3,
+    position = position_dodge(width = 1),
+    inherit.aes = TRUE
+  ) +
+  coord_flip() + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 10)) +
+  labs(x = "Partidos", y = "Alinhamento (%)", title = "Alinhamento dos partidos ao Meio Ambiente") +
+  theme_ipsum_rc()
+```
+
+```{r}
+alinhamento_partidos %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(id_parlamentar_b, 
+                                         levels = unique(id_parlamentar_b))
+                                  ), y = alinhamento * 100)) +
+  geom_point(color = paleta[1], size = 3, shape = 15) +
+  geom_text(aes(label = info_alinhamento), hjust = -0.5, vjust = 0.4, size = 3) + 
+  coord_flip() + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 10)) +
+  labs(x = "Partidos", y = "Alinhamento (%)", title = "Alinhamento dos partidos ao Meio Ambiente") +
+  theme_ipsum_rc()
+```
+
+```{r}
+data <- alinhamento_partidos %>%
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(respostas_discordancia_direta = perguntas_iguais - respostas_iguais) %>% 
+  mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
+  select(id_parlamentar_b, perguntas_iguais, 
+         alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+
+levels <- data %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais_), desc(perguntas_sem_posicao_b_)) %>% 
+  pull(id_parlamentar_b)
+  
+data_long <- data %>% 
+  gather("metric", "value", respostas_iguais:respostas_discordancia_direta)
+  
+data_long %>% 
+  mutate(metric = factor(metric, levels = c("respostas_iguais", 
+                                            "respostas_discordancia_direta", 
+                                            "perguntas_sem_posicao_b"))) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(id_parlamentar_b, levels = levels)), y = value, fill = metric, order = metric)) +
+  geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
+  geom_text(data = subset(data_long, value != 0),
+            aes(label = value),
+            hjust = 1.8,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  scale_fill_manual(values = c("respostas_discordancia_direta" = paleta[3],
+                               "perguntas_sem_posicao_b" = paleta[2], 
+                               "respostas_iguais" = paleta[1]),
+                    name = "", labels = c("Concordam",
+                                          "Discordam",
+                                          "Não se posicionou")) +
+  labs(x = "Partidos", 
+       y = "Nº de posições", 
+       title="Alinhamentos ao Meio Ambiente",
+       subtitle="Alinhamentos dos partidos com base em votações do meio ambiente") + 
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
+
+```{r}
+alinhamento_partidos %>% 
+  arrange(alinhamento, desc(perguntas_iguais), perguntas_sem_posicao_b) %>% 
+  mutate(info = paste0(perguntas_iguais, "/", perguntas_sem_posicao_b)) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(id_parlamentar_b, levels = unique(id_parlamentar_b))), 
+             y = perguntas_iguais + perguntas_sem_posicao_b)) +
+  geom_col(color = paleta[3], fill = paleta[3], width = .5) +
+  geom_text(aes(label = info), hjust = -0.5, vjust = 0.4, size = 3) + 
+  coord_flip() + 
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  labs(x = "Partidos", y = "Quantidade de perguntas em desacordo com o Meio Ambiente", title = "Partidos em relação ao desacordo com o Meio Ambiente")
+```
+
+
+```{r fig.height = 100, fig.width = 12}
+library(lemon)
+deputados_atuais %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, 
+                                         levels = unique(deputado))
+                                  ), y = alinhamento * 100)) +
+  geom_col(fill = paleta[1],  width = .2) +
+  geom_text(
+    aes(label = info_alinhamento), 
+    hjust = -0.5, size = 3,
+    position = position_dodge(width = 1),
+    inherit.aes = TRUE
+  ) +
+  coord_flip() + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 10)) +
+  labs(x = "Deputados", y = "Alinhamento (%)", title = "20 deputados com maior alinhamento ao Meio Ambiente") +
+  #facet_wrap(~ partido, scales = 'free_y', ncol = 2) +
+  #facet_grid(partido ~ ., scales = "free_y",  space="free_y") +
+  facet_rep_grid(partido ~ ., scales = "free_y",  space="free_y", repeat.tick.labels = TRUE) +
+  theme_ipsum_rc()
+```
+
+```{r fig.height = 100, fig.width = 12}
+data <- alin_deputados %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais), desc(perguntas_sem_posicao_b)) %>% 
+  mutate(respostas_discordancia_direta = perguntas_iguais - respostas_iguais) %>% 
+  mutate(respostas_iguais_ = respostas_iguais, perguntas_sem_posicao_b_ = perguntas_sem_posicao_b) %>% 
+  select(id_parlamentar_b, nome, uf, partido, em_exercicio, deputado, perguntas_iguais, 
+         alinhamento, respostas_iguais_, perguntas_sem_posicao_b_, respostas_iguais, perguntas_sem_posicao_b, respostas_discordancia_direta)
+
+levels <- data %>% 
+  arrange(desc(alinhamento), desc(respostas_iguais_), desc(perguntas_sem_posicao_b_)) %>% 
+  pull(deputado)
+  
+data_long <- data %>%
+  gather("metric", "value", respostas_iguais:respostas_discordancia_direta)
+  
+data_long %>% 
+  mutate(metric = factor(metric, levels = c("respostas_iguais", 
+                                            "respostas_discordancia_direta", 
+                                            "perguntas_sem_posicao_b"))) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(deputado, levels = levels)), y = value, fill = metric, order = metric)) +
+  geom_bar(width = .7, stat = "identity", position = position_stack(reverse = TRUE)) +
+  geom_text(data = subset(data_long, value != 0),
+            aes(label = value),
+            hjust = 1.8,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  scale_fill_manual(values = c("respostas_discordancia_direta" = paleta[3],
+                               "perguntas_sem_posicao_b" = paleta[2], 
+                               "respostas_iguais" = paleta[1]),
+                    name = "", labels = c("Concordam",
+                                          "Discordam",
+                                          "Não se posicionou")) +
+  labs(x = "Deputados", 
+       y = "Nº de posições",
+       title="Alinhamento dos Presidentes da República e da Câmara e \nde pessoas ligadas ao Governo") + 
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12)) +
+  facet_rep_grid(partido ~ ., scales = "free_y",  space="free_y", repeat.tick.labels = TRUE)
+```
+
+
+

@@ -1,0 +1,12 @@
+name: grupos-coautorias-meio-ambiente
+title: grupos-coautorias-meio-ambiente
+username:
+account: vozativa
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 997252
+bundleId: 2176854
+url: https://vozativa.shinyapps.io/grupos-coautorias-meio-ambiente/
+when: 1561464162.19105
+asMultiple: FALSE
+asStatic: FALSE
