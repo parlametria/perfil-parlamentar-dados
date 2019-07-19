@@ -255,11 +255,20 @@ processa_orientacoes <- function(votos_path = here::here("crawler/raw_data/votos
   
   orientacoes_governo <- orientacao_governo_pelo_voto_lider(votos, orientacoes)
   
+  orientacoes_partidos <- orientacoes %>% 
+    filter(tolower(partido) != "governo") %>% 
+    rbind(orientacoes_governo) %>% 
+    group_by(partido) %>% 
+    summarise(n = n()) %>% 
+    rowwise() %>% 
+    dplyr::mutate(id_partido = map_sigla_id(partido)) %>% 
+    ungroup()
+  
   orientacoes_alt <- orientacoes %>% 
     filter(tolower(partido) != "governo") %>% 
     rbind(orientacoes_governo) %>% 
     select(id_votacao, partido, voto) %>% 
-    map_sigla_to_id() %>%
+    left_join(orientacoes_partidos %>% select(partido, id_partido), by = c("partido")) %>% 
     select(id_votacao, id_partido, voto)
   
   return(orientacoes_alt)
