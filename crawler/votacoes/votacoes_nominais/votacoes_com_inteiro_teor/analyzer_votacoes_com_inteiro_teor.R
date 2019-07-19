@@ -1,3 +1,5 @@
+library(tidyverse)
+
 #' @title Recupera informações de uma proposição
 #' @description A partir do id, recupera dados de uma proposição na Câmara dos Deputados,
 #' como nome, data_apresentacao, ementa, autor, indexacao, tema e uri_tramitacao
@@ -118,30 +120,30 @@ export_votacoes_nominais <-
 #' @examples
 #' votacoes <- get_inteiro_teor(df)
 get_inteiro_teor <- function(df) {
-    library(tidyverse)
-    regex <- jsonlite::fromJSON(here::here("crawler/votacoes/votacoes_nominais/constants.json"))
+  library(tidyverse)
+  regex <- jsonlite::fromJSON(here::here("crawler/votacoes/votacoes_nominais/votacoes_com_inteiro_teor/constants.json"))
   
-    df <- 
-      preprocess_votacoes_nominais(df)
-    
-    votacoes_nominais <- df %>% 
-      rowwise(.) %>%
-      mutate(
-        link_documento_votacao = fetch_relacionadas(
-          id_proposicao,
-          data_votacao,
-          tipo_documento_votacao,
-          numero_emenda
-        )) %>% 
-      arrange(desc(data_votacao))
-    
-    return(votacoes_nominais)
-  }
+  df <- 
+    preprocess_votacoes_nominais(df)
+  
+  votacoes_nominais <- df %>% 
+    rowwise(.) %>%
+    mutate(
+      link_documento_votacao = fetch_relacionadas(
+        id_proposicao,
+        data_votacao,
+        tipo_documento_votacao,
+        numero_documento
+      )) %>% 
+    arrange(desc(data_votacao))
+  
+  return(votacoes_nominais)
+}
 
 #' @title Preprocessa dados do dataframe de votação
 #' @description Filtra as votações importantes, extrai o tipo do documento e o número da emenda a partir do obj_votacao
 #' @param df Dataframe com informações de proposições e das votações
-#' @return Dataframe contendo mais duas colunas tipo_documento_votacao e numero_emenda
+#' @return Dataframe contendo mais duas colunas tipo_documento_votacao e numero_documento
 #' @examples
 #' votacoes <- get_inteiro_teor(df)
 preprocess_votacoes_nominais <- function(df) {
@@ -173,13 +175,13 @@ preprocess_votacoes_nominais <- function(df) {
           ),
           tipo_documento_votacao
         ),
-      numero_emenda =
+      numero_documento =
         gsub(
           regex$numero_artigo_regex,
           regex$empty_string,
           str_remove(tolower(obj_votacao),
                      regex$numero_detaques_regex) %>%
-            str_extract(regex$numero_emenda_regex)
+            str_extract(regex$numero_documento_regex)
         ) %>%
         str_extract(regex$only_numbers_regex) %>%
         as.numeric()
@@ -189,11 +191,21 @@ preprocess_votacoes_nominais <- function(df) {
     filter(tipo_documento_votacao == primeiro_match) %>%
     select(-primeiro_match) %>%
     distinct()
-    
-    return(df)
+  
+  return(df)
 }
 
-fetch_relacionadas <- function(prop_id, data_votacao, tipo_documento_votacao, numero_emenda) {
+#' @title Recupera as proposições relacionadas a uma proposição
+#' @description A partir do id da proposição, data da votação, tipo do documento e numero do documento, 
+#' recupera as proposições relacionadas a uma proposição
+#' @param prop_id Id da proposição
+#' @param data_votacao Data da votação
+#' @param tipo_documento_votacao Tipo do documento do objeto da votação
+#' @param numero_documento Número do documento
+#' @return Dataframe contendo mais duas colunas tipo_documento_votacao e numero_documento
+#' @examples
+#' relacionadas <- fetch_relacionadas(516111, '05/06/2019', 'EMA', 1)
+fetch_relacionadas <- function(prop_id, data_votacao, tipo_documento_votacao, numero_documento) {
   tipo_documento_votacao = gsub(' ', '', tipo_documento_votacao)
   
   paste0(
@@ -204,7 +216,7 @@ fetch_relacionadas <- function(prop_id, data_votacao, tipo_documento_votacao, nu
     " para o documento ",
     tipo_documento_votacao,
     " com numero de emenda ",
-    numero_emenda
+    numero_documento
   ) %>%
     print()
   
@@ -239,7 +251,7 @@ fetch_relacionadas <- function(prop_id, data_votacao, tipo_documento_votacao, nu
     })
   
   res <- rels %>%
-    filter(siglaTipo == tipo_documento_votacao & numero == numero_emenda) %>%
+    filter(siglaTipo == tipo_documento_votacao & numero == numero_documento) %>%
     arrange(dataApresentacao) %>%
     tail(1)
   
