@@ -379,19 +379,26 @@ processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/l
   library(tidyverse)
   source(here::here("crawler/parlamentares/partidos/utils_partidos.R"))
   
-  liderancas <- read_csv(liderancas_path)
-  
-  liderancas <- liderancas %>%
+  liderancas <- read_csv(liderancas_path) %>% 
     mutate(
       casa_enum = dplyr::if_else(casa == "camara", 1, 2),
       id_parlamentar_voz = paste0(casa_enum, as.character(id)),
       bloco_partido = gsub("Bloco ", "", bloco_partido)
-    ) %>%
-    select(id_parlamentar_voz, cargo, partido = bloco_partido) %>% 
-    map_sigla_to_id() %>% 
+    )
+  
+  liderancas_partidos <- liderancas %>% 
+    group_by(bloco_partido) %>% 
+    summarise(n = n()) %>% 
+    rowwise() %>% 
+    dplyr::mutate(id_partido = map_sigla_id(bloco_partido)) %>% 
+    ungroup()
+  
+  liderancas_alt <- liderancas %>%
+    left_join(liderancas_partidos %>% select(bloco_partido, id_partido),
+              by = c("bloco_partido")) %>% 
     select(id_parlamentar_voz, id_partido, cargo)
   
-  return(liderancas)
+  return(liderancas_alt)
 }
 
 #' @title Processa dados de votos e orientações para sumarizar aderência do parlamentar ao partido
@@ -417,6 +424,13 @@ processa_aderencia <- function(votos_path = here::here("crawler/raw_data/votos.c
   deputados <- read_csv(parlamentares_path, col_types = cols(id = "c")) %>% 
     filter(casa == "camara")
   
+  partidos <- deputados %>% 
+    group_by(sg_partido) %>% 
+    summarise(n = n()) %>% 
+    rowwise() %>% 
+    dplyr::mutate(id_partido = map_sigla_id(sg_partido)) %>% 
+    ungroup()
+  
   ## Preparando dados de proposições e seus respectivos temas
   proposicoes <- processa_proposicoes()
   
@@ -432,20 +446,37 @@ processa_aderencia <- function(votos_path = here::here("crawler/raw_data/votos.c
   
   ## Calcula aderência por tema
   aderencia_temas <- processa_dados_aderencia_temas(proposicoes_temas, temas, 
-                                                    votos, orientacoes, deputados, filtrar = FALSE) %>% 
-    map_sigla_to_id() %>% 
+                                                    votos, orientacoes, deputados, filtrar = FALSE)
+  
+  partidos_aderencia_temas <- aderencia_temas %>% 
+    group_by(partido) %>% 
+    summarise(n = n()) %>% 
+    rowwise() %>% 
+    dplyr::mutate(id_partido = map_sigla_id(partido)) %>% 
+    ungroup()  
+    
+  aderencia_temas <- aderencia_temas %>% 
+    left_join(partidos_aderencia_temas, by = c("partido")) %>% 
     select(id_tema, id_deputado, nome, id_partido, faltou, partido_liberou,
            nao_seguiu, seguiu, total_votacoes, freq)
     
-  
   ## Calcula aderência geral ao Partido
   aderencia_geral_partido <- processa_dados_deputado_aderencia(votos, orientacoes, 
-                                                               deputados, filtrar = FALSE)[[2]] %>%
-    map_sigla_to_id() %>% 
+                                                               deputados, filtrar = FALSE)[[2]]
+  
+  partidos_aderencia_geral <- aderencia_geral_partido %>% 
+    group_by(partido) %>% 
+    summarise(n = n()) %>% 
+    rowwise() %>% 
+    dplyr::mutate(id_partido = map_sigla_id(partido)) %>% 
+    ungroup()  
+    
+  aderencia_geral_partido <- aderencia_geral_partido %>% 
+    left_join(partidos_aderencia_geral, by = c("partido")) %>% 
     mutate(id_tema = 99) %>% 
     select(id_tema, id_deputado, nome, id_partido, faltou, partido_liberou,
            nao_seguiu, seguiu, total_votacoes, freq)
-    
+  
   ## Calcula aderência geral ao Governo
   aderencia_geral_governo <- processa_dados_deputado_aderencia_governo(votos, orientacoes, 
                                                                        deputados, filtrar = FALSE)[[2]] %>% 
