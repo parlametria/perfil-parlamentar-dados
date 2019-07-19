@@ -10,7 +10,7 @@ processa_dados_deputados <- function() {
   # Lista das legislaturas de interesse
   legislaturas_list <- c(55, 56)
   
-  source(here::here("crawler/parlamentares/fetcher_parlamentar.R"))
+  source(here::here("crawler/parlamentares/deputados/fetcher_deputado.R"))
   source(here::here("crawler/votacoes/utils_votacoes.R"))
   
   deputados <- purrr::map_df(legislaturas_list, ~ fetch_deputados(.x))

@@ -55,14 +55,14 @@ map_sigla_id <- function(sigla_partido) {
   library(here)
   source(here("crawler/votacoes/utils_votacoes.R"))
   
-  sigla_partido <- if_else(tolower(sigla_partido) == "podemos", "PODE", sigla_partido)
-  
   partidos <- suppressWarnings(suppressMessages(read_csv(here("crawler/raw_data/partidos.csv"))))
   
   sigla_padronizada <- padroniza_sigla(sigla_partido)
   
   id_partido <- partidos %>% 
-    filter(sigla == sigla_padronizada) %>%
+    filter(tolower(sigla) == tolower(if_else(tolower(sigla_padronizada) == "podemos", 
+                                             "PODE", 
+                                             sigla_partido))) %>%
     pull(id)
   
   if (length(id_partido) == 0) {

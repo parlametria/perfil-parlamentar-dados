@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 source(here::here("crawler/votacoes/utils/constants.R"))
-source(here::here("crawler/parlamentares/fetcher_parlamentar.R"))
+source(here::here("crawler/parlamentares/deputados/fetcher_deputado.R"))
 
 # Bibliotecas
 library(tidyverse)
