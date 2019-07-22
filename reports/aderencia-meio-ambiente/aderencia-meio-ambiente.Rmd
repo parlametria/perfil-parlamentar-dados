@@ -29,7 +29,7 @@ theme_set(theme_minimal())
 source(here("crawler/proposicoes/fetcher_proposicao_info.R"))
 source(here("crawler/proposicoes/fetch_proposicoes_voz_ativa.R"))
 source(here("crawler/proposicoes/process_proposicao_tema.R"))
-source(here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
+source(here("crawler/votacoes/aderencia/processa_dados_aderencia.R"))
 source(here("crawler/votacoes/utils_votacoes.R"))
 ```
 

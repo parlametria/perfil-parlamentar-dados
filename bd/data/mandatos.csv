@@ -1477,7 +1477,7 @@ id_parlamentar_voz,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_ex
 1141552,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 1141552,54,2011-02-01,2011-12-02,Titular,20,Licença Conjunta Consecutiva
 1141552,55,2015-02-01,2017-07-06,Titular,20,Licença Conjunta Consecutiva
-1141552,56,2019-02-27,NA,Suplente,NA,NA
+1141552,56,2019-02-27,2019-06-29,Suplente,53,Afastamento
 174376,52,2003-02-01,2007-01-31,Titular,99,Término da Legislatura
 174376,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 174376,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
@@ -1605,7 +1605,7 @@ id_parlamentar_voz,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_ex
 1204509,56,2019-02-01,NA,Titular,NA,NA
 1109429,56,2019-02-01,NA,Titular,NA,NA
 1204358,56,2019-02-01,NA,Titular,NA,NA
-1207176,56,2019-02-06,NA,Suplente,NA,NA
+1207176,56,2019-02-06,2019-07-09,Suplente,53,Afastamento
 1204374,56,2019-02-01,NA,Titular,NA,NA
 1204388,56,2019-02-01,NA,Titular,NA,NA
 1204561,56,2019-02-01,NA,Titular,NA,NA
@@ -1664,7 +1664,7 @@ id_parlamentar_voz,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_ex
 1204389,56,2019-02-01,NA,Titular,NA,NA
 1198783,56,2019-02-01,NA,Titular,NA,NA
 1161550,56,2019-02-01,NA,Titular,NA,NA
-1207309,56,2019-02-07,NA,Suplente,NA,NA
+1207309,56,2019-02-07,2019-07-09,Suplente,53,Afastamento
 1204537,56,2019-02-01,NA,Titular,NA,NA
 1204482,56,2019-02-01,NA,Titular,NA,NA
 168720,56,2019-02-01,NA,Titular,NA,NA

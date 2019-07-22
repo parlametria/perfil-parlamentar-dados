@@ -246,14 +246,14 @@ processa_orientacoes <- function(votos_path = here::here("crawler/raw_data/votos
   library(here)
   
   source(here::here("crawler/parlamentares/partidos/utils_partidos.R"))
-  source(here::here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
+  source(here::here("crawler/votacoes/aderencia/processa_dados_aderencia.R"))
   
   votos <- read_csv(votos_path, col_types = cols(.default = "c", id_votacao = "i", voto = "i"))
   
   orientacoes <- read_csv(orientacoes_data_path, col_types = cols(id_proposicao = "c", 
                                                                   id_votacao = "i", voto = "i"))
   
-  orientacoes_governo <- orientacao_governo_pelo_voto_lider(votos, orientacoes)
+  orientacoes_governo <- adiciona_hierarquia_orientacao_governo(votos, orientacoes)
   
   orientacoes_partidos <- orientacoes %>% 
     filter(tolower(partido) != "governo") %>% 
@@ -406,7 +406,7 @@ processa_aderencia <- function(votos_path = here::here("crawler/raw_data/votos.c
   library(tidyverse)
   library(here)
   source(here("crawler/votacoes/utils_votacoes.R"))
-  source(here("crawler/votacoes/votos_orientacao/processa_dados_aderencia.R"))
+  source(here("crawler/votacoes/aderencia/processa_dados_aderencia.R"))
   source(here("crawler/parlamentares/partidos/utils_partidos.R"))
   
   ## Preparando dados de votos, orientações e deputados

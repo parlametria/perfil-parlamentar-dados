@@ -75,13 +75,13 @@ fetch_info_proposicao <- function(id_prop) {
 #' votacoes <- export_votacoes_nominais()
 export_votacoes_nominais <-
   function(ano_inicial = 2015,
-           ano_final = 2019,
+           ano_final = 2015,
            output = here::here("crawler/raw_data/votacoes_nominais_15_a_19.csv")) {
     library(tidyverse)
     source(here::here("crawler/votacoes/fetcher_votacoes.R"))
     
     votacoes <-
-      fetch_all_votacoes_por_intervalo(ano_inicial, ano_final)
+      fetch_all_votacoes_por_intervalo_camara(ano_inicial, ano_final)
     
     proposicoes_votadas <-
       purrr::map_df(votacoes$id_proposicao %>% unique(),
@@ -121,7 +121,6 @@ export_votacoes_nominais <-
 #' votacoes <- get_inteiro_teor(df)
 get_inteiro_teor <- function(df) {
   library(tidyverse)
-  regex <- jsonlite::fromJSON(here::here("crawler/votacoes/votacoes_nominais/votacoes_com_inteiro_teor/constants.json"))
   
   df <- 
     preprocess_votacoes_nominais(df)
@@ -148,8 +147,7 @@ get_inteiro_teor <- function(df) {
 #' votacoes <- get_inteiro_teor(df)
 preprocess_votacoes_nominais <- function(df) {
   library(tidyverse)
-  regex <-
-    jsonlite::fromJSON(here::here("crawler/votacoes/votacoes_nominais/constants.json"))
+  regex <- jsonlite::fromJSON(here::here("crawler/votacoes/votacoes_nominais/votacoes_com_inteiro_teor/constants.json"))
   
   # Remove votações menos relevantes
   df <- df %>%

@@ -16,7 +16,7 @@ processa_votacoes_info <- function(url = "https://docs.google.com/spreadsheets/d
   votacoes <- tibble(id = proposicoes_votadas$id) %>% 
     mutate(dados = purrr::map(
       id,
-      fetch_votacoes_por_proposicao
+      fetch_votacoes_por_proposicao_camara
     )) %>% 
     unnest(dados) %>% 
     mutate(id_votacao = paste0(cod_sessao, str_remove(hora, ":"))) %>% 

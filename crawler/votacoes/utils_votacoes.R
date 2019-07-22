@@ -65,7 +65,13 @@ get_descricao_voto <- function(voto) {
   return(voto_descricao)
 }
 
-get_sigla_by_id <- function(id_proposicao) {
+#' @title Recupera o título de uma proposição a partir de seu id
+#' @description Recebe o id de uma proposição na câmara e retorna seu título
+#' @param id_proposicao Id da proposição
+#' @return Título da proposicao (ex: MPV 867/2018)
+#' @examples
+#' get_sigla_by_id_camara(2190237) // "MPV 867/2018"
+get_sigla_by_id_camara <- function(id_proposicao) {
   library(tidyverse)
   library(RCurl)
   library(xml2)

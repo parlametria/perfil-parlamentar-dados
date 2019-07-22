@@ -72,7 +72,7 @@ fetch_votacoes_plenario_tema <- function() {
   proposicoes_votadas <-
     purrr::map_df(
       c(2019, 2020, 2021, 2022),
-      fetch_votacoes_ano
+      fetch_proposicoes_votadas_por_ano_camara
     ) %>% 
     distinct(id, nome_proposicao)
   
