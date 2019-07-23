@@ -71,67 +71,6 @@ fetch_deputados <- function(legislatura = 56) {
                   legislatura = legislatura))
 }
 
-#' @title Importa dados de todos os senadores de uma legislatura específica
-#' @description Importa os dados de todos os senadores de uma legislatura específica
-#' @return Dataframe contendo informações dos senadores: id e nome civil
-#' @examples
-#' senadores <- fetch_senadores(56)
-fetch_senadores <- function(legislatura = 56) {
-  url <- paste0("http://legis.senado.leg.br/dadosabertos/senador/lista/legislatura/", legislatura)
-  
-  senadores <- tryCatch({
-    xml <- RCurl::getURL(url) %>% xml2::read_xml()
-    data <- xml2::xml_find_all(xml, ".//Parlamentar") %>%
-      map_df(function(x) {
-        list(
-          id = xml2::xml_find_first(x, ".//IdentificacaoParlamentar/CodigoParlamentar") %>% 
-            xml2::xml_text(),
-          nome_civil = xml2::xml_find_first(x, ".//IdentificacaoParlamentar/NomeParlamentar") %>% 
-            xml2::xml_text(),
-          descricao_participacao = xml2::xml_find_first(x, ".//Mandatos/Mandato/DescricaoParticipacao") %>% 
-            xml2::xml_text()
-        )
-      }) %>% 
-      dplyr::filter(descricao_participacao == "Titular") %>% 
-      select(id, nome_civil)
-  }, error = function(e) {
-    data <- tribble(
-      ~ id, ~ nome_civil)
-    return(data)
-  })
-  
-  return(senadores)
-}
-
-#' @title Importa dados de todos os senadores atualmente em exercício no Senado
-#' @description Importa os dados de todos os senadores atualmente em exercício no Senado
-#' @return Dataframe contendo informações dos senadores: id e nome civil
-#' @examples
-#' senadores <- fetch_senadores_atuais()
-fetch_senadores_atuais <- function() {
-  url <- paste0("http://legis.senado.leg.br/dadosabertos/senador/lista/atual")
-  
-  senadores <- tryCatch({
-    xml <- RCurl::getURL(url) %>% xml2::read_xml()
-    data <- xml2::xml_find_all(xml, ".//Parlamentar") %>%
-      map_df(function(x) {
-        list(
-          id = xml2::xml_find_first(x, ".//IdentificacaoParlamentar/CodigoParlamentar") %>% 
-            xml2::xml_text(),
-          nome_civil = xml2::xml_find_first(x, ".//IdentificacaoParlamentar/NomeParlamentar") %>% 
-            xml2::xml_text()
-        )
-      }) %>%
-      select(id, nome_civil)
-  }, error = function(e) {
-    data <- tribble(
-      ~ id, ~ nome_civil)
-    return(data)
-  })
-  
-  return(senadores)
-}
-
 #' @title Extrai informações de um partido a partir de uma URL
 #' @description Recebe uma URL da câmara que possui o formato '/partidos/:num e extrai id e nome
 #' @param URL no formato "https://dadosabertos.camara.leg.br/api/v2/partidos/:num"

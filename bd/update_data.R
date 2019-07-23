@@ -69,7 +69,7 @@ tryCatch(
 tryCatch(
   {
     log <- paste0(log, date(), " - Executando crawler de Votos (posições)...\n")
-    source(here::here("crawler/votacoes/export_votos_posicoes.R"))
+    source(here::here("crawler/votacoes/votos/export_votos_posicoes.R"))
   },
   error=function(cond) {
     log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Votos (posições)")
@@ -83,11 +83,26 @@ tryCatch(
 
 tryCatch(
   {
-    log <- paste0(log, date(), " - Executando crawler de Votos e Orientação...\n")
-    source(here::here("crawler/votacoes/votos_orientacao/export_votos_orientacao.R"))
+    log <- paste0(log, date(), " - Executando crawler de Votos (aderência)...\n")
+    source(here::here("crawler/votacoes/votos/export_votos.R"))
   },
   error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Votos e Orientação")
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Votos (aderência)")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
+tryCatch(
+  {
+    log <- paste0(log, date(), " - Executando crawler de Orientações...\n")
+    source(here::here("crawler/votacoes/orientacoes/export_orientacoes.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Orientações")
     message(log_error)
     log <- paste0(log, date(), " ", log_error)
     send_log_to_bot(log)
@@ -102,7 +117,7 @@ tryCatch(
     source(here::here("crawler/votacoes/votacoes_nominais/export_votacoes_info.R"))
   },
   error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Votos e Orientação")
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Votações (informações detalhadas)")
     message(log_error)
     log <- paste0(log, date(), " ", log_error)
     send_log_to_bot(log)

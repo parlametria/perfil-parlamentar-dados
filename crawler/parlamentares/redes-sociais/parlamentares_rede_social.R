@@ -30,7 +30,7 @@ process_rede_social_deputados <- function() {
   library(tidyverse)
   library(here)
   
-  source(here::here("crawler/parlamentares/fetcher_parlamentar.R"))
+  source(here::here("crawler/parlamentares/deputados/fetcher_deputado.R"))
   
   redes_sociais_leg55 <- readr::read_csv(here::here("crawler/raw_data/2017-06-11-congresspeople-social-accounts.csv"))
   
@@ -53,7 +53,7 @@ process_rede_social_senadores <- function() {
   library(tidyverse)
   library(here)
   
-  source(here::here("crawler/parlamentares/fetcher_parlamentar.R"))
+  source(here::here("crawler/parlamentares/deputados/fetcher_deputado.R"))
   
   redes_sociais_leg55 <- readr::read_csv(here::here("crawler/raw_data/2017-06-11-congresspeople-social-accounts.csv"))
 

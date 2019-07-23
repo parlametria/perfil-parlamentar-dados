@@ -1,31 +1,3 @@
-#' @title Lista com votos e orientações para as proposições votadas em plenário em 2019
-#' @description Retorna os votos e as orientações dos partidos para as votações em 2019 
-#' @return Lista contendo dois dataframes (votos e orientações)
-#' @examples
-#' votos_orientacao <- processa_dados_votacoes()
-processa_dados_votacoes <- function() {
-  library(tidyverse)
-  library(here)
-  
-  source(here("crawler/votacoes/utils_votacoes.R"))
-  source(here("crawler/votacoes/fetcher_votacoes.R"))
-  
-  deputados <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")) %>% 
-    filter(casa == "camara") %>% 
-    mutate(sg_partido = padroniza_sigla(sg_partido))
-  
-  proposicoes_votadas <- fetch_votacoes_ano(2019) %>% 
-    rbind(fetch_votacoes_ano(2020)) %>% 
-    rbind(fetch_votacoes_ano(2021)) %>% 
-    rbind(fetch_votacoes_ano(2022)) 
-
-  votos <- read_csv(here("crawler/raw_data/votos.csv"))
-  
-  orientacao <- read_csv(here("crawler/raw_data/orientacoes.csv"))
-  
-  return(list(deputados, proposicoes_votadas, votos, orientacao))
-}
-
 #' @title Calcula os dados de aderência do deputado a um partido ou ao governo
 #' @description Retorna dados de aderência dos deputados por votação e de forma sumarizada
 #' @param deputados_votos Dataframe de deputados com os votos do deputado e os do partido (pode ser GOVERNO)
@@ -37,7 +9,7 @@ processa_dados_votacoes <- function() {
 processa_calculo_aderencia <- function(deputados_votos, deputados, filtrar = TRUE) {
   library(tidyverse)
   
-  source(here("crawler/votacoes/votos_orientacao/calcula_aderencia.R"))
+  source(here("crawler/votacoes/aderencia/calcula_aderencia.R"))
   
   if (filtrar) {
     minimo_votacoes_por_deputado <- 10
@@ -123,8 +95,8 @@ processa_dados_deputado_aderencia <- function(votos, orientacao, deputados, filt
 #' @param orientacao Dataframe de orientações
 #' @return Dataframe com orientações do Governo para votações em plenário
 #' @examples
-#' orientacao_governo <- orientacao_governo_pelo_voto_lider(votos, orientacao)
-orientacao_governo_pelo_voto_lider <- function(votos, orientacao) {
+#' orientacao_governo <- adiciona_hierarquia_orientacao_governo(votos, orientacao)
+adiciona_hierarquia_orientacao_governo <- function(votos, orientacao) {
   library(tidyverse)
   library(here)
   
@@ -168,7 +140,7 @@ orientacao_governo_pelo_voto_lider <- function(votos, orientacao) {
 processa_dados_deputado_aderencia_governo <- function(votos, orientacao, deputados, filtrar = TRUE) {
   library(tidyverse)
   
-  orientacao_governo <- orientacao_governo_pelo_voto_lider(votos, orientacao)
+  orientacao_governo <- adiciona_hierarquia_orientacao_governo(votos, orientacao)
   
   deputados_votos <- votos %>% 
     left_join(orientacao_governo,

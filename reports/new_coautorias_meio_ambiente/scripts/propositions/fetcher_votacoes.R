@@ -3,8 +3,8 @@
 #' @param ano Ano de ocorrência das votações
 #' @return Dataframe contendo id da proposição, nome e data da votação
 #' @examples
-#' proposicoes_votadas_em_2019 <- fetch_votacoes_ano(2019)
-fetch_votacoes_ano <- function(ano = 2019) {
+#' proposicoes_votadas_em_2019 <- fetch_votacoes_por_ano(2019)
+fetch_votacoes_por_ano <- function(ano = 2019) {
   library(tidyverse)
   library(RCurl)
   library(xml2)
@@ -211,7 +211,7 @@ fetch_all_votacoes_por_intervalo <- function(ano_inicial = 2015, ano_final = 201
   anos <- seq(ano_inicial, ano_final, 1)
   
   proposicoes_votadas <-
-    purrr::map_df(anos, ~ fetch_votacoes_ano(.x)) %>%
+    purrr::map_df(anos, ~ fetch_votacoes_por_ano(.x)) %>%
     mutate(ano_votacao = lubridate::dmy(data_votacao) %>%
              lubridate::year()) %>%
     distinct(id, ano_votacao)

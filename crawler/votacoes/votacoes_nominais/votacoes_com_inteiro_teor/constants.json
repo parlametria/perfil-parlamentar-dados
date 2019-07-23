@@ -93,7 +93,7 @@
   "artigo_regex": "art(igo|\\.)",
   "numero_artigo_regex": "?/.*|§.*|.*º",
   "numero_detaques_regex": "dtq(.|) [\\d]+.*(:|-)",
-  "numero_emenda_regex": "(nº .*)|.*",
+  "numero_documento_regex": "(nº .*)|.*",
   "only_numbers_regex": "[\\d]+",
   "begin_with_number_regex": " \\d.*",
   "empty_string": "",

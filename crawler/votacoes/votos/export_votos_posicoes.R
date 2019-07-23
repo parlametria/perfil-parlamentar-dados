@@ -1,4 +1,4 @@
-suppressWarnings(suppressMessages(source(here::here("crawler/votacoes/analyzer_votos.R"))))
+suppressWarnings(suppressMessages(source(here::here("crawler/votacoes/votos/analyzer_votos.R"))))
   
 if(!require(optparse)){
   install.packages("optparse")

@@ -1,6 +1,5 @@
 library(tidyverse)
 
-
 #' @title Importa e processa dados das orientações das bancadas na Câmara dos Deputados
 #' @description Recebe informações da proposição e da votação específica para obtenção dos votos
 #' @param id_proposicao Id da prposição para obtenção das orientações
@@ -19,7 +18,7 @@ fetch_orientacoes_camara <-
     source(here("crawler/votacoes/utils_votacoes.R"))
     
     proposicoes <-
-      get_sigla_by_id(id_proposicao) %>%
+      get_sigla_by_id_camara(id_proposicao) %>%
       select(siglaTipo, numero, ano)
     
     url <-
@@ -42,65 +41,70 @@ fetch_orientacoes_camara <-
         proposicoes$ano
       )
     )
-    
-    xml <- RCurl::getURL(url) %>%
-      read_xml()
-    
-    votacao <- xml_find_all(xml, ".//Votacao") %>%
-      map_df(function(x) {
-        list(
-          obj_votacao = xml_attr(x, "ObjVotacao"),
-          resumo = xml_attr(x, "Resumo"),
-          cod_sessao = xml_attr(x, "codSessao"),
-          data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
-        )
-      })
-    
-    ## Escolhe votação específica
-    if (nrow(votacao) > 1) {
-      if (is.na(resumo_votacao)) {
-        votacao <- votacao %>%
-          mutate(obj_votacao = trimws(obj_votacao, which = "both")) %>%
-          filter(obj_votacao == trimws(objeto_votacao, "both"))
-      } else {
-        votacao <- votacao %>%
-          mutate(resumo = trimws(resumo, which = "both")) %>%
-          filter(resumo == trimws(resumo_votacao, "both"))
+
+    tryCatch({
+      xml <- RCurl::getURL(url) %>%
+        read_xml()
+      
+      votacao <- xml_find_all(xml, ".//Votacao") %>%
+        map_df(function(x) {
+          list(
+            obj_votacao = xml_attr(x, "ObjVotacao"),
+            resumo = xml_attr(x, "Resumo"),
+            cod_sessao = xml_attr(x, "codSessao"),
+            data = as.Date(xml_attr(x, "Data"), "%d/%m/%Y")
+          )
+        })
+      
+      ## Escolhe votação específica
+      if (nrow(votacao) > 1) {
+        if (is.na(resumo_votacao)) {
+          votacao <- votacao %>%
+            mutate(obj_votacao = trimws(obj_votacao, which = "both")) %>%
+            filter(obj_votacao == trimws(objeto_votacao, "both"))
+        } else {
+          votacao <- votacao %>%
+            mutate(resumo = trimws(resumo, which = "both")) %>%
+            filter(resumo == trimws(resumo_votacao, "both"))
+        }
       }
-    }
-    
-    orientacoes <-
-      xml2::xml_find_all(
-        xml,
-        paste0(
-          ".//Votacao[@ObjVotacao = '",
-          votacao$obj_votacao,
-          "']",
-          "//orientacaoBancada//bancada"
-        )
-      ) %>%
-      map_df(function(x) {
-        list(
-          sigla = xml_attr(x, "Sigla") %>%
-            gsub(" ", "", .),
-          voto = xml_attr(x, "orientacao") %>%
-            gsub(" ", "", .)
-        )
-      })
-    
-    orientacoes <-
-      purrr::map2_df(orientacoes$sigla, orientacoes$voto, ~ mutate_sigla(.x, .y)) %>%
-      mutate(
-        sigla = padroniza_sigla(sigla),
-        id_votacao = id_votacao,
-        data = votacao$data
-      ) %>%
-      select(id_votacao,
-             data,
-             id_parlamentar_voz = sigla,
-             voto = orientacao)
-    
-    return(orientacoes)
+      
+      orientacoes <-
+        xml2::xml_find_all(
+          xml,
+          paste0(
+            ".//Votacao[@ObjVotacao = '",
+            votacao$obj_votacao,
+            "']",
+            "//orientacaoBancada//bancada"
+          )
+        ) %>%
+        map_df(function(x) {
+          list(
+            sigla = xml_attr(x, "Sigla") %>%
+              gsub(" ", "", .),
+            voto = xml_attr(x, "orientacao") %>%
+              gsub(" ", "", .)
+          )
+        })
+      
+      orientacoes <-
+        purrr::map2_df(orientacoes$sigla, orientacoes$voto, ~ mutate_sigla_bloco(.x, .y)) %>%
+        mutate(
+          sigla = padroniza_sigla(sigla),
+          id_votacao = id_votacao,
+          data = votacao$data
+        ) %>%
+        select(id_votacao,
+               data,
+               id_parlamentar_voz = sigla,
+               voto = orientacao)
+      
+      return(orientacoes)
+    }, error = function(e) {
+      return(tribble(~ id_votacao, ~ data, ~ id_parlamentar_voz, ~ voto))
+    })    
+   
   }
 
 #' @title Separa orientações de bancadas compostas
@@ -110,8 +114,8 @@ fetch_orientacoes_camara <-
 #' @param orientacao Orientação da bancada
 #' @return Dataframe contendo a sigla e a orientação da bancada
 #' @examples
-#' mutate_sigla("PpPodePTdoB", "Sim")
-mutate_sigla <- function(sigla, orientacao) {
+#' mutate_sigla_bloco("PpPodePTdoB", "Sim")
+mutate_sigla_bloco <- function(sigla, orientacao) {
   siglas <-
     strsplit(sigla, "(?<=[a-z])(?=[A|D-Z])", perl = TRUE) %>%
     unlist()
@@ -131,8 +135,8 @@ mutate_sigla <- function(sigla, orientacao) {
 #' @param votacoes_datapath Caminho para o arquivo csv com as votações
 #' @return Dataframe contendo a orientação dos partidos
 #' @examples
-#' fetch_orientacoes_votacoes(here::here("crawler/raw_data/tabela_votacoes.csv"))
-fetch_orientacoes_votacoes <- function(votacoes_datapath = here::here("crawler/raw_data/tabela_votacoes.csv")) {
+#' fetch_orientacoes_questionario_camara(here::here("crawler/raw_data/tabela_votacoes.csv"))
+fetch_orientacoes_questionario_camara <- function(votacoes_datapath = here::here("crawler/raw_data/tabela_votacoes.csv")) {
   source(here("crawler/votacoes/utils_votacoes.R"))
   
   votacoes <-
@@ -157,19 +161,38 @@ fetch_orientacoes_votacoes <- function(votacoes_datapath = here::here("crawler/r
   return(orientacoes)
 }
 
-#' @title Recupera informações da orientação dos partidos e salva num csv
-#' @description Recupera para cada votação informações sobre a orientação dos partidos e salva num csv
-#' @param votacoes_datapath Caminho para o arquivo csv com as votações
-#' @return Dataframe contendo a orientação dos partidos
+#' @title Recupera orientações das bancadas para uma votação específica
+#' @description A partir do código da sessão e da hora extrai as orientações das bancadas contidas num xml
+#' @param cod_sessao Código da sessão da votação
+#' @param hora Hora da votação
+#' @param xml XML com informaçãoo das votações
+#' @return Dataframe contendo id da votação, id e voto dos deputados que participaram de cada votação
 #' @examples
-#' fetch_all_orientacoes(here::here("crawler/raw_data/tabela_votacoes.csv"))
-fetch_all_orientacoes <- function(votacoes_datapath = here::here("crawler/raw_data/tabela_votacoes.csv")) {
-    orientacoes <- fetch_orientacoes_votacoes()
-    
-    readr::write_csv(orientacoes,
-                     here::here("crawler/raw_data/orientacoes.csv"))
-    
-    return(orientacoes)
+#' orientacoes <- fetch_orientacao_from_xml_camara("16821", "19:57", xml)
+fetch_orientacao_from_xml_camara <- function(cod_sessao, hora, xml) {
+  source(here("crawler/votacoes/utils_votacoes.R"))
+  
+  orientacoes_raw <- xml2::xml_find_all(xml, paste0(".//Votacao[@codSessao = '", cod_sessao,"' and @Hora = '", hora,"']", 
+                                                    "//orientacaoBancada//bancada")) %>%
+    map_df(function(x) {
+      list(
+        sigla = xml_attr(x, "Sigla") %>%
+          gsub(" ", "", .),
+        orientacao = xml_attr(x, "orientacao") %>%
+          gsub(" ", "", .)
+      )
+    })
+  
+  orientacoes <- purrr::map2_df(orientacoes_raw$sigla, orientacoes_raw$orientacao, ~ mutate_sigla_bloco(.x, .y)) %>%
+    mutate(sigla = padroniza_sigla(sigla),
+           id_votacao = paste0(cod_sessao, str_remove(hora, ":"))) %>%
+    select(id_votacao,
+           partido = sigla,
+           voto = orientacao) %>% 
+    enumera_voto() %>% 
+    distinct()
+  
+  return(orientacoes)
 }
 
 #' @title Importa e processa dados das orientações das bancadas na Câmara dos Deputados para uma proposição
@@ -178,15 +201,13 @@ fetch_all_orientacoes <- function(votacoes_datapath = here::here("crawler/raw_da
 #' @param ano Ano em que as votações ocorreram
 #' @return Dataframe contendo id da votação, id e voto dos deputados que participaram de cada votação
 #' @examples
-#' orientacoes <- fetch_orientacoes_por_proposicao(2190355, 2019)
-fetch_orientacoes_por_proposicao <- function(id_proposicao, ano = 2019) {
+#' orientacoes <- fetch_orientacoes_por_proposicao_camara(2190355, 2019)
+fetch_orientacoes_por_proposicao_camara <- function(id_proposicao, ano = 2019) {
     library(tidyverse)
     library(xml2)
     source(here("crawler/votacoes/utils_votacoes.R"))
-
-    source(here("crawler/votacoes/utils_votacoes.R"))
     
-    proposicao <- get_sigla_by_id(id_proposicao) %>%
+    proposicao <- get_sigla_by_id_camara(id_proposicao) %>%
       select(siglaTipo, numero, ano)
     
     url <- paste0("https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicao?tipo=", 
@@ -219,45 +240,11 @@ fetch_orientacoes_por_proposicao <- function(id_proposicao, ano = 2019) {
       mutate(dados = map2(
         cod_sessao,
         hora,
-        fetch_orientacao_from_xml,
+        fetch_orientacao_from_xml_camara,
         xml
       )) %>% 
       unnest(dados) %>% 
       select(id_votacao, partido, voto)
     
     return(orientacoes)
-}
-
-#' @title Recupera orientações das bancadas para uma votação específica
-#' @description A partir do código da sessão e da hora extrai as orientações das bancadas contidas num xml
-#' @param cod_sessao Código da sessão da votação
-#' @param hora Hora da votação
-#' @param xml XML com informaçãoo das votações
-#' @return Dataframe contendo id da votação, id e voto dos deputados que participaram de cada votação
-#' @examples
-#' orientacoes <- fetch_orientacao_from_xml("16821", "19:57", xml)
-fetch_orientacao_from_xml <- function(cod_sessao, hora, xml) {
-  source(here("crawler/votacoes/utils_votacoes.R"))
-  
-  orientacoes_raw <- xml2::xml_find_all(xml, paste0(".//Votacao[@codSessao = '", cod_sessao,"' and @Hora = '", hora,"']", 
-                                   "//orientacaoBancada//bancada")) %>%
-    map_df(function(x) {
-      list(
-        sigla = xml_attr(x, "Sigla") %>%
-          gsub(" ", "", .),
-        orientacao = xml_attr(x, "orientacao") %>%
-          gsub(" ", "", .)
-      )
-    })
-  
-  orientacoes <- purrr::map2_df(orientacoes_raw$sigla, orientacoes_raw$orientacao, ~ mutate_sigla(.x, .y)) %>%
-    mutate(sigla = padroniza_sigla(sigla),
-           id_votacao = paste0(cod_sessao, str_remove(hora, ":"))) %>%
-    select(id_votacao,
-           partido = sigla,
-           voto = orientacao) %>% 
-    enumera_voto() %>% 
-    distinct()
-  
-  return(orientacoes)
 }

@@ -44,3 +44,30 @@ map_sigla_to_id <- function(df,
   return(df)
   
 }
+
+
+#' @title Mapeia sigla de partido para id
+#' @description Recebe uma string com a sigla do partido e retorna qual o ID deste partido
+#' @param sigla Sigla do partido (string)
+#' @return Id do partido
+map_sigla_id <- function(sigla_partido) {
+  library(tidyverse)
+  library(here)
+  source(here("crawler/votacoes/utils_votacoes.R"))
+  
+  partidos <- suppressWarnings(suppressMessages(read_csv(here("crawler/raw_data/partidos.csv"))))
+  
+  sigla_padronizada <- padroniza_sigla(sigla_partido)
+  
+  id_partido <- partidos %>% 
+    filter(tolower(sigla) == tolower(if_else(tolower(sigla_padronizada) == "podemos", 
+                                             "PODE", 
+                                             sigla_partido))) %>%
+    pull(id)
+  
+  if (length(id_partido) == 0) {
+    return(partidos %>% filter(sigla == "SPART") %>% pull(id))
+  } else {
+    return(id_partido)
+  }
+}
