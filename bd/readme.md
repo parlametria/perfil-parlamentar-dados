@@ -156,48 +156,6 @@ Obs: Só realize este tratamento caso os dados brutos tenham sido alterados. Cas
 Rscript export_dados_tratados_bd.R
 ```
 
-# Como atualizar os dados desde o início
-
-**1. Tudo começa com a tabela de proposições**
-
-O dado presente em `crawler/raw-data/tabela_votacoes.csv` contém a lista de proposições e informações sobre o tema da proposição, apelido da proposição, descrição e o id da votação mais importante.
-
-Todas as proposições contidas neste arquivo *tabela_votacoes.csv* são consideradas as atualmente disponíveis e ativas na plataforma Voz Ativa. Logo, se é preciso editar o texto de uma proposição, excluir proposições ou adicionar novas é preciso inicialmente editar este arquivo.
-
-**2. Atualize os votos**
-
-Qualquer alteração de adição ou remoção de proposições na tabela de proposições envolve também a atualização dos dados de votos dos parlamentares para a votação mais importante atrelada a proposição. Para atualizar os votos execute o script *fetcher_votos.R* no módulo de votações. Mais informações sobre a execução desse script podem ser obtidas no readme presente em `crawler/votacoes/readme.md`
-
-```
-Rscript fetcher_votos.R
-```
-
-**3. Atualize a lista de candidatos**
-
-No módulo de candidatos (`crawler/candidatos`) execute o script *export_info_candidatos_2018.R* para salvar os dados de candidatos a Deputado Federal nas eleições de 2018.
-
-```
-Rscript export_info_candidatos_2018.R
-```
-
-**4. Atualize os dados de comissões**
-
-No módulo de Comissões (`crawler/parlamentares/comissoes`) execute o script *export_comissoes.R* para salvar os dados de comissões e de suas composições.
-
-```
-Rscript export_comissoes.R
-```
-
-**5. Tratamento dos dados para o banco de dados**
-
-Com a execução dos passos 1, 2 e 3, os arquivos *tabela_votacoes.csv*, *votacoes.csv* e *candidatos.csv* presentes em `crawler/raw-data/` estarão atualizados de acordo com a nova lista de proposições ativas no Voz Ativa.
-
-Agora é preciso que esses dados sejam alterados para o formato utilizado no banco de dados do Voz Ativa. Para tal processamento basta executar o script *export_dados_tratados_bd.R* presente em `bd/`:
-
-```
-Rscript export_dados_tratados_bd.R
-```
-
 **Certifique-se que o diretório atual é o `bd/`.**
 
 **6. Atualização do Banco de dados**

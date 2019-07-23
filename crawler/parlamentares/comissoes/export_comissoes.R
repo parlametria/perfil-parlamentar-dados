@@ -1,8 +1,8 @@
 library(tidyverse)
+#devtools::install_github('analytics-ufcg/leggoR', force = T)
 library(agoradigital)
-# devtools::install_github('analytics-ufcg/leggoR', force = T)
+#devtools::install_github('analytics-ufcg/rcongresso', force = T)
 library(rcongresso)
-# devtools::install_github('analytics-ufcg/rcongresso', force = T)
 
 source(here::here("crawler/parlamentares/comissoes/analyzer_comissoes.R"))
 
