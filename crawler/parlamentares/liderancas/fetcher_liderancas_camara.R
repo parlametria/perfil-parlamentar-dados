@@ -22,7 +22,7 @@ fetch_liderancas_camara <- function() {
         t() %>%
         as_data_frame() %>%
         unnest() %>%
-        mutate(cargo = "Lider") %>%
+        mutate(cargo = "Líder") %>%
         rename(id = ideCadastro)
       
       if (!is.null(x$vice_lider)) {
@@ -42,7 +42,7 @@ fetch_liderancas_camara <- function() {
             partido = V3,
             uf = V4
           ) %>%
-          mutate(cargo = "Vice-lider")
+          mutate(cargo = "Vice-líder")
         
         df <- bind_rows(df, vices)
         

@@ -1,5 +1,5 @@
 library(tidyverse)
-source(here::here("crawler/parlamentares/liderancas/fetcher_liderancas.R"))
+source(here::here("crawler/parlamentares/liderancas/analyzer_liderancas.R"))
 
 if(!require(optparse)){
   install.packages("optparse")
@@ -23,7 +23,7 @@ output_path = opt$output
 
 message("Iniciando processamento...")
 
-liderancas <- fetch_liderancas_camara()
+liderancas <- processa_liderancas()
 
 message(paste0("Salvando o resultado das lideranças em: ", output_path))
 
