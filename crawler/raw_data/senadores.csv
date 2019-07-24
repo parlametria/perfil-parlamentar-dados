@@ -70,7 +70,7 @@ id,casa,cpf,nome_civil,nome_eleitoral,genero,uf,sg_partido,situacao,condicao_ele
 5090,senado,NA,José Alberto Wenzel,José Alberto Wenzel,M,RS,PSDB,NA,1º Suplente,55,0
 5120,senado,NA,José Antonio Guidoni,José Antonio Guidoni,M,ES,PSB,NA,2º Suplente,55,0
 43,senado,NA,José Eduardo de Barros Dutra,José Eduardo Dutra,M,SE,PT,NA,1º Suplente,55,0
-5112,senado,NA,José Antônio Medeiros,José Medeiros,M,MT,PODE,NA,1º Suplente,55,0
+5112,senado,NA,José Antônio Medeiros,José Medeiros,M,MT,PODEMOS,NA,1º Suplente,55,0
 615,senado,NA,José Barroso Pimentel,José Pimentel,M,CE,PT,NA,Titular,55,0
 5180,senado,NA,José Rodrigues da Silva,José Rodrigues da Silva,M,PE,PSB,NA,2º Suplente,55,0
 5036,senado,NA,José de Macedo Ferreira,José de Macedo Ferreira,M,AL,MDB,NA,2º Suplente,55,0
@@ -169,7 +169,7 @@ id,casa,cpf,nome_civil,nome_eleitoral,genero,uf,sg_partido,situacao,condicao_ele
 4610,senado,NA,Alexandre Silveira de Oliveira,Alexandre Silveira,M,MG,PSD,NA,1º Suplente,56,0
 3651,senado,NA,Alfredo Cotait Neto,Alfredo Cotait Neto,M,SP,DEM,NA,1º Suplente,56,0
 5962,senado,NA,Alisson Taveira Rocha Leal,Alisson Taveira,M,RN,NA,NA,1º Suplente,56,0
-945,senado,NA,Alvaro Fernandes Dias,Alvaro Dias,M,PR,PODE,NA,Titular,56,1
+945,senado,NA,Alvaro Fernandes Dias,Alvaro Dias,M,PR,PODEMOS,NA,Titular,56,1
 5607,senado,NA,Maria Alzenir Porto da Costa,Alzenir Porto,F,PI,PTB,NA,2º Suplente,56,0
 5989,senado,NA,Ana Maria de Resende Vieira,Ana Maria,F,MG,NA,NA,2º Suplente,56,0
 5950,senado,NA,Ana Paula Tongo da Silva,Ana Paula Tongo,F,ES,NA,NA,1º Suplente,56,0
@@ -218,14 +218,14 @@ id,casa,cpf,nome_civil,nome_eleitoral,genero,uf,sg_partido,situacao,condicao_ele
 6016,senado,NA,Adriana de Lucena Francisco,Drica de Lucena,F,RS,NA,NA,2º Suplente,56,0
 5537,senado,NA,Dário Elias Berger,Dário Berger,M,SC,MDB,NA,Titular,56,1
 4994,senado,NA,Carlos Eduardo de Souza Braga,Eduardo Braga,M,AM,MDB,NA,Titular,56,1
-5976,senado,NA,Luis Eduardo Grangeiro Girão,Eduardo Girão,M,CE,PODE,NA,Titular,56,1
-3777,senado,NA,Carlos Eduardo Torres Gomes,Eduardo Gomes,M,TO,MDB,NA,Titular,56,1
+5976,senado,NA,Luis Eduardo Grangeiro Girão,Eduardo Girão,M,CE,PODEMOS,NA,Titular,56,1
+3777,senado,NA,Carlos Eduardo Torres Gomes,Eduardo Gomes,M,TO,MDB,NA,Titular,56,0
 5902,senado,NA,Eduardo Ovídio Borges de Velloso Vianna,Eduardo Velloso,M,AC,NA,NA,1º Suplente,56,0
 5587,senado,NA,Eladio Barbosa Carneiro,Eladio Carneiro,M,GO,MDB,NA,2º Suplente,56,0
 5898,senado,NA,Eliane e Silva Nogueira Lima,Eliane Nogueira,F,PI,NA,NA,1º Suplente,56,0
 5605,senado,NA,Eliane Rodrigues de Andrade Ferreira,Eliane Rodrigues,F,PE,PSB,NA,2º Suplente,56,0
 5718,senado,NA,Eliziane Pereira Gama Melo,Eliziane Gama,F,MA,CIDADANIA,NA,Titular,56,1
-5531,senado,NA,Elmano Férrer de Almeida,Elmano Férrer,M,PI,PODE,NA,Titular,56,1
+5531,senado,NA,Elmano Férrer de Almeida,Elmano Férrer,M,PI,PODEMOS,NA,Titular,56,1
 6025,senado,NA,Roberta Leontina Xisto Acioly,Enfermeira Roberta,F,RR,NA,NA,1º Suplente,56,0
 22,senado,NA,Esperidião Amin Helou Filho,Esperidião Amin,M,SC,PP,NA,Titular,56,1
 5906,senado,NA,Eudocia Maria Holanda de Araujo Caldas,Eudócia Caldas,F,AL,NA,NA,1º Suplente,56,0
@@ -269,7 +269,7 @@ id,casa,cpf,nome_civil,nome_eleitoral,genero,uf,sg_partido,situacao,condicao_ele
 4885,senado,NA,Jorge Yoshiaki Yanai,Jorge Yanai,M,MT,DEM,NA,1º Suplente,56,0
 5350,senado,NA,Jorginho dos Santos Mello,Jorginho Mello,M,SC,PL,NA,Titular,56,1
 5569,senado,NA,Jose Samuel Alcolumbre Tobelem,Josiel,M,AP,DEM,NA,1º Suplente,56,0
-5849,senado,NA,Jose Amauri P. de Araújo,José Amauri,M,PI,PODE,NA,1º Suplente,56,0
+5849,senado,NA,Jose Amauri P. de Araújo,José Amauri,M,PI,PODEMOS,NA,1º Suplente,56,0
 878,senado,NA,José Aníbal Peres de Pontes,José Aníbal,M,SP,PSDB,NA,1º Suplente,56,0
 5579,senado,NA,José Carlos de Moraes Vasconcellos Filho,José Carlos Vasconcellos,M,DF,PDT,NA,1º Suplente,56,0
 5983,senado,NA,José Chagas dos Santos,José Chagas,M,MS,NA,NA,1º Suplente,56,0
@@ -282,7 +282,7 @@ id,casa,cpf,nome_civil,nome_eleitoral,genero,uf,sg_partido,situacao,condicao_ele
 5965,senado,NA,Manoel Junior Souto de Souza,Júnior Souto,M,RN,NA,NA,1º Suplente,56,0
 1249,senado,NA,Kátia Regina de Abreu,Kátia Abreu,F,TO,PDT,NA,Titular,56,1
 415,senado,NA,Lael Vieira Varella,Lael Varella,M,MG,DEM,NA,2º Suplente,56,0
-5533,senado,NA,Lasier Costa Martins,Lasier Martins,M,RS,PODE,NA,Titular,56,1
+5533,senado,NA,Lasier Costa Martins,Lasier Martins,M,RS,PODEMOS,NA,Titular,56,1
 5977,senado,NA,Leany Barreiro de Sousa Lemos,Leany Lemos,F,DF,NA,NA,1º Suplente,56,0
 5979,senado,NA,Leila Gomes de Barros Rêgo,Leila Barros,F,DF,PSB,NA,Titular,56,1
 5903,senado,NA,Leonardo Rodrigues,Leonardo Rodrigues,M,RJ,NA,NA,2º Suplente,56,0
@@ -324,7 +324,7 @@ id,casa,cpf,nome_civil,nome_eleitoral,genero,uf,sg_partido,situacao,condicao_ele
 6006,senado,NA,Ogari de Castro Pacheco,Ogari Pacheco,M,TO,NA,NA,2º Suplente,56,0
 5525,senado,NA,Omar José Abdel Aziz,Omar Aziz,M,AM,PSD,NA,Titular,56,1
 6024,senado,NA,Onésimo de Souza Cruz Netto,Onésimo Cruz,M,RR,NA,NA,2º Suplente,56,0
-5924,senado,NA,Oriovisto Guimaraes,Oriovisto Guimarães,M,PR,PODE,NA,Titular,56,1
+5924,senado,NA,Oriovisto Guimaraes,Oriovisto Guimarães,M,PR,PODEMOS,NA,Titular,56,1
 5523,senado,NA,Otto Roberto Mendonça de Alencar,Otto Alencar,M,BA,PSD,NA,Titular,56,1
 5925,senado,NA,Orlando Moura Gaia,Pastor Gaia,M,AP,NA,NA,2º Suplente,56,0
 5599,senado,NA,Ibanes Taveira da Silva,Pastor Ibanes Taveira,M,PA,PDT,NA,2º Suplente,56,0
@@ -363,12 +363,12 @@ id,casa,cpf,nome_civil,nome_eleitoral,genero,uf,sg_partido,situacao,condicao_ele
 5905,senado,NA,Rodrigo Santos Cunha,Rodrigo Cunha,M,AL,PSDB,NA,Titular,56,1
 5732,senado,NA,Rodrigo Otavio Soares Pacheco,Rodrigo Pacheco,M,MG,DEM,NA,Titular,56,1
 5352,senado,NA,Rogério Carvalho Santos,Rogério Carvalho,M,SE,PT,NA,Titular,56,1
-5322,senado,NA,Romario de Souza Faria,Romário,M,RJ,PODE,NA,Titular,56,1
+5322,senado,NA,Romario de Souza Faria,Romário,M,RJ,PODEMOS,NA,Titular,56,1
 456,senado,NA,Ronaldo Ramos Caiado,Ronaldo Caiado,M,GO,DEM,NA,Titular,56,0
 5945,senado,NA,Ronaldo Libardi,Ronaldo Libardi,M,ES,NA,NA,2º Suplente,56,0
 5601,senado,NA,Roosevelt Vita,Roosevelt Vita,M,PB,MDB,NA,2º Suplente,56,0
 5944,senado,NA,Rosana Marcia Foerste da Silva,Rosana Foerst,F,ES,NA,NA,1º Suplente,56,0
-2331,senado,NA,Rosilda de Freitas,Rose de Freitas,F,ES,PODE,NA,Titular,56,1
+2331,senado,NA,Rosilda de Freitas,Rose de Freitas,F,ES,PODEMOS,NA,Titular,56,1
 5911,senado,NA,Maria do Rosário de Fátima Biserra Rodrigues,Rosário Bezerra,F,PI,NA,NA,2º Suplente,56,0
 5621,senado,NA,Rudson Leite da Silva,Rudson Leite,M,RR,PV,NA,2º Suplente,56,0
 6021,senado,NA,Samuel Pereira de Araujo,Samuel Araujo,M,RO,NA,NA,1º Suplente,56,0
@@ -380,9 +380,9 @@ id,casa,cpf,nome_civil,nome_eleitoral,genero,uf,sg_partido,situacao,condicao_ele
 5916,senado,NA,Silvania Batinga de Oliveira Barbosa,Silvania Barbosa,F,AL,NA,NA,2º Suplente,56,0
 5056,senado,NA,Silvia Nascimento Cardoso dos Santos Cerqueira,Silvia Nascimento Cardoso dos Santos Cerqueira,M,BA,PRB,NA,2º Suplente,56,0
 5527,senado,NA,Simone Nassar Tebet,Simone Tebet,F,MS,MDB,NA,Titular,56,1
-6005,senado,NA,Jose Wilson Siqueira Campos,Siqueira Campos,M,TO,NA,NA,1º Suplente,56,0
+6005,senado,NA,Jose Wilson Siqueira Campos,Siqueira Campos,M,TO,DEM,NA,1º Suplente,56,1
 5988,senado,NA,Soraya Vieira Thronicke,Soraya Thronicke,F,MS,PSL,NA,Titular,56,1
-5959,senado,NA,Eann Styvenson Valentim Mendes,Styvenson Valentim,M,RN,PODE,NA,Titular,56,1
+5959,senado,NA,Eann Styvenson Valentim Mendes,Styvenson Valentim,M,RN,PODEMOS,NA,Titular,56,1
 5893,senado,NA,Suely Torres e Silva,Suely Pereira,M,MA,NA,NA,1º Suplente,56,0
 5995,senado,NA,Maria Suely Alves de Oliveira Santiago,Suely Santiago,F,PB,NA,NA,2º Suplente,56,0
 4560,senado,NA,Sérgio de Oliveira Cunha,Sérgio Petecão,M,AC,PSD,NA,Titular,56,1
