@@ -25,7 +25,7 @@ message("Use --help para mais informações\n")
 
  source(here::here("bd/analyzer_data_bd.R"))	
 
- message("Processando dados...")	
+message("Processando dados...")	
 parlamentares <- processa_parlamentares()	
 perguntas <- processa_perguntas()	
 proposicoes <- processa_proposicoes()	

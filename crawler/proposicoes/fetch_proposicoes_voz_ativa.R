@@ -16,7 +16,7 @@ fetch_proposicoes_plenario_selecionadas <- function(url = "https://docs.google.c
            status_proposicao = "Inativa",
            status_importante = "Ativa",
            casa = "camara") %>%
-    select(id_proposicao = id, casa, projeto_lei = nome, titulo, descricao, status_proposicao, status_importante)
+    select(id_proposicao = id, casa, projeto_lei = nome, titulo = `Sugestões de apelido`, descricao, status_proposicao, status_importante)
 }
 
 #' @title Recupera e processa dados das proposições escolhidas como posições para o questionário do Voz Ativa
