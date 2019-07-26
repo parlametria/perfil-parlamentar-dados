@@ -21,7 +21,7 @@ fetcher_votacoes_por_intervalo_senado <-
       )
     
     votacoes <- tryCatch({
-      html <-
+      dados <-
         RCurl::getURI(url) %>%
         xml2::read_html() %>%
         html_nodes(".table") %>%
@@ -83,6 +83,8 @@ fetcher_votacoes_por_intervalo_senado <-
           return(tribble())
           
         })
+      
+      return(dados)
       
     }, error = function(e) {
       return(tribble( ~ id_proposicao,
