@@ -5,8 +5,13 @@
 #' @return Dataframe com o formato padrão para os dados de proposições
 #' @examples
 #' proposicoes <- fetch_proposicoes_plenario_selecionadas(url)
-fetch_proposicoes_plenario_selecionadas <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvvT0fmGUMwOHnEPe9hcAMC_l-u9d7sSplNYkMMzgiE_vFiDcWXWwl4Ys7qaXuWwx4VcPtFLBbMdBd/pub?gid=399933255&single=true&output=csv") {
+fetch_proposicoes_plenario_selecionadas <- function(url = NULL) {
   library(tidyverse)
+  
+  if(is.null(url)) {
+    source(here::here("crawler/proposicoes/utils_proposicoes.R"))
+    url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+  }
   
   proposicoes <- read_csv(url, col_types = cols(id = "c"))
   
@@ -26,9 +31,14 @@ fetch_proposicoes_plenario_selecionadas <- function(url = "https://docs.google.c
 #' @return Dataframe com o formato padrão para os dados de proposições
 #' @examples
 #' proposicoes <- fetch_proposicoes_questionario(data_path)
-fetch_proposicoes_questionario <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMcbeHRm_dqX-i2gNVaCiHMFg6yoIjNl9cHj0VBIlQ5eMX3hoHB8cM8FGOukjfNajWDtfvfhqxjji7/pub?gid=0&single=true&output=csv") {
+fetch_proposicoes_questionario <- function(url = NULL) {
   library(tidyverse)
   library(here)
+
+  if(is.null(url)) {
+    source(here("crawler/proposicoes/utils_proposicoes.R"))
+    url <- .URL_PROPOSICOES_VOZATIVA
+  }
   
   proposicoes <- read_csv(url, col_types = cols(id_proposicao = "c"))
   
