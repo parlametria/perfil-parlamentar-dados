@@ -7,7 +7,7 @@
 processa_votacoes_info <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvvT0fmGUMwOHnEPe9hcAMC_l-u9d7sSplNYkMMzgiE_vFiDcWXWwl4Ys7qaXuWwx4VcPtFLBbMdBd/pub?gid=399933255&single=true&output=csv") {
   library(tidyverse)
   library(here)
-  source(here("crawler/votacoes/fetcher_votacoes.R"))
+  source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
   
   proposicoes_votadas <- read_csv(url, col_types = cols(id = "c")) %>% 
     filter(tolower(tema_va) != "não entra") %>% 
