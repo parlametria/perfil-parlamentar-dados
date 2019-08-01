@@ -153,6 +153,7 @@ fetcher_votacoes_por_proposicao_senado <-
       if (!is.null(ano)) {
         data <- data %>%
           filter(lubridate::year(datetime) == ano)
+        return(data)
       }
       
     }, error = function(e) {
