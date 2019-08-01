@@ -11,7 +11,7 @@ process_orientacao_por_ano_camara <- function(ano = 2019, url = NULL) {
   library(here)
   
   source(here("crawler/votacoes/orientacoes/fetcher_orientacoes_camara.R"))
-  source(here("crawler/votacoes/fetcher_votacoes.R"))
+  source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
   source(here("crawler/votacoes/utils_votacoes.R"))
   
   proposicoes_votadas <- tryCatch({

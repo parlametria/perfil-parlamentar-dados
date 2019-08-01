@@ -84,7 +84,7 @@ process_votos_por_ano_camara <- function(ano = 2019, url = NULL) {
   library(tidyverse)
   library(here)
   
-  source(here("crawler/votacoes/fetcher_votacoes.R"))
+  source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
   source(here("crawler/votacoes/votos/fetcher_votos_camara.R"))
   source(here("crawler/votacoes/utils_votacoes.R"))
   

@@ -78,7 +78,7 @@ export_votacoes_nominais <-
            ano_final = 2015,
            output = here::here("crawler/raw_data/votacoes_nominais_15_a_19.csv")) {
     library(tidyverse)
-    source(here::here("crawler/votacoes/fetcher_votacoes.R"))
+    source(here::here("crawler/votacoes/fetcher_votacoes_camara.R"))
     
     votacoes <-
       fetch_all_votacoes_por_intervalo_camara(ano_inicial, ano_final)
