@@ -21,7 +21,8 @@ opt = parse_args(opt_parser);
 output_datapath <- opt$out
 
 message("Iniciando processamento...")
-votos <- process_votos_anos_url_camara()
+votos <- process_votos_anos_url_camara() %>% 
+  rbind(process_votos_por_votacoes_senado())
 
 message(paste0("Salvando o resultado em ", output_datapath))
 readr::write_csv(votos, output_datapath)

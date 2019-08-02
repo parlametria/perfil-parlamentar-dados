@@ -10,10 +10,11 @@ enumera_voto <- function(df) {
       voto = case_when(
         str_detect(voto, "Não") ~ -1,
         str_detect(voto, "Sim") ~ 1,
-        str_detect(voto, "Obstrução") ~ 2,
+        str_detect(voto, "Obstrução|P-OD") ~ 2,
         str_detect(voto, "Abstenção") ~ 3,
-        str_detect(voto, "Art. 17") ~ 4,
+        str_detect(voto, "Art. 17|art. 51 RISF") ~ 4,
         str_detect(voto, "Liberado") ~ 5,
+        #TODO: Tratar caso P-NRV: Presente mas não registrou foto
         TRUE ~ 0
       )
     )
@@ -88,4 +89,23 @@ get_sigla_by_id_camara <- function(id_proposicao) {
     select(siglaTipo = tipo, numero, ano)
     
   return(atributos)
+}
+
+#' @title Mapeia um nome eleitoral para id correspondente
+#' @description Recebe dois dataframes contendo nome eleitoral e um deles com informação de id
+#' @param target_df Dataframe a receber o id do parlamentar
+#' @return Dataframe target_df contendo coluna id
+mapeia_nome_eleitoral_to_id_senado <- function(target_df) {
+  library(tidyverse)
+  
+  senadores_df <- read_csv(here::here("crawler/raw_data/senadores.csv"))
+  
+  result <- 
+    target_df %>% 
+    left_join(
+      senadores_df %>%
+        select(nome_eleitoral, id), 
+         by=c("nome_eleitoral"))
+  
+  return(result)
 }

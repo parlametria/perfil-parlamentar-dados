@@ -164,13 +164,18 @@ processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/t
   library(tidyverse)
   library(here)
   source(here("crawler/proposicoes/fetch_proposicoes_voz_ativa.R"))
+  source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
+  source(here("crawler/proposicoes/utils_proposicoes.R"))
   
-  proposicoes_questionario <- fetch_proposicoes_questionario()
+  proposicoes_questionario <- fetch_proposicoes_questionario(.URL_PROPOSICOES_VOZATIVA)
   
-  proposicoes_plenario <- fetch_proposicoes_plenario_selecionadas()
+  proposicoes_plenario <- fetch_proposicoes_plenario_selecionadas(.URL_PROPOSICOES_PLENARIO_CAMARA)
   
+  #proposicoes_plenario_senado <- fetch_proposicoes_plenario_selecionadas_senado(.URL_PROPOSICOES_PLENARIO_SENADO) 
+    
   proposicoes <- proposicoes_questionario %>% 
     rbind(proposicoes_plenario) %>% 
+    #rbind(proposicoes_plenario_senado) %>%
     group_by(id_proposicao) %>% 
     mutate(n_prop = row_number()) %>% 
     ungroup() %>% 
@@ -187,17 +192,20 @@ processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/t
 processa_proposicoes_temas <- function() {
   library(tidyverse)
   library(here)
-  
   source(here("crawler/proposicoes/process_proposicao_tema.R"))
+  source(here("crawler/proposicoes/utils_proposicoes.R"))
   
-  proposicoes_questionario <- process_proposicoes_questionario_temas()
+  proposicoes_questionario <- process_proposicoes_questionario_temas(.URL_PROPOSICOES_VOZATIVA)
   
-  proposicoes_plenario <- process_proposicoes_plenario_selecionadas_temas()
+  proposicoes_plenario <- process_proposicoes_plenario_selecionadas_temas(.URL_PROPOSICOES_PLENARIO_CAMARA)
+  
+ # proposicoes_plenario_senado <- process_proposicoes_plenario_selecionadas_temas(.URL_PROPOSICOES_PLENARIO_SENADO)
   
   proposicoes <- proposicoes_questionario %>%
     rbind(proposicoes_plenario) %>%
+    #rbind(proposicoes_plenario_senado) %>% 
     mutate(id_tema = tema_id) %>% 
-    distinct(id_proposicao, id_tema)
+    distinct(id_proposicao, casa, id_tema)
   
   return(proposicoes)
 }

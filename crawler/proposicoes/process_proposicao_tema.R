@@ -26,8 +26,13 @@ getIdfromTema <- function(tema_nome) {
 #' @return Dataframe com proposições e os temas (ids)
 #' @examples
 #' proposicoes_temas <- process_proposicoes_plenario_selecionadas_temas(url)
-process_proposicoes_plenario_selecionadas_temas <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvvT0fmGUMwOHnEPe9hcAMC_l-u9d7sSplNYkMMzgiE_vFiDcWXWwl4Ys7qaXuWwx4VcPtFLBbMdBd/pub?gid=399933255&single=true&output=csv") {
+process_proposicoes_plenario_selecionadas_temas <- function(url = NULL) {
   library(tidyverse)
+  
+  if(is.null(url)) {
+    source(here::here("crawler/proposicoes/utils_proposicoes.R"))
+    url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+  }
   
   proposicoes <- read_csv(url, col_types = cols(id = "c"))
   
@@ -45,8 +50,13 @@ process_proposicoes_plenario_selecionadas_temas <- function(url = "https://docs.
   return(proposicoes_va)
 }
 
-process_proposicoes_questionario_temas <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMcbeHRm_dqX-i2gNVaCiHMFg6yoIjNl9cHj0VBIlQ5eMX3hoHB8cM8FGOukjfNajWDtfvfhqxjji7/pub?gid=0&single=true&output=csv") {
+process_proposicoes_questionario_temas <- function(url = NULL) {
   library(tidyverse)
+  
+  if(is.null(url)) {
+    source(here::here("crawler/proposicoes/utils_proposicoes.R"))
+    url <- .URL_PROPOSICOES_VOZATIVA
+  }
   
   proposicoes <- read_csv(url, col_types = cols(id_proposicao = "c"))
   

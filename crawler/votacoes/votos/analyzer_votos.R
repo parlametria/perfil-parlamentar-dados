@@ -150,3 +150,29 @@ process_votos_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
   
   return(votos)
 }
+
+
+process_votos_por_votacoes_senado <- function(votacoes_senado_filepath = NULL) {
+  library(tidyverse)
+  source(here::here("crawler/votacoes/votos/fetcher_votos_senado.R"))
+  source(here::here("crawler/votacoes/utils_votacoes.R"))
+  
+  votos <- fetch_all_votos_senado(votacoes_senado_filepath)
+  
+  votos_padronizados <- votos %>%
+    enumera_voto() %>%
+    mutate(partido = padroniza_sigla(partido),
+           senador = str_remove(senador, "^\\s")) %>%
+    select(ano, id_proposicao, id_votacao, senador, voto, partido, casa) %>%
+    rename(nome_eleitoral = senador) %>%
+    mapeia_nome_eleitoral_to_id_senado() %>%
+    select(ano,
+           id_proposicao,
+           id_votacao,
+           id_parlamentar = id,
+           voto,
+           partido,
+           casa)
+    
+  return(votos_padronizados)
+}
