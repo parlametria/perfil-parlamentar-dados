@@ -1,4 +1,5 @@
 -- TEMAS
+BEGIN;
 CREATE TEMP TABLE temp_temas AS SELECT * FROM temas LIMIT 0;
 
 \copy temp_temas FROM './data/temas.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
@@ -19,3 +20,4 @@ DELETE FROM temas
                   FROM temp_temas t);
 
 DROP TABLE temp_temas;
+COMMIT;

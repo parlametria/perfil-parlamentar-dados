@@ -1,4 +1,6 @@
 -- PARLAMENTARES
+BEGIN;
+
 CREATE TEMP TABLE temp_parlamentares AS SELECT * FROM parlamentares LIMIT 0;
 
 \copy temp_parlamentares FROM './data/parlamentares.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
@@ -27,3 +29,5 @@ DELETE FROM parlamentares
  (SELECT id_parlamentar_voz FROM temp_parlamentares);
 
 DROP TABLE temp_parlamentares;
+
+COMMIT;

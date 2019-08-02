@@ -1,4 +1,5 @@
 -- PROPOSICOES
+BEGIN;
 CREATE TEMP TABLE temp_proposicoes AS SELECT * FROM proposicoes LIMIT 0;
 
 \copy temp_proposicoes FROM './data/proposicoes.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
@@ -20,3 +21,4 @@ DO
     status_importante = EXCLUDED.status_importante;    
 
 DROP TABLE temp_proposicoes;
+COMMIT;

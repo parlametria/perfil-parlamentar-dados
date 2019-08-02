@@ -1,4 +1,5 @@
 -- MANDATOS
+BEGIN;
 CREATE TEMP TABLE temp_mandatos AS SELECT * FROM mandatos LIMIT 0;
 
 \copy temp_mandatos FROM './data/mandatos.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
@@ -25,3 +26,4 @@ WHERE (id_parlamentar_voz, id_legislatura) NOT IN
    FROM temp_mandatos);
 
 DROP TABLE temp_mandatos; 
+COMMIT;
