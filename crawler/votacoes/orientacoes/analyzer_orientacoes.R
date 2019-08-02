@@ -73,3 +73,29 @@ process_orientacao_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
   
   return(orientacao)
 }
+
+
+process_orientacao_governo_senado <- function(votos_datapath = NULL) {
+  library(tidyverse)
+  
+  if(is.null(votos_datapath)){
+    source(here::here("crawler/votacoes/votos/fetcher_votos_senado.R"))
+    votos <- fetch_all_votos_senado()
+    
+  } else {
+    votos <- read_csv(votos_datapath)
+  }
+  
+  
+}
+
+
+calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
+  library(tidyverse)
+  
+  orientacoes <- votos %>% 
+    group_by(id_proposicao, id_votacao) %>% 
+    filter(partido == sigla_partido) %>% 
+    count()
+  
+}
