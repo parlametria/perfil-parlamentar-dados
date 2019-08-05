@@ -24,6 +24,7 @@ library(hrbrthemes)
 library(ggchicklet)
 library(ggridges)
 library(ggrepel)
+library(ggalt)
 library(DT)
 source(here("reports/investimento-partidos/scripts/utils.R"))
 source(here("crawler/votacoes/utils_votacoes.R"))
@@ -113,12 +114,12 @@ deputados_receita %>%
   head(15) %>% 
   mutate(valor = format_currency_value(total_receita)) %>% 
   ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = total_receita)) +
-  geom_point(col = "tomato3", size = 3) + 
   geom_segment(aes(x = nome, 
                    xend = nome, 
                    y = valor_inicial, 
                    yend = total_receita), 
                size = 0.1) +
+  geom_point(col = "tomato3", size = 3) + 
   geom_text(aes(label = valor),
             hjust = -0.3,
             size = 3.3) +
@@ -321,6 +322,92 @@ deputados_receita %>%
 
 Não é possível afirmar uma relação direta entre a obediência/aderência ao partido e o investimento proporcional recebido pelo partido.
 
+### Investimento por Gênero
+```{r}
+receita_por_genero <- deputados_receita %>% 
+  filter(!is.na(proporcao_receita)) %>% 
+  group_by(sg_partido, genero) %>% 
+  summarise(median = median(proporcao_receita)) %>% 
+  ungroup() %>% 
+  mutate(median = median * 100) %>% 
+  spread(key = genero, value = median) %>% 
+  mutate(diff = (`F` - `M`)) %>% 
+  gather(key = "group", value = "median", `F`, `M`) %>% 
+  mutate(diff = replace_na(diff, 0)) %>% 
+  select(sg_partido, group, median, diff)
+```
+
+```{r fig.height=10}
+levels <- receita_por_genero %>%
+  arrange(desc(diff)) %>% 
+  distinct(sg_partido) %>% 
+  pull(sg_partido)
+
+receita_por_genero %>% 
+ggplot(
+  mapping = aes(
+    y = fct_rev(factor(sg_partido, levels = levels)), 
+    x = median, 
+    color = group)
+  ) + 
+  geom_line(
+    mapping = aes(group = sg_partido),
+    color = "#bbbbbb",
+    size = 1
+  ) +
+  geom_point(size = 3, pch = 19) +
+  geom_text_repel(
+    size = 3,
+    nudge_y = -0.38,
+    mapping = 
+      aes(
+        label = paste0(as.character(round(median, 1))),
+        color = group)
+  ) + 
+  geom_text(size = 3.5, fontface = "bold", nudge_y = 0.6,
+            mapping = aes(label = ifelse(sg_partido == "PODEMOS", 
+                                         ifelse(group == "F",
+                                               "Mulher",
+                                               "Homem"),
+                                          ""),
+                          color = group)
+            ) +
+  
+  ## retangulo das diferencas
+  geom_rect(mapping = aes(xmin = 10.4, xmax = Inf , ymin = -Inf, ymax = Inf),
+            fill = "white",
+            color = "white") +
+  geom_rect(mapping = aes(xmin = 10.5, xmax = 11.5 , ymin = -Inf, ymax = Inf),
+            fill = "#eef0e2",
+            color = "#eef0e2") +
+  geom_text(fontface = "bold", size = 3.3, colour = "#5f5757", 
+            mapping = aes(x = 11, y = sg_partido, 
+                          label = ifelse(group == "M", "",
+                                         ifelse(diff > 0, paste0("+", as.character(round(diff, 2))), 
+                                                paste0(as.character(round(diff, 2)))
+                                                )
+                                         )
+                          )
+            ) +
+  geom_text(size = 3, colour = "#9e9191", nudge_y = 0.6,
+            mapping = aes(x = 11, y = sg_partido, label = ifelse(sg_partido == "PODEMOS", "diferença", ""))) +
+  ## fim retangulo das diferencas
+  
+  scale_color_manual(values = c("#DEAC7C", "#83ACB8")) +
+  scale_x_continuous(breaks = seq(0, 10, 1), limits = c(0, 12)) +
+  scale_y_discrete(
+    expand = expand_scale(add=c(0.65,1))
+  ) +
+  labs(title = "Proporção mediana do investimento \npor gênero e partido",
+       y = "",
+       x = "Mediana da Proporção de Investimento (%)",
+       color = "Gênero") +
+  guides(color = FALSE) +
+  theme_ipsum_rc() +
+  theme(panel.grid = element_blank(), panel.grid.major.y = element_line(colour = "#f4f4f4", size = 1))
+```
+
+Pela visualização é possível identificar a diferença entre as medianas da proporção de investimento do partido considerando o gênero do Parlamentar. É possível saber quais partidos doaram mais para mulheres do que para homens nas eleições de 2018.
 
 ## Senadores
 
@@ -335,7 +422,7 @@ senadores_receita <- senadores %>%
               mutate(nome = format_string(nome)) %>% 
               mutate(partido = if_else(partido == "PODE", "PODEMOS", partido)), 
             by = c("nome_civil" = "nome", "sg_partido" = "partido")) %>% 
-  select(id, casa, nome_eleitoral, uf = uf.x, sg_partido, total_receita, total_partido, proporcao_receita) %>% 
+  select(id, casa, nome_eleitoral, uf = uf.x, genero, sg_partido, total_receita, total_partido, proporcao_receita) %>% 
   mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", sg_partido, "/", uf))
 ```
 
@@ -373,12 +460,12 @@ senadores_receita %>%
   head(15) %>% 
   mutate(valor = format_currency_value(total_receita)) %>% 
   ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = total_receita)) +
-  geom_point(col = "tomato3", size = 3) + 
   geom_segment(aes(x = nome, 
                    xend = nome, 
                    y = valor_inicial, 
                    yend = total_receita), 
                size = 0.1) +
+  geom_point(col = "tomato3", size = 3) + 
   geom_text(aes(label = valor),
             hjust = -0.3,
             size = 3.3) +
@@ -483,9 +570,6 @@ senadores_receita %>%
 
 Nas eleições para o cargo de Senador há menos candidatos por partido quando comparamos com a eleição a Deputado Federal. Como consequência temos uma porcentagem maior distribuída para o senadores dentro de um partido. As cores na visualização apenas ajudam na diferenciação de partidos próximos no gráfico.
 
-
-
-
 ### Relação com Mandatos
 O gráfico a seguir busca responder o questionamento de se os senadores mais experientes no Senado são aqueles que mais recebem investimento dos partidos. Contamos um mandato quando um senador assume seu cargo por algum período durante alguma das duas legislaturas do mandato (8 anos). Usamos os [Dados Abertos](https://www12.senado.leg.br/dados-abertos) do Senado para capturar informação dos mandatos.
 
@@ -545,6 +629,94 @@ senadores_receita %>%
 ```
 
 Nota-se que a mediana do grupo de deputados que estão no segundo mandato é bem parecida com a mediana do grupo que está no primeiro mandato. Ou seja, o investimento do partido não cresceu, considerando a mediana geral, em relação a experiência do parlamentar no Senado.
+
+### Investimento por Gênero
+```{r}
+receita_por_genero <- senadores_receita %>% 
+  filter(!is.na(proporcao_receita)) %>% 
+  group_by(sg_partido, genero) %>% 
+  summarise(median = median(proporcao_receita)) %>% 
+  ungroup() %>% 
+  mutate(median = median * 100) %>% 
+  spread(key = genero, value = median) %>% 
+  mutate(diff = (`F` - `M`)) %>% 
+  gather(key = "group", value = "median", `F`, `M`) %>% 
+  mutate(diff = replace_na(diff, 0)) %>% 
+  select(sg_partido, group, median, diff)
+```
+
+```{r}
+levels <- receita_por_genero %>%
+  arrange(desc(diff)) %>% 
+  distinct(sg_partido) %>% 
+  pull(sg_partido)
+
+receita_por_genero %>% 
+ggplot(
+  mapping = aes(
+    y = fct_rev(factor(sg_partido, levels = levels)), 
+    x = median, 
+    color = group)
+  ) + 
+  geom_line(
+    mapping = aes(group = sg_partido),
+    color = "#bbbbbb",
+    size = 1
+  ) +
+  geom_point(size = 3, pch = 19) +
+  geom_text(
+    size = 3,
+    nudge_y = -0.38,
+    mapping = 
+      aes(
+        label = paste0(as.character(round(median, 1))),
+        color = group)
+  ) + 
+  geom_text(size = 3.5, fontface = "bold", nudge_y = 0.6,
+            mapping = aes(label = ifelse(sg_partido == "PSDB", 
+                                         ifelse(group == "F",
+                                               "Mulher",
+                                               "Homem"),
+                                          ""),
+                          color = group)
+            ) +
+  
+  ## retangulo das diferencas
+  geom_rect(mapping = aes(xmin = 26.3, xmax = Inf , ymin = -Inf, ymax = Inf),
+            fill = "white",
+            color = "white") +
+  geom_rect(mapping = aes(xmin = 26.4, xmax = 29 , ymin = -Inf, ymax = Inf),
+            fill = "#eef0e2",
+            color = "#eef0e2") +
+  geom_text(fontface = "bold", size = 3.3, colour = "#5f5757", 
+            mapping = aes(x = 27.7, y = sg_partido, 
+                          label = ifelse(group == "M", "",
+                                         ifelse(diff > 0, paste0("+", as.character(round(diff, 2))), 
+                                                paste0(as.character(round(diff, 2)))
+                                                )
+                                         )
+                          )
+            ) +
+  geom_text(size = 3.1, colour = "#9e9191", nudge_y = 0.6,
+            mapping = aes(x = 27.7, y = sg_partido, label = ifelse(sg_partido == "PSDB", "diferença", ""))) +
+  ## fim retangulo das diferencas
+  
+  scale_color_manual(values = c("#DEAC7C", "#83ACB8")) +
+  scale_x_continuous(breaks = seq(0, 26, 1), limits = c(0, 29)) +
+  scale_y_discrete(
+    expand = expand_scale(add=c(0.65,1))
+  ) +
+  labs(title = "Proporção mediana do investimento \npor gênero e partido",
+       y = "",
+       x = "Mediana da Proporção de Investimento (%)",
+       color = "Gênero") +
+  guides(color = FALSE) +
+  theme_ipsum_rc() +
+  theme(panel.grid = element_blank(), panel.grid.major.y = element_line(colour = "#f4f4f4", size = 1))
+```
+
+Pela visualização é possível identificar a diferença entre as medianas da proporção de investimento do partido considerando o gênero do Parlamentar. É possível saber quais partidos doaram mais para mulheres do que para homens nas eleições de 2018.
+
 
 ## Mais dados
 
