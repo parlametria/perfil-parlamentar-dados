@@ -74,7 +74,12 @@ process_orientacao_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
   return(orientacao)
 }
 
-
+#' @title Processa orientação dos votos de plenário para um conjunto de votações
+#' @description Recupera informação das orientações dos partidos para um conjunto de votações
+#' @param votos_datapath Caminho para o dataframe contendo dados de votações
+#' @return Lista contendo orientações
+#' @examples
+#' orientacao <- process_orientacao_senado()
 process_orientacao_senado <- function(votos_datapath = NULL) {
   library(tidyverse)
   
@@ -86,9 +91,7 @@ process_orientacao_senado <- function(votos_datapath = NULL) {
     votos <- read_csv(votos_datapath)
   }
   
-  orientacoes_governo <- calcula_voto_maioria_absoluta(votos, "Governo") %>% 
-    mutate(partido = "Governo") %>% 
-    select(ano, id_proposicao, id_votacao, partido, voto)
+  orientacoes_governo <- define_orientacao_governo(votos)
   
   partidos <- votos %>% 
     select(partido) %>% 
@@ -102,7 +105,14 @@ process_orientacao_senado <- function(votos_datapath = NULL) {
   
 }
 
-
+#' @title Define a orientação de um partido para um conjunto de votos
+#' @description Recupera informação das orientações dos partidos para um conjunto de votos utilizando a maioria absoluta.
+#' No caso de empate entre os votos, o voto será o do líder do partido.
+#' @param voto Dataframe contendo dados de votos
+#' @param sigla_partido Sigla do partido a ter orientações recuperadas
+#' @return Dataframe contendo informações de orientações de um partido
+#' @examples
+#' orientacao <- calcula_voto_maioria_absoluta(votos, "PSL")
 calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
   library(tidyverse)
   source(here::here("crawler/parlamentares/liderancas/fetcher_liderancas_senado.R"))
@@ -119,7 +129,7 @@ calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
     mutate(empate = if_else(n() > 1, 1, 0),
            voto = if_else(empate == 1, -9, voto)) %>% 
     distinct() %>% 
-    select(-empate, -n)
+    select(-n)
   
   lider <- fetch_liderancas_senado() %>% 
     filter(bloco_partido == sigla_partido & cargo == "Líder")
@@ -127,8 +137,9 @@ calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
   votos <- votos %>% 
     rename(id_votacao_votos = id_votacao)
   
-  if (-9 %in% orientacoes$voto) {
-    orientacoes <- orientacoes %>%
+  if(nrow(orientacoes %>% filter(empate == 1)) > 0) {
+    
+    orientacoes <- orientacoes %>% 
       mutate(voto =
                if_else(
                  voto == -9,
@@ -140,5 +151,21 @@ calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
                ))
   }
   
+  orientacoes <- orientacoes %>%
+    select(-empate)
+
   return(orientacoes)
+}
+
+define_orientacao_governo <- function(votos) {
+  library(tidyverse)
+  source(here::here("crawler/parlamentares/liderancas/fetcher_liderancas_senado.R"))
+  
+  lideres <- fetch_liderancas_senado() %>% 
+    filter(bloco_partido == "Governo")
+  
+  orientacoes <- votos %>% filter(id_parlamentar == lideres %>% filter(cargo == "Líder") %>% pull(id))
+  
+  return(orientacoes)
+  
 }
