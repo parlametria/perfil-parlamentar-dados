@@ -151,7 +151,12 @@ process_votos_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
   return(votos)
 }
 
-
+#' @title Processa votos de plenário para um conjunto de votações
+#' @description Recupera informação dos votos para um conjunto de votações no senado.
+#' @param votacoes_senado_filepath Caminho para o dataframe de votações no senado.
+#' @return Dataframe com os votos processados
+#' @examples
+#' votos <- process_votos_por_votacoes_senado()
 process_votos_por_votacoes_senado <- function(votacoes_senado_filepath = NULL) {
   library(tidyverse)
   source(here::here("crawler/votacoes/votos/fetcher_votos_senado.R"))

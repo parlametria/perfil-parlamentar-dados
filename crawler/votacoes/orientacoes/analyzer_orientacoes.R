@@ -75,27 +75,70 @@ process_orientacao_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
 }
 
 
-process_orientacao_governo_senado <- function(votos_datapath = NULL) {
+process_orientacao_senado <- function(votos_datapath = NULL) {
   library(tidyverse)
   
   if(is.null(votos_datapath)){
-    source(here::here("crawler/votacoes/votos/fetcher_votos_senado.R"))
-    votos <- fetch_all_votos_senado()
+    source(here::here("crawler/votacoes/votos/analyzer_votos.R"))
+    votos <- process_votos_por_votacoes_senado()
     
   } else {
     votos <- read_csv(votos_datapath)
   }
   
+  orientacoes_governo <- calcula_voto_maioria_absoluta(votos, "Governo") %>% 
+    mutate(partido = "Governo") %>% 
+    select(ano, id_proposicao, id_votacao, partido, voto)
+  
+  partidos <- votos %>% 
+    select(partido) %>% 
+    distinct() %>% 
+    filter(partido != "SPARTIDO")
+  
+  orientacoes_governo <- orientacoes_governo %>% 
+    rbind(purrr::map_df(partidos$partido, ~ calcula_voto_maioria_absoluta(votos, .x)))
+  
+  return(orientacoes_governo)
   
 }
 
 
 calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
   library(tidyverse)
+  source(here::here("crawler/parlamentares/liderancas/fetcher_liderancas_senado.R"))
+  
+  print(paste0("Calculando orientação do partido ", sigla_partido))
   
   orientacoes <- votos %>% 
-    group_by(id_proposicao, id_votacao) %>% 
-    filter(partido == sigla_partido) %>% 
-    count()
+    group_by(ano, id_proposicao, id_votacao, partido, voto) %>% 
+    filter(partido == sigla_partido | (sigla_partido == "Governo" & partido == "PSL")) %>% 
+    count() %>% 
+    ungroup() %>% 
+    group_by(id_votacao) %>% 
+    filter(n == max(n)) %>% 
+    mutate(empate = if_else(n() > 1, 1, 0),
+           voto = if_else(empate == 1, -9, voto)) %>% 
+    distinct() %>% 
+    select(-empate, -n)
   
+  lider <- fetch_liderancas_senado() %>% 
+    filter(bloco_partido == sigla_partido & cargo == "Líder")
+  
+  votos <- votos %>% 
+    rename(id_votacao_votos = id_votacao)
+  
+  if (-9 %in% orientacoes$voto) {
+    orientacoes <- orientacoes %>%
+      mutate(voto =
+               if_else(
+                 voto == -9,
+                 votos %>%
+                   filter(id_parlamentar == lider$id &
+                            id_votacao_votos == id_votacao) %>%
+                   pull(voto),
+                 voto
+               ))
+  }
+  
+  return(orientacoes)
 }
