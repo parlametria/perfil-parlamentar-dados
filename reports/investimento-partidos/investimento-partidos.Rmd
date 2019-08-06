@@ -114,12 +114,12 @@ deputados_receita %>%
   head(15) %>% 
   mutate(valor = format_currency_value(total_receita)) %>% 
   ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = total_receita)) +
+  geom_point(col = "tomato3", size = 3) + 
   geom_segment(aes(x = nome, 
                    xend = nome, 
                    y = valor_inicial, 
                    yend = total_receita), 
                size = 0.1) +
-  geom_point(col = "tomato3", size = 3) + 
   geom_text(aes(label = valor),
             hjust = -0.3,
             size = 3.3) +
@@ -205,13 +205,13 @@ deputados_receita %>%
   coord_flip() +
   scale_shape_identity() +
   
-  annotate("text", label = "Mediana do partido", x = "PT", y = 7.5, color = "#4b4545") +
-  geom_curve(aes(x = "NOVO", y = 0.85, xend = "PT", yend = 4.5),
+  annotate("text", label = "Mediana do partido", x = "PT", y = 7.7, color = "#4b4545") +
+  geom_curve(aes(x = "NOVO", y = 0.65, xend = "PT", yend = 4.5),
              color = "#7d7373", size = 0.4, curvature = 0.35,
              arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
   
-  annotate("text", label = "Líder do Partido", x = "AVANTE", y = 22, color = "#4b4545") +
-  geom_segment(aes(x = "AVANTE", y = 17.5, xend = "AVANTE", yend = 19.5), colour="#7d7373", size=0.5, 
+  annotate("text", label = "Líder do Partido", x = "AVANTE", y = 23.3, color = "#4b4545") +
+  geom_segment(aes(x = "AVANTE", y = 18, xend = "AVANTE", yend = 20.5), colour="#7d7373", size=0.5, 
                arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
 
   geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
@@ -254,12 +254,13 @@ deputados_receita %>%
   ungroup() %>% 
   ggplot(aes(x = proporcao_receita, y = n_mandatos, fill = "a")) + 
   geom_density_ridges(
-    scale = 1,
-    jittered_points = TRUE,
-    position = position_points_jitter(width = 0.05, height = 0),
-    point_shape = '|', point_size = 2, point_alpha = 0.5, alpha = 0.7,
+    aes(height = ..density..),
+    stat = "density", trim = TRUE,
+    scale = 1
   ) +
-  
+  scale_shape_identity() +
+  geom_point(aes(x = proporcao_receita, color = "b"), size = 2, alpha = 0.7, shape = 124) +
+
   annotate("text", label = "Mediana", x = 5, y = 3.52, color = "#4b4545") +
   geom_curve(aes(x = 1.8, y = 3.9, xend = 3.7, yend = 3.5),
              color = "#7d7373", size = 0.4, curvature = 0.35,
@@ -271,15 +272,14 @@ deputados_receita %>%
              arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
   
   
-  scale_shape_identity() +
-  geom_point(aes(x = median, color = "a"), size = 3.7, shape = 124) +
+  geom_point(aes(x = median, color = "a"), size = 3.8, shape = 124) +
   scale_x_continuous(breaks = seq(0, 100, 5)) +
   labs(y = "Nº de mandatos na Câmara", x = "Doado pelo Partido (%)") +
   scale_fill_manual(
     name = "", values = c("#91BFDA"), guide = FALSE
   ) +
   scale_color_manual(
-    name = "", values = c("#dc267f"), guide = FALSE
+    name = "", values = c("#dc267f", "black"), guide = FALSE
   ) +
   theme_ipsum_rc() 
 ```
@@ -460,12 +460,12 @@ senadores_receita %>%
   head(15) %>% 
   mutate(valor = format_currency_value(total_receita)) %>% 
   ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = total_receita)) +
+  geom_point(col = "tomato3", size = 3) + 
   geom_segment(aes(x = nome, 
                    xend = nome, 
                    y = valor_inicial, 
                    yend = total_receita), 
                size = 0.1) +
-  geom_point(col = "tomato3", size = 3) + 
   geom_text(aes(label = valor),
             hjust = -0.3,
             size = 3.3) +
@@ -540,18 +540,18 @@ senadores_receita %>%
   geom_count() +
   geom_point(aes(y = proporcao_receita_lider*100), color = "#dc267f", size = 1) +
   scale_x_discrete(position = "right") +
-  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
+  scale_y_continuous(limits = c(0, 70), breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
   scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
   coord_flip() +
   scale_shape_identity() +
   
-  annotate("text", label = "Mediana do partido", x = "MDB", y = 14, color = "#4b4545") +
-  geom_curve(aes(x = 10.25, y = 7.55, xend = "MDB", yend = 10),
+  annotate("text", label = "Mediana do partido", x = "PODEMOS", y = 17, color = "#4b4545") +
+  geom_curve(aes(x = 14.25, y = 4, xend = "PODEMOS", yend = 10),
              color = "#7d7373", size = 0.4, curvature = -0.5,
              arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
   
-  annotate("text", label = "líder do partido", x = 10.4, y = 31.8, color = "#4b4545") +
-  geom_curve(aes(x = 10.25, y = 38, xend = 10.4, yend = 35),
+  annotate("text", label = "líder do partido", x = 11.4, y = 29.2, color = "#4b4545") +
+  geom_curve(aes(x = 11.25, y = 38, xend = 11.4, yend = 35),
              color = "#7d7373", size = 0.4, curvature = 0.5,
              arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
 
@@ -563,7 +563,7 @@ senadores_receita %>%
   geom_text(aes(label = ifelse(proporcao_receita > 25, 
                                paste0(str_to_title(nome_eleitoral), " ", sg_partido, "/", uf), 
                                "")),
-            vjust = 2,
+            hjust = -.07,
             size = 3.5,
             color = "#4b4545")
 ```
@@ -587,6 +587,8 @@ senadores_receita <- senadores_receita %>%
 ```
 
 ```{r}
+set.seed(123)
+
 senadores_receita %>% 
   filter(!is.na(proporcao_receita)) %>% 
   mutate(proporcao_receita = proporcao_receita * 100) %>% 
@@ -596,33 +598,31 @@ senadores_receita %>%
   ungroup() %>% 
   ggplot(aes(x = proporcao_receita, y = n_mandatos, fill = "a")) + 
   geom_density_ridges(
-    scale = 0.9,
-    jittered_points = TRUE,
-    position = position_points_jitter(width = 0.05, height = 0),
-    point_shape = '|', point_size = 2, point_alpha = 1, alpha = 0.7,
+    scale = 0.9
   ) +
+  scale_shape_identity() +
+  geom_point(aes(x = proporcao_receita, color = "b"), size = 3, shape = 124) +
   
-  annotate("text", label = "Mediana", x = 14.8, y = 1.72, color = "#4b4545") +
-  geom_curve(aes(x = 9.9, y = 1.9, xend = 12.5, yend = 1.7),
+  annotate("text", label = "Mediana", x = 15.2, y = 1.71, color = "#4b4545") +
+  geom_curve(aes(x = 9.8, y = 1.94, xend = 12.5, yend = 1.7),
              color = "#7d7373", size = 0.4, curvature = 0.35,
              arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
 
-  annotate("text", label = "um deputado", x = 44.3, y = 1.62, color = "#4b4545") +
-  geom_curve(aes(x = 38.55, y = 1.9, xend = 41, yend = 1.6),
-             color = "#7d7373", size = 0.4, curvature = 0.38,
+  annotate("text", label = "um deputado", x = 46.3, y = 1.71, color = "#4b4545") +
+  geom_curve(aes(x = 38.55, y = 1.95, xend = 42, yend = 1.7),
+             color = "#7d7373", size = 0.4, curvature = 0.48,
              arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
 
-  scale_shape_identity() +
-  geom_point(aes(x = median, color = "a"), size = 1, shape = 124, stroke = 4) +
-  scale_x_continuous(breaks = seq(0, 100, 5)) +
+  geom_point(aes(x = median, color = "a"), size = 5, shape = 124) +
+  scale_x_continuous(breaks = seq(0, 100, 5), limits = c(0, 70)) +
   labs(y = "Nº de mandatos", x = "Doado pelo Partido (%)") +
   scale_fill_manual(name = "", values = c("#91BFDA"), guide = FALSE) +
-  scale_color_manual(name = "", values = c("#dc267f"), guide = FALSE) +
+  scale_color_manual(name = "", values = c("#dc267f", "black"), guide = FALSE) +
   theme_ipsum_rc() +
   geom_text_repel(aes(label = ifelse(n_mandatos > 2, 
                                paste0(str_to_title(nome_eleitoral), " ", sg_partido, "/", uf), 
                                "")),
-            vjust = -1.1,
+            vjust = -1,
             arrow = arrow(length = unit(0.006, "npc"), ends = "first"),
             size = 4,
             color = "#4b4545")
@@ -631,6 +631,7 @@ senadores_receita %>%
 Nota-se que a mediana do grupo de deputados que estão no segundo mandato é bem parecida com a mediana do grupo que está no primeiro mandato. Ou seja, o investimento do partido não cresceu, considerando a mediana geral, em relação a experiência do parlamentar no Senado.
 
 ### Investimento por Gênero
+
 ```{r}
 receita_por_genero <- senadores_receita %>% 
   filter(!is.na(proporcao_receita)) %>% 
@@ -673,7 +674,7 @@ ggplot(
         color = group)
   ) + 
   geom_text(size = 3.5, fontface = "bold", nudge_y = 0.6,
-            mapping = aes(label = ifelse(sg_partido == "PSDB", 
+            mapping = aes(label = ifelse(sg_partido == "CIDADANIA", 
                                          ifelse(group == "F",
                                                "Mulher",
                                                "Homem"),
@@ -682,14 +683,14 @@ ggplot(
             ) +
   
   ## retangulo das diferencas
-  geom_rect(mapping = aes(xmin = 26.3, xmax = Inf , ymin = -Inf, ymax = Inf),
+  geom_rect(mapping = aes(xmin = 52, xmax = Inf , ymin = -Inf, ymax = Inf),
             fill = "white",
             color = "white") +
-  geom_rect(mapping = aes(xmin = 26.4, xmax = 29 , ymin = -Inf, ymax = Inf),
+  geom_rect(mapping = aes(xmin = 52.5, xmax = 59, ymin = -Inf, ymax = Inf),
             fill = "#eef0e2",
             color = "#eef0e2") +
   geom_text(fontface = "bold", size = 3.3, colour = "#5f5757", 
-            mapping = aes(x = 27.7, y = sg_partido, 
+            mapping = aes(x = 55.7, y = sg_partido, 
                           label = ifelse(group == "M", "",
                                          ifelse(diff > 0, paste0("+", as.character(round(diff, 2))), 
                                                 paste0(as.character(round(diff, 2)))
@@ -697,12 +698,13 @@ ggplot(
                                          )
                           )
             ) +
-  geom_text(size = 3.1, colour = "#9e9191", nudge_y = 0.6,
-            mapping = aes(x = 27.7, y = sg_partido, label = ifelse(sg_partido == "PSDB", "diferença", ""))) +
+  geom_text(size = 3.3, colour = "#9e9191", nudge_y = 0.6,
+            mapping = aes(x = 55.75, 
+                          y = sg_partido, label = ifelse(sg_partido == "CIDADANIA", "diferença", ""))) +
   ## fim retangulo das diferencas
   
   scale_color_manual(values = c("#DEAC7C", "#83ACB8")) +
-  scale_x_continuous(breaks = seq(0, 26, 1), limits = c(0, 29)) +
+  scale_x_continuous(breaks = seq(0, 50, 5), limits = c(0, 60)) +
   scale_y_discrete(
     expand = expand_scale(add=c(0.65,1))
   ) +
