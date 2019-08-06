@@ -22,6 +22,8 @@ output_datapath <- opt$out
 
 message("Iniciando processamento...")
 orientacoes <- process_orientacao_anos_url_camara()
+ # rbind(process_orientacao_anos_url_camara(),
+ #                    process_orientacao_senado())
 
 message(paste0("Salvando o resultado em ", output_datapath))
 readr::write_csv(orientacoes, output_datapath)

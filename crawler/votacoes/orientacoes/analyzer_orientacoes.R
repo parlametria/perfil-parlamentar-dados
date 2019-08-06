@@ -99,7 +99,9 @@ process_orientacao_senado <- function(votos_datapath = NULL) {
     filter(partido != "SPARTIDO")
   
   orientacoes_governo <- orientacoes_governo %>% 
-    rbind(purrr::map_df(partidos$partido, ~ calcula_voto_maioria_absoluta(votos, .x)))
+    bind_rows(purrr::map_df(partidos$partido, ~ calcula_voto_maioria_absoluta(votos, .x)) %>% 
+            mutate(casa = 'senado')) %>% 
+    select(ano, id_proposicao, id_votacao, partido, voto)
   
   return(orientacoes_governo)
   
@@ -108,7 +110,7 @@ process_orientacao_senado <- function(votos_datapath = NULL) {
 #' @title Define a orientação de um partido para um conjunto de votos
 #' @description Recupera informação das orientações dos partidos para um conjunto de votos utilizando a maioria absoluta.
 #' No caso de empate entre os votos, o voto será o do líder do partido.
-#' @param voto Dataframe contendo dados de votos
+#' @param votos Dataframe contendo dados de votos
 #' @param sigla_partido Sigla do partido a ter orientações recuperadas
 #' @return Dataframe contendo informações de orientações de um partido
 #' @examples
@@ -126,8 +128,7 @@ calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
     ungroup() %>% 
     group_by(id_votacao) %>% 
     filter(n == max(n)) %>% 
-    mutate(empate = if_else(n() > 1, 1, 0),
-           voto = if_else(empate == 1, -9, voto)) %>% 
+    mutate(empate = if_else(n() > 1, 1, 0)) %>% 
     distinct() %>% 
     select(-n)
   
@@ -142,7 +143,7 @@ calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
     orientacoes <- orientacoes %>% 
       mutate(voto =
                if_else(
-                 voto == -9,
+                 empate == 1,
                  votos %>%
                    filter(id_parlamentar == lider$id &
                             id_votacao_votos == id_votacao) %>%
@@ -157,6 +158,12 @@ calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
   return(orientacoes)
 }
 
+#' @title Define a orientação do Governo
+#' @description Recupera informação das orientações do Governo com base nos votos do Líder
+#' @param votos Dataframe contendo dados de votos
+#' @return Dataframe contendo informações de orientações do Governo
+#' @examples
+#' orientacao <- define_orientacao_governo(votos)
 define_orientacao_governo <- function(votos) {
   library(tidyverse)
   source(here::here("crawler/parlamentares/liderancas/fetcher_liderancas_senado.R"))
@@ -164,7 +171,11 @@ define_orientacao_governo <- function(votos) {
   lideres <- fetch_liderancas_senado() %>% 
     filter(bloco_partido == "Governo")
   
-  orientacoes <- votos %>% filter(id_parlamentar == lideres %>% filter(cargo == "Líder") %>% pull(id))
+  orientacoes <- votos %>% 
+    filter(id_parlamentar == lideres %>% 
+             filter(cargo == "Líder") %>% 
+             pull(id)) %>% 
+    select(-id_parlamentar)
   
   return(orientacoes)
   
