@@ -98,12 +98,14 @@ process_orientacao_senado <- function(votos_datapath = NULL) {
     distinct() %>% 
     filter(partido != "SPARTIDO")
   
-  orientacoes_governo <- orientacoes_governo %>% 
-    bind_rows(purrr::map_df(partidos$partido, ~ calcula_voto_maioria_absoluta(votos, .x)) %>% 
-            mutate(casa = 'senado')) %>% 
+  orientacoes_partido <- 
+    purrr::map_df(partidos$partido, ~ calcula_voto_maioria_absoluta(votos, .x))
+  
+  orientacoes <- orientacoes_governo %>% 
+    bind_rows(orientacoes_partido) %>% 
     select(ano, id_proposicao, id_votacao, partido, voto)
   
-  return(orientacoes_governo)
+  return(orientacoes)
   
 }
 
@@ -123,7 +125,7 @@ calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
   
   orientacoes <- votos %>% 
     group_by(ano, id_proposicao, id_votacao, partido, voto) %>% 
-    filter(partido == sigla_partido | (sigla_partido == "Governo" & partido == "PSL")) %>% 
+    filter(partido == sigla_partido & voto != 0) %>% 
     count() %>% 
     ungroup() %>% 
     group_by(id_votacao) %>% 
@@ -175,7 +177,9 @@ define_orientacao_governo <- function(votos) {
     filter(id_parlamentar == lideres %>% 
              filter(cargo == "Líder") %>% 
              pull(id)) %>% 
-    select(-id_parlamentar)
+    mutate(partido = "Governo",
+           voto = if_else(voto == 0, 5, voto)) %>% 
+    select(-id_parlamentar, -casa, ano, id_proposicao, id_votacao, partido, voto)
   
   return(orientacoes)
   
