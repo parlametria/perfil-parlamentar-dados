@@ -69,7 +69,116 @@ process_orientacao_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
       url
     )) %>% 
     unnest(dados) %>% 
-    distinct()
+    distinct() %>% 
+    mutate(casa = "camara")
   
   return(orientacao)
+}
+
+#' @title Processa orientação dos votos de plenário para um conjunto de votações
+#' @description Recupera informação das orientações dos partidos para um conjunto de votações
+#' @param votos_datapath Caminho para o dataframe contendo dados de votações
+#' @return Lista contendo orientações
+#' @examples
+#' orientacao <- process_orientacao_senado()
+process_orientacao_senado <- function(votos_datapath = here::here("crawler/raw_data/votos.csv")) {
+  library(tidyverse)
+  
+  votos <- read_csv(votos_datapath) %>% 
+      filter(casa == "senado")
+
+  
+  orientacoes_governo <- define_orientacao_governo(votos)
+  
+  partidos <- votos %>% 
+    select(partido) %>% 
+    distinct() %>% 
+    filter(partido != "SPARTIDO")
+  
+  orientacoes_partido <- 
+    purrr::map_df(partidos$partido, ~ calcula_voto_maioria_absoluta(votos, .x))
+  
+  orientacoes <- orientacoes_governo %>% 
+    bind_rows(orientacoes_partido) %>% 
+    select(ano, id_proposicao, id_votacao, partido, voto, casa)
+  
+  return(orientacoes)
+  
+}
+
+#' @title Define a orientação de um partido para um conjunto de votos
+#' @description Recupera informação das orientações dos partidos para um conjunto de votos utilizando a maioria absoluta.
+#' No caso de empate entre os votos, o voto será o do líder do partido.
+#' @param votos Dataframe contendo dados de votos
+#' @param sigla_partido Sigla do partido a ter orientações recuperadas
+#' @return Dataframe contendo informações de orientações de um partido
+#' @examples
+#' orientacao <- calcula_voto_maioria_absoluta(votos, "PSL")
+calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
+  library(tidyverse)
+  source(here::here("crawler/parlamentares/liderancas/fetcher_liderancas_senado.R"))
+  
+  print(paste0("Calculando orientação do partido ", sigla_partido))
+  
+  orientacoes <- votos %>% 
+    group_by(ano, id_proposicao, id_votacao, partido, voto, casa) %>% 
+    filter(partido == sigla_partido & voto != 0) %>% 
+    count() %>% 
+    ungroup() %>% 
+    group_by(id_votacao) %>% 
+    filter(n == max(n)) %>% 
+    mutate(empate = if_else(n() > 1, 1, 0)) %>% 
+    distinct() %>% 
+    select(-n)
+  
+  lider <- fetch_liderancas_senado() %>% 
+    filter(bloco_partido == sigla_partido & cargo == "Líder")
+  
+  votos <- votos %>% 
+    rename(id_votacao_votos = id_votacao)
+  
+  if(nrow(orientacoes %>% filter(empate == 1)) > 0) {
+    
+    orientacoes <- orientacoes %>% 
+      mutate(voto =
+               if_else(
+                 empate == 1,
+                 votos %>%
+                   filter(id_parlamentar == lider$id &
+                            id_votacao_votos == id_votacao) %>%
+                   pull(voto),
+                 voto
+               ))
+  }
+  
+  orientacoes <- orientacoes %>%
+    select(-empate) %>% 
+    ungroup()
+
+  return(orientacoes)
+}
+
+#' @title Define a orientação do Governo
+#' @description Recupera informação das orientações do Governo com base nos votos do Líder
+#' @param votos Dataframe contendo dados de votos
+#' @return Dataframe contendo informações de orientações do Governo
+#' @examples
+#' orientacao <- define_orientacao_governo(votos)
+define_orientacao_governo <- function(votos) {
+  library(tidyverse)
+  source(here::here("crawler/parlamentares/liderancas/fetcher_liderancas_senado.R"))
+  
+  lideres <- fetch_liderancas_senado() %>% 
+    filter(bloco_partido == "Governo")
+  
+  orientacoes <- votos %>% 
+    filter(id_parlamentar == lideres %>% 
+             filter(cargo == "Líder") %>% 
+             pull(id)) %>% 
+    mutate(partido = "Governo",
+           voto = if_else(voto == 0, 5, voto)) %>% 
+    select(-id_parlamentar, ano, id_proposicao, id_votacao, partido, voto, casa)
+  
+  return(orientacoes)
+  
 }

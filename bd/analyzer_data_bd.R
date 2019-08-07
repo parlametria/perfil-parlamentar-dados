@@ -89,8 +89,8 @@ processa_parlamentares <- function(parlamentares_data_path = here::here("crawler
   
   parlamentares_alt <- parlamentares %>%
     dplyr::mutate(id_parlamentar_voz = paste0(
-                   dplyr::if_else(casa == "camara", 1, 2), 
-                   id)) %>% 
+      dplyr::if_else(casa == "camara", 1, 2), 
+      id)) %>% 
     left_join(parlamentares_partidos %>% select(id_partido, sg_partido), by = c("sg_partido")) %>% 
     dplyr::select(id_parlamentar_voz, 
                   id_parlamentar = id,
@@ -105,7 +105,7 @@ processa_parlamentares <- function(parlamentares_data_path = here::here("crawler
                   condicao_eleitoral, 
                   ultima_legislatura, 
                   em_exercicio)
- 
+  
   return(parlamentares_alt)
 }
 
@@ -129,7 +129,7 @@ processa_perguntas <- function(perg_data_path = here::here("crawler/raw_data/per
       TRUE ~ 5
     )) %>% 
     dplyr::select(texto, id, tema_id)
-
+  
   return(perguntas_alt)
 }
 
@@ -137,21 +137,8 @@ processa_perguntas <- function(perg_data_path = here::here("crawler/raw_data/per
 #' @description Cria os dados dos temas
 #' @return Dataframe com informações dos temas (descrição e id)
 processa_temas <- function() {
-  temas <- data.frame(id_tema = c(0, 1, 2, 3, 5, 99),
-                      tema = c("Meio Ambiente", 
-                        "Direitos Humanos", 
-                        "Integridade e Transparência", 
-                        "Agenda Nacional", 
-                        "Educação",
-                        "Geral"), 
-                      slug = c("meio-ambiente",
-                               "direitos-humanos",
-                               "transparencia",
-                               "agenda-nacional",
-                               "educacao",
-                               "geral"),
-                      ativo = c(1, 1, 1, 1, 1, 0),
-                      stringsAsFactors = FALSE)
+  source(here::here("crawler/proposicoes/process_proposicao_tema.R"))
+  temas <- processa_temas_proposicoes()
   
   return(temas)
 }
@@ -172,7 +159,7 @@ processa_proposicoes <- function(prop_data_path = here::here("crawler/raw_data/t
   proposicoes_plenario <- fetch_proposicoes_plenario_selecionadas(.URL_PROPOSICOES_PLENARIO_CAMARA)
   
   #proposicoes_plenario_senado <- fetch_proposicoes_plenario_selecionadas_senado(.URL_PROPOSICOES_PLENARIO_SENADO) 
-    
+  
   proposicoes <- proposicoes_questionario %>% 
     rbind(proposicoes_plenario) %>% 
     #rbind(proposicoes_plenario_senado) %>%
