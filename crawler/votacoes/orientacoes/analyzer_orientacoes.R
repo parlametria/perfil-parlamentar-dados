@@ -69,7 +69,8 @@ process_orientacao_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
       url
     )) %>% 
     unnest(dados) %>% 
-    distinct()
+    distinct() %>% 
+    mutate(casa = "camara")
   
   return(orientacao)
 }
@@ -80,16 +81,12 @@ process_orientacao_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
 #' @return Lista contendo orientações
 #' @examples
 #' orientacao <- process_orientacao_senado()
-process_orientacao_senado <- function(votos_datapath = NULL) {
+process_orientacao_senado <- function(votos_datapath = here::here("crawler/raw_data/votos.csv")) {
   library(tidyverse)
   
-  if(is.null(votos_datapath)){
-    source(here::here("crawler/votacoes/votos/analyzer_votos.R"))
-    votos <- process_votos_por_votacoes_senado()
-    
-  } else {
-    votos <- read_csv(votos_datapath)
-  }
+  votos <- read_csv(votos_datapath) %>% 
+      filter(casa == "senado")
+
   
   orientacoes_governo <- define_orientacao_governo(votos)
   
@@ -103,7 +100,7 @@ process_orientacao_senado <- function(votos_datapath = NULL) {
   
   orientacoes <- orientacoes_governo %>% 
     bind_rows(orientacoes_partido) %>% 
-    select(ano, id_proposicao, id_votacao, partido, voto)
+    select(ano, id_proposicao, id_votacao, partido, voto, casa)
   
   return(orientacoes)
   
@@ -124,7 +121,7 @@ calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
   print(paste0("Calculando orientação do partido ", sigla_partido))
   
   orientacoes <- votos %>% 
-    group_by(ano, id_proposicao, id_votacao, partido, voto) %>% 
+    group_by(ano, id_proposicao, id_votacao, partido, voto, casa) %>% 
     filter(partido == sigla_partido & voto != 0) %>% 
     count() %>% 
     ungroup() %>% 
@@ -155,7 +152,8 @@ calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
   }
   
   orientacoes <- orientacoes %>%
-    select(-empate)
+    select(-empate) %>% 
+    ungroup()
 
   return(orientacoes)
 }
@@ -179,7 +177,7 @@ define_orientacao_governo <- function(votos) {
              pull(id)) %>% 
     mutate(partido = "Governo",
            voto = if_else(voto == 0, 5, voto)) %>% 
-    select(-id_parlamentar, -casa, ano, id_proposicao, id_votacao, partido, voto)
+    select(-id_parlamentar, ano, id_proposicao, id_votacao, partido, voto, casa)
   
   return(orientacoes)
   

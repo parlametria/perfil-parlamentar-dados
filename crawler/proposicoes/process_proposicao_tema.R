@@ -42,10 +42,10 @@ process_proposicoes_plenario_selecionadas_temas <- function(url = NULL) {
     unnest(tema) %>% 
     ungroup() %>% 
     rowwise() %>% 
-    mutate(tema_id = getIdfromTema(tema)) %>% 
+    mutate(id_tema = getIdfromTema(tema)) %>% 
     ungroup() %>% 
     mutate(id_proposicao = id) %>% 
-    distinct(id_proposicao, tema_id)
+    distinct(id_proposicao, id_tema)
   
   return(proposicoes_va)
 }
@@ -75,4 +75,27 @@ process_proposicoes_questionario_temas <- function(url = NULL) {
     distinct(id_proposicao, tema_id)
     
   return(proposicoes_va)
+}
+
+#' @title Cria dados dos temas
+#' @description Cria os dados dos temas
+#' @return Dataframe com informações dos temas (descrição e id)
+processa_temas_proposicoes <- function() {
+  temas <- data.frame(id_tema = c(0, 1, 2, 3, 5, 99),
+                      tema = c("Meio Ambiente", 
+                               "Direitos Humanos", 
+                               "Integridade e Transparência", 
+                               "Agenda Nacional", 
+                               "Educação",
+                               "Geral"), 
+                      slug = c("meio-ambiente",
+                               "direitos-humanos",
+                               "transparencia",
+                               "agenda-nacional",
+                               "educacao",
+                               "geral"),
+                      ativo = c(1, 1, 1, 1, 1, 0),
+                      stringsAsFactors = FALSE)
+  
+  return(temas)
 }

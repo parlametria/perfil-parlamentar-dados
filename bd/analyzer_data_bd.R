@@ -137,21 +137,8 @@ processa_perguntas <- function(perg_data_path = here::here("crawler/raw_data/per
 #' @description Cria os dados dos temas
 #' @return Dataframe com informações dos temas (descrição e id)
 processa_temas <- function() {
-  temas <- data.frame(id_tema = c(0, 1, 2, 3, 5, 99),
-                      tema = c("Meio Ambiente", 
-                               "Direitos Humanos", 
-                               "Integridade e Transparência", 
-                               "Agenda Nacional", 
-                               "Educação",
-                               "Geral"), 
-                      slug = c("meio-ambiente",
-                               "direitos-humanos",
-                               "transparencia",
-                               "agenda-nacional",
-                               "educacao",
-                               "geral"),
-                      ativo = c(1, 1, 1, 1, 1, 0),
-                      stringsAsFactors = FALSE)
+  source(here::here("crawler/proposicoes/process_proposicao_tema.R"))
+  temas <- processa_temas_proposicoes()
   
   return(temas)
 }
