@@ -1,17 +1,71 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Aderência dos Senadores em votações de plenário"
+output: 
+  html_document:
+    css: styles.css
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
-```{r}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+```{r results='hide'}
+library(tidyverse)
+library(DT)
+source(here::here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
+```
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+```{r results='hide'}
+theme_set(theme_minimal())
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+aderencia <- readr::read_csv(here::here("reports/aderencia-senado/data/aderencia.csv"))
+
+votos <- readr::read_csv(here::here("crawler/raw_data/votos.csv")) %>% 
+  filter(casa == "senado")
+
+proposicoes <- fetch_proposicoes_plenario_selecionadas_senado()
+```
+
+### Resumo
+
+Analisamos os senadores que mais seguem e o menos "obedientes" ao governo nas votações nominais de plenário do Senado Federal ocorridas em em 2019.
+
+<br>
+
+### O que é aderência
+
+Aderência é uma faceta da atuação dos Deputados e Senadores Federais nas votações em plenário de cada casa. Um parlamentar é aderente ao Governo quando segue as orientações do Governo em votações nominais. Neste relatório, focamos nos senadores.
+
+Para cada votação de cada senador, identificamos se ele seguiu a orientação do Governo ou não. Em seguida, calculamos o grau de aderência como a proporção das votações em que ele seguiu a orientação do Governo. Quando o Governo não apresentou orientação em uma votação, consideramos o voto do Líder do Governo como orientação.
+
+### As proposições
+
+A grande maioria das votações de plenário no Senado em 2019 são de escolhas de cargos, como embaixadores, ministros, etc., e são todas secretas.
+
+
+Existem 3 proposições que possuem votações em plenário cujo tema é classificado como **Meio Ambiente**.
+
+- A **PEC 25/2017** l.
+- A **MPV 870/2019**  que .
+- A **MPV 871/2019** que .
+- A **PDL 233/2019** que .
+
+Ao total temos `r votos %>% count(id_votacao) %>% nrow()` votações em plenário.
+
+Nesta análise, *consideramos apenas deputados que participaram em pelo menos 10 com orientações do Governo, e apenas deputados de partidos com ao menos 5 membros na câmara*.
+## Aderência ao Governo
+### Quem tem menos aderência?
+### Mais detalhes sobre quem não adere
+### Quem tem mais aderência?
+### Aderência nos partidos
+### Aderência nas Comissões
+### Quantos deputados são aderentes ao Governo em Meio Ambiente e Agenda Nacional
