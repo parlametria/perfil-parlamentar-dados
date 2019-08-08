@@ -69,11 +69,14 @@ processa_dados_senadores <- function() {
 #' @examples
 #' processa_dados_parlamentares()
 processa_dados_parlamentares <- function() {
-  deputados <- processa_dados_deputados()
+  deputados <- processa_dados_deputados() %>% 
+    ungroup()
   
-  # senadores <- processa_dados_senadores()
+  senadores <- processa_dados_senadores() %>% 
+    ungroup()
   
-  parlamentares <- deputados %>% ungroup()
+  parlamentares <- deputados %>% 
+    rbind(senadores)
   
   return(parlamentares)
 }

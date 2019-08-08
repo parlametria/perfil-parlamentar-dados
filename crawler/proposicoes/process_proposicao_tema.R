@@ -70,9 +70,9 @@ process_proposicoes_questionario_temas <- function(url = NULL) {
     unnest(tema) %>% 
     ungroup() %>% 
     rowwise() %>% 
-    mutate(tema_id = getIdfromTema(tema)) %>% 
+    mutate(id_tema = getIdfromTema(tema)) %>% 
     ungroup() %>% 
-    distinct(id_proposicao, tema_id)
+    distinct(id_proposicao, id_tema)
     
   return(proposicoes_va)
 }

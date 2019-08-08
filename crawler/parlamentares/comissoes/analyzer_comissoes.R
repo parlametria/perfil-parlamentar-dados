@@ -55,10 +55,10 @@ processa_comissoes <- function() {
   
   comissao_composicao_camara <- fetch_comissoes_composicao_camara()
   
-  # comissao_composicao_senado <- fetch_comissoes_composicao_senado()
+  comissao_composicao_senado <- fetch_comissoes_composicao_senado()
   
-  comissao_composicao <- comissao_composicao_camara
-    # rbind(comissao_composicao_senado)
+  comissao_composicao <- comissao_composicao_camara %>% 
+    rbind(comissao_composicao_senado)
   
   lista_comissao <- comissao_composicao %>% 
     dplyr::distinct(casa, sigla) %>% 
@@ -80,7 +80,7 @@ processa_comissoes <- function() {
     dplyr::group_by(comissao_id, id) %>% 
     dplyr::mutate(maximo = max(peso_cargo)) %>%
     dplyr::filter(maximo == peso_cargo) %>%
-    dplyr::mutate(casa = "camara") %>%
+    ungroup() %>% 
     dplyr::select(comissao_id, casa, id_parlamentar = id, cargo, situacao) %>% 
     dplyr::filter(!is.na(comissao_id))
 

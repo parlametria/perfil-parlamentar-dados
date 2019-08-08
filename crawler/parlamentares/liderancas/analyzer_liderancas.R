@@ -11,10 +11,10 @@ processa_liderancas <- function() {
   
   liderancas_camara <- fetch_liderancas_camara()
   
-  # liderancas_senado <- fetch_liderancas_senado()
-  # 
-  # liderancas <- liderancas_camara %>% 
-  #   rbind(liderancas_senado)
+  liderancas_senado <- fetch_liderancas_senado()
+
+  liderancas <- liderancas_camara %>%
+    rbind(liderancas_senado)
   
-  return(liderancas_camara)
+  return(liderancas)
 }
