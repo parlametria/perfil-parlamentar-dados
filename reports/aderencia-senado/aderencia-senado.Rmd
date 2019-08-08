@@ -20,17 +20,36 @@ knitr::opts_chunk$set(
 ```{r results='hide'}
 library(tidyverse)
 library(DT)
-source(here::here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
+library(ggplot2)
+library(scales)
+library(hrbrthemes)
+library(here)
+source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
 ```
 
 ```{r results='hide'}
 theme_set(theme_minimal())
 
-
-aderencia <- readr::read_csv(here::here("reports/aderencia-senado/data/aderencia.csv"))
-
-votos <- readr::read_csv(here::here("crawler/raw_data/votos.csv")) %>% 
+votos <- read_csv(here("crawler/raw_data/votos.csv")) %>% 
   filter(casa == "senado")
+
+numero_votacoes <- votos %>% 
+  count(id_votacao) %>% 
+  nrow()
+
+senadores <- read_csv(here("crawler/raw_data/senadores.csv")) %>% 
+  filter(em_exercicio == 1) %>% 
+  mutate(nome_exibido = paste0(nome_eleitoral, " - ", sg_partido, "/", uf),
+         id = as.character(id)) %>% 
+  select(id, nome_exibido)
+
+aderencia <- read_csv(here("reports/aderencia-senado/data/aderencia.csv")) %>% 
+  mutate(id = str_remove(id_parlamentar_voz, "^(\\d){1}"), #remove o 1 do id_parlamentar_voz
+         freq = (numero_votacoes - faltou)/numero_votacoes) %>% 
+  filter(id_partido == 0)
+
+aderencia <- aderencia %>% 
+  left_join(senadores, by="id")
 
 proposicoes <- fetch_proposicoes_plenario_selecionadas_senado()
 ```
@@ -49,21 +68,44 @@ Para cada votação de cada senador, identificamos se ele seguiu a orientação 
 
 ### As proposições
 
-A grande maioria das votações de plenário no Senado em 2019 são de escolhas de cargos, como embaixadores, ministros, etc., e são todas secretas.
+A grande maioria das votações de plenário no Senado em 2019 são de escolhas de cargos, como embaixadores, ministros, etc., e são todas secretas, sem informação sobre os votos dos senadores. As demais votações nominais foram recuperadas, filtradas por tema e totalizam a cinco proposições: uma do tema **Direitos Humanos** e quatro sobre **Agenda Nacional**.
 
-
-Existem 3 proposições que possuem votações em plenário cujo tema é classificado como **Meio Ambiente**.
-
-- A **PEC 25/2017** l.
-- A **MPV 870/2019**  que .
-- A **MPV 871/2019** que .
-- A **PDL 233/2019** que .
+- A **PEC 25/2017** propõe *"incorporar a nomenclatura “pessoa com deficiência”, utilizada pela Convenção Internacional sobre o Direito das Pessoas com Deficiência"*;
+- A **MPV 870/2019** estabelece *"a organização básica dos órgãos da Presidência da República e dos Ministérios"*;
+- A **MPV 871/2019** com apelido de *"Combate a irregularidades em benefícios previdenciários"*
+- A **PDL 233/2019** que *"regulamenta a Lei nº 10.826/2003, para dispor sobre a aquisição, o cadastro, o registro, a posse, o porte e a comercialização de armas de fogo e de munição e sobre o Sistema Nacional de Armas e o Sistema Nacional de Gerenciamento Militar de Armas."*
+- A **PLS 224/2017** que *"altera a Lei nº 10.826/2003, para autorizar a aquisição de uma arma de fogo de uso permitido por residentes em áreas rurais."*
 
 Ao total temos `r votos %>% count(id_votacao) %>% nrow()` votações em plenário.
 
-Nesta análise, *consideramos apenas deputados que participaram em pelo menos 10 com orientações do Governo, e apenas deputados de partidos com ao menos 5 membros na câmara*.
 ## Aderência ao Governo
 ### Quem tem menos aderência?
+
+Abaixo temos os 20 senadores que possuem menos aderência ao governo. Eles estão ordenados pelo número de vezes que não seguiram a orientação do governo e pela frequência dos senadores nas votações.
+
+```{r}
+
+theme_set(theme_classic())
+
+# Plot
+aderencia %>% 
+  filter(id_tema == 99) %>% 
+  arrange(desc(nao_seguiu), desc(freq)) %>% 
+  head(20) %>% 
+  ggplot(aes(x = reorder(nome_exibido, nao_seguiu), y = nao_seguiu)) + 
+  geom_point(col="tomato3", size = 3) + 
+  geom_segment(aes(x = nome_exibido, 
+                   xend = nome_exibido, 
+                   y = 0, 
+                   yend = nao_seguiu), 
+               size = 0.1) +
+  coord_flip() +
+  labs(title = "Senadores com menos aderência ao Governo",
+       y = "Nº de votações em que não seguiu o Governo",
+       x = "Senador") +
+    theme_ipsum_rc()
+```
+
 ### Mais detalhes sobre quem não adere
 ### Quem tem mais aderência?
 ### Aderência nos partidos
