@@ -1,4 +1,5 @@
 -- RESPOSTAS
+BEGIN;
 CREATE TEMP TABLE temp_respostas AS SELECT * FROM respostas LIMIT 0;
 
 \copy temp_respostas FROM './data/respostas.csv' DELIMITER ',' CSV HEADER;
@@ -21,3 +22,4 @@ WHERE id NOT IN
    FROM temp_respostas);
 
 DROP TABLE temp_respostas;
+COMMIT;

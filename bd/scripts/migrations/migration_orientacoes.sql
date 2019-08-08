@@ -1,4 +1,5 @@
 -- MANDATOS
+BEGIN;
 CREATE TEMP TABLE temp_orientacoes AS SELECT * FROM orientacoes LIMIT 0;
 
 \copy temp_orientacoes FROM './data/orientacoes.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
@@ -18,3 +19,4 @@ WHERE (id_votacao, id_partido) NOT IN
    FROM temp_orientacoes);
 
 DROP TABLE temp_orientacoes;
+COMMIT;

@@ -1,4 +1,5 @@
 -- VOTACOES
+BEGIN;
 CREATE TEMP TABLE temp_votacoes AS SELECT * FROM votacoes LIMIT 0;
 
 \copy temp_votacoes FROM './data/votacoes.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
@@ -16,3 +17,4 @@ DO
     codigo_sessao = EXCLUDED.codigo_sessao;
 
 DROP TABLE temp_votacoes;
+COMMIT;
