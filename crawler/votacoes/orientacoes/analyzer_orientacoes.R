@@ -59,9 +59,15 @@ process_orientacao_por_ano_camara <- function(ano = 2019, url = NULL) {
 #' @examples
 #' orientacao <- process_orientacao_anos_url_camara(2019)
 process_orientacao_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
-                                               url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvvT0fmGUMwOHnEPe9hcAMC_l-u9d7sSplNYkMMzgiE_vFiDcWXWwl4Ys7qaXuWwx4VcPtFLBbMdBd/pub?gid=399933255&single=true&output=csv") {
+                                               url = NULL) {
   library(tidyverse)
+  library(here)
   
+  if(is.null(url)) {
+    source(here("crawler/proposicoes/utils_proposicoes.R"))
+    url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+  }
+
   orientacao <- tibble(ano = anos) %>%
     mutate(dados = map(
       ano,
@@ -100,7 +106,9 @@ process_orientacao_senado <- function(votos_datapath = here::here("crawler/raw_d
   
   orientacoes <- orientacoes_governo %>% 
     bind_rows(orientacoes_partido) %>% 
+    distinct(id_votacao, partido, .keep_all = TRUE) %>% 
     select(ano, id_proposicao, id_votacao, partido, voto, casa)
+    
   
   return(orientacoes)
   

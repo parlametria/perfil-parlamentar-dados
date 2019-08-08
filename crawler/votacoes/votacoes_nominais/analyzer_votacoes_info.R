@@ -4,10 +4,15 @@
 #' @return Dataframe contendo id da votação, objeto da votação, data, hora e código da sessão
 #' @examples
 #' processa_votacoes_info(url)
-processa_votacoes_info <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvvT0fmGUMwOHnEPe9hcAMC_l-u9d7sSplNYkMMzgiE_vFiDcWXWwl4Ys7qaXuWwx4VcPtFLBbMdBd/pub?gid=399933255&single=true&output=csv") {
+processa_votacoes_info <- function(url = NULL) {
   library(tidyverse)
   library(here)
   source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
+
+  if (is.null(url)) {
+    source(here("crawler/proposicoes/utils_proposicoes.R"))
+    url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+  }
   
   proposicoes_votadas <- read_csv(url, col_types = cols(id = "c")) %>% 
     filter(tolower(tema_va) != "não entra") %>% 

@@ -105,7 +105,7 @@ adiciona_hierarquia_orientacao_governo <- function(votos, orientacao) {
   library(here)
   
   lider_governo <- read_csv(here("crawler/raw_data/liderancas.csv")) %>% 
-    filter(tolower(bloco_partido) == "governo", tolower(cargo) == "lider") %>% 
+    filter(tolower(bloco_partido) == "governo", tolower(cargo) == "líder", casa == "camara") %>% 
     pull(id)
   
   if (!is.na(lider_governo)) {
@@ -130,7 +130,8 @@ adiciona_hierarquia_orientacao_governo <- function(votos, orientacao) {
                                             voto.y), 
                                     voto.y)) %>% 
       mutate(partido = "GOVERNO") %>% 
-      select(ano = ano.x, id_proposicao, id_votacao, partido, voto = voto_governo)
+      mutate(casa = "camara") %>% 
+      select(ano = ano.x, id_proposicao, id_votacao, partido, voto = voto_governo, casa)
     
   } else {
     return(orientacao %>% filter(tolower(partido) == "governo"))
@@ -144,6 +145,7 @@ adiciona_hierarquia_orientacao_governo <- function(votos, orientacao) {
 #' @param parlamentares Dataframe de parlamentares
 #' @param filtrar TRUE se deseja filtrar fora os partidos com menos de 5 membros e os parlamentares com menos de 10 votações. 
 #' FALSE se quiser capturar todos os parlamentares
+#' @param casa Pode ser "camara" ou "senado"
 #' @return Lista com dataframes com informações dos parlamentares e seus dados de aderência sumarizados e por votação
 #' @examples
 #' dados_aderencia <- processa_dados_deputado_aderencia_governo(votos, orientacao, parlamentares, filtrar = FALSE)
@@ -152,6 +154,9 @@ processa_dados_deputado_aderencia_governo <- function(votos, orientacao, parlame
   
   if(tolower(casa) == "camara") {
     orientacao <- adiciona_hierarquia_orientacao_governo(votos, orientacao)
+  } else {
+    orientacao <- orientacao %>% 
+      filter(tolower(partido) == "governo")
   }
   
   parlamentares_votos <- votos %>% 
@@ -180,11 +185,13 @@ processa_dados_deputado_aderencia_governo <- function(votos, orientacao, parlame
 #' @param deputados Dataframe de deputados com informações sobre o mesmo
 #' @param filtrar TRUE se deseja filtrar fora os partidos com menos de 5 membros e os deputados com menos de 10 votações. 
 #' FALSE se quiser capturar todos os deputados
+#' @param casa Pode ser "camara" ou "senado"
 #' @return Lista com dataframes com informações dos deputados e seus dados de aderência sumarizados e por votação
 #' @examples
 #' dados_aderencia_meio_ambiente <- processa_dados_aderencia_por_tema(0, proposicoes_temas, votos, orientacao, deputados, filtrar = FALSE)
 processa_dados_aderencia_por_tema <- function(tema_id, proposicoes_temas, 
-                                              votos, orientacoes, parlamentares, filtrar = TRUE) {
+                                              votos, orientacoes, parlamentares, filtrar = TRUE,
+                                              casa = "camara") {
   library(tidyverse)
   
   message(paste0("Calculando Aderência para o tema: ", tema_id))
@@ -196,6 +203,7 @@ processa_dados_aderencia_por_tema <- function(tema_id, proposicoes_temas,
     return(tribble(~ id, ~ nome, ~ partido, ~ faltou, ~ partido_liberou,
                    ~ nao_seguiu, ~ seguiu, ~ total_votacoes, ~ freq))
   }
+  
   votos <- votos %>% 
     filter(id_proposicao %in% lista_proposicoes)
   
@@ -207,7 +215,7 @@ processa_dados_aderencia_por_tema <- function(tema_id, proposicoes_temas,
   orientacao_governo <- orientacao %>% 
     filter(tolower(partido) == "governo")
   
-  aderencia_governo <- processa_dados_deputado_aderencia_governo(votos, orientacao_governo, parlamentares, filtrar, casa = "senado")[[2]]
+  aderencia_governo <- processa_dados_deputado_aderencia_governo(votos, orientacao_governo, parlamentares, filtrar, casa)[[2]]
   
   aderencia_tema <- aderencia_partido %>% 
     rbind(aderencia_governo) %>% 
@@ -226,11 +234,13 @@ processa_dados_aderencia_por_tema <- function(tema_id, proposicoes_temas,
 #' @param deputados Dataframe de deputados com informações sobre o mesmo
 #' @param filtrar TRUE se deseja filtrar fora os partidos com menos de 5 membros e os deputados com menos de 10 votações. 
 #' FALSE se quiser capturar todos os deputados
+#' @param casa Pode ser "camara" ou "senado"
 #' @return Lista com dataframes com informações dos deputados e seus dados de aderência sumarizados e por votação
 #' @examples
 #' dados_aderencia_temas <- processa_dados_aderencia_temas(proposicoes_temas, temas, votos, orientacao, deputados, filtrar = FALSE)
 processa_dados_aderencia_temas <- function(proposicoes_temas, temas, 
-                                           votos, orientacoes, deputados, filtrar = FALSE) {
+                                           votos, orientacoes, deputados, filtrar = FALSE,
+                                           casa = "camara") {
   library(tidyverse)
   
   temas_lista <- temas %>% pull(id_tema)
@@ -243,7 +253,8 @@ processa_dados_aderencia_temas <- function(proposicoes_temas, temas,
       votos,
       orientacoes,
       deputados, 
-      filtrar
+      filtrar,
+      casa
     )) %>% 
     unnest(dados)
  
