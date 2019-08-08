@@ -10,6 +10,7 @@ processa_votacoes_info <- function(url = NULL) {
   source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
 
   if (is.null(url)) {
+    source(here("crawler/proposicoes/utils_proposicoes.R"))
     url <- .URL_PROPOSICOES_PLENARIO_CAMARA
   }
   
