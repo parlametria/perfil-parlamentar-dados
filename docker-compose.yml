@@ -25,6 +25,7 @@ services:
     volumes:
       - ./bd:/log-server/bd
       - ./bd/server/server.js:/log-server/bd/server/server.js
+      - /log-server/bd/server/node_modules/
     ports:
       - "8080:8080"
 
