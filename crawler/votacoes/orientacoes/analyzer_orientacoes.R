@@ -93,7 +93,6 @@ process_orientacao_senado <- function(votos_datapath = here::here("crawler/raw_d
   votos <- read_csv(votos_datapath) %>% 
       filter(casa == "senado")
 
-  
   orientacoes_governo <- define_orientacao_governo(votos)
   
   partidos <- votos %>% 
@@ -120,6 +119,30 @@ process_orientacao_senado <- function(votos_datapath = here::here("crawler/raw_d
 #' @param votos Dataframe contendo dados de votos
 #' @param sigla_partido Sigla do partido a ter orientações recuperadas
 #' @return Dataframe contendo informações de orientações de um partido
+get_voto_lider <- function(lideres, votos, id_votacao) {
+  library(tidyverse)
+
+   voto <- (lideres$id %>% 
+    purrr::map(function(x) {
+      data <- votos %>%
+        filter(id_parlamentar == x &
+                 id_votacao_votos %in% id_votacao) %>%
+        pull(voto)
+    }))[[1]]
+   
+   if(length(voto) == 0) {
+     return(0)
+   } else{
+     return(voto)
+   }
+}
+
+#' @title Define a orientação de um partido para um conjunto de votos
+#' @description Recupera informação das orientações dos partidos para um conjunto de votos utilizando a maioria absoluta.
+#' No caso de empate entre os votos, o voto será o do líder do partido.
+#' @param votos Dataframe contendo dados de votos
+#' @param sigla_partido Sigla do partido a ter orientações recuperadas
+#' @return Dataframe contendo informações de orientações de um partido
 #' @examples
 #' orientacao <- calcula_voto_maioria_absoluta(votos, "PSL")
 calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
@@ -130,7 +153,7 @@ calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
   
   orientacoes <- votos %>% 
     group_by(ano, id_proposicao, id_votacao, partido, voto, casa) %>% 
-    filter(partido == sigla_partido & voto != 0) %>% 
+    filter(partido == sigla_partido) %>% 
     count() %>% 
     ungroup() %>% 
     group_by(id_votacao) %>% 
@@ -139,24 +162,18 @@ calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
     distinct() %>% 
     select(-n)
   
-  lider <- fetch_liderancas_senado() %>% 
-    filter(bloco_partido == sigla_partido & cargo == "Líder")
+  lideres <- fetch_liderancas_senado() %>% 
+    filter(bloco_partido == sigla_partido)
   
   votos <- votos %>% 
     rename(id_votacao_votos = id_votacao)
   
   if(nrow(orientacoes %>% filter(empate == 1)) > 0) {
-    
     orientacoes <- orientacoes %>% 
-      mutate(voto =
-               if_else(
-                 empate == 1,
-                 votos %>%
-                   filter(id_parlamentar == lider$id &
-                            id_votacao_votos == id_votacao) %>%
-                   pull(voto),
-                 voto
-               ))
+      mutate(voto = if_else(empate == 1,
+                            get_voto_lider(lideres, votos, id_votacao),
+                            voto)) %>% 
+      unique()
   }
   
   orientacoes <- orientacoes %>%

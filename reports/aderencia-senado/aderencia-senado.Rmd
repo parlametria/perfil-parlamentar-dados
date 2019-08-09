@@ -23,6 +23,7 @@ library(DT)
 library(ggplot2)
 library(scales)
 library(hrbrthemes)
+library(ggchicklet)
 library(here)
 source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
 ```
@@ -30,7 +31,7 @@ source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
 ```{r results='hide'}
 theme_set(theme_minimal())
 
-votos <- read_csv(here("crawler/raw_data/votos.csv")) %>% 
+votos <- read_csv(here("reports/aderencia-senado/data/votos.csv")) %>% 
   filter(casa == "senado")
 
 numero_votacoes <- votos %>% 
@@ -46,10 +47,11 @@ senadores <- read_csv(here("crawler/raw_data/senadores.csv")) %>%
 aderencia <- read_csv(here("reports/aderencia-senado/data/aderencia.csv")) %>% 
   mutate(id = str_remove(id_parlamentar_voz, "^(\\d){1}"), #remove o 1 do id_parlamentar_voz
          freq = (numero_votacoes - faltou)/numero_votacoes) %>% 
-  filter(id_partido == 0)
+  filter(id_partido == 0, id_tema == 99)
 
 aderencia <- aderencia %>% 
-  left_join(senadores, by="id")
+  left_join(senadores, by="id") %>% 
+  filter(!is.na(nome_exibido))
 
 proposicoes <- fetch_proposicoes_plenario_selecionadas_senado()
 ```
@@ -65,16 +67,6 @@ Analisamos os senadores que mais seguem e o menos "obedientes" ao governo nas vo
 Aderência é uma faceta da atuação dos Deputados e Senadores Federais nas votações em plenário de cada casa. Um parlamentar é aderente ao Governo quando segue as orientações do Governo em votações nominais. Neste relatório, focamos nos senadores.
 
 Para cada votação de cada senador, identificamos se ele seguiu a orientação do Governo ou não. Em seguida, calculamos o grau de aderência como a proporção das votações em que ele seguiu a orientação do Governo. Quando o Governo não apresentou orientação em uma votação, consideramos o voto do Líder do Governo como orientação.
-
-### As proposições
-
-A grande maioria das votações de plenário no Senado em 2019 são de escolhas de cargos, como embaixadores, ministros, etc., e são todas secretas, sem informação sobre os votos dos senadores. As demais votações nominais foram recuperadas, filtradas por tema e totalizam a cinco proposições: uma do tema **Direitos Humanos** e quatro sobre **Agenda Nacional**.
-
-- A **PEC 25/2017** propõe *"incorporar a nomenclatura “pessoa com deficiência”, utilizada pela Convenção Internacional sobre o Direito das Pessoas com Deficiência"*;
-- A **MPV 870/2019** estabelece *"a organização básica dos órgãos da Presidência da República e dos Ministérios"*;
-- A **MPV 871/2019** com apelido de *"Combate a irregularidades em benefícios previdenciários"*
-- A **PDL 233/2019** que *"regulamenta a Lei nº 10.826/2003, para dispor sobre a aquisição, o cadastro, o registro, a posse, o porte e a comercialização de armas de fogo e de munição e sobre o Sistema Nacional de Armas e o Sistema Nacional de Gerenciamento Militar de Armas."*
-- A **PLS 224/2017** que *"altera a Lei nº 10.826/2003, para autorizar a aquisição de uma arma de fogo de uso permitido por residentes em áreas rurais."*
 
 Ao total temos `r votos %>% count(id_votacao) %>% nrow()` votações em plenário.
 
@@ -107,7 +99,123 @@ aderencia %>%
 ```
 
 ### Mais detalhes sobre quem não adere
+
+```{r}
+paleta <- c("#91bfda", "#E89D68", "#e06264")
+match_valores <- c("seguiu", "faltou", "nao_seguiu")
+
+data_long <- aderencia %>% 
+  arrange(desc(nao_seguiu), freq, faltou) %>% 
+  head(20) %>% 
+  gather("match", "n", faltou:seguiu) %>% 
+  filter(match %in% match_valores)
+  
+levels <- aderencia %>% 
+  arrange(desc(nao_seguiu), freq, faltou) %>% 
+  pull(nome_exibido)
+
+data_long %>% 
+  mutate(match = factor(match, 
+                        levels = c("faltou",
+                                   "nao_seguiu",
+                                   "seguiu"),
+                        ordered = TRUE)) %>% 
+  filter(n > 0) %>% 
+  ggplot(aes(x = fct_rev(factor(nome_exibido, levels = levels)), y = n, fill = match)) +
+  geom_chicklet(width = .7, stat = "identity", position = "stack") +
+  geom_text(aes(label = n),
+            hjust = 1.3,
+            position = "stack"
+            ) +
+  coord_flip() +
+  scale_fill_manual(values = c(
+                               "faltou" = paleta[2], 
+                               "nao_seguiu" = paleta[3],
+                               "seguiu" = paleta[1]),
+                    name = "", labels = c("Faltou",
+                                          
+                                          "Não seguiu",
+                                          "Seguiu")) +
+  labs(x = "Senador", 
+       y = "Nº de votações", 
+       title = "Senadores com menos aderência ao Governo",
+       subtitle = "Ordenados por frequência de aderência") + 
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
 ### Quem tem mais aderência?
+```{r fig.height=7}
+levels <- aderencia %>%
+  arrange(desc(seguiu), desc(freq), faltou) %>% 
+  pull(nome_exibido)
+
+aderencia %>% 
+  arrange(desc(seguiu), desc(freq), faltou) %>% 
+  head(20) %>% 
+  ggplot(aes(x = fct_rev(factor(nome_exibido, levels = levels)), y = seguiu)) + 
+  geom_point(col="tomato3", size = 3) + 
+  geom_segment(aes(x = nome_exibido, 
+                   xend = nome_exibido, 
+                   y = 0, 
+                   yend = seguiu), 
+               size = 0.1) +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 100, 2)) +
+  labs(title = "Senadores com mais aderência ao Governo",
+       y = "Nº de votações em que seguiu o Governo",
+       x = "Senador") +
+    theme_ipsum_rc()
+```
+
+```{r}
+paleta <- c("#91bfda", "#E89D68", "#e06264")
+match_valores <- c("seguiu", "faltou", "nao_seguiu")
+
+data_long <- aderencia %>% 
+  arrange(desc(nao_seguiu), freq, faltou) %>% 
+  head(20) %>% 
+  gather("match", "n", faltou:seguiu) %>% 
+  filter(match %in% match_valores)
+  
+levels <- aderencia %>% 
+  arrange(desc(nao_seguiu), freq, faltou) %>% 
+  pull(nome_exibido)
+
+data_long %>% 
+  mutate(match = factor(match, 
+                        levels = c("faltou",
+                                   "nao_seguiu",
+                                   "seguiu"),
+                        ordered = TRUE)) %>% 
+  filter(n > 0) %>% 
+  ggplot(aes(x = fct_rev(factor(nome_exibido, levels = levels)), y = n, fill = match)) +
+  geom_chicklet(width = .7, stat = "identity", position = "stack") +
+  geom_text(aes(label = n),
+            hjust = 1.3,
+            position = "stack"
+            ) +
+  coord_flip() +
+  scale_fill_manual(values = c(
+                               "faltou" = paleta[2], 
+                               "nao_seguiu" = paleta[3],
+                               "seguiu" = paleta[1]),
+                    name = "", labels = c("Faltou",
+                                          
+                                          "Não seguiu",
+                                          "Seguiu")) +
+  labs(x = "Senador", 
+       y = "Nº de votações", 
+       title = "Senadores com menos aderência ao Governo",
+       subtitle = "Ordenados por frequência de aderência") + 
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom",
+        plot.subtitle = element_text(size = 12))
+```
+
 ### Aderência nos partidos
 ### Aderência nas Comissões
 ### Quantos deputados são aderentes ao Governo em Meio Ambiente e Agenda Nacional
