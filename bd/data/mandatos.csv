@@ -1761,7 +1761,7 @@ id_parlamentar_voz,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_ex
 1204455,56,2019-02-01,NA,Titular,NA,NA
 1204526,56,2019-02-01,NA,Titular,NA,NA
 1204418,56,2019-02-01,NA,Titular,NA,NA
-1204458,56,2019-02-01,NA,Titular,NA,NA
+1204458,56,2019-02-01,2019-08-07,Titular,12,Secretário de Estado
 1179587,56,2019-02-01,NA,Titular,NA,NA
 1204469,56,2019-02-01,NA,Titular,NA,NA
 1204471,56,2019-02-01,NA,Titular,NA,NA
@@ -1836,6 +1836,7 @@ id_parlamentar_voz,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_ex
 173801,53,2007-02-01,2008-12-31,Titular,16,Renúncia
 173801,56,2019-02-01,NA,Titular,NA,NA
 1204362,56,2019-02-01,NA,Titular,NA,NA
+1211649,56,2019-08-07,NA,Suplente,NA,NA
 1204489,56,2019-02-01,NA,Titular,NA,NA
 174305,52,2003-02-01,2003-02-13,Titular,7,Licença para Tratamento de Saúde
 174305,56,2019-02-01,NA,Titular,NA,NA
