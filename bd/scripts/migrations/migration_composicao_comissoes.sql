@@ -1,4 +1,5 @@
 -- COMPOSICAO DAS COMISSOES
+BEGIN;
 CREATE TEMP TABLE temp_composicao_comissoes AS SELECT * FROM composicao_comissoes LIMIT 0;
 
 \copy temp_composicao_comissoes FROM './data/composicao_comissoes.csv' DELIMITER ',' CSV HEADER;
@@ -19,3 +20,4 @@ WHERE (id_comissao_voz, id_parlamentar_voz) NOT IN
    FROM temp_composicao_comissoes); 
 
 DROP TABLE temp_composicao_comissoes;
+COMMIT;

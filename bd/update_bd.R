@@ -1,126 +1,85 @@
 library(tidyverse)
 source(here::here("bd/send_log_to_bot.R"))
-
-log <- ""
+Sys.setenv(TZ='America/Recife')
 
 host <- Sys.getenv("PGHOST")
 user <- Sys.getenv("PGUSER")
 database <- Sys.getenv("PGDATABASE")
 ## password env PGPASSWORD
 
-tryCatch(
-  {
-    log <- paste0(log, date(), " - Realizando migrações para parlamentares...\n")
-    file = here::here("bd/scripts/migrations/migration_parlamentares.sql")
-    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
-  },
-  error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Parlamentares")
-    log <- paste0(log, date(), log_error)
-    stop("A execução foi interrompida", call. = FALSE)
-    return(NA)
-  }
-)
+execute_migration <- function(migration, log_output) {
+  system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' -f ', migration,
+                ' -a -b -e >> ', log_output, ' 2>&1'))
+  write_log("=======================================================", log_output)
+}
 
-tryCatch(
-  {
-    log <- paste0(log, date(), " - Realizando migrações para proposicoes...\n")
-    file = here::here("bd/scripts/migrations/migration_proposicoes.sql")
-    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
-  },
-  error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Proposições")
-    log <- paste0(log, date(), log_error)
-    stop("A execução foi interrompida", call. = FALSE)
-    return(NA)
-  }
-)
+write_log <- function(message, log_output) {
+  system(paste0('echo ', message, ' >> ', log_output))
+}
 
-tryCatch(
-  {
-    log <- paste0(log, date(), " - Realizando migrações para Votações...\n")
-    file = here::here("bd/scripts/migrations/migration_votacoes.sql")
-    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
-  },
-  error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Votações")
-    log <- paste0(log, date(), log_error)
-    stop("A execução foi interrompida", call. = FALSE)
-    return(NA)
-  }
-)
+log_file <- here::here(paste0("bd/scripts/logs/",  Sys.Date(), "_log.txt"))
 
-tryCatch(
-  {
-    log <- paste0(log, date(), " - Realizando migrações para Comissões...\n")
-    file = here::here("bd/scripts/migrations/migration_comissoes.sql")
-    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
-  },
-  error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Comissões")
-    log <- paste0(log, date(), log_error)
-    stop("A execução foi interrompida", call. = FALSE)
-    return(NA)
-  }
-)
+write_log(Sys.time(), log_file)
+write_log("=======================================================", log_file)
 
-tryCatch(
-  {
-    log <- paste0(log, date(), " - Realizando migrações para Composição de Comissões...\n")
-    file = here::here("bd/scripts/migrations/migration_composicao_comissoes.sql")
-    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
-  },
-  error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Composição de Comissões")
-    log <- paste0(log, date(), log_error)
-    stop("A execução foi interrompida", call. = FALSE)
-    return(NA)
-  }
-)
+## PARTIDOS
+file = here::here("bd/scripts/migrations/migration_partidos.sql")
+execute_migration(file, log_file)
 
-tryCatch(
-  {
-    log <- paste0(log, date(), " - Realizando migrações para Lideranças...\n")
-    file = here::here("bd/scripts/migrations/migration_liderancas.sql")
-    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
-  },
-  error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Composição de lideranças")
-    log <- paste0(log, date(), log_error)
-    stop("A execução foi interrompida", call. = FALSE)
-    return(NA)
-  }
-)
+## TEMAS
+file = here::here("bd/scripts/migrations/migration_temas.sql")
+execute_migration(file, log_file)
 
-tryCatch(
-  {
-    log <- paste0(log, date(), " - Realizando migrações para Mandatos...\n")
-    file = here::here("bd/scripts/migrations/migration_mandatos.sql")
-    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
-  },
-  error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Mandatos")
-    log <- paste0(log, date(), log_error)
-    stop("A execução foi interrompida", call. = FALSE)
-    return(NA)
-  }
-)
+## PARLAMENTARES
+file = here::here("bd/scripts/migrations/migration_parlamentares.sql")
+execute_migration(file, log_file)
 
-tryCatch(
-  {
-    log <- paste0(log, date(), " - Realizando migrações para Aderência...\n")
-    file = here::here("bd/scripts/migrations/migration_aderencia.sql")
-    system(paste0('psql -h ', host, ' -U ', user, ' -d ', database, ' < ', file))
-  },
-  error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução da migração de Composição de Aderência")
-    log <- paste0(log, date(), log_error)
-    stop("A execução foi interrompida", call. = FALSE)
-    return(NA)
-  }
-)
+## LIDERANCAS
+file = here::here("bd/scripts/migrations/migration_liderancas.sql")
+execute_migration(file, log_file)
 
-send_log_to_bot(log)
-success <- "As migrações foram realizadas com sucesso!"
-send_log_to_bot(success)
-print(success)
+## MANDATOS
+file = here::here("bd/scripts/migrations/migration_mandatos.sql")
+execute_migration(file, log_file)
+
+## ADERENCIA
+file = here::here("bd/scripts/migrations/migration_aderencia.sql")
+execute_migration(file, log_file)
+
+## COMISSOES
+file = here::here("bd/scripts/migrations/migration_comissoes.sql")
+execute_migration(file, log_file)
+
+## COMPOSICAO COMISSOES
+file = here::here("bd/scripts/migrations/migration_composicao_comissoes.sql")
+execute_migration(file, log_file)
+
+## PROPOSICOES
+file = here::here("bd/scripts/migrations/migration_proposicoes.sql")
+execute_migration(file, log_file)
+
+## PROPOSICOES_TEMAS
+file = here::here("bd/scripts/migrations/migration_proposicoes_temas.sql")
+execute_migration(file, log_file)
+
+## VOTACOES
+file = here::here("bd/scripts/migrations/migration_votacoes.sql")
+execute_migration(file, log_file)
+
+## VOTOS
+file = here::here("bd/scripts/migrations/migration_votos.sql")
+execute_migration(file, log_file)
+
+## ORIENTACOES
+file = here::here("bd/scripts/migrations/migration_orientacoes.sql")
+execute_migration(file, log_file)
+
+if (length(grep("ROLLBACK", readLines(log_file), value = TRUE)) > 0) {
+  error <- paste0('Um erro ocorreu durante a execução das migrações. Mais informações em ', log_file)
+  send_log_to_bot(error)
+  print(error)
+} else {
+  success <- "As migrações foram realizadas com sucesso!"
+  send_log_to_bot(success)
+  print(success)
+}

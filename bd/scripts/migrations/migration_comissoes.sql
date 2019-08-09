@@ -1,4 +1,5 @@
 -- COMISSOES
+BEGIN;
 CREATE TEMP TABLE temp_comissoes AS SELECT * FROM comissoes LIMIT 0;
 
 \copy temp_comissoes FROM './data/comissoes.csv' DELIMITER ',' CSV HEADER;
@@ -6,7 +7,7 @@ CREATE TEMP TABLE temp_comissoes AS SELECT * FROM comissoes LIMIT 0;
 INSERT INTO comissoes (id_comissao_voz, id, casa, sigla, nome)
 SELECT id_comissao_voz, id, casa, sigla, nome
 FROM temp_comissoes
-ON CONFLICT (id_comissao_voz) 
+ON CONFLICT (id_comissao_voz)
 DO
   UPDATE
   SET
@@ -21,3 +22,4 @@ WHERE (id_comissao_voz) NOT IN
    FROM temp_comissoes);
 
 DROP TABLE temp_comissoes;
+COMMIT;

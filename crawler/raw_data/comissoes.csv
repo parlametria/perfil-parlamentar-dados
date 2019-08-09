@@ -1,26 +1,44 @@
 id,casa,sigla,nome
 2001,camara,CAPADR,"Comissão De Agricultura, Pecuária, Abastecimento E Desenvolvimento Rural"
-2003,camara,CCJC,Comissão De Constituição E Justiça E De Cidadania
 2002,camara,CCTCI,"Comissão De Ciência E Tecnologia, Comunicação E Informática"
-536996,camara,CCULT,Comissão De Cultura
+2003,camara,CCJC,Comissão De Constituição E Justiça E De Cidadania
 2004,camara,CDC,Comissão De Defesa Do Consumidor
-2008,camara,CDEICS,"Comissão De Desenvolvimento Econômico, Indústria, Comércio E Serviços"
-2007,camara,CDHM,Comissão De Direitos Humanos E Minorias
 2006,camara,CDU,Comissão De Desenvolvimento Urbano
+2007,camara,CDHM,Comissão De Direitos Humanos E Minorias
+2008,camara,CDEICS,"Comissão De Desenvolvimento Econômico, Indústria, Comércio E Serviços"
 2009,camara,CE,Comissão De Educação
-537236,camara,CESPO,Comissão Do Esporte
-2011,camara,CFFC,Comissão De Fiscalização Financeira E Controle
 2010,camara,CFT,Comissão De Finanças E Tributação
-537871,camara,CIDOSO,Comissão De Defesa Dos Direitos Da Pessoa Idosa
-2017,camara,CINDRA,"Comissão De Integração Nacional, Desenvolvimento Regional E Da Amazônia"
-5438,camara,CLP,Comissão De Legislação Participativa
-6174,camara,CMADS,Comissão De Meio Ambiente E Desenvolvimento Sustentável
+2011,camara,CFFC,Comissão De Fiscalização Financeira E Controle
 2012,camara,CME,Comissão De Minas E Energia
-537870,camara,CMULHER,Comissão De Defesa Dos Direitos Da Mulher
-537480,camara,CPD,Comissão De Defesa Dos Direitos Das Pessoas Com Deficiência
-2018,camara,CREDN,Comissão De Relações Exteriores E De Defesa Nacional
-5503,camara,CSPCCO,Comissão De Segurança Pública E Combate Ao Crime Organizado
 2014,camara,CSSF,Comissão De Seguridade Social E Família
 2015,camara,CTASP,"Comissão De Trabalho, De Administração E Serviço Público"
-6066,camara,CTUR,Comissão De Turismo
 2016,camara,CVT,Comissão De Viação E Transportes
+2017,camara,CINDRA,"Comissão De Integração Nacional, Desenvolvimento Regional E Da Amazônia"
+2018,camara,CREDN,Comissão De Relações Exteriores E De Defesa Nacional
+5438,camara,CLP,Comissão De Legislação Participativa
+5503,camara,CSPCCO,Comissão De Segurança Pública E Combate Ao Crime Organizado
+6066,camara,CTUR,Comissão De Turismo
+6174,camara,CMADS,Comissão De Meio Ambiente E Desenvolvimento Sustentável
+536996,camara,CCULT,Comissão De Cultura
+537236,camara,CESPO,Comissão Do Esporte
+537480,camara,CPD,Comissão De Defesa Dos Direitos Das Pessoas Com Deficiência
+537870,camara,CMULHER,Comissão De Defesa Dos Direitos Da Mulher
+537871,camara,CIDOSO,Comissão De Defesa Dos Direitos Da Pessoa Idosa
+38,senado,CAE,Comissão De Assuntos Econômicos
+40,senado,CAS,Comissão De Assuntos Sociais
+34,senado,CCJ,"Comissão De Constituição, Justiça E Cidadania"
+47,senado,CE,"Comissão De Educação, Cultura E Esporte"
+50,senado,CMA,Comissão De Meio Ambiente
+834,senado,CDH,Comissão De Direitos Humanos E Legislação Participativa
+54,senado,CRE,Comissão De Relações Exteriores E Defesa Nacional
+59,senado,CI,Comissão De Serviços De Infraestrutura
+1306,senado,CDR,Comissão De Desenvolvimento Regional E Turismo
+1307,senado,CRA,Comissão De Agricultura E Reforma Agrária
+1363,senado,CCT,"Comissão De Ciência, Tecnologia, Inovação, Comunicação E Informática"
+1716,senado,CSF,Comissão Senado Do Futuro
+1956,senado,CTFC,"Comissão De Transparência, Governança, Fiscalização E Controle E Defesa Do Consumidor"
+449,senado,CCAI,Comissão Mista De Controle Das Atividades De Inteligência
+1450,senado,CMMC,Comissão Mista Permanente Sobre Mudanças Climáticas
+1664,senado,CMO,"Comissão Mista De Planos, Orçamentos Públicos E Fiscalização"
+1774,senado,CMCVM,Comissão Permanente Mista De Combate À Violência Contra A Mulher
+1775,senado,CMCPLP,Comissão Mista Do Congresso Nacional De Assuntos Relacionados À Comunidade Dos Países De Língua Portuguesa

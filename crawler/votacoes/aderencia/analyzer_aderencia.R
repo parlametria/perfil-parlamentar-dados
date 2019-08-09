@@ -1,8 +1,18 @@
-processa_aderencia_senado <-
+#' @title Calcula aderência para o conjunto de votos e parlamentares passados como parâmetro
+#' @description A partir de informações de votos e orientações relacionadas a proposições, calcula por tema a
+#' aderência de parlamentares a seus partidos e ao governo
+#' @param votos_path Caminho para o arquivo de dados de votos
+#' @param orientacoes_path Caminho para o arquivo de dados de orientações
+#' @param parlamentares_path Caminho para o arquivo de dados de parlamentares
+#' @param proposicoes_url URL para a tabela de proposições com informações dos temas no VA
+#' @param casa_aderencia Casa para o cálculo da aderência (pode ser "camara" ou "senado)
+#' @return Dataframe com informações de aderência
+processa_aderencia_parlamentares <-
   function(votos_path = here::here("crawler/raw_data/votos.csv"),
            orientacoes_path = here::here("crawler/raw_data/orientacoes.csv"),
-           senadores_path = here::here("crawler/raw_data/senadores.csv"),
-           proposicoes_url = NULL) {
+           parlamentares_path = here::here("crawler/raw_data/parlamentares.csv"),
+           proposicoes_url = NULL,
+           casa_aderencia = "camara") {
     library(tidyverse)
     library(here)
     source(here("crawler/votacoes/utils_votacoes.R"))
@@ -15,17 +25,17 @@ processa_aderencia_senado <-
     ## Preparando dados de votos, orientações e senadores
     votos <-
       read_csv(votos_path, col_types = cols(.default = "c", voto = "i")) %>%
-      filter(casa == "senado")
+      filter(casa == casa_aderencia)
     
     orientacoes <-
       read_csv(orientacoes_path, col_types = cols(.default = "c", voto = "i")) %>%
-      filter(casa == "senado")
+      filter(casa == casa_aderencia)
     
-    senadores <-
-      read_csv(senadores_path, col_types = cols(id = "c")) %>%
-      filter(em_exercicio == 1)
+    parlamentares <-
+      read_csv(parlamentares_path, col_types = cols(id = "c")) %>%
+      filter(casa == casa_aderencia)
     
-    partidos <- senadores %>%
+    partidos <- parlamentares %>%
       group_by(sg_partido) %>%
       summarise(n = n()) %>%
       rowwise() %>%
@@ -33,7 +43,11 @@ processa_aderencia_senado <-
       ungroup()
     
     if (is.null(proposicoes_url)) {
-      proposicoes_url = .URL_PROPOSICOES_PLENARIO_SENADO
+      if (casa_aderencia == "camara") {
+        proposicoes_url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+      } else {
+        proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
+      }
     }
     
     ## Preparando dados de proposições e seus respectivos temas
@@ -51,12 +65,15 @@ processa_aderencia_senado <-
     
     ## Calcula aderência por tema
     aderencia_temas <-
-      processa_dados_aderencia_temas(proposicoes_temas,
-                                     temas,
-                                     votos,
-                                     orientacoes,
-                                     senadores,
-                                     filtrar = FALSE)
+      processa_dados_aderencia_temas(
+        proposicoes_temas,
+        temas,
+        votos,
+        orientacoes,
+        parlamentares,
+        filtrar = FALSE,
+        casa_aderencia
+      )
     
     partidos_aderencia_temas <- aderencia_temas %>%
       group_by(partido) %>%
@@ -83,7 +100,7 @@ processa_aderencia_senado <-
     ## Calcula aderência geral ao Partido
     aderencia_geral_partido <-
       processa_dados_deputado_aderencia(votos, orientacoes,
-                                        senadores, filtrar = FALSE)[[2]]
+                                        parlamentares, filtrar = FALSE)[[2]]
     
     partidos_aderencia_geral <- aderencia_geral_partido %>%
       group_by(partido) %>%
@@ -111,7 +128,7 @@ processa_aderencia_senado <-
     ## Calcula aderência geral ao Governo
     aderencia_geral_governo <-
       processa_dados_deputado_aderencia_governo(votos, orientacoes,
-                                                senadores, filtrar = FALSE)[[2]] %>%
+                                                parlamentares, filtrar = FALSE, casa_aderencia)[[2]] %>%
       mutate(id_partido = 0) %>%
       mutate(id_tema = 99) %>%
       select(
@@ -130,10 +147,9 @@ processa_aderencia_senado <-
     aderencia_alt <- aderencia_geral_partido %>%
       rbind(aderencia_geral_governo) %>%
       rbind(aderencia_temas) %>%
-      mutate(casa_enum = 1,
-             # 1 é o código da camara. TODO: estender para senadores
-             id_parlamentar_voz = paste0(casa_enum, as.character(id))) %>%
-      mutate(freq = if_else(freq == -1,-1, freq / 100)) %>%
+      mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa_aderencia == "camara", 1, 2),
+                                         id)) %>%
+      mutate(freq = if_else(freq == -1, -1, freq / 100)) %>%
       select(
         id_parlamentar_voz,
         id_partido,

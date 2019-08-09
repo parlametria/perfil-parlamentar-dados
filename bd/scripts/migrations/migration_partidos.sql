@@ -1,4 +1,5 @@
 -- PARTIDOS POLITICOS
+BEGIN;
 CREATE TEMP TABLE temp_partido AS SELECT * FROM partidos LIMIT 0;
 
 \copy temp_partido FROM './data/partidos.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
@@ -20,3 +21,4 @@ WHERE (id_partido, sigla, tipo, situacao) NOT IN
    FROM temp_partido); 
 
 DROP TABLE temp_partido;
+COMMIT;
