@@ -650,6 +650,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 4931,camara,53,2007-03-01,2007-03-15,Suplente,12,Secretário de Estado
 4931,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 4931,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
+196378,camara,55,2017-01-05,2017-10-19,Suplente,53,Afastamento
 74665,camara,52,2003-02-01,2003-02-20,Titular,7,Licença para Tratamento de Saúde
 74665,camara,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 74665,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
@@ -1760,7 +1761,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204455,camara,56,2019-02-01,NA,Titular,NA,NA
 204526,camara,56,2019-02-01,NA,Titular,NA,NA
 204418,camara,56,2019-02-01,NA,Titular,NA,NA
-204458,camara,56,2019-02-01,NA,Titular,NA,NA
+204458,camara,56,2019-02-01,2019-08-07,Titular,12,Secretário de Estado
 179587,camara,56,2019-02-01,NA,Titular,NA,NA
 204469,camara,56,2019-02-01,NA,Titular,NA,NA
 204471,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1835,6 +1836,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 73801,camara,53,2007-02-01,2008-12-31,Titular,16,Renúncia
 73801,camara,56,2019-02-01,NA,Titular,NA,NA
 204362,camara,56,2019-02-01,NA,Titular,NA,NA
+211649,camara,56,2019-08-07,NA,Suplente,NA,NA
 204489,camara,56,2019-02-01,NA,Titular,NA,NA
 74305,camara,52,2003-02-01,2003-02-13,Titular,7,Licença para Tratamento de Saúde
 74305,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1878,3 +1880,989 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204463,camara,56,2019-02-01,NA,Titular,NA,NA
 204559,camara,56,2019-02-01,NA,Titular,NA,NA
 204517,camara,56,2019-02-01,NA,Titular,NA,NA
+5154,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5154,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5170,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5170,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5140,senado,54,2011-02-01,2015-01-31,1º Suplente,2827,Retorno do titular
+5140,senado,55,2015-02-01,2019-01-31,1º Suplente,2827,Retorno do titular
+846,senado,54,2011-02-01,2015-01-31,Titular,2883,Término do mandato
+846,senado,55,2015-02-01,2019-01-31,Titular,2883,Término do mandato
+5042,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5042,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+4988,senado,54,2011-02-01,2015-01-31,Titular,2581,Término do mandato
+4988,senado,55,2015-02-01,2019-01-31,Titular,2581,Término do mandato
+5046,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5046,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5150,senado,54,2011-02-01,2015-01-31,1º Suplente,2671,Retorno do titular
+5150,senado,55,2015-02-01,2019-01-31,1º Suplente,2671,Retorno do titular
+3,senado,50,1995-02-01,1999-01-31,Titular,166,Término do mandato
+3,senado,51,1999-02-01,2003-01-31,Titular,166,Término do mandato
+3,senado,52,2003-02-01,2007-01-31,Titular,1750,Término do mandato
+3,senado,53,2007-02-01,2011-01-31,Titular,1750,Término do mandato
+3,senado,54,2011-02-01,2015-01-31,Titular,2847,Término do mandato
+3,senado,55,2015-02-01,2019-01-31,Titular,2847,Término do mandato
+5134,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5134,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5032,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5032,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5168,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5168,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5028,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5028,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+715,senado,54,2011-02-01,2015-01-31,Titular,2777,Término do mandato
+715,senado,55,2015-02-01,2019-01-31,Titular,2777,Término do mandato
+5164,senado,54,2011-02-01,2015-01-31,1º Suplente,2691,Término do mandato
+5164,senado,55,2015-02-01,2019-01-31,1º Suplente,2691,Término do mandato
+5138,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5138,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+391,senado,54,2011-02-01,2015-01-31,Titular,2834,Término do mandato
+391,senado,55,2015-02-01,2019-01-31,Titular,2834,Término do mandato
+3823,senado,54,2011-02-01,2015-01-31,Titular,2875,Término do mandato
+3823,senado,55,2015-02-01,2019-01-31,Titular,2875,Término do mandato
+111,senado,50,1995-02-01,1999-01-31,1º Suplente,724,Retorno do titular
+111,senado,51,1999-02-01,2003-01-31,1º Suplente,724,Retorno do titular
+111,senado,54,2011-02-01,2015-01-31,Titular,2882,Término do mandato
+111,senado,55,2015-02-01,2019-01-31,Titular,2882,Término do mandato
+5136,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5136,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5108,senado,54,2011-02-01,2015-01-31,1º Suplente,2859,Retorno do titular
+5108,senado,55,2015-02-01,2019-01-31,1º Suplente,2859,Retorno do titular
+3881,senado,54,2011-02-01,2015-01-31,1º Suplente,2649,Retorno do titular
+3881,senado,55,2015-02-01,2019-01-31,1º Suplente,2649,Retorno do titular
+5044,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5044,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+3398,senado,52,2003-02-01,2007-01-31,Titular,1893,Término do mandato
+3398,senado,53,2007-02-01,2011-01-31,Titular,1893,Término do mandato
+3398,senado,54,2011-02-01,2015-01-31,Titular,2588,Término do mandato
+3398,senado,55,2015-02-01,2019-01-31,Titular,2588,Término do mandato
+1757,senado,45,1975-03-01,1978-12-05,NA,NA,NA
+1757,senado,46,1979-02-01,1983-01-31,NA,NA,NA
+1757,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+1757,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5197,senado,54,2011-02-01,2015-01-31,Titular,2808,Término do mandato
+5197,senado,54,2011-02-01,2015-01-31,NA,NA,NA
+5197,senado,55,2015-02-01,2019-01-31,Titular,2808,Término do mandato
+5197,senado,55,2015-02-01,2019-01-31,NA,NA,NA
+5132,senado,54,2011-02-01,2015-01-31,1º Suplente,2762,Término do mandato
+5132,senado,55,2015-02-01,2019-01-31,1º Suplente,2762,Término do mandato
+5199,senado,54,2011-02-01,2015-01-31,1º Suplente,2797,Retorno do titular
+5199,senado,55,2015-02-01,2019-01-31,1º Suplente,2797,Retorno do titular
+3360,senado,52,2003-02-01,2007-01-31,Titular,2436,Término do mandato
+3360,senado,53,2007-02-01,2011-01-31,Titular,2436,Término do mandato
+3360,senado,54,2011-02-01,2015-01-31,Titular,2589,Perda de mandato
+3360,senado,55,2015-02-01,2019-01-31,Titular,2589,Perda de mandato
+3399,senado,52,2003-02-01,2007-01-31,Titular,1697,Término do mandato
+3399,senado,53,2007-02-01,2011-01-31,Titular,1697,Término do mandato
+3399,senado,54,2011-02-01,2015-01-31,Titular,2590,Perda de mandato
+3399,senado,55,2015-02-01,2019-01-31,Titular,2590,Perda de mandato
+5178,senado,54,2011-02-01,2015-01-31,1º Suplente,2723,Retorno do titular
+5178,senado,55,2015-02-01,2019-01-31,1º Suplente,2723,Retorno do titular
+16,senado,48,1987-02-01,1991-01-31,Titular,NA,NA
+16,senado,48,1987-02-01,1991-01-31,NA,NA,NA
+16,senado,49,1991-02-01,1995-01-31,Titular,NA,NA
+16,senado,50,1995-02-01,1999-01-31,Titular,135,Término do mandato
+16,senado,51,1999-02-01,2003-01-31,Titular,135,Término do mandato
+16,senado,52,2003-02-01,2007-01-31,Titular,2576,Término do mandato
+16,senado,53,2007-02-01,2011-01-31,Titular,2576,Término do mandato
+16,senado,54,2011-02-01,2015-01-31,Titular,2848,Término do mandato
+16,senado,55,2015-02-01,2019-01-31,Titular,2848,Término do mandato
+5160,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5160,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+4721,senado,54,2011-02-01,2015-01-31,Titular,2716,Término do mandato
+4721,senado,55,2015-02-01,2019-01-31,Titular,2716,Término do mandato
+4767,senado,54,2011-02-01,2015-01-31,1º Suplente,2809,Afastamento do exercício
+4767,senado,55,2015-02-01,2019-01-31,1º Suplente,2809,Afastamento do exercício
+5146,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5146,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+4969,senado,54,2011-02-01,2015-01-31,2º Suplente,2843,Retorno do titular
+4969,senado,55,2015-02-01,2019-01-31,2º Suplente,2843,Retorno do titular
+5148,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5148,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5064,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5064,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5126,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5126,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+612,senado,54,2011-02-01,2015-01-31,Titular,2594,Término do mandato
+612,senado,55,2015-02-01,2019-01-31,Titular,2594,Término do mandato
+5026,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5026,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+2632,senado,50,1995-02-01,1999-01-31,2º Suplente,1233,Término do mandato
+2632,senado,51,1999-02-01,2003-01-31,2º Suplente,1233,Término do mandato
+2632,senado,54,2011-02-01,2015-01-31,1º Suplente,2730,Licença Particular
+2632,senado,55,2015-02-01,2019-01-31,1º Suplente,2730,Licença Particular
+4873,senado,54,2011-02-01,2015-01-31,2º Suplente,2708,Retorno do titular
+4873,senado,55,2015-02-01,2019-01-31,2º Suplente,2708,Retorno do titular
+3634,senado,52,2003-02-01,2007-01-31,1º Suplente,2137,Término do mandato
+3634,senado,53,2007-02-01,2011-01-31,1º Suplente,2137,Término do mandato
+3634,senado,54,2011-02-01,2015-01-31,Titular,2595,Término do mandato
+3634,senado,55,2015-02-01,2019-01-31,Titular,2595,Término do mandato
+553,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+553,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5054,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5054,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5416,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5416,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5034,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5034,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5162,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5162,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5024,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5024,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+87,senado,49,1991-02-01,1995-01-31,Titular,121,Renúncia
+87,senado,50,1995-02-01,1999-01-31,Titular,121,Renúncia
+87,senado,52,2003-02-01,2007-01-31,Titular,2577,Término do mandato
+87,senado,53,2007-02-01,2011-01-31,Titular,2577,Término do mandato
+87,senado,54,2011-02-01,2015-01-31,Titular,2725,Término do mandato
+87,senado,55,2015-02-01,2019-01-31,Titular,2725,Término do mandato
+4522,senado,50,1995-02-01,1999-01-31,2º Suplente,NA,NA
+4522,senado,51,1999-02-01,2003-01-31,2º Suplente,NA,NA
+4522,senado,52,2003-02-01,2007-01-31,1º Suplente,2520,Retorno do titular
+4522,senado,53,2007-02-01,2011-01-31,1º Suplente,2520,Retorno do titular
+4522,senado,54,2011-02-01,2015-01-31,1º Suplente,2636,Retorno do titular
+4522,senado,55,2015-02-01,2019-01-31,1º Suplente,2636,Retorno do titular
+5088,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5088,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+30,senado,50,1995-02-01,1999-01-31,Titular,104,Término do mandato
+30,senado,51,1999-02-01,2003-01-31,Titular,104,Término do mandato
+30,senado,52,2003-02-01,2007-01-31,Titular,2544,Término do mandato
+30,senado,52,2003-02-01,2007-01-31,NA,NA,NA
+30,senado,53,2007-02-01,2011-01-31,Titular,2544,Término do mandato
+30,senado,53,2007-02-01,2011-01-31,NA,NA,NA
+30,senado,54,2011-02-01,2015-01-31,Titular,2655,Término do mandato
+30,senado,55,2015-02-01,2019-01-31,Titular,2655,Término do mandato
+5128,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5128,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5030,senado,54,2011-02-01,2015-01-31,1º Suplente,2858,Retorno do titular
+5030,senado,55,2015-02-01,2019-01-31,1º Suplente,2858,Retorno do titular
+5006,senado,54,2011-02-01,2015-01-31,Titular,2693,Término do mandato
+5006,senado,55,2015-02-01,2019-01-31,Titular,2693,Término do mandato
+5100,senado,54,2011-02-01,2015-01-31,1º Suplente,2726,Término do mandato
+5100,senado,55,2015-02-01,2019-01-31,1º Suplente,2726,Término do mandato
+5076,senado,54,2011-02-01,2015-01-31,1º Suplente,2860,Renúncia
+5076,senado,55,2015-02-01,2019-01-31,1º Suplente,2860,Renúncia
+1754,senado,45,1975-03-01,1978-12-05,NA,NA,NA
+1754,senado,46,1979-02-01,1983-01-31,NA,NA,NA
+1754,senado,47,1983-02-01,1987-01-31,NA,NA,NA
+1754,senado,48,1987-02-01,1991-01-31,NA,NA,NA
+1754,senado,54,2011-02-01,2015-01-31,Titular,2600,Falecimento
+1754,senado,55,2015-02-01,2019-01-31,Titular,2600,Falecimento
+5418,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5418,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5004,senado,54,2011-02-01,2015-01-31,Titular,2862,Término do mandato
+5004,senado,55,2015-02-01,2019-01-31,Titular,2862,Término do mandato
+5022,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5022,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+724,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+724,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+4990,senado,54,2011-02-01,2015-01-31,Titular,2604,Término do mandato
+4990,senado,55,2015-02-01,2019-01-31,Titular,2604,Término do mandato
+5078,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5078,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+40,senado,48,1987-02-01,1991-01-31,Titular,NA,NA
+40,senado,48,1987-02-01,1991-01-31,NA,NA,NA
+40,senado,49,1991-02-01,1995-01-31,Titular,NA,NA
+40,senado,49,1991-02-01,1995-01-31,NA,NA,NA
+40,senado,50,1995-02-01,1999-01-31,Titular,156,Término do mandato
+40,senado,51,1999-02-01,2003-01-31,Titular,156,Término do mandato
+40,senado,52,2003-02-01,2007-01-31,Titular,2563,Término do mandato
+40,senado,53,2007-02-01,2011-01-31,Titular,2563,Término do mandato
+40,senado,54,2011-02-01,2015-01-31,Titular,2605,Término do mandato
+40,senado,55,2015-02-01,2019-01-31,Titular,2605,Término do mandato
+5090,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5090,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5120,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5120,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+43,senado,50,1995-02-01,1999-01-31,Titular,167,Renúncia
+43,senado,51,1999-02-01,2003-01-31,Titular,167,Renúncia
+43,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+43,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5112,senado,54,2011-02-01,2015-01-31,1º Suplente,2720,Término do mandato
+5112,senado,55,2015-02-01,2019-01-31,1º Suplente,2720,Término do mandato
+615,senado,54,2011-02-01,2015-01-31,Titular,2606,Término do mandato
+615,senado,55,2015-02-01,2019-01-31,Titular,2606,Término do mandato
+5180,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5180,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5036,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5036,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+950,senado,51,1999-02-01,2003-01-31,Titular,2421,Término do mandato
+950,senado,52,2003-02-01,2007-01-31,Titular,2421,Término do mandato
+950,senado,54,2011-02-01,2015-01-31,Titular,2676,Término do mandato
+950,senado,55,2015-02-01,2019-01-31,Titular,2676,Término do mandato
+3394,senado,52,2003-02-01,2007-01-31,Titular,1725,Cassação de registro/diploma pela Justiça Eleitora
+3394,senado,53,2007-02-01,2011-01-31,Titular,1725,Cassação de registro/diploma pela Justiça Eleitora
+3394,senado,54,2011-02-01,2015-01-31,Titular,2656,Término do mandato
+3394,senado,55,2015-02-01,2019-01-31,Titular,2656,Término do mandato
+5186,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5186,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5166,senado,54,2011-02-01,2015-01-31,1º Suplente,2684,Retorno do titular
+5166,senado,55,2015-02-01,2019-01-31,1º Suplente,2684,Retorno do titular
+3593,senado,52,2003-02-01,2007-01-31,1º Suplente,2571,Retorno do titular
+3593,senado,53,2007-02-01,2011-01-31,1º Suplente,2571,Retorno do titular
+3593,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+3593,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+916,senado,52,2003-02-01,2007-01-31,Titular,2419,Término do mandato
+916,senado,53,2007-02-01,2011-01-31,Titular,2419,Término do mandato
+916,senado,54,2011-02-01,2015-01-31,Titular,2689,Falecimento
+916,senado,55,2015-02-01,2019-01-31,Titular,2689,Falecimento
+5066,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5066,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5158,senado,54,2011-02-01,2015-01-31,2º Suplente,2707,Retorno do titular
+5158,senado,55,2015-02-01,2019-01-31,2º Suplente,2707,Retorno do titular
+5156,senado,54,2011-02-01,2015-01-31,1º Suplente,2705,Licença Saúde-Particular
+5156,senado,55,2015-02-01,2019-01-31,1º Suplente,2705,Licença Saúde-Particular
+3695,senado,54,2011-02-01,2015-01-31,Titular,2608,Término do mandato
+3695,senado,55,2015-02-01,2019-01-31,Titular,2608,Término do mandato
+5040,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5040,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+3579,senado,52,2003-02-01,2007-01-31,1º Suplente,2488,Retorno do titular
+3579,senado,53,2007-02-01,2011-01-31,1º Suplente,2488,Retorno do titular
+3579,senado,54,2011-02-01,2015-01-31,1º Suplente,2634,Retorno do titular
+3579,senado,55,2015-02-01,2019-01-31,1º Suplente,2634,Retorno do titular
+5092,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5092,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5104,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5104,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5002,senado,54,2011-02-01,2015-01-31,Titular,2610,Falecimento
+5002,senado,55,2015-02-01,2019-01-31,Titular,2610,Falecimento
+5058,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5058,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+4575,senado,54,2011-02-01,2015-01-31,Titular,2607,Término do mandato
+4575,senado,55,2015-02-01,2019-01-31,Titular,2607,Término do mandato
+643,senado,52,2003-02-01,2007-01-31,Titular,1698,Término do mandato
+643,senado,53,2007-02-01,2011-01-31,Titular,1698,Término do mandato
+643,senado,54,2011-02-01,2015-01-31,Titular,2872,Término do mandato
+643,senado,55,2015-02-01,2019-01-31,Titular,2872,Término do mandato
+631,senado,52,2003-02-01,2007-01-31,Titular,2255,Término do mandato
+631,senado,53,2007-02-01,2011-01-31,Titular,2255,Término do mandato
+631,senado,54,2011-02-01,2015-01-31,Titular,2611,Término do mandato
+631,senado,55,2015-02-01,2019-01-31,Titular,2611,Término do mandato
+4951,senado,52,2003-02-01,2007-01-31,2º Suplente,NA,NA
+4951,senado,53,2007-02-01,2011-01-31,2º Suplente,NA,NA
+4951,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+4951,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+3366,senado,52,2003-02-01,2007-01-31,Titular,1739,Término do mandato
+3366,senado,53,2007-02-01,2011-01-31,Titular,1739,Término do mandato
+3366,senado,54,2011-02-01,2015-01-31,Titular,2801,Renúncia
+3366,senado,55,2015-02-01,2019-01-31,Titular,2801,Renúncia
+710,senado,47,1983-02-01,1987-01-31,NA,NA,NA
+710,senado,48,1987-02-01,1991-01-31,NA,NA,NA
+710,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+710,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5124,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5124,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5190,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5190,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5174,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5174,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+4998,senado,54,2011-02-01,2015-01-31,Titular,2613,Término do mandato
+4998,senado,55,2015-02-01,2019-01-31,Titular,2613,Término do mandato
+5142,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5142,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5000,senado,54,2011-02-01,2015-01-31,Titular,2711,Término do mandato
+5000,senado,55,2015-02-01,2019-01-31,Titular,2711,Término do mandato
+670,senado,52,2003-02-01,2007-01-31,1º Suplente,2512,Término do mandato
+670,senado,53,2007-02-01,2011-01-31,1º Suplente,2512,Término do mandato
+670,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+670,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5086,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5086,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5094,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5094,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5176,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5176,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+380,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+380,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+288,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+288,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+64,senado,47,1983-02-01,1987-01-31,NA,NA,NA
+64,senado,48,1987-02-01,1991-01-31,NA,NA,NA
+64,senado,49,1991-02-01,1995-01-31,Titular,171,Término do mandato
+64,senado,50,1995-02-01,1999-01-31,Titular,171,Término do mandato
+64,senado,54,2011-02-01,2015-01-31,2º Suplente,2701,Retorno do titular
+64,senado,55,2015-02-01,2019-01-31,2º Suplente,2701,Retorno do titular
+5060,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5060,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5080,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5080,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+918,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+918,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5018,senado,54,2011-02-01,2015-01-31,2º Suplente,2844,Retorno do titular
+5018,senado,55,2015-02-01,2019-01-31,2º Suplente,2844,Retorno do titular
+5122,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5122,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+3741,senado,54,2011-02-01,2015-01-31,Titular,2615,Término do mandato
+3741,senado,55,2015-02-01,2019-01-31,Titular,2615,Término do mandato
+5020,senado,54,2011-02-01,2015-01-31,1º Suplente,2635,Retorno do titular
+5020,senado,55,2015-02-01,2019-01-31,1º Suplente,2635,Retorno do titular
+5152,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5152,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5114,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5114,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5116,senado,54,2011-02-01,2015-01-31,1º Suplente,2790,Término do mandato
+5116,senado,55,2015-02-01,2019-01-31,1º Suplente,2790,Término do mandato
+5050,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5050,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5010,senado,54,2011-02-01,2015-01-31,Titular,2617,Renúncia
+5010,senado,55,2015-02-01,2019-01-31,Titular,2617,Renúncia
+2207,senado,48,1987-02-01,1991-01-31,Titular,NA,NA
+2207,senado,49,1991-02-01,1995-01-31,Titular,NA,NA
+2207,senado,54,2011-02-01,2015-01-31,1º Suplente,2719,Término do mandato
+2207,senado,55,2015-02-01,2019-01-31,1º Suplente,2719,Término do mandato
+5072,senado,54,2011-02-01,2015-01-31,1º Suplente,2856,Retorno do titular
+5072,senado,55,2015-02-01,2019-01-31,1º Suplente,2856,Retorno do titular
+5182,senado,54,2011-02-01,2015-01-31,1º Suplente,2721,Renúncia
+5182,senado,55,2015-02-01,2019-01-31,1º Suplente,2721,Renúncia
+635,senado,54,2011-02-01,2015-01-31,Titular,2845,Término do mandato
+635,senado,55,2015-02-01,2019-01-31,Titular,2845,Término do mandato
+5052,senado,54,2011-02-01,2015-01-31,1º Suplente,2835,Retorno do titular
+5052,senado,55,2015-02-01,2019-01-31,1º Suplente,2835,Retorno do titular
+72,senado,50,1995-02-01,1999-01-31,Titular,145,Renúncia
+72,senado,51,1999-02-01,2003-01-31,Titular,145,Renúncia
+72,senado,54,2011-02-01,2015-01-31,Titular,2621,Término do mandato
+72,senado,55,2015-02-01,2019-01-31,Titular,2621,Término do mandato
+5098,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5098,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+4593,senado,54,2011-02-01,2015-01-31,Titular,2622,Renúncia
+4593,senado,55,2015-02-01,2019-01-31,Titular,2622,Renúncia
+5110,senado,54,2011-02-01,2015-01-31,2º Suplente,2849,Retorno do titular
+5110,senado,55,2015-02-01,2019-01-31,2º Suplente,2849,Retorno do titular
+73,senado,50,1995-02-01,1999-01-31,Titular,161,Término do mandato
+73,senado,51,1999-02-01,2003-01-31,Titular,161,Término do mandato
+73,senado,52,2003-02-01,2007-01-31,Titular,2375,Término do mandato
+73,senado,53,2007-02-01,2011-01-31,Titular,2375,Término do mandato
+73,senado,54,2011-02-01,2015-01-31,Titular,2792,Término do mandato
+73,senado,55,2015-02-01,2019-01-31,Titular,2792,Término do mandato
+4847,senado,52,2003-02-01,2007-01-31,2º Suplente,NA,NA
+4847,senado,53,2007-02-01,2011-01-31,2º Suplente,NA,NA
+4847,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+4847,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5074,senado,50,1995-02-01,1999-01-31,2º Suplente,NA,NA
+5074,senado,51,1999-02-01,2003-01-31,2º Suplente,NA,NA
+5074,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5074,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5172,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5172,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5048,senado,54,2011-02-01,2015-01-31,1º Suplente,2640,Retorno do titular
+5048,senado,55,2015-02-01,2019-01-31,1º Suplente,2640,Retorno do titular
+624,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+624,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5106,senado,54,2011-02-01,2015-01-31,1º Suplente,2841,Retorno do titular
+5106,senado,55,2015-02-01,2019-01-31,1º Suplente,2841,Retorno do titular
+438,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+438,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+4949,senado,52,2003-02-01,2007-01-31,1º Suplente,NA,NA
+4949,senado,53,2007-02-01,2011-01-31,1º Suplente,NA,NA
+4949,senado,54,2011-02-01,2015-01-31,1º Suplente,2667,Retorno do titular
+4949,senado,55,2015-02-01,2019-01-31,1º Suplente,2667,Retorno do titular
+5068,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5068,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5420,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5420,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+3372,senado,52,2003-02-01,2007-01-31,Titular,1743,Término do mandato
+3372,senado,53,2007-02-01,2011-01-31,Titular,1743,Término do mandato
+3372,senado,54,2011-02-01,2015-01-31,Titular,2678,Término do mandato
+3372,senado,55,2015-02-01,2019-01-31,Titular,2678,Término do mandato
+5130,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5130,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+558,senado,54,2011-02-01,2015-01-31,Titular,2626,Término do mandato
+558,senado,55,2015-02-01,2019-01-31,Titular,2626,Término do mandato
+5084,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5084,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+4763,senado,54,2011-02-01,2015-01-31,Titular,2688,Término do mandato
+4763,senado,55,2015-02-01,2019-01-31,Titular,2688,Término do mandato
+4645,senado,54,2011-02-01,2015-01-31,Titular,2628,Renúncia
+4645,senado,55,2015-02-01,2019-01-31,Titular,2628,Renúncia
+5082,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5082,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+1176,senado,54,2011-02-01,2015-01-31,Titular,2629,Término do mandato
+1176,senado,55,2015-02-01,2019-01-31,Titular,2629,Término do mandato
+604,senado,54,2011-02-01,2015-01-31,Titular,2871,Término do mandato
+604,senado,55,2015-02-01,2019-01-31,Titular,2871,Término do mandato
+5016,senado,54,2011-02-01,2015-01-31,Titular,2631,Renúncia
+5016,senado,55,2015-02-01,2019-01-31,Titular,2631,Renúncia
+5070,senado,54,2011-02-01,2015-01-31,1º Suplente,2714,Término do mandato
+5070,senado,55,2015-02-01,2019-01-31,1º Suplente,2714,Término do mandato
+5096,senado,54,2011-02-01,2015-01-31,1º Suplente,NA,NA
+5096,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+3811,senado,54,2011-02-01,2015-01-31,Titular,2632,Término do mandato
+3811,senado,55,2015-02-01,2019-01-31,Titular,2632,Término do mandato
+3597,senado,50,1995-02-01,1999-01-31,1º Suplente,NA,NA
+3597,senado,51,1999-02-01,2003-01-31,1º Suplente,NA,NA
+3597,senado,52,2003-02-01,2007-01-31,1º Suplente,2195,Retorno do titular
+3597,senado,53,2007-02-01,2011-01-31,1º Suplente,2195,Retorno do titular
+3597,senado,54,2011-02-01,2015-01-31,1º Suplente,2789,Retorno do titular
+3597,senado,55,2015-02-01,2019-01-31,1º Suplente,2789,Retorno do titular
+5144,senado,54,2011-02-01,2015-01-31,1º Suplente,2643,Término do mandato
+5144,senado,55,2015-02-01,2019-01-31,1º Suplente,2643,Término do mandato
+5118,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5118,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5184,senado,54,2011-02-01,2015-01-31,2º Suplente,2878,Término do mandato
+5184,senado,54,2011-02-01,2015-01-31,Titular,NA,NA
+5184,senado,55,2015-02-01,2019-01-31,2º Suplente,2878,Término do mandato
+5184,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+4697,senado,54,2011-02-01,2015-01-31,Titular,2582,Término do mandato
+4697,senado,55,2015-02-01,2019-01-31,Titular,2582,Término do mandato
+5573,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5573,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+4981,senado,53,2007-02-01,2011-01-31,Titular,2675,Término do mandato
+4981,senado,54,2011-02-01,2015-01-31,Titular,2675,Término do mandato
+4981,senado,55,2015-02-01,2019-01-31,Titular,2810,Licença Saúde-Particular
+4981,senado,56,2019-02-01,2023-01-31,Titular,2810,Licença Saúde-Particular
+5918,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5918,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5625,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5625,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6026,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6026,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5923,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5923,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5982,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5982,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+4610,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+4610,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+3651,senado,52,2003-02-01,2007-01-31,1º Suplente,2558,Término do mandato
+3651,senado,53,2007-02-01,2011-01-31,1º Suplente,2558,Término do mandato
+3651,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+3651,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5962,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5962,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+945,senado,47,1983-02-01,1987-01-31,NA,NA,NA
+945,senado,48,1987-02-01,1991-01-31,NA,NA,NA
+945,senado,51,1999-02-01,2003-01-31,Titular,1813,Término do mandato
+945,senado,52,2003-02-01,2007-01-31,Titular,1813,Término do mandato
+945,senado,53,2007-02-01,2011-01-31,Titular,2717,Término do mandato
+945,senado,54,2011-02-01,2015-01-31,Titular,2717,Término do mandato
+945,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+945,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5607,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5607,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5989,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5989,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5950,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5950,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5969,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5969,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5967,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5967,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5529,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+5529,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+6001,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6001,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+751,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+751,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+6009,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6009,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5633,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5633,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5631,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5631,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5554,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5554,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+4979,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+4979,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5896,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5896,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5952,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5952,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+6011,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6011,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5932,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5932,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5559,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5559,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6013,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6013,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5603,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5603,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6020,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6020,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5990,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5990,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5991,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5991,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5593,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5593,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6000,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6000,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+470,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+470,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+611,senado,52,2003-02-01,2007-01-31,1º Suplente,NA,NA
+611,senado,53,2007-02-01,2011-01-31,1º Suplente,NA,NA
+611,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+611,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5623,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5623,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5973,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5973,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+739,senado,54,2011-02-01,2015-01-31,Titular,2587,Término do mandato
+739,senado,55,2015-02-01,2019-01-31,Titular,2587,Término do mandato
+739,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+739,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+6017,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6017,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5933,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5933,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+475,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+475,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5963,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5963,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5960,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5960,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5998,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5998,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5992,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5992,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5987,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5987,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+3830,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+3830,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5837,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5837,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+6012,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6012,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5996,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5996,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5637,senado,55,2015-02-01,2019-01-31,1º Suplente,2870,Licença Particular
+5637,senado,56,2019-02-01,2023-01-31,1º Suplente,2870,Licença Particular
+5975,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5975,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5565,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5565,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6016,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6016,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5537,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+5537,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+4994,senado,54,2011-02-01,2015-01-31,Titular,2775,Término do mandato
+4994,senado,55,2015-02-01,2019-01-31,Titular,2775,Término do mandato
+4994,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+4994,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5976,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5976,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+3777,senado,56,2019-02-01,2023-01-31,Titular,2894,Afastamento do exercício
+3777,senado,57,2023-02-01,2027-01-31,Titular,2894,Afastamento do exercício
+5902,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5902,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5587,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5587,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5898,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5898,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5605,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5605,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5718,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5718,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5531,senado,55,2015-02-01,2019-01-31,Titular,2874,Licença Saúde-Particular
+5531,senado,56,2019-02-01,2023-01-31,Titular,2874,Licença Saúde-Particular
+6025,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6025,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+22,senado,49,1991-02-01,1995-01-31,Titular,238,Renúncia
+22,senado,50,1995-02-01,1999-01-31,Titular,238,Renúncia
+22,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+22,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5906,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5906,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5953,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5953,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5740,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5740,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5581,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5581,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5540,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+5540,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5980,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5980,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+4525,senado,53,2007-02-01,2011-01-31,Titular,2509,Término do mandato
+4525,senado,54,2011-02-01,2015-01-31,Titular,2509,Término do mandato
+4525,senado,55,2015-02-01,2019-01-31,Titular,2946,Licença Saúde-Particular
+4525,senado,56,2019-02-01,2023-01-31,Titular,2946,Licença Saúde-Particular
+5917,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5917,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5577,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5577,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5920,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5920,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+345,senado,52,2003-02-01,2007-01-31,Titular,1737,Renúncia
+345,senado,53,2007-02-01,2011-01-31,Titular,1737,Renúncia
+345,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+345,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5894,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5894,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+3713,senado,55,2015-02-01,2019-01-31,Titular,2735,Renúncia
+3713,senado,56,2019-02-01,2023-01-31,Titular,2735,Renúncia
+196,senado,50,1995-02-01,1999-01-31,1º Suplente,1513,Término do mandato
+196,senado,51,1999-02-01,2003-01-31,1º Suplente,1513,Término do mandato
+196,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+196,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5900,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5900,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5615,senado,55,2015-02-01,2019-01-31,1º Suplente,2798,Licença Saúde-Particular
+5615,senado,56,2019-02-01,2023-01-31,1º Suplente,2798,Licença Saúde-Particular
+6008,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6008,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+4558,senado,55,2015-02-01,2019-01-31,Titular,2737,Renúncia
+4558,senado,56,2019-02-01,2023-01-31,Titular,2737,Renúncia
+5639,senado,55,2015-02-01,2019-01-31,2º Suplente,2873,Licença Particular
+5639,senado,56,2019-02-01,2023-01-31,2º Suplente,2873,Licença Particular
+5999,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5999,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5907,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5907,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5008,senado,54,2011-02-01,2015-01-31,Titular,2599,Término do mandato
+5008,senado,55,2015-02-01,2019-01-31,Titular,2599,Término do mandato
+5008,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5008,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5385,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5385,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+6015,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6015,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+6007,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6007,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+6010,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6010,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5978,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5978,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+4770,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+4770,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5931,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5931,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+35,senado,50,1995-02-01,1999-01-31,Titular,141,Renúncia
+35,senado,51,1999-02-01,2003-01-31,Titular,141,Renúncia
+35,senado,54,2011-02-01,2015-01-31,Titular,2761,Término do mandato
+35,senado,55,2015-02-01,2019-01-31,Titular,2761,Término do mandato
+35,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+35,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5912,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5912,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+581,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+581,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+4545,senado,53,2007-02-01,2011-01-31,Titular,2456,Término do mandato
+4545,senado,54,2011-02-01,2015-01-31,Titular,2456,Término do mandato
+4545,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+4545,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+4531,senado,53,2007-02-01,2011-01-31,Titular,2692,Término do mandato
+4531,senado,54,2011-02-01,2015-01-31,Titular,2692,Término do mandato
+4531,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+4531,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5627,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5627,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5609,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5609,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5895,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5895,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5993,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5993,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+4885,senado,52,2003-02-01,2007-01-31,2º Suplente,2545,Retorno do titular
+4885,senado,53,2007-02-01,2011-01-31,2º Suplente,2545,Retorno do titular
+4885,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+4885,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5350,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5350,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5569,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5569,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5849,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5849,senado,55,2015-02-01,2019-01-31,1º Suplente,2857,Retorno do titular
+5849,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5849,senado,56,2019-02-01,2023-01-31,1º Suplente,2857,Retorno do titular
+878,senado,55,2015-02-01,2019-01-31,1º Suplente,2788,Retorno do titular
+878,senado,56,2019-02-01,2023-01-31,1º Suplente,2788,Retorno do titular
+5579,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5579,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5983,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5983,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5910,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5910,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+3361,senado,52,2003-02-01,2007-01-31,Titular,2441,Renúncia
+3361,senado,53,2007-02-01,2011-01-31,Titular,2441,Renúncia
+3361,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+3361,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+90,senado,50,1995-02-01,1999-01-31,Titular,1294,Término do mandato
+90,senado,51,1999-02-01,2003-01-31,Titular,1294,Término do mandato
+90,senado,55,2015-02-01,2019-01-31,Titular,2814,Afastamento do exercício
+90,senado,56,2019-02-01,2023-01-31,Titular,2814,Afastamento do exercício
+5613,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5613,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5972,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5972,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5929,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5929,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5965,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5965,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+1249,senado,53,2007-02-01,2011-01-31,Titular,2683,Afastamento do exercício
+1249,senado,54,2011-02-01,2015-01-31,Titular,2683,Afastamento do exercício
+1249,senado,55,2015-02-01,2019-01-31,Titular,2886,Licença Particular
+1249,senado,56,2019-02-01,2023-01-31,Titular,2886,Licença Particular
+415,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+415,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5533,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+5533,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5977,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5977,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5979,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5979,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5903,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5903,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5926,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5926,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+6014,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6014,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+1186,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+1186,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5968,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5968,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5567,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5567,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+151,senado,50,1995-02-01,1999-01-31,1º Suplente,1533,Término do mandato
+151,senado,51,1999-02-01,2003-01-31,NA,NA,NA
+151,senado,51,1999-02-01,2003-01-31,1º Suplente,1533,Término do mandato
+151,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+151,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5585,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5585,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5904,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5904,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5557,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5557,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5981,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5981,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5666,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5666,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5591,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5591,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5376,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5376,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+742,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+742,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5915,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5915,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+285,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+285,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5422,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5422,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+6287,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6287,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5942,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5942,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5909,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5909,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+6019,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6019,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5994,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5994,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5908,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5908,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+1023,senado,51,1999-02-01,2003-01-31,Titular,2136,Término do mandato
+1023,senado,52,2003-02-01,2007-01-31,Titular,2136,Término do mandato
+1023,senado,53,2007-02-01,2011-01-31,Titular,2510,Término do mandato
+1023,senado,54,2011-02-01,2015-01-31,Titular,2510,Término do mandato
+1023,senado,55,2015-02-01,2019-01-31,Titular,2807,Afastamento do exercício
+1023,senado,56,2019-02-01,2023-01-31,Titular,2807,Afastamento do exercício
+6002,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6002,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5575,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5575,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5571,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5571,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6027,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+6027,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5935,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5935,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5897,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5897,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5595,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5595,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5997,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5997,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5985,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5985,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+63,senado,49,1991-02-01,1995-01-31,1º Suplente,175,Término do mandato
+63,senado,50,1995-02-01,1999-01-31,1º Suplente,175,Término do mandato
+63,senado,51,1999-02-01,2003-01-31,Titular,1373,Término do mandato
+63,senado,52,2003-02-01,2007-01-31,Titular,1373,Término do mandato
+63,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+63,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5281,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+5281,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6006,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6006,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5525,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+5525,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+6024,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6024,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5924,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5924,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5523,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+5523,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5925,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5925,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5599,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5599,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5966,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5966,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+6022,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6022,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5617,senado,55,2015-02-01,2019-01-31,2º Suplente,2800,Retorno do titular
+5617,senado,56,2019-02-01,2023-01-31,2º Suplente,2800,Retorno do titular
+5928,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5928,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5927,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5927,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+336,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+336,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5901,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5901,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5589,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5589,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+825,senado,52,2003-02-01,2007-01-31,Titular,1747,Término do mandato
+825,senado,53,2007-02-01,2011-01-31,Titular,1747,Término do mandato
+825,senado,54,2011-02-01,2015-01-31,Titular,2616,Término do mandato
+825,senado,55,2015-02-01,2019-01-31,Titular,2616,Término do mandato
+825,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+825,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+374,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+374,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5921,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5921,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+6023,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6023,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+453,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+453,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+674,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+674,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+4606,senado,55,2015-02-01,2019-01-31,1º Suplente,2802,Retorno do titular
+4606,senado,56,2019-02-01,2023-01-31,1º Suplente,2802,Retorno do titular
+5922,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5922,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5502,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5502,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5936,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5936,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5971,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5971,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5984,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5984,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5913,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5913,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5012,senado,54,2011-02-01,2015-01-31,Titular,2618,Término do mandato
+5012,senado,55,2015-02-01,2019-01-31,Titular,2618,Término do mandato
+5012,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5012,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+6018,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6018,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5236,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+5236,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+70,senado,50,1995-02-01,1999-01-31,Titular,764,Término do mandato
+70,senado,51,1999-02-01,2003-01-31,Titular,764,Término do mandato
+70,senado,52,2003-02-01,2007-01-31,Titular,1720,Término do mandato
+70,senado,53,2007-02-01,2011-01-31,Titular,1720,Término do mandato
+70,senado,54,2011-02-01,2015-01-31,Titular,2619,Término do mandato
+70,senado,55,2015-02-01,2019-01-31,Titular,2619,Término do mandato
+70,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+70,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5934,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5934,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5561,senado,55,2015-02-01,2019-01-31,1º Suplente,2942,Retorno do titular
+5561,senado,56,2019-02-01,2023-01-31,1º Suplente,2942,Retorno do titular
+5257,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5257,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5635,senado,55,2015-02-01,2019-01-31,1º Suplente,2803,Licença Saúde-Particular
+5635,senado,56,2019-02-01,2023-01-31,1º Suplente,2803,Licença Saúde-Particular
+5892,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5892,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+677,senado,55,2015-02-01,2019-01-31,Titular,2812,Licença Particular
+677,senado,56,2019-02-01,2023-01-31,Titular,2812,Licença Particular
+5986,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5986,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5905,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5905,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5732,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5732,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5352,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5352,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5322,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+5322,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+456,senado,55,2015-02-01,2019-01-31,Titular,2748,Renúncia
+456,senado,56,2019-02-01,2023-01-31,Titular,2748,Renúncia
+5945,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5945,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5601,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5601,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5944,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5944,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+2331,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+2331,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5911,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5911,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5621,senado,55,2015-02-01,2019-01-31,2º Suplente,2852,Retorno do titular
+5621,senado,56,2019-02-01,2023-01-31,2º Suplente,2852,Retorno do titular
+6021,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6021,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5038,senado,54,2011-02-01,2015-01-31,1º Suplente,2722,Retorno do titular
+5038,senado,55,2015-02-01,2019-01-31,1º Suplente,2722,Retorno do titular
+5038,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5038,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5974,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5974,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5583,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5583,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5611,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5611,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5563,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5563,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5916,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5916,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5056,senado,54,2011-02-01,2015-01-31,2º Suplente,NA,NA
+5056,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5056,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5056,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5527,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+5527,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+6005,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+6005,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5988,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5988,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5959,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5959,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5893,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5893,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+5995,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5995,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+4560,senado,54,2011-02-01,2015-01-31,Titular,2624,Término do mandato
+4560,senado,55,2015-02-01,2019-01-31,Titular,2624,Término do mandato
+4560,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+4560,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+3396,senado,52,2003-02-01,2007-01-31,Titular,1728,Término do mandato
+3396,senado,53,2007-02-01,2011-01-31,Titular,1728,Término do mandato
+3396,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+3396,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5535,senado,55,2015-02-01,2019-01-31,Titular,2861,Licença Saúde-Particular
+5535,senado,56,2019-02-01,2023-01-31,Titular,2861,Licença Saúde-Particular
+6004,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+6004,senado,57,2023-02-01,2027-01-31,2º Suplente,NA,NA
+5629,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+5629,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5619,senado,55,2015-02-01,2019-01-31,1º Suplente,2851,Licença Saúde-Particular
+5619,senado,56,2019-02-01,2023-01-31,1º Suplente,2851,Licença Saúde-Particular
+375,senado,55,2015-02-01,2019-01-31,1º Suplente,NA,NA
+375,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5899,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5899,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5748,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5748,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5919,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5919,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+4786,senado,53,2007-02-01,2011-01-31,1º Suplente,2490,Retorno do titular
+4786,senado,54,2011-02-01,2015-01-31,1º Suplente,2490,Retorno do titular
+4786,senado,55,2015-02-01,2019-01-31,2º Suplente,2804,Retorno do titular
+4786,senado,56,2019-02-01,2023-01-31,2º Suplente,2804,Retorno do titular
+791,senado,55,2015-02-01,2019-01-31,2º Suplente,NA,NA
+791,senado,56,2019-02-01,2023-01-31,2º Suplente,NA,NA
+5914,senado,56,2019-02-01,2023-01-31,1º Suplente,NA,NA
+5914,senado,57,2023-02-01,2027-01-31,1º Suplente,NA,NA
+1173,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
+1173,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5411,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5411,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+5783,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+5783,senado,57,2023-02-01,2027-01-31,Titular,NA,NA
+3806,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
+3806,senado,57,2023-02-01,2027-01-31,Titular,NA,NA

@@ -5,7 +5,7 @@ id,sigla,tipo,situacao
 3,Oposição,Oposição,Ativo
 575,"PP, MDB, PTB",Bloco,Ativo
 36761,PEN,Partido,Inativo
-36762,PPL,Partido,Ativo
+36762,PPL,Partido,Extinto
 36763,PROS,Partido,Ativo
 36765,SD,Partido,Inativo
 36769,DEM,Partido,Ativo
@@ -50,3 +50,8 @@ id,sigla,tipo,situacao
 37905,CIDADANIA,Partido,Ativo
 37906,PL,Partido,Ativo
 37907,PATRIOTA,Partido,Ativo
+770,Bloco Parlamentar Unidos pelo Brasil,Bloco,Ativo
+754,Bloco Parlamentar Senado Independente,Bloco,Ativo
+771,Bloco Parlamentar PSDB/PSL,Bloco,Ativo
+763,Bloco Parlamentar Vanguarda,Bloco,Ativo
+755,Bloco Parlamentar da Resistência Democrática,Bloco,Ativo

@@ -53,7 +53,13 @@ processa_votos_camara <- function(votacoes) {
 #' @return Dataframe contendo o id da votação, o id do parlamentar, a casa e o voto dos parlamentares
 #' @examples
 #' processa_votos(url)
-processa_votos <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMcbeHRm_dqX-i2gNVaCiHMFg6yoIjNl9cHj0VBIlQ5eMX3hoHB8cM8FGOukjfNajWDtfvfhqxjji7/pub?gid=0&single=true&output=csv") {
+processa_votos <- function(url = NULL) {
+  
+  if(is.null(url)) {
+    source(here::here("crawler/proposicoes/utils_proposicoes.R"))
+    url <- .URL_PROPOSICOES_VOZATIVA
+  }
+  
   votacoes_lista <- read_csv(url, col_types = cols(id_proposicao = "c"))
     # filter(status_proposicao == "Ativa") %>% 
     # filter(id_sessao != 99999) # remove votacao da PL 6299/2002 (nao possui votacoes em plenário)
@@ -134,8 +140,14 @@ process_votos_por_ano_camara <- function(ano = 2019, url = NULL) {
 #' @examples
 #' votos <- process_votos_anos_url_camara(2019)
 process_votos_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
-                                              url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvvT0fmGUMwOHnEPe9hcAMC_l-u9d7sSplNYkMMzgiE_vFiDcWXWwl4Ys7qaXuWwx4VcPtFLBbMdBd/pub?gid=399933255&single=true&output=csv") {
+                                              url = NULL) {
   library(tidyverse)
+  library(here)
+  
+  if(is.null(url)) {
+    source(here("crawler/proposicoes/utils_proposicoes.R"))
+    url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+  }
   
   votos <- tibble(ano = anos) %>%
     mutate(dados = map(
@@ -156,13 +168,19 @@ process_votos_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
 #' @param votacoes_senado_filepath Caminho para o dataframe de votações no senado.
 #' @return Dataframe com os votos processados
 #' @examples
-#' votos <- process_votos_por_votacoes_senado()
-process_votos_por_votacoes_senado <- function(votacoes_senado_filepath = NULL) {
+#' votos <- process_votos_url_senado()
+process_votos_url_senado <- function(proposicoes_url = NULL) {
   library(tidyverse)
   source(here::here("crawler/votacoes/votos/fetcher_votos_senado.R"))
   source(here::here("crawler/votacoes/utils_votacoes.R"))
   
-  votos <- fetch_all_votos_senado(votacoes_senado_filepath)
+  
+  if(is.null(proposicoes_url)) {
+    source(here::here("crawler/proposicoes/utils_proposicoes.R"))
+    proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
+  }
+  
+  votos <- fetch_all_votos_senado(proposicoes_url)
   
   votos_padronizados <- votos %>%
     enumera_voto() %>%

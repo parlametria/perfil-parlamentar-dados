@@ -90,14 +90,21 @@ fetch_votos_por_link_votacao_senado <- function(url) {
 #' @description A partir de um dataframe de votações, extrai os dados de votos dos senadores.
 #' @param votacoes_senado_filepath Caminho para o csv das votações
 #' @return Dataframe com informações de votos dos senadores
-fetch_all_votos_senado <- function(votacoes_senado_filepath = NULL) {
+#' @example 
+#' source(here::here("crawler/proposicoes/utils_proposicoes.R"))
+#' votos <- fetch_all_votos_senado(.URL_PROPOSICOES_PLENARIO_SENADO)
+fetch_all_votos_senado <- function(url_proposicoes = NULL) {
   library(tidyverse)
+  source(here::here("crawler/votacoes/fetcher_votacoes_senado.R"))
   
-  if (is.null(votacoes_senado_filepath)) {
-    source(here::here("crawler/votacoes/fetcher_votacoes_senado.R"))
+  if (is.null(url_proposicoes)) {
     votacoes <- fetcher_votacoes_por_intervalo_senado()
   } else {
-    votacoes <- read_csv(votacoes_senado_filepath)
+    source(here::here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
+    proposicoes_selecionadas <- fetch_proposicoes_plenario_selecionadas_senado() %>% 
+      pull(id_proposicao)
+    votacoes <- fetcher_votacoes_por_intervalo_senado() %>% 
+      filter(id_proposicao %in% proposicoes_selecionadas)
   }
   
   votacoes <- votacoes %>% 

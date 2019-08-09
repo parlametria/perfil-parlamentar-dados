@@ -1,192 +1,231 @@
 bloco_partido,cargo,id,nome,partido,uf,casa
-"Bloco PP, MDB, PTB",Lider,160541,ARTHUR LIRA,PP,AL,camara
-"Bloco PP, MDB, PTB",Vice-lider,178975,BALEIA ROSSI,MDB,SP,camara
-"Bloco PP, MDB, PTB",Vice-lider,204459,DANIELA DO WAGUINHO,MDB,RJ,camara
-"Bloco PP, MDB, PTB",Vice-lider,171623,FABIO REIS,MDB,SE,camara
-"Bloco PP, MDB, PTB",Vice-lider,178954,LUCIO MOSQUINI,MDB,RO,camara
-"Bloco PP, MDB, PTB",Vice-lider,179001,MÁRCIO BIOLCHI,MDB,RS,camara
-"Bloco PP, MDB, PTB",Vice-lider,204549,AJ ALBUQUERQUE,PP,CE,camara
-"Bloco PP, MDB, PTB",Vice-lider,66828,FAUSTO PINATO,PP,SP,camara
-"Bloco PP, MDB, PTB",Vice-lider,108338,JAQUELINE CASSOL,PP,RO,camara
-"Bloco PP, MDB, PTB",Vice-lider,151208,LAERCIO OLIVEIRA,PP,SE,camara
-"Bloco PP, MDB, PTB",Vice-lider,204406,PEDRO WESTPHALEN,PP,RS,camara
-"Bloco PP, MDB, PTB",Vice-lider,204524,PINHEIRINHO,PP,MG,camara
-"Bloco PP, MDB, PTB",Vice-lider,204380,CELINA LEÃO,PP,DF,camara
-"Bloco PP, MDB, PTB",Vice-lider,204539,HERCÍLIO COELHO DINIZ,MDB,MG,camara
-"Bloco PP, MDB, PTB",Vice-lider,178884,HILDO ROCHA,MDB,MA,camara
-"Bloco PP, MDB, PTB",Vice-lider,178959,HIRAN GONÇALVES,PP,RR,camara
-"Bloco PP, MDB, PTB",Vice-lider,204500,EDUARDO COSTA,PTB,PA,camara
-"Bloco PP, MDB, PTB",Vice-lider,93083,CACÁ LEÃO,PP,BA,camara
-"Bloco PP, MDB, PTB",Vice-lider,204430,MARGARETE COELHO,PP,PI,camara
-"Bloco PP, MDB, PTB",Vice-lider,198783,EMANUEL PINHEIRO NETO,PTB,MT,camara
-"Bloco PP, MDB, PTB",Vice-lider,122974,PEDRO LUCAS FERNANDES ,PTB,MA,camara
-"Bloco PP, MDB, PTB",Vice-lider,204390,PROFESSOR ALCIDES,PP,GO,camara
-PT,Lider,74400,PAULO PIMENTA,PT,RS,camara
-PT,Vice-lider,73604,RUI FALCÃO,PT,SP,camara
-PT,Vice-lider,204503,ALEXANDRE PADILHA,PT,SP,camara
-PT,Vice-lider,160575,ERIKA KOKAY,PT,DF,camara
-PT,Vice-lider,74161,REGINALDO LOPES,PT,MG,camara
-PT,Vice-lider,74398,MARIA DO ROSÁRIO,PT,RS,camara
-PT,Vice-lider,204480,ROGÉRIO CORREIA ,PT,MG,camara
-PT,Vice-lider,160604,PEDRO UCZAI,PT,SC,camara
-PT,Vice-lider,178986,NILTO TATTO,PT,SP,camara
-PT,Vice-lider,204428,MARÍLIA ARRAES,PT,PE,camara
-PT,Vice-lider,160535,MARCON,PT,RS,camara
-PT,Vice-lider,132504,ENIO VERRI,PT,PR,camara
-PT,Vice-lider,204559,ZÉ NETO,PT,BA,camara
-PT,Vice-lider,204495,AIRTON FALEIRO,PT,PA,camara
-PT,Vice-lider,178873,HELDER SALOMÃO,PT,ES,camara
-PSL,Lider,164359,DELEGADO WALDIR,PSL,GO,camara
-PSL,Vice-lider,204477,FELÍCIO LATERÇA,PSL,RJ,camara
-PSL,Vice-lider,204479,NICOLETTI,PSL,RR,camara
-PSL,Vice-lider,204420,JULIAN LEMOS ,PSL,PB,camara
-PSL,Vice-lider,204449,NELSON BARBUDO,PSL,MT,camara
-PSL,Vice-lider,204520,CABO JUNIO AMARAL,PSL,MG,camara
-PSL,Vice-lider,204462,CHRIS TONIETTO,PSL,RJ,camara
-PSL,Vice-lider,204455,LUIZ LIMA,PSL,RJ,camara
-PSL,Vice-lider,204544,ALEXANDRE FROTA ,PSL,SP,camara
-PSL,Vice-lider,204388,BIBO NUNES,PSL,RS,camara
-PSL,Vice-lider,204411,FILIPE BARROS,PSL,PR,camara
-PSL,Vice-lider,204569,DELEGADO PABLO,PSL,AM,camara
-PSL,Vice-lider,204546,JOICE HASSELMANN,PSL,SP,camara
-PSL,Vice-lider,204502,JÚNIOR BOZZELLA,PSL,SP,camara
-PSL,Vice-lider,204484,GENERAL PETERNELLI,PSL,SP,camara
-PL,Lider,74043,WELLINGTON ROBERTO,PL,PB,camara
-PL,Vice-lider,204556,MARCELO RAMOS ,PL,AM,camara
-PL,Vice-lider,160673,GIOVANI CHERINI,PL,RS,camara
-PL,Vice-lider,141417,EDIO LOPES,PL,RR,camara
-PL,Vice-lider,74585,LINCOLN PORTELA,PL,MG,camara
-PL,Vice-lider,204427,FERNANDO RODOLFO,PL,PE,camara
-PL,Vice-lider,178937,ALTINEU CÔRTES,PL,RJ,camara
-PL,Vice-lider,204481,DR. JAZIEL,PL,CE,camara
-PL,Vice-lider,178829,CAPITÃO AUGUSTO,PL,SP,camara
-PL,Vice-lider,137070,VICENTINHO JÚNIOR,PL,TO,camara
-PL,Vice-lider,204354,FLÁVIA ARRUDA,PL,DF,camara
-PSD,Lider,74471,ANDRÉ DE PAULA,PSD,PE,camara
-PSD,Vice-lider,160588,DIEGO ANDRADE,PSD,MG,camara
-PSD,Vice-lider,178910,JOAQUIM PASSARINHO,PSD,PA,camara
-PSD,Vice-lider,160587,FÁBIO TRAD,PSD,MS,camara
-PSD,Vice-lider,74317,JÚLIO CESAR,PSD,PI,camara
-PSD,Vice-lider,204447,FLORDELIS,PSD,RJ,camara
-PSD,Vice-lider,204522,MARCO BERTAIOLLI,PSD,SP,camara
-PSD,Vice-lider,204392,FRANCISCO JR.,PSD,GO,camara
-PSD,Vice-lider,141450,HUGO LEAL,PSD,RJ,camara
-PSD,Vice-lider,178930,EVANDRO ROMAN,PSD,PR,camara
-PSB,Lider,178922,TADEU ALENCAR,PSB,PE,camara
-PSB,Vice-lider,204389,ELIAS VAZ,PSB,GO,camara
-PSB,Vice-lider,204429,JOÃO H. CAMPOS,PSB,PE,camara
-PSB,Vice-lider,204352,CAMILO CAPIBERIBE,PSB,AP,camara
-PSB,Vice-lider,204405,LIZIANE BAYER,PSB,RS,camara
-PSB,Vice-lider,204558,MARCELO NILO,PSB,BA,camara
-PSB,Vice-lider,204561,BIRA DO PINDARÉ,PSB,MA,camara
-PSB,Vice-lider,204525,ROSANA VALLE,PSB,SP,camara
-PSB,Vice-lider,206231,TED CONTI,PSB,ES,camara
-PRB,Lider,160531,JHONATAN DE JESUS,PRB,RR,camara
-PRB,Vice-lider,204576,JOÃO ROMA,PRB,BA,camara
-PRB,Vice-lider,204572,CAPITÃO ALBERTO NETO,PRB,AM,camara
-PRB,Vice-lider,141555,VINICIUS CARVALHO,PRB,SP,camara
-PRB,Vice-lider,204425,SILVIO COSTA FILHO,PRB,PE,camara
-PRB,Vice-lider,98057,LAFAYETTE DE ANDRADA,PRB,MG,camara
-PRB,Vice-lider,160674,HUGO MOTTA,PRB,PB,camara
-PRB,Vice-lider,74366,JOÃO CAMPOS,PRB,GO,camara
-PRB,Vice-lider,204418,LUIZÃO GOULART,PRB,PR,camara
-PSDB,Lider,74262,CARLOS SAMPAIO,PSDB,SP,camara
-PSDB,Vice-lider,204358,BETO PEREIRA,PSDB,MS,camara
-PSDB,Vice-lider,204560,ADOLFO VIANA,PSDB,BA,camara
-PSDB,Vice-lider,204409,DANIEL TRZECIAK,PSDB,RS,camara
-PSDB,Vice-lider,204357,ROSE MODESTO,PSDB,MS,camara
-PSDB,Vice-lider,160758,DOMINGOS SÁVIO,PSDB,MG,camara
-PSDB,Vice-lider,204496,CELSO SABINO,PSDB,PA,camara
-PSDB,Vice-lider,204471,MARA ROCHA,PSDB,AC,camara
-PSDB,Vice-lider,160635,RUY CARNEIRO,PSDB,PB,camara
-DEM,Lider,178854,ELMAR NASCIMENTO,DEM,BA,camara
-DEM,Vice-lider,141422,EFRAIM FILHO,DEM,PB,camara
-DEM,Vice-lider,204536,KIM KATAGUIRI,DEM,SP,camara
-DEM,Vice-lider,160545,ALEXANDRE LEITE,DEM,SP,camara
-DEM,Vice-lider,178947,SÓSTENES CAVALCANTE,DEM,RJ,camara
-DEM,Vice-lider,204498,OLIVAL MARQUES,DEM,PA,camara
-DEM,Vice-lider,204395,PEDRO LUPION,DEM,PR,camara
-DEM,Vice-lider,122158,PEDRO PAULO,DEM,RJ,camara
-PDT,Lider,133439,ANDRÉ FIGUEIREDO,PDT,CE,camara
-PDT,Vice-lider,178835,AFONSO MOTTA,PDT,RS,camara
-PDT,Vice-lider,133968,PAULO RAMOS,PDT,RJ,camara
-PDT,Vice-lider,73460,GUSTAVO FRUET,PDT,PR,camara
-PDT,Vice-lider,74299,LEÔNIDAS CRISTINO,PDT,CE,camara
-PDT,Vice-lider,204533,IDILVAN ALENCAR,PDT,CE,camara
-PDT,Vice-lider,141411,DAGOBERTO NOGUEIRA,PDT,MS,camara
-PDT,Vice-lider,73486,POMPEO DE MATTOS,PDT,RS,camara
-SOLIDARIEDADE,Lider,160665,AUGUSTO COUTINHO,SOLIDARIEDADE,PE,camara
-SOLIDARIEDADE,Vice-lider,204439,DR. LEONARDO,SOLIDARIEDADE,MT,camara
-SOLIDARIEDADE,Vice-lider,204408,GUSTINHO RIBEIRO,SOLIDARIEDADE,SE,camara
-SOLIDARIEDADE,Vice-lider,160632,ZÉ SILVA,SOLIDARIEDADE,MG,camara
-SOLIDARIEDADE,Vice-lider,204364,ELI BORGES,SOLIDARIEDADE,TO,camara
-PODE,Lider,204391,JOSÉ NELTO,PODE,GO,camara
-PODE,Vice-lider,204508,IGOR TIMO,PODE,MG,camara
-PODE,Vice-lider,204359,LÉO MORAES,PODE,RO,camara
-PODE,Vice-lider,69871,BACELAR,PODE,BA,camara
-PSOL,Lider,73531,IVAN VALENTE,PSOL,SP,camara
-PSOL,Vice-lider,76874,MARCELO FREIXO,PSOL,RJ,camara
-PSOL,Vice-lider,204509,ÁUREA CAROLINA,PSOL,MG,camara
-PSOL,Vice-lider,204407,FERNANDA MELCHIONNA ,PSOL,RS,camara
-PROS,Lider,178934,TONINHO WANDSCHEER,PROS,PR,camara
-PROS,Vice-lider,204487,CAPITÃO WAGNER,PROS,CE,camara
-PROS,Vice-lider,178939,CLARISSA GAROTINHO,PROS,RJ,camara
-PROS,Vice-lider,204379,ACÁCIO FAVACHO,PROS,AP,camara
-PCdoB,Lider,74060,DANIEL ALMEIDA,PCdoB,BA,camara
-PCdoB,Vice-lider,73943,PERPÉTUA ALMEIDA,PCdoB,AC,camara
-PCdoB,Vice-lider,81055,MÁRCIO JERRY,PCdoB,MA,camara
-PCdoB,Vice-lider,73801,RENILDO CALHEIROS,PCdoB,PE,camara
-PSC,Lider,204423,ANDRÉ FERREIRA,PSC,PE,camara
-PSC,Vice-lider,204441,OTONI DE PAULA,PSC,RJ,camara
-PSC,Vice-lider,204482,EUCLYDES PETTERSEN,PSC,MG,camara
-CIDADANIA,Lider,178916,DANIEL COELHO,CIDADANIA,PE,camara
-CIDADANIA,Vice-lider,204355,DA VITORIA,CIDADANIA,ES,camara
-CIDADANIA,Vice-lider,204377,PAULA BELMONTE,CIDADANIA,DF,camara
-NOVO,Lider,156190,MARCEL VAN HATTEM,NOVO,RS,camara
-NOVO,Vice-lider,204519,TIAGO MITRAUD,NOVO,MG,camara
-NOVO,Vice-lider,204461,PAULO GANIME,NOVO,RJ,camara
-AVANTE,Lider,160510,LUIS TIBÉ,AVANTE,MG,camara
-AVANTE,Vice-lider,204553,PASTOR SARGENTO ISIDÓRIO,AVANTE,BA,camara
-AVANTE,Vice-lider,198197,GREYCE ELIAS,AVANTE,MG,camara
-PATRIOTA,Lider,204494,FRED COSTA,PATRIOTA,MG,camara
-PATRIOTA,Vice-lider,204518,DR. FREDERICO,PATRIOTA,MG,camara
-PATRIOTA,Vice-lider,160642,PASTOR EURICO,PATRIOTA,PE,camara
-PV,Lider,178832,LEANDRE,PV,PR,camara
-PV,Vice-lider,204488,CÉLIO STUDART,PV,CE,camara
+"Bloco PP, MDB, PTB",Líder,178975,BALEIA ROSSI,MDB,SP,camara
+"Bloco PP, MDB, PTB",Vice-líder,122974,PEDRO LUCAS FERNANDES ,PTB,MA,camara
+"Bloco PP, MDB, PTB",Vice-líder,204459,DANIELA DO WAGUINHO,MDB,RJ,camara
+"Bloco PP, MDB, PTB",Vice-líder,171623,FABIO REIS,MDB,SE,camara
+"Bloco PP, MDB, PTB",Vice-líder,178954,LUCIO MOSQUINI,MDB,RO,camara
+"Bloco PP, MDB, PTB",Vice-líder,179001,MÁRCIO BIOLCHI,MDB,RS,camara
+"Bloco PP, MDB, PTB",Vice-líder,204549,AJ ALBUQUERQUE,PP,CE,camara
+"Bloco PP, MDB, PTB",Vice-líder,66828,FAUSTO PINATO,PP,SP,camara
+"Bloco PP, MDB, PTB",Vice-líder,108338,JAQUELINE CASSOL,PP,RO,camara
+"Bloco PP, MDB, PTB",Vice-líder,151208,LAERCIO OLIVEIRA,PP,SE,camara
+"Bloco PP, MDB, PTB",Vice-líder,204406,PEDRO WESTPHALEN,PP,RS,camara
+"Bloco PP, MDB, PTB",Vice-líder,204380,CELINA LEÃO,PP,DF,camara
+"Bloco PP, MDB, PTB",Vice-líder,204539,HERCÍLIO COELHO DINIZ,MDB,MG,camara
+"Bloco PP, MDB, PTB",Vice-líder,178884,HILDO ROCHA,MDB,MA,camara
+"Bloco PP, MDB, PTB",Vice-líder,178959,HIRAN GONÇALVES,PP,RR,camara
+"Bloco PP, MDB, PTB",Vice-líder,204500,EDUARDO COSTA,PTB,PA,camara
+"Bloco PP, MDB, PTB",Vice-líder,93083,CACÁ LEÃO,PP,BA,camara
+"Bloco PP, MDB, PTB",Vice-líder,204430,MARGARETE COELHO,PP,PI,camara
+"Bloco PP, MDB, PTB",Vice-líder,160541,ARTHUR LIRA,PP,AL,camara
+"Bloco PP, MDB, PTB",Vice-líder,198783,EMANUEL PINHEIRO NETO,PTB,MT,camara
+"Bloco PP, MDB, PTB",Vice-líder,204524,PINHEIRINHO,PP,MG,camara
+PT,Líder,74400,PAULO PIMENTA,PT,RS,camara
+PT,Vice-líder,73604,RUI FALCÃO,PT,SP,camara
+PT,Vice-líder,204503,ALEXANDRE PADILHA,PT,SP,camara
+PT,Vice-líder,160575,ERIKA KOKAY,PT,DF,camara
+PT,Vice-líder,74161,REGINALDO LOPES,PT,MG,camara
+PT,Vice-líder,74398,MARIA DO ROSÁRIO,PT,RS,camara
+PT,Vice-líder,204480,ROGÉRIO CORREIA ,PT,MG,camara
+PT,Vice-líder,160604,PEDRO UCZAI,PT,SC,camara
+PT,Vice-líder,178986,NILTO TATTO,PT,SP,camara
+PT,Vice-líder,132504,ENIO VERRI,PT,PR,camara
+PT,Vice-líder,204559,ZÉ NETO,PT,BA,camara
+PT,Vice-líder,204495,AIRTON FALEIRO,PT,PA,camara
+PT,Vice-líder,204428,MARÍLIA ARRAES,PT,PE,camara
+PT,Vice-líder,178873,HELDER SALOMÃO,PT,ES,camara
+PT,Vice-líder,160535,MARCON,PT,RS,camara
+PSL,Líder,164359,DELEGADO WALDIR,PSL,GO,camara
+PSL,Vice-líder,204477,FELÍCIO LATERÇA,PSL,RJ,camara
+PSL,Vice-líder,204479,NICOLETTI,PSL,RR,camara
+PSL,Vice-líder,204420,JULIAN LEMOS ,PSL,PB,camara
+PSL,Vice-líder,204449,NELSON BARBUDO,PSL,MT,camara
+PSL,Vice-líder,204520,CABO JUNIO AMARAL,PSL,MG,camara
+PSL,Vice-líder,204462,CHRIS TONIETTO,PSL,RJ,camara
+PSL,Vice-líder,204455,LUIZ LIMA,PSL,RJ,camara
+PSL,Vice-líder,204411,FILIPE BARROS,PSL,PR,camara
+PSL,Vice-líder,204502,JÚNIOR BOZZELLA,PSL,SP,camara
+PSL,Vice-líder,204374,BIA KICIS,PSL,DF,camara
+PSL,Vice-líder,204367,DANIEL FREITAS,PSL,SC,camara
+PL,Líder,74043,WELLINGTON ROBERTO,PL,PB,camara
+PL,Vice-líder,204556,MARCELO RAMOS ,PL,AM,camara
+PL,Vice-líder,160673,GIOVANI CHERINI,PL,RS,camara
+PL,Vice-líder,141417,EDIO LOPES,PL,RR,camara
+PL,Vice-líder,74585,LINCOLN PORTELA,PL,MG,camara
+PL,Vice-líder,204427,FERNANDO RODOLFO,PL,PE,camara
+PL,Vice-líder,178937,ALTINEU CÔRTES,PL,RJ,camara
+PL,Vice-líder,204481,DR. JAZIEL,PL,CE,camara
+PL,Vice-líder,178829,CAPITÃO AUGUSTO,PL,SP,camara
+PL,Vice-líder,137070,VICENTINHO JÚNIOR,PL,TO,camara
+PL,Vice-líder,204354,FLÁVIA ARRUDA,PL,DF,camara
+PSD,Líder,74471,ANDRÉ DE PAULA,PSD,PE,camara
+PSD,Vice-líder,160588,DIEGO ANDRADE,PSD,MG,camara
+PSD,Vice-líder,178910,JOAQUIM PASSARINHO,PSD,PA,camara
+PSD,Vice-líder,160587,FÁBIO TRAD,PSD,MS,camara
+PSD,Vice-líder,74317,JÚLIO CESAR,PSD,PI,camara
+PSD,Vice-líder,204447,FLORDELIS,PSD,RJ,camara
+PSD,Vice-líder,204522,MARCO BERTAIOLLI,PSD,SP,camara
+PSD,Vice-líder,141450,HUGO LEAL,PSD,RJ,camara
+PSD,Vice-líder,204392,FRANCISCO JR.,PSD,GO,camara
+PSD,Vice-líder,178930,EVANDRO ROMAN,PSD,PR,camara
+PSB,Líder,178922,TADEU ALENCAR,PSB,PE,camara
+PSB,Vice-líder,204389,ELIAS VAZ,PSB,GO,camara
+PSB,Vice-líder,204429,JOÃO H. CAMPOS,PSB,PE,camara
+PSB,Vice-líder,204352,CAMILO CAPIBERIBE,PSB,AP,camara
+PSB,Vice-líder,204405,LIZIANE BAYER,PSB,RS,camara
+PSB,Vice-líder,204558,MARCELO NILO,PSB,BA,camara
+PSB,Vice-líder,204561,BIRA DO PINDARÉ,PSB,MA,camara
+PSB,Vice-líder,204525,ROSANA VALLE,PSB,SP,camara
+PSB,Vice-líder,206231,TED CONTI,PSB,ES,camara
+PRB,Líder,160531,JHONATAN DE JESUS,PRB,RR,camara
+PRB,Vice-líder,204576,JOÃO ROMA,PRB,BA,camara
+PRB,Vice-líder,204572,CAPITÃO ALBERTO NETO,PRB,AM,camara
+PRB,Vice-líder,141555,VINICIUS CARVALHO,PRB,SP,camara
+PRB,Vice-líder,204425,SILVIO COSTA FILHO,PRB,PE,camara
+PRB,Vice-líder,98057,LAFAYETTE DE ANDRADA,PRB,MG,camara
+PRB,Vice-líder,160674,HUGO MOTTA,PRB,PB,camara
+PRB,Vice-líder,74366,JOÃO CAMPOS,PRB,GO,camara
+PRB,Vice-líder,204418,LUIZÃO GOULART,PRB,PR,camara
+PSDB,Líder,74262,CARLOS SAMPAIO,PSDB,SP,camara
+PSDB,Vice-líder,204358,BETO PEREIRA,PSDB,MS,camara
+PSDB,Vice-líder,204560,ADOLFO VIANA,PSDB,BA,camara
+PSDB,Vice-líder,204409,DANIEL TRZECIAK,PSDB,RS,camara
+PSDB,Vice-líder,204357,ROSE MODESTO,PSDB,MS,camara
+PSDB,Vice-líder,160758,DOMINGOS SÁVIO,PSDB,MG,camara
+PSDB,Vice-líder,204496,CELSO SABINO,PSDB,PA,camara
+PSDB,Vice-líder,204471,MARA ROCHA,PSDB,AC,camara
+PSDB,Vice-líder,74646,AÉCIO NEVES,PSDB,MG,camara
+DEM,Líder,178854,ELMAR NASCIMENTO,DEM,BA,camara
+DEM,Vice-líder,141422,EFRAIM FILHO,DEM,PB,camara
+DEM,Vice-líder,204536,KIM KATAGUIRI,DEM,SP,camara
+DEM,Vice-líder,160545,ALEXANDRE LEITE,DEM,SP,camara
+DEM,Vice-líder,178947,SÓSTENES CAVALCANTE,DEM,RJ,camara
+DEM,Vice-líder,204498,OLIVAL MARQUES,DEM,PA,camara
+DEM,Vice-líder,204395,PEDRO LUPION,DEM,PR,camara
+PDT,Líder,133439,ANDRÉ FIGUEIREDO,PDT,CE,camara
+PDT,Vice-líder,178835,AFONSO MOTTA,PDT,RS,camara
+PDT,Vice-líder,133968,PAULO RAMOS,PDT,RJ,camara
+PDT,Vice-líder,73460,GUSTAVO FRUET,PDT,PR,camara
+PDT,Vice-líder,74299,LEÔNIDAS CRISTINO,PDT,CE,camara
+PDT,Vice-líder,204533,IDILVAN ALENCAR,PDT,CE,camara
+PDT,Vice-líder,141411,DAGOBERTO NOGUEIRA,PDT,MS,camara
+PDT,Vice-líder,73486,POMPEO DE MATTOS,PDT,RS,camara
+SOLIDARIEDADE,Líder,160665,AUGUSTO COUTINHO,SOLIDARIEDADE,PE,camara
+SOLIDARIEDADE,Vice-líder,204439,DR. LEONARDO,SOLIDARIEDADE,MT,camara
+SOLIDARIEDADE,Vice-líder,204408,GUSTINHO RIBEIRO,SOLIDARIEDADE,SE,camara
+SOLIDARIEDADE,Vice-líder,160632,ZÉ SILVA,SOLIDARIEDADE,MG,camara
+SOLIDARIEDADE,Vice-líder,204364,ELI BORGES,SOLIDARIEDADE,TO,camara
+PODE,Líder,204391,JOSÉ NELTO,PODE,GO,camara
+PODE,Vice-líder,204508,IGOR TIMO,PODE,MG,camara
+PODE,Vice-líder,204359,LÉO MORAES,PODE,RO,camara
+PODE,Vice-líder,69871,BACELAR,PODE,BA,camara
+PSOL,Líder,73531,IVAN VALENTE,PSOL,SP,camara
+PSOL,Vice-líder,76874,MARCELO FREIXO,PSOL,RJ,camara
+PSOL,Vice-líder,204509,ÁUREA CAROLINA,PSOL,MG,camara
+PSOL,Vice-líder,204407,FERNANDA MELCHIONNA ,PSOL,RS,camara
+PROS,Líder,178934,TONINHO WANDSCHEER,PROS,PR,camara
+PROS,Vice-líder,204487,CAPITÃO WAGNER,PROS,CE,camara
+PROS,Vice-líder,178939,CLARISSA GAROTINHO,PROS,RJ,camara
+PROS,Vice-líder,204379,ACÁCIO FAVACHO,PROS,AP,camara
+PCdoB,Líder,74060,DANIEL ALMEIDA,PCdoB,BA,camara
+PCdoB,Vice-líder,73943,PERPÉTUA ALMEIDA,PCdoB,AC,camara
+PCdoB,Vice-líder,81055,MÁRCIO JERRY,PCdoB,MA,camara
+PCdoB,Vice-líder,73801,RENILDO CALHEIROS,PCdoB,PE,camara
+PSC,Líder,204423,ANDRÉ FERREIRA,PSC,PE,camara
+PSC,Vice-líder,204441,OTONI DE PAULA,PSC,RJ,camara
+PSC,Vice-líder,204482,EUCLYDES PETTERSEN,PSC,MG,camara
+CIDADANIA,Líder,178916,DANIEL COELHO,CIDADANIA,PE,camara
+CIDADANIA,Vice-líder,204355,DA VITORIA,CIDADANIA,ES,camara
+CIDADANIA,Vice-líder,204377,PAULA BELMONTE,CIDADANIA,DF,camara
+NOVO,Líder,156190,MARCEL VAN HATTEM,NOVO,RS,camara
+NOVO,Vice-líder,204523,LUCAS GONZALEZ,NOVO,MG,camara
+NOVO,Vice-líder,204532,VINICIUS POIT,NOVO,SP,camara
+AVANTE,Líder,160510,LUIS TIBÉ,AVANTE,MG,camara
+AVANTE,Vice-líder,197438,TITO,AVANTE,BA,camara
+AVANTE,Vice-líder,204375,LEDA SADALA,AVANTE,AP,camara
+PATRIOTA,Líder,204494,FRED COSTA,PATRIOTA,MG,camara
+PATRIOTA,Vice-líder,204518,DR. FREDERICO,PATRIOTA,MG,camara
+PATRIOTA,Vice-líder,160642,PASTOR EURICO,PATRIOTA,PE,camara
+PV,Líder,178832,LEANDRE,PV,PR,camara
+PV,Vice-líder,204488,CÉLIO STUDART,PV,CE,camara
 PMN,Representante,204552,EDUARDO BRAIDE,PMN,MA,camara
 PHS,Representante,204564,IGOR KANNÁRIO,PHS,BA,camara
 REDE,Representante,204468,JOENIA WAPICHANA,REDE,RR,camara
-Governo,Lider,179587,MAJOR VITOR HUGO,PSL,GO,camara
-Governo,Vice-lider,204460,CARLOS JORDY,PSL,RJ,camara
-Governo,Vice-lider,204376,CORONEL ARMANDO,PSL,SC,camara
-Governo,Vice-lider,73891,DARCÍSIO PERONDI,MDB,RS,camara
-Governo,Vice-lider,204472,JOSÉ MEDEIROS,PODE,MT,camara
-Governo,Vice-lider,178879,LUCAS VERGILIO,SOLIDARIEDADE,GO,camara
-Governo,Vice-lider,204458,MAJOR FABIANA,PSL,RJ,camara
-Governo,Vice-lider,178993,CARLOS HENRIQUE GAGUIM,DEM,TO,camara
-Governo,Vice-lider,204531,GUILHERME DERRITE,PP,SP,camara
-Governo,Vice-lider,74554,JOSÉ ROCHA,PL,BA,camara
-Governo,Vice-lider,178981,HERCULANO PASSOS,MDB,SP,camara
-Maioria,Lider,160527,AGUINALDO RIBEIRO,PP,PB,camara
-Oposição,Lider,160511,ALESSANDRO MOLON,PSB,RJ,camara
-Oposição,Vice-lider,204394,GERVÁSIO MAIA,PSB,PB,camara
-Oposição,Vice-lider,73482,HENRIQUE FONTANA,PT,RS,camara
-Oposição,Vice-lider,141488,PAULO TEIXEIRA,PT,SP,camara
-Oposição,Vice-lider,74160,PATRUS ANANIAS,PT,MG,camara
-Oposição,Vice-lider,178970,JOÃO DANIEL,PT,SE,camara
-Oposição,Vice-lider,178927,ALIEL MACHADO,PSB,PR,camara
-Oposição,Vice-lider,141439,CHICO D'ANGELO,PDT,RJ,camara
-Oposição,Vice-lider,160528,DANILO CABRAL,PSB,PE,camara
-Minoria,Lider,74848,JANDIRA FEGHALI,PCdoB,RJ,camara
-Minoria,Vice-lider,157130,TÚLIO GADÊLHA ,PDT,PE,camara
-Minoria,Vice-lider,141470,JOSÉ GUIMARÃES,PT,CE,camara
-Minoria,Vice-lider,69871,BACELAR,PODE,BA,camara
-Minoria,Vice-lider,139285,LÍDICE DA MATA,PSB,BA,camara
-Minoria,Vice-lider,74057,ALICE PORTUGAL,PCdoB,BA,camara
-Minoria,Vice-lider,204483,VILSON DA FETAEMG,PSB,MG,camara
-Minoria,Vice-lider,160508,AFONSO FLORENCE,PT,BA,camara
-Minoria,Vice-lider,76874,MARCELO FREIXO,PSOL,RJ,camara
-Minoria,Vice-lider,68720,FÁBIO HENRIQUE,PDT,SE,camara
-PP,Lider,160541,ARTHUR LIRA,PP,AL,camara
-MDB,Lider,178975,BALEIA ROSSI,MDB,SP,camara
-PTB,Lider,122974,PEDRO LUCAS FERNANDES ,PTB,MA,camara
+Governo,Líder,179587,MAJOR VITOR HUGO,PSL,GO,camara
+Governo,Vice-líder,204460,CARLOS JORDY,PSL,RJ,camara
+Governo,Vice-líder,204376,CORONEL ARMANDO,PSL,SC,camara
+Governo,Vice-líder,73891,DARCÍSIO PERONDI,MDB,RS,camara
+Governo,Vice-líder,204472,JOSÉ MEDEIROS,PODE,MT,camara
+Governo,Vice-líder,178879,LUCAS VERGILIO,SOLIDARIEDADE,GO,camara
+Governo,Vice-líder,204458,MAJOR FABIANA,PSL,RJ,camara
+Governo,Vice-líder,178993,CARLOS HENRIQUE GAGUIM,DEM,TO,camara
+Governo,Vice-líder,204531,GUILHERME DERRITE,PP,SP,camara
+Governo,Vice-líder,74554,JOSÉ ROCHA,PL,BA,camara
+Governo,Vice-líder,178981,HERCULANO PASSOS,MDB,SP,camara
+Maioria,Líder,160527,AGUINALDO RIBEIRO,PP,PB,camara
+Oposição,Líder,160511,ALESSANDRO MOLON,PSB,RJ,camara
+Oposição,Vice-líder,204394,GERVÁSIO MAIA,PSB,PB,camara
+Oposição,Vice-líder,73482,HENRIQUE FONTANA,PT,RS,camara
+Oposição,Vice-líder,141488,PAULO TEIXEIRA,PT,SP,camara
+Oposição,Vice-líder,74160,PATRUS ANANIAS,PT,MG,camara
+Oposição,Vice-líder,178970,JOÃO DANIEL,PT,SE,camara
+Oposição,Vice-líder,178927,ALIEL MACHADO,PSB,PR,camara
+Oposição,Vice-líder,141439,CHICO D'ANGELO,PDT,RJ,camara
+Oposição,Vice-líder,160528,DANILO CABRAL,PSB,PE,camara
+Minoria,Líder,74848,JANDIRA FEGHALI,PCdoB,RJ,camara
+Minoria,Vice-líder,157130,TÚLIO GADÊLHA ,PDT,PE,camara
+Minoria,Vice-líder,141470,JOSÉ GUIMARÃES,PT,CE,camara
+Minoria,Vice-líder,69871,BACELAR,PODE,BA,camara
+Minoria,Vice-líder,139285,LÍDICE DA MATA,PSB,BA,camara
+Minoria,Vice-líder,74057,ALICE PORTUGAL,PCdoB,BA,camara
+Minoria,Vice-líder,204483,VILSON DA FETAEMG,PSB,MG,camara
+Minoria,Vice-líder,160508,AFONSO FLORENCE,PT,BA,camara
+Minoria,Vice-líder,76874,MARCELO FREIXO,PSOL,RJ,camara
+Minoria,Vice-líder,68720,FÁBIO HENRIQUE,PDT,SE,camara
+PP,Líder,160541,ARTHUR LIRA,PP,AL,camara
+MDB,Líder,178975,BALEIA ROSSI,MDB,SP,camara
+PTB,Líder,122974,PEDRO LUCAS FERNANDES ,PTB,MA,camara
+Bloco Parlamentar Unidos pelo Brasil,Líder,22,Esperidião Amin,PP,SC,senado
+Bloco Parlamentar Senado Independente,Líder,5748,Veneziano Vital do Rêgo,PSB,PB,senado
+Bloco Parlamentar PSDB/PSL,Líder,5905,Rodrigo Cunha,PSDB,AL,senado
+Bloco Parlamentar Vanguarda,Líder,1173,Wellington Fagundes,PL,MT,senado
+Bloco Parlamentar Vanguarda,Vice-líder,5732,Rodrigo Pacheco,DEM,MG,senado
+Bloco Parlamentar Vanguarda,Vice-líder,5350,Jorginho Mello,PL,SC,senado
+Bloco Parlamentar Vanguarda,Vice-líder,3806,Zequinha Marinho,PSC,PA,senado
+Bloco Parlamentar da Resistência Democrática,Líder,374,Paulo Rocha,PT,PA,senado
+Bloco Parlamentar da Resistência Democrática,Vice-líder,5783,Zenaide Maia,PROS,RN,senado
+PSD,Líder,5523,Otto Alencar,PSD,BA,senado
+PSD,Vice-líder,5385,Irajá,PSD,TO,senado
+PSD,Vice-líder,5967,Angelo Coronel,PSD,BA,senado
+PODEMOS,Líder,945,Alvaro Dias,PODEMOS,PR,senado
+PODEMOS,Vice-líder,5976,Eduardo Girão,PODEMOS,CE,senado
+PODEMOS,Vice-líder,5924,Oriovisto Guimarães,PODEMOS,PR,senado
+PODEMOS,Vice-líder,2331,Rose de Freitas,PODEMOS,ES,senado
+Maioria,Líder,4994,Eduardo Braga,MDB,AM,senado
+Minoria,Líder,5012,Randolfe Rodrigues,REDE,AP,senado
+Governo,Líder,5540,Fernando Bezerra Coelho,MDB,PE,senado
+Governo,Vice-líder,5531,Elmano Férrer,PODEMOS,PI,senado
+Governo,Vice-líder,4770,Izalci Lucas,PSDB,DF,senado
+Governo,Vice-líder,470,Chico Rodrigues,DEM,RR,senado
+MDB,Líder,4994,Eduardo Braga,MDB,AM,senado
+MDB,Vice-líder,285,Marcio Bittar,MDB,AC,senado
+PP,Líder,5998,Daniella Ribeiro,PP,PB,senado
+PP,Vice-líder,739,Ciro Nogueira,PP,PI,senado
+PRB,Líder,6027,Mecias de Jesus,PRB,RR,senado
+PDT,Líder,5411,Weverton,PDT,MA,senado
+CIDADANIA,Líder,5718,Eliziane Gama,CIDADANIA,MA,senado
+CIDADANIA,Vice-líder,5982,Alessandro Vieira,CIDADANIA,SE,senado
+PSB,Líder,5895,Jorge Kajuru,PSB,GO,senado
+REDE,Líder,5012,Randolfe Rodrigues,REDE,AP,senado
+PSDB,Líder,677,Roberto Rocha,PSDB,MA,senado
+PSDB,Vice-líder,4770,Izalci Lucas,PSDB,DF,senado
+PSDB,Vice-líder,5905,Rodrigo Cunha,PSDB,AL,senado
+PSL,Líder,5666,Major Olimpio,PSL,SP,senado
+DEM,Líder,5732,Rodrigo Pacheco,DEM,MG,senado
+DEM,Vice-líder,5422,Marcos Rogério,DEM,RO,senado
+PL,Líder,5350,Jorginho Mello,PL,SC,senado
+PSC,Líder,3806,Zequinha Marinho,PSC,PA,senado
+PT,Líder,5008,Humberto Costa,PT,PE,senado
+PT,Vice-líder,5352,Rogério Carvalho,PT,SE,senado
+PROS,Líder,5535,Telmário Mota,PROS,RR,senado
+PROS,Vice-líder,5783,Zenaide Maia,PROS,RN,senado
