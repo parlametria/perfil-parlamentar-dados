@@ -25,6 +25,7 @@ library(scales)
 library(hrbrthemes)
 library(ggchicklet)
 library(here)
+library(ggchicklet)
 source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
 ```
 
@@ -44,8 +45,9 @@ senadores <- read_csv(here("crawler/raw_data/senadores.csv")) %>%
          id = as.character(id)) %>% 
   select(id, nome_exibido)
 
-aderencia <- read_csv(here("reports/aderencia-senado/data/aderencia.csv")) %>% 
-  mutate(id = str_remove(id_parlamentar_voz, "^(\\d){1}"), #remove o 1 do id_parlamentar_voz
+aderencia <- read_csv(here("bd/data/aderencia.csv")) %>% 
+  filter(str_detect(id_parlamentar_voz, "^2.*")) %>% 
+  mutate(id = str_remove(id_parlamentar_voz, "^(\\d){1}"), #remove o dígito 2 do id_parlamentar_voz
          freq = (numero_votacoes - faltou)/numero_votacoes) %>% 
   filter(id_partido == 0, id_tema == 99)
 
@@ -80,8 +82,7 @@ Abaixo temos os 20 senadores que possuem menos aderência ao governo. Eles estã
 theme_set(theme_classic())
 
 # Plot
-aderencia %>% 
-  filter(id_tema == 99) %>% 
+aderencia %>%
   arrange(desc(nao_seguiu), desc(freq)) %>% 
   head(20) %>% 
   ggplot(aes(x = reorder(nome_exibido, nao_seguiu), y = nao_seguiu)) + 
@@ -105,13 +106,22 @@ paleta <- c("#91bfda", "#E89D68", "#e06264")
 match_valores <- c("seguiu", "faltou", "nao_seguiu")
 
 data_long <- aderencia %>% 
+<<<<<<< HEAD
   arrange(desc(nao_seguiu), freq, faltou) %>% 
   head(20) %>% 
+=======
+  arrange(desc(nao_seguiu), seguiu, freq, faltou) %>% 
+  head(10) %>% 
+>>>>>>> da0d462821a87c2e78df2fb1fea9f3805b0be2ee
   gather("match", "n", faltou:seguiu) %>% 
   filter(match %in% match_valores)
   
 levels <- aderencia %>% 
+<<<<<<< HEAD
   arrange(desc(nao_seguiu), freq, faltou) %>% 
+=======
+  arrange(desc(nao_seguiu), seguiu,  freq, faltou) %>% 
+>>>>>>> da0d462821a87c2e78df2fb1fea9f3805b0be2ee
   pull(nome_exibido)
 
 data_long %>% 
@@ -133,10 +143,16 @@ data_long %>%
                                "nao_seguiu" = paleta[3],
                                "seguiu" = paleta[1]),
                     name = "", labels = c("Faltou",
+<<<<<<< HEAD
                                           
                                           "Não seguiu",
                                           "Seguiu")) +
   labs(x = "Senador", 
+=======
+                                          "Não seguiu",
+                                          "Seguiu")) +
+  labs(x = "Senadores", 
+>>>>>>> da0d462821a87c2e78df2fb1fea9f3805b0be2ee
        y = "Nº de votações", 
        title = "Senadores com menos aderência ao Governo",
        subtitle = "Ordenados por frequência de aderência") + 
