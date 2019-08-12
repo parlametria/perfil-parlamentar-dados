@@ -1,0 +1,15 @@
+DROP TABLE aderencia;
+DROP TABLE aderencias;
+DROP TABLE composicao_comissoes;
+DROP TABLE comissoes;
+DROP TABLE orientacoes;
+DROP TABLE votos;
+DROP TABLE liderancas;
+DROP TABLE mandatos;
+DROP TABLE respostas;
+DROP TABLE parlamentares;
+DROP TABLE proposicoes_temas;
+DROP TABLE votacoesus;
+DROP TABLE votacoes;
+DROP TABLE proposicoes;
+DROP TABLE partidos;
