@@ -23,10 +23,10 @@ library(DT)
 library(ggplot2)
 library(scales)
 library(hrbrthemes)
-library(ggchicklet)
 library(here)
 library(ggchicklet)
 source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
+source(here("crawler/votacoes/aderencia/analyzer_aderencia.R"))
 ```
 
 ```{r results='hide'}
@@ -45,15 +45,37 @@ senadores <- read_csv(here("crawler/raw_data/senadores.csv")) %>%
          id = as.character(id)) %>% 
   select(id, nome_exibido)
 
-aderencia <- read_csv(here("reports/aderencia-senado/data/aderencia.csv")) %>% 
+composicao_comissoes <- read_csv(here("crawler/raw_data/composicao_comissoes.csv")) %>% 
+  filter(casa == "senado") %>% 
+  select(-casa)
+
+comissoes <- read_csv(here("crawler/raw_data/comissoes.csv")) %>% 
+  filter(casa == "senado") %>% 
+  select(-casa)
+
+composicao_comissoes <- composicao_comissoes %>% 
+  right_join(comissoes, by=c("comissao_id" = "id")) %>% 
+  filter(situacao == "Titular") %>% 
+  select(id_parlamentar, sigla)
+
+aderencia <- 
+  processa_aderencia_parlamentares(
+    votos_path = here::here("reports/aderencia-senado/data/votos.csv"),
+    orientacoes_path = here::here("reports/aderencia-senado/data/orientacoes.csv"),
+    parlamentares_path = here::here("crawler/raw_data/parlamentares.csv"),
+    proposicoes_url = NULL,
+    casa_aderencia = "senado") %>%  
   filter(str_detect(id_parlamentar_voz, "^2.*")) %>% 
   mutate(id = str_remove(id_parlamentar_voz, "^(\\d){1}"), #remove o dígito 2 do id_parlamentar_voz
          freq = (numero_votacoes - faltou)/numero_votacoes) %>% 
-  filter(id_partido == 0, id_tema == 99)
-
-aderencia <- aderencia %>% 
   left_join(senadores, by="id") %>% 
   filter(!is.na(nome_exibido))
+
+aderencia_governo <- aderencia  %>% 
+  filter(id_partido == 0, id_tema == 99)
+
+aderencia_partido <- aderencia %>% 
+  filter(id_partido != 0)
 
 proposicoes <- fetch_proposicoes_plenario_selecionadas_senado()
 ```
@@ -82,7 +104,7 @@ Abaixo temos os 20 senadores que possuem menos aderência ao governo. Eles estã
 theme_set(theme_classic())
 
 # Plot
-aderencia %>%
+aderencia_governo %>%
   arrange(desc(nao_seguiu), desc(freq)) %>% 
   head(20) %>% 
   ggplot(aes(x = reorder(nome_exibido, nao_seguiu), y = nao_seguiu)) + 
@@ -105,13 +127,13 @@ aderencia %>%
 paleta <- c("#91bfda", "#E89D68", "#e06264")
 match_valores <- c("seguiu", "faltou", "nao_seguiu")
 
-data_long <- aderencia %>% 
+data_long <- aderencia_governo %>% 
   arrange(desc(nao_seguiu), freq, faltou) %>% 
   head(20) %>% 
   gather("match", "n", faltou:seguiu) %>% 
   filter(match %in% match_valores)
   
-levels <- aderencia %>% 
+levels <- aderencia_governo %>% 
   arrange(desc(nao_seguiu), freq, faltou) %>% 
   pull(nome_exibido)
 
@@ -148,11 +170,11 @@ data_long %>%
 
 ### Quem tem mais aderência?
 ```{r fig.height=7}
-levels <- aderencia %>%
+levels <- aderencia_governo %>%
   arrange(desc(seguiu), desc(freq), faltou) %>% 
   pull(nome_exibido)
 
-aderencia %>% 
+aderencia_governo %>% 
   arrange(desc(seguiu), desc(freq), faltou) %>% 
   head(20) %>% 
   ggplot(aes(x = fct_rev(factor(nome_exibido, levels = levels)), y = seguiu)) + 
@@ -174,13 +196,13 @@ aderencia %>%
 paleta <- c("#91bfda", "#E89D68", "#e06264")
 match_valores <- c("seguiu", "faltou", "nao_seguiu")
 
-data_long <- aderencia %>% 
+data_long <- aderencia_governo %>% 
   arrange(desc(seguiu), freq, faltou) %>% 
   head(20) %>% 
   gather("match", "n", faltou:seguiu) %>% 
   filter(match %in% match_valores)
   
-levels <- aderencia %>% 
+levels <- aderencia_governo %>% 
   arrange(desc(seguiu), freq, faltou) %>% 
   pull(nome_exibido)
 

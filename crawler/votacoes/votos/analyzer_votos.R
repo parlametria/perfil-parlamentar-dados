@@ -163,42 +163,52 @@ process_votos_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
   return(votos)
 }
 
-return_senadores_em_exercicio_por_data <- function(data,
-                                                   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv"),
-                                                   mandatos_datapath = here::here("crawler/raw_data/mandatos.csv")) {
-  library(tidyverse)
-  
-  senadores <- read_csv(parlamentares_datapath) %>% 
-    filter(casa == "senado")
-  
-  mandatos <- read_csv(mandatos_datapath) %>% 
-    filter(casa == "senado")
-  
-  data <- as.Date(data)
-  
-  senadores_exercicio <- mandatos %>% 
-    filter(data >= data_inicio & (data <= data_fim | is.na(data_fim))) %>% 
-    select(id_parlamentar) %>% left_join(senadores, by=c("id_parlamentar"="id"))
-    
-  
-}
-
+#' @title Processa votos de plenário para um conjunto de votações com votos faltosos
+#' @description Adiciona linhas com votos faltosos quando os senadores faltam às votações
+#' @param votos Dataframe com os votos
+#' @param senadores Dataframe com os dados dos senadores
+#' @return Dataframe com os votos processados dos votos faltosos
 processa_votacoes_com_votos_incompletos <- function(votos, senadores) {
   library(tidyverse)
   
   votacoes_incompletas <- votos %>% 
     count(id_votacao) %>% 
     filter(n < 81) %>% 
-    select(id_votacao) %>% 
-    pull(id_votacao)
+    select(id_votacao) 
   
+  senadores <- senadores %>% 
+    select(id, sg_partido, casa)
   
-  votacoes_incompletas %>% 
+  votacoes_incompletas <- votacoes_incompletas %>% 
     purrr::map_df(function(x) {
+      votacao <- 
+        votos %>% 
+        filter(id_votacao %in% x)
       
+      id_votacao_votacao <- votacao %>%
+        head(1) %>% 
+        pull(id_votacao)
+      
+      id_proposicao_votacao <- votacao %>% 
+        head(1) %>% 
+        pull(id_proposicao)
+      
+      ano_votacao <- votacao %>% 
+        head(1) %>% 
+        pull(ano)
+      
+      votacao %>% 
+        right_join(senadores, by=c("id", "casa")) %>% 
+        mutate(partido = if_else(!is.na(partido), partido, sg_partido),
+               ano = if_else(is.na(ano), ano_votacao, ano),
+               id_proposicao = if_else(is.na(id_proposicao), id_proposicao_votacao, id_proposicao),
+               id_votacao = if_else(is.na(id_votacao), id_votacao_votacao, id_votacao),
+               voto = if_else(is.na(voto), 0 , voto)) %>% 
+        select(-sg_partido)
     })
+  
+  return(votacoes_incompletas)
 }
-
 
 #' @title Processa votos de plenário para um conjunto de votações
 #' @description Recupera informação dos votos para um conjunto de votações no senado.
@@ -222,23 +232,25 @@ process_votos_url_senado <- function(proposicoes_url = NULL) {
   senadores <- read_csv(here::here("crawler/raw_data/parlamentares.csv")) %>% 
     filter(casa == "senado", em_exercicio == 1)
   
-  votos_faltosos <- 
-    processa_votacoes_com_votos_incompletos(votos)
-  
   votos_padronizados <- votos %>%
     enumera_voto() %>%
     mutate(partido = padroniza_sigla(partido),
            senador = str_remove(senador, "^\\s")) %>%
     select(ano, id_proposicao, id_votacao, senador, voto, partido, casa) %>%
     rename(nome_eleitoral = senador) %>%
-    mapeia_nome_eleitoral_to_id_senado() %>%
-    select(ano,
+    mapeia_nome_eleitoral_to_id_senado() %>% 
+  # votos_finais <-
+  # rbind(votos_padronizados, 
+  #       processa_votacoes_com_votos_incompletos(votos_padronizados, 
+  #                                               senadores)) %>%
+  select(ano,
            id_proposicao,
            id_votacao,
            id_parlamentar = id,
            voto,
            partido,
-           casa)
+           casa) %>% 
+    distinct()
     
   return(votos_padronizados)
 }
