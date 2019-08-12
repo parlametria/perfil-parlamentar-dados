@@ -1,3 +1,19 @@
+#' @title Extrai a legislatura com base em um intervalo de tempo
+#' @description A partir de um dataframe de legislaturas e um intervalo de datas, 
+#' retorna a legislatura correspondente.
+#' @param legislaturas Dataframe de legislaturas
+#' @param data_inicio Data de inicio
+#' @param data_fim Data de fim
+#' @return Id da legislatura correspondente.
+find_legislatura <- function(legislaturas, data_inicio, data_fim) {
+  leg <- 
+    legislaturas %>% 
+    filter(data_inicio_leg <= data_inicio & 
+             (data_fim_leg >= data_fim | is.na(data_fim))) %>% 
+    pull(id_legislatura)
+  return(leg)
+}
+
 #' @title Extrai informações sobre o mandato de um senador
 #' @description Recebe o id de um senador e retorna um dataframe contendo informações do mandato, como legislatura,
 #' data de inicio, data de fim, situacao, código e descrição da causa do fim do exercício.
@@ -11,37 +27,65 @@ extract_mandatos_senado <- function(id_senador) {
   url <-
     paste0("http://legis.senado.leg.br/dadosabertos/senador/",
            id_senador,
-           "/mandatos")
+           "/historico")
   
   mandatos <- tryCatch({
-    data <-
+    xml <-
       RCurl::getURL(url) %>%
       xml2::read_xml() %>%
-      xml2::xml_find_all(".//Mandato") %>%
-      
+      xml2::xml_find_all(".//MandatoAtual") 
+    
+    legislaturas <- tribble(
+      ~ id_legislatura,
+      ~ data_inicio_leg,
+      ~ data_fim_leg,
+      extract_text_from_node(xml, "./PrimeiraLegislaturaDoMandato/NumeroLegislatura"),
+      extract_text_from_node(xml, "./PrimeiraLegislaturaDoMandato/DataInicio") %>% as.Date(),
+      extract_text_from_node(xml, "./PrimeiraLegislaturaDoMandato/DataFim") %>% as.Date(),
+      extract_text_from_node(xml, "./SegundaLegislaturaDoMandato/NumeroLegislatura"),
+      extract_text_from_node(xml, "./SegundaLegislaturaDoMandato/DataInicio") %>% as.Date(),
+      extract_text_from_node(xml, "./SegundaLegislaturaDoMandato/DataFim") %>% as.Date()) %>% 
+      mutate(
+      situacao = extract_text_from_node(xml, "./DescricaoParticipacao")
+      )
+    
+    mandatos <- xml %>%
+      xml2::xml_find_all(".//Exercicio") %>%
       purrr::map_df(function(x) {
-        mandato <- tribble(
-          ~ id_legislatura,
+        tribble(
           ~ data_inicio,
           ~ data_fim,
-          extract_text_from_node(x, "./PrimeiraLegislaturaDoMandato/NumeroLegislatura"),
-          extract_text_from_node(x, "./PrimeiraLegislaturaDoMandato/DataInicio"),
-          extract_text_from_node(x, "./PrimeiraLegislaturaDoMandato/DataFim"),
-          extract_text_from_node(x, "./SegundaLegislaturaDoMandato/NumeroLegislatura"),
-          extract_text_from_node(x, "./SegundaLegislaturaDoMandato/DataInicio"),
-          extract_text_from_node(x, "./SegundaLegislaturaDoMandato/DataFim")
-        ) %>%
-          mutate(
-            situacao =
-              extract_text_from_node(x, "./DescricaoParticipacao"),
-            cod_causa_fim_exercicio =
-              extract_text_from_node(x, "./Exercicios/Exercicio/CodigoExercicio"),
-            desc_causa_fim_exercicio =
-              extract_text_from_node(x, "./Exercicios/Exercicio/DescricaoCausaAfastamento")
-          )
-      })
+          ~ cod_causa_fim_exercicio,
+          ~ desc_causa_fim_exercicio,
+          extract_text_from_node(x, "./DataInicio") %>% as.Date(),
+          extract_text_from_node(x, "./DataFim") %>% as.Date(),
+          extract_text_from_node(x, "./SiglaCausaAfastamento"),
+          extract_text_from_node(x, "./DescricaoCausaAfastamento")
+        )
+      }) 
     
-    data <- data %>%
+    mandatos <- mandatos %>%
+      fuzzyjoin::fuzzy_full_join(
+        legislaturas,
+        by = c("data_inicio" = "data_inicio_leg",
+               "data_inicio" = "data_fim_leg"),
+        match_fun = list(`>=`, `<=`)
+      ) %>%
+      arrange(data_inicio, id_legislatura) %>% 
+      mutate(
+        data_fim = 
+          if_else(is.na(data_fim) & 
+                    !is.na(lead(data_inicio_leg)), 
+                  lead(data_inicio_leg) - 1, 
+                  data_fim), 
+        data_inicio = 
+          if_else(is.na(data_inicio), 
+                  data_inicio_leg,
+                  data_inicio)) %>% 
+      filter(data_inicio <= data_fim_leg) %>% 
+      select(-data_inicio_leg, -data_fim_leg)
+    
+    mandatos <- mandatos %>% 
       dplyr::mutate(
         id_parlamentar = as.integer(id_senador),
         casa = "senado",
@@ -63,8 +107,6 @@ extract_mandatos_senado <- function(id_senador) {
         desc_causa_fim_exercicio
       ) %>% 
       arrange(id_legislatura)
-    
-    return(data)
     
   }, error = function(e) {
     data <- tribble(

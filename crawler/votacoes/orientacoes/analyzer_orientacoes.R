@@ -121,15 +121,25 @@ process_orientacao_senado <- function(votos_datapath = here::here("crawler/raw_d
 #' @return Dataframe contendo informações de orientações de um partido
 get_voto_lider <- function(lideres, votos, id_votacao) {
   library(tidyverse)
+  
+  if(nrow(lideres) > 0) {
+    voto <- (lideres$id %>% 
+               purrr::map(function(x) {
+                 data <- votos %>%
+                   filter(id_parlamentar == x &
+                            id_votacao_votos %in% id_votacao) %>%
+                   pull(voto)
+               }))[[1]]
+  } else {
+    voto <- (votos %>% 
+      filter(id_votacao_votos %in% id_votacao) %>% 
+      group_by(voto) %>% 
+      mutate(maioria = n(),
+             voto_final = max(maioria)) %>% 
+      arrange(desc(voto_final)) %>% 
+      pull(voto))[[1]]
+  }
 
-   voto <- (lideres$id %>% 
-    purrr::map(function(x) {
-      data <- votos %>%
-        filter(id_parlamentar == x &
-                 id_votacao_votos %in% id_votacao) %>%
-        pull(voto)
-    }))[[1]]
-   
    if(length(voto) == 0) {
      return(0)
    } else{

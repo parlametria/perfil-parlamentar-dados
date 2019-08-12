@@ -33,7 +33,7 @@ processa_aderencia_parlamentares <-
     
     parlamentares <-
       read_csv(parlamentares_path, col_types = cols(id = "c")) %>%
-      filter(casa == casa_aderencia)
+      filter(casa == casa_aderencia, em_exercicio == 1)
     
     partidos <- parlamentares %>%
       group_by(sg_partido) %>%
