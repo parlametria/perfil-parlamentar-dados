@@ -45,44 +45,36 @@ senadores <- read_csv(here("crawler/raw_data/senadores.csv")) %>%
          id = as.character(id)) %>% 
   select(id, nome_exibido)
 
-composicao_comissoes <- read_csv(here("crawler/raw_data/composicao_comissoes.csv")) %>% 
-  filter(casa == "senado") %>% 
-  select(-casa)
-
-comissoes <- read_csv(here("crawler/raw_data/comissoes.csv")) %>% 
-  filter(casa == "senado") %>% 
-  select(-casa)
-
-composicao_comissoes <- composicao_comissoes %>% 
-  right_join(comissoes, by=c("comissao_id" = "id")) %>% 
-  filter(situacao == "Titular") %>% 
-  select(id_parlamentar, sigla)
+partidos <- read_csv(here("crawler/raw_data/partidos.csv")) %>% 
+  select(id, sigla)
 
 aderencia <- 
   processa_aderencia_parlamentares(
-    votos_path = here::here("reports/aderencia-senado/data/votos.csv"),
-    orientacoes_path = here::here("reports/aderencia-senado/data/orientacoes.csv"),
-    parlamentares_path = here::here("crawler/raw_data/parlamentares.csv"),
     proposicoes_url = NULL,
     casa_aderencia = "senado") %>%  
   filter(str_detect(id_parlamentar_voz, "^2.*")) %>% 
-  mutate(id = str_remove(id_parlamentar_voz, "^(\\d){1}"), #remove o dígito 2 do id_parlamentar_voz
-         freq = (numero_votacoes - faltou)/numero_votacoes) %>% 
+  mutate(id = str_remove(id_parlamentar_voz, "^(\\d){1}")) %>%  #remove o dígito 2 do id_parlamentar_voz
   left_join(senadores, by="id") %>% 
-  filter(!is.na(nome_exibido))
+  filter(!is.na(nome_exibido), aderencia >= 0) %>% 
+  left_join(partidos, by=c("id_partido"="id")) %>% 
+  select(-id_partido) %>% 
+  rename(partido = sigla) %>% 
+  mutate(freq = (seguiu / (seguiu + nao_seguiu)) * 100) %>%
+  mutate(freq = if_else(is.nan(freq), -1, freq))
+  
 
 aderencia_governo <- aderencia  %>% 
-  filter(id_partido == 0, id_tema == 99)
+  filter(partido == "Governo", id_tema == 99)
 
 aderencia_partido <- aderencia %>% 
-  filter(id_partido != 0)
+  filter(partido != "Governo")
 
 proposicoes <- fetch_proposicoes_plenario_selecionadas_senado()
 ```
 
 ### Resumo
 
-Analisamos os senadores que mais seguem e o menos "obedientes" ao governo nas votações nominais de plenário do Senado Federal ocorridas em em 2019.
+Analisamos os senadores que mais seguem e o menos "obedientes" ao governo nas votações nominais de plenário do Senado Federal ocorridas em 2019.
 
 <br>
 
@@ -97,17 +89,18 @@ Ao total temos `r votos %>% count(id_votacao) %>% nrow()` votações em plenári
 ## Aderência ao Governo
 ### Quem tem menos aderência?
 
-Abaixo temos os 20 senadores que possuem menos aderência ao governo. Eles estão ordenados pelo número de vezes que não seguiram a orientação do governo e pela frequência dos senadores nas votações.
+Abaixo temos os 20 senadores que possuem menos aderência ao governo. Eles estão ordenados pela frequência dos votos em que não seguiram a orientação do Governo. Esta frequência é definida como **nº de votos que seguiu / nº de votos totais** que o senador teve, ignorando os casos onde o partido liberou ou o senador faltou.
 
-```{r}
+```{r fig.height=7}
 
-theme_set(theme_classic())
+levels <- aderencia_governo %>%
+  arrange(freq, desc(nao_seguiu)) %>% 
+  pull(nome_exibido)
 
-# Plot
-aderencia_governo %>%
-  arrange(desc(nao_seguiu), desc(freq)) %>% 
+aderencia_governo %>% 
+  arrange(freq, desc(nao_seguiu)) %>% 
   head(20) %>% 
-  ggplot(aes(x = reorder(nome_exibido, nao_seguiu), y = nao_seguiu)) + 
+  ggplot(aes(x = fct_rev(factor(nome_exibido, levels = levels)), y = nao_seguiu)) + 
   geom_point(col="tomato3", size = 3) + 
   geom_segment(aes(x = nome_exibido, 
                    xend = nome_exibido, 
@@ -115,26 +108,30 @@ aderencia_governo %>%
                    yend = nao_seguiu), 
                size = 0.1) +
   coord_flip() +
+  scale_y_continuous(breaks = seq(0, max(aderencia_governo$nao_seguiu), 1)) +
   labs(title = "Senadores com menos aderência ao Governo",
-       y = "Nº de votações em que não seguiu o Governo",
-       x = "Senador") +
+       y = "Nº de votações em que seguiu o Governo",
+       x = "Senador",
+       subtitle = "Os que mais frequentemente não seguem o governo") +
     theme_ipsum_rc()
 ```
+
+É possível observar os senadores que frequentemente seguem menos a orientação do governo: o partido que possui deputados menos aderentes é o PODEMOS, 
 
 ### Mais detalhes sobre quem não adere
 
 ```{r}
-paleta <- c("#91bfda", "#E89D68", "#e06264")
+paleta <- c("#91bfda", "#CCCCCC", "#e06264")
 match_valores <- c("seguiu", "faltou", "nao_seguiu")
 
 data_long <- aderencia_governo %>% 
-  arrange(desc(nao_seguiu), freq, faltou) %>% 
+  arrange(freq, desc(nao_seguiu), faltou) %>% 
   head(20) %>% 
   gather("match", "n", faltou:seguiu) %>% 
   filter(match %in% match_valores)
   
 levels <- aderencia_governo %>% 
-  arrange(desc(nao_seguiu), freq, faltou) %>% 
+  arrange(freq, desc(nao_seguiu), faltou) %>% 
   pull(nome_exibido)
 
 data_long %>% 
@@ -171,11 +168,11 @@ data_long %>%
 ### Quem tem mais aderência?
 ```{r fig.height=7}
 levels <- aderencia_governo %>%
-  arrange(desc(seguiu), desc(freq), faltou) %>% 
+  arrange(desc(freq), desc(seguiu), faltou) %>% 
   pull(nome_exibido)
 
 aderencia_governo %>% 
-  arrange(desc(seguiu), desc(freq), faltou) %>% 
+  arrange(desc(freq), desc(seguiu), faltou) %>% 
   head(20) %>% 
   ggplot(aes(x = fct_rev(factor(nome_exibido, levels = levels)), y = seguiu)) + 
   geom_point(col="tomato3", size = 3) + 
@@ -193,17 +190,17 @@ aderencia_governo %>%
 ```
 
 ```{r}
-paleta <- c("#91bfda", "#E89D68", "#e06264")
+paleta <- c("#91bfda", "#CCCCCC", "#e06264")
 match_valores <- c("seguiu", "faltou", "nao_seguiu")
 
 data_long <- aderencia_governo %>% 
-  arrange(desc(seguiu), freq, faltou) %>% 
+  arrange(desc(freq), desc(seguiu), faltou) %>% 
   head(20) %>% 
   gather("match", "n", faltou:seguiu) %>% 
   filter(match %in% match_valores)
   
 levels <- aderencia_governo %>% 
-  arrange(desc(seguiu), freq, faltou) %>% 
+  arrange(desc(freq), desc(seguiu), faltou) %>% 
   pull(nome_exibido)
 
 data_long %>% 
@@ -225,11 +222,10 @@ data_long %>%
                                "nao_seguiu" = paleta[3],
                                "seguiu" = paleta[1]),
                     name = "", labels = c("Faltou",
-                                          "Não seguiu",
                                           "Seguiu")) +
   labs(x = "Senador", 
        y = "Nº de votações", 
-       title = "Senadores com menos aderência ao Governo",
+       title = "Senadores com mais aderência ao Governo",
        subtitle = "Ordenados por frequência de aderência") + 
   guides(fill = guide_legend(reverse = TRUE)) +
   theme_ipsum_rc() +
@@ -238,5 +234,89 @@ data_long %>%
 ```
 
 ### Aderência nos partidos
+```{r}
+partidos <- aderencia %>% 
+  filter(partido != "Governo", partido != "SPART") %>% 
+  group_by(partido) %>% 
+  summarise(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>% 
+  arrange(median) %>% 
+  mutate(partido = factor(partido, levels = unique(partido)))
+
+levels <- partidos %>% 
+  pull(partido)
+```
+
+```{r}
+aderencia_partido %>% 
+  filter(partido != "SPART") %>% 
+  group_by(partido) %>% 
+  mutate(n = n(),
+         median = median(freq),
+         aderencia = aderencia * 100) %>% 
+  ungroup() %>% 
+  filter(partido %in% (partidos %>% pull(partido))) %>% 
+  ggplot(aes(x = factor(partido, levels = levels), y = freq, color = factor(partido, levels = levels))) +
+  geom_count() +
+  scale_x_discrete(position = "left") +
+  scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
+  scale_color_manual(values = rep(c("#af8dc3", "#FF816E"), 15)) +
+  coord_flip() +
+  scale_shape_identity() +
+  geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
+  labs(x = "", y = "Aderência ao Governo (%)",
+       title = "Distribuição da aderência dos senadores \nnos partidos") +
+  guides(color = FALSE, size = FALSE) +
+  theme_ipsum_rc()
+```
+
 ### Aderência nas Comissões
-### Quantos deputados são aderentes ao Governo em Meio Ambiente e Agenda Nacional
+
+```{r}
+comissoes <- readr::read_csv(here::here("crawler/raw_data/comissoes.csv")) %>% 
+  filter(casa == "senado")
+composicao_comissoes <- readr::read_csv(here::here("crawler/raw_data/composicao_comissoes.csv"), 
+                                        col_types = cols(id_parlamentar = "c")) %>% 
+  filter(casa == "senado")
+
+composicao_comissoes <- composicao_comissoes %>% 
+  left_join(comissoes, by = c("comissao_id" = "id")) %>% 
+  select(comissao_id, id_parlamentar, cargo, sigla, nome_comissao = nome)
+
+senadores_comissoes <- aderencia_governo %>% 
+  inner_join(composicao_comissoes, by = c("id" = "id_parlamentar"))
+```
+
+```{r}
+comissoes <- senadores_comissoes %>% 
+  group_by(sigla) %>% 
+  summarise(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>% 
+  arrange(median) %>%
+  mutate(sigla = factor(sigla, levels = unique(sigla)))
+
+levels <- comissoes %>% 
+  pull(sigla)
+```
+
+```{r}
+senadores_comissoes %>% 
+  group_by(sigla) %>% 
+  mutate(n = n(),
+         median = median(freq)) %>% 
+  ungroup() %>%
+  ggplot(aes(x = factor(sigla, levels = levels), y = freq, color = factor(sigla, levels = levels))) +
+  geom_count() +
+  scale_x_discrete(position = "left") +
+  scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
+  scale_color_manual(values = rep(c("#af8dc3", "#FF816E"), 15)) +
+  coord_flip() +
+  scale_shape_identity() +
+  geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
+  labs(x = "", y = "Aderência ao Governo (%)",
+       title = "Distribuição da aderência dos senadores \nnas Comissões") +
+  guides(color = FALSE, size = FALSE) +
+  theme_ipsum_rc()
+```
