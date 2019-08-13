@@ -168,43 +168,56 @@ process_votos_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
 #' @param votos Dataframe com os votos
 #' @param senadores Dataframe com os dados dos senadores
 #' @return Dataframe com os votos processados dos votos faltosos
-processa_votacoes_com_votos_incompletos <- function(votos, senadores) {
+processa_votacoes_com_votos_incompletos <- function(votacoes,
+                                                    votos, 
+                                                    senadores, 
+                                                    mandatos_datapath = here::here("crawler/raw_data/mandatos.csv")) {
   library(tidyverse)
+  
+  mandatos <- read_csv(mandatos_datapath)
   
   votacoes_incompletas <- votos %>% 
     count(id_votacao) %>% 
     filter(n < 81) %>% 
-    select(id_votacao) 
+    pull(id_votacao) 
+  
+  votacoes_incompletas <- votacoes %>% 
+    filter(id_votacao %in% votacoes_incompletas)
   
   senadores <- senadores %>% 
-    select(id, sg_partido, casa)
+    select(id, nome_eleitoral, sg_partido, casa)
   
-  votacoes_incompletas <- votacoes_incompletas %>% 
-    purrr::map_df(function(x) {
-      votacao <- 
-        votos %>% 
+  votacoes_incompletas <-
+    purrr::map2_df(votacoes_incompletas$id_votacao, votacoes_incompletas$datetime, function(x, y) {
+      
+      votacao <- votos %>%
         filter(id_votacao %in% x)
-      
-      id_votacao_votacao <- votacao %>%
-        head(1) %>% 
-        pull(id_votacao)
-      
-      id_proposicao_votacao <- votacao %>% 
+        
+      id_proposicao_votacao <-  votacao %>% 
         head(1) %>% 
         pull(id_proposicao)
       
-      ano_votacao <- votacao %>% 
-        head(1) %>% 
-        pull(ano)
+      senadores_em_exercicio <- mandatos %>% 
+        filter(data_inicio <= y, y <= data_fim | is.na(data_fim)) %>% 
+        select(id_parlamentar)
       
-      votacao %>% 
-        right_join(senadores, by=c("id", "casa")) %>% 
-        mutate(partido = if_else(!is.na(partido), partido, sg_partido),
-               ano = if_else(is.na(ano), ano_votacao, ano),
-               id_proposicao = if_else(is.na(id_proposicao), id_proposicao_votacao, id_proposicao),
-               id_votacao = if_else(is.na(id_votacao), id_votacao_votacao, id_votacao),
-               voto = if_else(is.na(voto), 0 , voto)) %>% 
-        select(-sg_partido)
+      if (nrow(senadores_em_exercicio) == 81) {
+        senadores_em_exercicio <- senadores %>% 
+          filter(id %in% senadores_em_exercicio$id_parlamentar)
+        
+        votacao <- votacao %>% 
+          select(-nome_eleitoral) %>% 
+          right_join(senadores_em_exercicio, by=c("id", "casa")) %>% 
+          mutate(partido = if_else(!is.na(partido), partido, sg_partido),
+                 ano = if_else(is.na(ano), lubridate::year(y), ano),
+                 id_proposicao = if_else(is.na(id_proposicao), id_proposicao_votacao, id_proposicao),
+                 id_votacao = if_else(is.na(id_votacao), x, id_votacao),
+                 voto = if_else(is.na(voto), 0 , voto)) %>% 
+          select(-sg_partido)
+      }
+      
+      return(votacao)
+      
     })
   
   return(votacoes_incompletas)
@@ -220,6 +233,7 @@ process_votos_url_senado <- function(proposicoes_url = NULL) {
   library(tidyverse)
   source(here::here("crawler/votacoes/votos/fetcher_votos_senado.R"))
   source(here::here("crawler/votacoes/utils_votacoes.R"))
+  source(here::here("crawler/votacoes/fetcher_votacoes_senado.R"))
   
   
   if(is.null(proposicoes_url)) {
@@ -227,10 +241,11 @@ process_votos_url_senado <- function(proposicoes_url = NULL) {
     proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
   }
   
+  votacoes <- fetcher_votacoes_por_intervalo_senado()
   votos <- fetch_all_votos_senado(proposicoes_url)
   
   senadores <- read_csv(here::here("crawler/raw_data/parlamentares.csv")) %>% 
-    filter(casa == "senado", em_exercicio == 1)
+    filter(casa == "senado")
   
   votos_padronizados <- votos %>%
     enumera_voto() %>%
@@ -238,11 +253,13 @@ process_votos_url_senado <- function(proposicoes_url = NULL) {
            senador = str_remove(senador, "^\\s")) %>%
     select(ano, id_proposicao, id_votacao, senador, voto, partido, casa) %>%
     rename(nome_eleitoral = senador) %>%
-    mapeia_nome_eleitoral_to_id_senado() %>% 
-  # votos_finais <-
-  # rbind(votos_padronizados, 
-  #       processa_votacoes_com_votos_incompletos(votos_padronizados, 
-  #                                               senadores)) %>%
+    mapeia_nome_eleitoral_to_id_senado() 
+  
+  votos_finais <-
+  rbind(votos_padronizados,
+        processa_votacoes_com_votos_incompletos(votacoes,
+                                                votos_padronizados,
+                                                senadores)) %>%
   select(ano,
            id_proposicao,
            id_votacao,
@@ -251,6 +268,8 @@ process_votos_url_senado <- function(proposicoes_url = NULL) {
            partido,
            casa) %>% 
     distinct()
+  
+  
     
-  return(votos_padronizados)
+  return(votos_finais)
 }

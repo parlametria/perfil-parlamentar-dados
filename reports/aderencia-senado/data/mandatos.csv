@@ -1,174 +1,262 @@
-id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_exercicio,desc_causa_fim_exercicio
-4981,senado,55,2015-02-01,2016-09-08,Titular,NA,Licença Saúde-Particular
-4981,senado,55,2017-01-14,2019-01-31,Titular,NA,NA
-4981,senado,56,2019-02-01,NA,Titular,NA,NA
-5982,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5982,senado,57,2023-02-01,NA,Titular,NA,NA
-945,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-945,senado,56,2019-02-01,NA,Titular,NA,NA
-5967,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5967,senado,57,2023-02-01,NA,Titular,NA,NA
-5529,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-5529,senado,56,2019-02-01,NA,Titular,NA,NA
-751,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-751,senado,57,2023-02-01,NA,Titular,NA,NA
-5990,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5990,senado,57,2023-02-01,NA,Titular,NA,NA
-470,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-470,senado,57,2023-02-01,NA,Titular,NA,NA
-5973,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5973,senado,57,2023-02-01,NA,Titular,NA,NA
-739,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-739,senado,57,2023-02-01,NA,Titular,NA,NA
-475,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-475,senado,57,2023-02-01,NA,Titular,NA,NA
-5998,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5998,senado,57,2023-02-01,NA,Titular,NA,NA
-3830,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-3830,senado,56,2019-02-01,NA,Titular,NA,NA
-5537,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-5537,senado,56,2019-02-01,NA,Titular,NA,NA
-4994,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-4994,senado,57,2023-02-01,NA,Titular,NA,NA
-5976,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5976,senado,57,2023-02-01,NA,Titular,NA,NA
-5718,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5718,senado,57,2023-02-01,NA,Titular,NA,NA
-5531,senado,55,2015-02-01,2018-07-09,Titular,NA,Licença Saúde-Particular
-5531,senado,55,2018-11-08,2019-01-31,Titular,NA,NA
-5531,senado,56,2019-02-01,NA,Titular,NA,NA
-22,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-22,senado,57,2023-02-01,NA,Titular,NA,NA
-5953,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5953,senado,57,2023-02-01,NA,Titular,NA,NA
-5540,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-5540,senado,56,2019-02-01,NA,Titular,NA,NA
-4525,senado,55,2015-02-01,2019-04-01,Titular,NA,Licença Saúde-Particular
-4525,senado,56,2019-08-01,NA,Titular,NA,NA
-345,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-345,senado,57,2023-02-01,NA,Titular,NA,NA
-5894,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5894,senado,57,2023-02-01,NA,Titular,NA,NA
-5008,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5008,senado,57,2023-02-01,NA,Titular,NA,NA
-5385,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5385,senado,57,2023-02-01,NA,Titular,NA,NA
-4770,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-4770,senado,57,2023-02-01,NA,Titular,NA,NA
-35,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-35,senado,57,2023-02-01,NA,Titular,NA,NA
-581,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-581,senado,57,2023-02-01,NA,Titular,NA,NA
-4545,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-4545,senado,57,2023-02-01,NA,Titular,NA,NA
-4531,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-4531,senado,57,2023-02-01,NA,Titular,NA,NA
-5627,senado,55,2019-01-03,2019-01-31,1º Suplente,NA,NA
-5627,senado,56,2019-02-01,NA,1º Suplente,NA,NA
-5895,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5895,senado,57,2023-02-01,NA,Titular,NA,NA
-5350,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5350,senado,57,2023-02-01,NA,Titular,NA,NA
-3361,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-3361,senado,56,2019-02-01,NA,Titular,NA,NA
-90,senado,55,2015-02-01,2016-05-13,Titular,NA,Afastamento do exercício
-90,senado,55,2017-02-23,2019-01-31,Titular,NA,NA
-90,senado,56,2019-02-01,NA,Titular,NA,NA
-5929,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5929,senado,57,2023-02-01,NA,Titular,NA,NA
-1249,senado,55,2015-02-01,2015-02-02,Titular,NA,Afastamento do exercício
-1249,senado,55,2016-05-12,2018-10-28,Titular,NA,Licença Particular
-1249,senado,55,2019-01-31,2019-01-31,Titular,NA,NA
-1249,senado,56,2019-02-01,NA,Titular,NA,NA
-5533,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-5533,senado,56,2019-02-01,NA,Titular,NA,NA
-5979,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5979,senado,57,2023-02-01,NA,Titular,NA,NA
-5926,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5926,senado,57,2023-02-01,NA,Titular,NA,NA
-1186,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-1186,senado,57,2023-02-01,NA,Titular,NA,NA
-5585,senado,55,2019-01-02,2019-01-31,1º Suplente,NA,NA
-5585,senado,56,2019-02-01,NA,1º Suplente,NA,NA
-5557,senado,55,2019-01-03,2019-01-31,1º Suplente,NA,NA
-5557,senado,56,2019-02-01,NA,1º Suplente,NA,NA
-5666,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5666,senado,57,2023-02-01,NA,Titular,NA,NA
-5376,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5376,senado,57,2023-02-01,NA,Titular,NA,NA
-742,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-742,senado,57,2023-02-01,NA,Titular,NA,NA
-285,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-285,senado,57,2023-02-01,NA,Titular,NA,NA
-5422,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5422,senado,57,2023-02-01,NA,Titular,NA,NA
-5942,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5942,senado,57,2023-02-01,NA,Titular,NA,NA
-1023,senado,55,2015-02-01,2015-11-10,Titular,NA,Afastamento do exercício
-1023,senado,55,2016-05-10,2016-05-13,Titular,NA,Afastamento do exercício
-1023,senado,55,2016-08-22,2016-09-30,Titular,NA,Afastamento do exercício
-1023,senado,55,2017-01-01,2019-01-31,Titular,NA,NA
-1023,senado,56,2019-02-01,NA,Titular,NA,NA
-6027,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-6027,senado,57,2023-02-01,NA,Titular,NA,NA
-5985,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5985,senado,57,2023-02-01,NA,Titular,NA,NA
-5525,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-5525,senado,56,2019-02-01,NA,Titular,NA,NA
-5924,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5924,senado,57,2023-02-01,NA,Titular,NA,NA
-5523,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-5523,senado,56,2019-02-01,NA,Titular,NA,NA
-825,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-825,senado,57,2023-02-01,NA,Titular,NA,NA
-374,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-374,senado,56,2019-02-01,NA,Titular,NA,NA
-5502,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5502,senado,57,2023-02-01,NA,Titular,NA,NA
-5012,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5012,senado,57,2023-02-01,NA,Titular,NA,NA
-5236,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-5236,senado,56,2019-02-01,NA,Titular,NA,NA
-70,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-70,senado,57,2023-02-01,NA,Titular,NA,NA
-677,senado,55,2015-02-01,2016-09-25,Titular,NA,Licença Particular
-677,senado,55,2017-01-27,2019-01-31,Titular,NA,NA
-677,senado,56,2019-02-01,NA,Titular,NA,NA
-5905,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5905,senado,57,2023-02-01,NA,Titular,NA,NA
-5732,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5732,senado,57,2023-02-01,NA,Titular,NA,NA
-5352,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5352,senado,57,2023-02-01,NA,Titular,NA,NA
-5322,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-5322,senado,56,2019-02-01,NA,Titular,NA,NA
-2331,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-2331,senado,56,2019-02-01,NA,Titular,NA,NA
-5527,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-5527,senado,56,2019-02-01,NA,Titular,NA,NA
-6005,senado,56,2019-07-16,2023-01-31,1º Suplente,NA,NA
-6005,senado,57,2023-02-01,NA,1º Suplente,NA,NA
-5988,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5988,senado,57,2023-02-01,NA,Titular,NA,NA
-5959,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5959,senado,57,2023-02-01,NA,Titular,NA,NA
-4560,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-4560,senado,57,2023-02-01,NA,Titular,NA,NA
-3396,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-3396,senado,56,2019-02-01,NA,Titular,NA,NA
-5535,senado,55,2015-02-01,2016-12-14,Titular,NA,Licença Saúde-Particular
-5535,senado,55,2017-04-14,2018-05-29,Titular,NA,Licença Saúde-Particular
-5535,senado,55,2018-10-04,2019-01-31,Titular,NA,NA
-5535,senado,56,2019-02-01,NA,Titular,NA,NA
-5899,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5899,senado,57,2023-02-01,NA,Titular,NA,NA
-5748,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5748,senado,57,2023-02-01,NA,Titular,NA,NA
-1173,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
-1173,senado,56,2019-02-01,NA,Titular,NA,NA
-5411,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5411,senado,57,2023-02-01,NA,Titular,NA,NA
-5783,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-5783,senado,57,2023-02-01,NA,Titular,NA,NA
-3806,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
-3806,senado,57,2023-02-01,NA,Titular,NA,NA
+id_parlamentar,casa,data_inicio,data_fim,cod_causa_fim_exercicio,desc_causa_fim_exercicio
+5140,senado,2017-03-09,2018-12-31,NA,Retorno do titular
+846,senado,2019-01-01,2019-01-31,NA,Término do mandato
+846,senado,2011-02-01,2017-03-06,NA,Afastamento do exercício
+4988,senado,2011-02-01,2019-01-31,NA,Término do mandato
+5150,senado,2012-10-08,2014-11-12,NA,Retorno do titular
+3,senado,2018-03-23,2019-01-31,NA,Término do mandato
+3,senado,2011-02-01,2017-11-21,NA,Licença Saúde-Particular
+715,senado,2016-05-09,2019-01-31,NA,Término do mandato
+715,senado,2014-11-15,2015-01-01,NA,Afastamento do exercício
+715,senado,2011-02-01,2014-07-16,NA,Licença Saúde-Particular
+5164,senado,2013-12-23,2019-01-31,NA,Término do mandato
+5164,senado,2013-02-08,2013-08-07,NA,Retorno do titular
+5164,senado,2011-05-03,2011-08-31,NA,Retorno do titular
+391,senado,2017-10-17,2019-01-31,NA,Término do mandato
+391,senado,2017-06-30,2017-09-28,NA,Afastamento por decisão judicial
+391,senado,2011-02-01,2017-05-18,NA,Afastamento por decisão judicial
+3823,senado,2018-11-10,2019-01-31,NA,Término do mandato
+3823,senado,2011-02-01,2018-07-12,NA,Licença Saúde-Particular
+111,senado,2019-01-01,2019-01-31,NA,Término do mandato
+111,senado,2014-07-18,2016-05-13,NA,Afastamento do exercício
+111,senado,2012-12-17,2014-03-12,NA,Licença Saúde-Particular
+111,senado,2011-02-01,2012-08-08,NA,Licença Saúde-Particular
+5108,senado,2018-08-27,2018-12-31,NA,Retorno do titular
+5108,senado,2016-05-15,2018-12-30,NA,Licença Saúde-Particular
+5108,senado,2014-03-13,2014-07-17,NA,Retorno do titular
+5108,senado,2012-08-09,2012-12-16,NA,Retorno do titular
+3881,senado,2011-09-30,2012-11-04,NA,Retorno do titular
+3398,senado,2011-02-01,2019-01-31,NA,Término do mandato
+5197,senado,2017-01-05,2019-01-31,NA,Término do mandato
+5197,senado,2011-11-08,2016-09-07,NA,Licença Saúde-Particular
+5132,senado,2015-05-19,2019-01-31,NA,Término do mandato
+5199,senado,2016-09-08,2017-01-04,NA,Retorno do titular
+3360,senado,2011-02-01,2016-05-10,NA,Perda de mandato
+3399,senado,2011-02-01,2012-07-11,NA,Perda de mandato
+5178,senado,2015-01-01,2016-05-08,NA,Retorno do titular
+5178,senado,2014-07-17,2014-11-14,NA,Retorno do titular
+16,senado,2018-04-20,2019-01-31,NA,Término do mandato
+16,senado,2015-01-01,2017-12-15,NA,Licença Saúde-Particular
+16,senado,2011-02-01,2011-02-01,NA,Afastamento do exercício
+4721,senado,2014-11-22,2019-01-31,NA,Término do mandato
+4721,senado,2012-04-05,2014-07-21,NA,Licença Saúde-Particular
+4721,senado,2011-02-01,2011-12-05,NA,Licença Saúde-Particular
+4767,senado,2017-01-02,2018-12-31,NA,Afastamento do exercício
+4767,senado,2016-06-06,2016-09-30,NA,Retorno do titular
+4767,senado,2012-03-06,2014-03-14,NA,Retorno do titular
+4969,senado,2017-11-22,2018-03-22,NA,Retorno do titular
+612,senado,2011-02-01,2019-01-31,NA,Término do mandato
+2632,senado,2015-01-30,2015-04-07,NA,Licença Particular
+4873,senado,2014-07-24,2014-11-14,NA,Retorno do titular
+3634,senado,2011-02-01,2019-01-31,NA,Término do mandato
+87,senado,2015-01-01,2019-01-31,NA,Término do mandato
+87,senado,2011-02-01,2011-02-01,NA,Afastamento do exercício
+4522,senado,2011-03-31,2011-11-25,NA,Retorno do titular
+30,senado,2011-11-26,2011-11-28,NA,Término do mandato
+30,senado,2011-02-01,2011-03-28,NA,Licença saúde
+5030,senado,2018-07-18,2018-11-09,NA,Retorno do titular
+5006,senado,2014-02-03,2019-01-31,NA,Término do mandato
+5006,senado,2011-02-01,2011-06-08,NA,Afastamento do exercício
+5100,senado,2015-01-01,2019-01-31,NA,Término do mandato
+5076,senado,2018-09-04,2018-10-30,NA,Renúncia
+1754,senado,2011-02-01,2011-07-02,NA,Falecimento
+5004,senado,2018-10-27,2019-01-31,NA,Término do mandato
+5004,senado,2014-11-13,2018-06-13,NA,Licença Saúde-Particular
+5004,senado,2011-11-14,2014-07-15,NA,Licença Saúde-Particular
+5004,senado,2011-02-01,2011-07-12,NA,Licença Saúde-Particular
+4990,senado,2011-02-01,2019-01-31,NA,Término do mandato
+40,senado,2011-02-01,2019-01-31,NA,Término do mandato
+43,senado,1995-02-01,2003-01-02,NA,Renúncia
+5112,senado,2015-01-01,2019-01-31,NA,Término do mandato
+615,senado,2011-02-01,2019-01-31,NA,Término do mandato
+950,senado,2012-11-05,2019-01-31,NA,Término do mandato
+950,senado,2011-02-01,2011-09-29,NA,Afastamento do exercício
+3394,senado,2011-11-29,2019-01-31,NA,Término do mandato
+5166,senado,2013-02-05,2013-04-22,NA,Retorno do titular
+5166,senado,2012-10-17,2013-01-29,NA,Retorno do titular
+3593,senado,2011-01-01,2011-01-30,NA,Retorno do titular
+3593,senado,2010-07-15,2010-11-12,NA,Retorno do titular
+916,senado,2013-08-08,2013-12-18,NA,Falecimento
+916,senado,2011-09-01,2013-02-07,NA,Licença saúde
+916,senado,2011-02-01,2011-05-02,NA,Licença saúde
+5158,senado,2014-07-24,2014-11-21,NA,Retorno do titular
+5156,senado,2014-07-23,2014-07-23,NA,Licença Saúde-Particular
+5156,senado,2011-12-06,2012-04-04,NA,Retorno do titular
+3695,senado,2011-02-01,2019-01-31,NA,Término do mandato
+3579,senado,2011-02-02,2014-12-31,NA,Retorno do titular
+5002,senado,2011-02-01,2015-05-10,NA,Falecimento
+4575,senado,2011-02-01,2019-01-31,NA,Término do mandato
+643,senado,2018-10-31,2019-01-31,NA,Término do mandato
+643,senado,2011-02-01,2018-09-03,NA,Licença Saúde-Particular
+631,senado,2011-02-01,2019-01-31,NA,Término do mandato
+3366,senado,2016-10-01,2016-12-31,NA,Renúncia
+3366,senado,2014-03-17,2016-06-01,NA,Licença Saúde-Particular
+3366,senado,2011-02-01,2012-03-01,NA,Afastamento do exercício
+4998,senado,2011-02-01,2011-12-27,NA,Término do mandato
+5000,senado,2014-11-13,2019-01-31,NA,Término do mandato
+5000,senado,2011-02-01,2012-09-13,NA,Afastamento do exercício
+670,senado,2009-05-12,2011-01-31,NA,Término do mandato
+670,senado,2005-06-17,2005-10-26,NA,Retorno do titular
+670,senado,2004-12-16,2004-12-16,NA,Licença Particular
+64,senado,2014-07-16,2014-11-12,NA,Retorno do titular
+5018,senado,2017-12-18,2018-04-19,NA,Retorno do titular
+3741,senado,2011-02-01,2019-01-31,NA,Término do mandato
+5020,senado,2011-02-03,2014-12-31,NA,Retorno do titular
+5116,senado,2016-05-17,2019-01-31,NA,Término do mandato
+5010,senado,2011-02-01,2015-01-01,NA,Renúncia
+2207,senado,2014-12-22,2019-01-31,NA,Término do mandato
+5072,senado,2018-06-14,2018-10-26,NA,Retorno do titular
+5072,senado,2011-07-13,2011-11-11,NA,Retorno do titular
+5182,senado,2015-01-01,2018-12-12,NA,Renúncia
+635,senado,2018-03-08,2019-01-31,NA,Término do mandato
+635,senado,2011-02-01,2017-11-07,NA,Licença Saúde-Particular
+5052,senado,2017-10-19,2018-10-30,NA,Retorno do titular
+5052,senado,2016-06-06,2017-10-16,NA,Retorno do titular
+72,senado,2011-02-01,2019-01-31,NA,Término do mandato
+4593,senado,2011-02-01,2015-01-01,NA,Renúncia
+5110,senado,2018-05-02,2018-08-26,NA,Retorno do titular
+73,senado,2016-05-24,2019-01-31,NA,Término do mandato
+73,senado,2011-02-01,2016-05-13,NA,Afastamento do exercício
+5048,senado,2011-06-14,2014-02-02,NA,Retorno do titular
+5106,senado,2017-11-08,2018-03-07,NA,Retorno do titular
+4949,senado,2012-07-17,2012-11-14,NA,Retorno do titular
+3372,senado,2012-11-15,2019-01-31,NA,Término do mandato
+3372,senado,2011-02-01,2012-07-13,NA,Licença Saúde-Particular
+558,senado,2011-02-01,2019-01-31,NA,Término do mandato
+4763,senado,2013-04-23,2019-01-31,NA,Término do mandato
+4763,senado,2013-01-30,2013-02-01,NA,Afastamento do exercício
+4763,senado,2011-02-01,2012-10-16,NA,Afastamento do exercício
+4645,senado,2011-02-01,2014-12-22,NA,Renúncia
+1176,senado,2011-02-01,2019-01-31,NA,Término do mandato
+604,senado,2018-10-31,2019-01-31,NA,Término do mandato
+604,senado,2017-10-17,2017-10-18,NA,Afastamento do exercício
+604,senado,2011-02-01,2016-06-03,NA,Afastamento do exercício
+5016,senado,2011-02-01,2015-01-01,NA,Renúncia
+5070,senado,2014-11-15,2019-01-31,NA,Término do mandato
+5070,senado,2012-07-13,2014-07-16,NA,Licença Saúde-Particular
+3811,senado,2011-02-01,2011-11-07,NA,Término do mandato
+3597,senado,2016-05-17,2016-05-23,NA,Retorno do titular
+5144,senado,2011-07-11,2019-01-31,NA,Término do mandato
+5184,senado,2018-12-13,2019-01-31,NA,Término do mandato
+4697,senado,2011-02-01,2019-01-31,NA,Término do mandato
+4981,senado,2017-01-14,NA,NA,NA
+4981,senado,2015-02-01,2016-09-08,NA,Licença Saúde-Particular
+5982,senado,2019-02-01,NA,NA,NA
+3651,senado,2010-11-03,2011-01-31,NA,Término do mandato
+945,senado,2015-02-01,NA,NA,NA
+5967,senado,2019-02-01,NA,NA,NA
+5529,senado,2015-02-01,NA,NA,NA
+751,senado,2019-02-01,NA,NA,NA
+5990,senado,2019-02-01,NA,NA,NA
+470,senado,2019-02-01,NA,NA,NA
+5973,senado,2019-02-01,NA,NA,NA
+739,senado,2019-02-01,NA,NA,NA
+475,senado,2019-02-01,NA,NA,NA
+5998,senado,2019-02-01,NA,NA,NA
+3830,senado,2015-02-01,NA,NA,NA
+5637,senado,2018-10-29,2018-10-29,NA,Licença Particular
+5637,senado,2015-02-03,2016-05-11,NA,Retorno do titular
+5537,senado,2015-02-01,NA,NA,NA
+4994,senado,2019-02-01,NA,NA,NA
+5976,senado,2019-02-01,NA,NA,NA
+3777,senado,2019-02-01,2019-07-12,NA,Afastamento do exercício
+5718,senado,2019-02-01,NA,NA,NA
+5531,senado,2018-11-08,NA,NA,NA
+5531,senado,2015-02-01,2018-07-09,NA,Licença Saúde-Particular
+22,senado,2019-02-01,NA,NA,NA
+5953,senado,2019-02-01,NA,NA,NA
+5540,senado,2015-02-01,NA,NA,NA
+4525,senado,2019-08-01,NA,NA,NA
+4525,senado,2015-02-01,2019-04-01,NA,Licença Saúde-Particular
+345,senado,2019-02-01,NA,NA,NA
+5894,senado,2019-02-01,NA,NA,NA
+3713,senado,2015-02-01,2019-01-01,NA,Renúncia
+196,senado,2002-09-19,2003-01-31,NA,Término do mandato
+196,senado,1998-11-03,2002-05-20,NA,Licença Saúde-Particular
+5615,senado,2016-09-08,2016-09-14,NA,Licença Saúde-Particular
+4558,senado,2015-02-01,2019-01-01,NA,Renúncia
+5639,senado,2018-10-31,2019-01-30,NA,Licença Particular
+5008,senado,2019-02-01,NA,NA,NA
+5385,senado,2019-02-01,NA,NA,NA
+4770,senado,2019-02-01,NA,NA,NA
+35,senado,2019-02-01,NA,NA,NA
+581,senado,2019-02-01,NA,NA,NA
+4545,senado,2019-02-01,NA,NA,NA
+4531,senado,2019-02-01,NA,NA,NA
+5627,senado,2019-01-03,NA,NA,NA
+5895,senado,2019-02-01,NA,NA,NA
+4885,senado,2010-05-06,2010-09-04,NA,Retorno do titular
+5350,senado,2019-02-01,NA,NA,NA
+5849,senado,2018-07-10,2018-11-07,NA,Retorno do titular
+878,senado,2016-05-17,2017-02-22,NA,Retorno do titular
+3361,senado,2015-02-01,NA,NA,NA
+90,senado,2017-02-23,NA,NA,NA
+90,senado,2015-02-01,2016-05-13,NA,Afastamento do exercício
+5929,senado,2019-02-01,NA,NA,NA
+1249,senado,2019-01-31,NA,NA,NA
+1249,senado,2016-05-12,2018-10-28,NA,Licença Particular
+1249,senado,2015-02-01,2015-02-02,NA,Afastamento do exercício
+5533,senado,2015-02-01,NA,NA,NA
+5979,senado,2019-02-01,NA,NA,NA
+5926,senado,2019-02-01,NA,NA,NA
+1186,senado,2019-02-01,NA,NA,NA
+151,senado,2002-10-29,2003-01-31,NA,Término do mandato
+5585,senado,2019-01-02,NA,NA,NA
+5557,senado,2019-01-03,NA,NA,NA
+5666,senado,2019-02-01,NA,NA,NA
+5376,senado,2019-02-01,NA,NA,NA
+742,senado,2019-02-01,NA,NA,NA
+285,senado,2019-02-01,NA,NA,NA
+5422,senado,2019-02-01,NA,NA,NA
+5942,senado,2019-02-01,NA,NA,NA
+1023,senado,2017-01-01,NA,NA,NA
+1023,senado,2016-08-22,2016-09-30,NA,Afastamento do exercício
+1023,senado,2016-05-10,2016-05-13,NA,Afastamento do exercício
+1023,senado,2015-02-01,2015-11-10,NA,Afastamento do exercício
+6027,senado,2019-02-01,NA,NA,NA
+5985,senado,2019-02-01,NA,NA,NA
+63,senado,2002-04-05,2007-01-31,NA,Término do mandato
+63,senado,1999-02-01,2001-11-13,NA,Afastamento do exercício
+5525,senado,2015-02-01,NA,NA,NA
+5924,senado,2019-02-01,NA,NA,NA
+5523,senado,2015-02-01,NA,NA,NA
+5617,senado,2016-09-14,2017-01-13,NA,Retorno do titular
+825,senado,2019-02-01,NA,NA,NA
+374,senado,2015-02-01,NA,NA,NA
+4606,senado,2016-10-05,2017-01-26,NA,Retorno do titular
+5502,senado,2019-02-01,NA,NA,NA
+5012,senado,2019-02-01,NA,NA,NA
+5236,senado,2015-02-01,NA,NA,NA
+70,senado,2019-02-01,NA,NA,NA
+5561,senado,2019-04-03,2019-07-31,NA,Retorno do titular
+5635,senado,2016-10-07,2016-10-10,NA,Licença Saúde-Particular
+5635,senado,2016-05-23,2016-08-21,NA,Retorno do titular
+5635,senado,2015-11-11,2016-05-09,NA,Retorno do titular
+677,senado,2017-01-27,NA,NA,NA
+677,senado,2015-02-01,2016-09-25,NA,Licença Particular
+5905,senado,2019-02-01,NA,NA,NA
+5732,senado,2019-02-01,NA,NA,NA
+5352,senado,2019-02-01,NA,NA,NA
+5322,senado,2015-02-01,NA,NA,NA
+456,senado,2015-02-01,2019-01-01,NA,Renúncia
+2331,senado,2015-02-01,NA,NA,NA
+5621,senado,2018-06-05,2018-10-03,NA,Retorno do titular
+5038,senado,2015-01-01,2016-04-22,NA,Retorno do titular
+5527,senado,2015-02-01,NA,NA,NA
+6005,senado,2019-07-16,NA,NA,NA
+5988,senado,2019-02-01,NA,NA,NA
+5959,senado,2019-02-01,NA,NA,NA
+4560,senado,2019-02-01,NA,NA,NA
+3396,senado,2015-02-01,NA,NA,NA
+5535,senado,2018-10-04,NA,NA,NA
+5535,senado,2017-04-14,2018-05-29,NA,Licença Saúde-Particular
+5535,senado,2015-02-01,2016-12-14,NA,Licença Saúde-Particular
+5619,senado,2018-05-30,2018-06-04,NA,Licença Saúde-Particular
+5619,senado,2016-12-15,2017-04-12,NA,Retorno do titular
+5899,senado,2019-02-01,NA,NA,NA
+5748,senado,2019-02-01,NA,NA,NA
+4786,senado,2016-10-16,2016-12-31,NA,Retorno do titular
+1173,senado,2015-02-01,NA,NA,NA
+5411,senado,2019-02-01,NA,NA,NA
+5783,senado,2019-02-01,NA,NA,NA
+3806,senado,2019-02-01,NA,NA,NA
