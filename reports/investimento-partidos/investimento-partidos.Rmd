@@ -35,8 +35,9 @@ options(scipen = 999)
 
 ```{r}
 receita <- read_csv(here("crawler/raw_data/receitas_tse_2018.csv")) %>% 
-  group_by(partido, cargo) %>% 
-  mutate(total_partido = sum(total_receita)) %>% 
+  group_by(partido, cargo, uf) %>% 
+  mutate(total_partido = sum(total_receita),
+         n_candidatos = n()) %>% 
   ungroup() %>% 
   mutate(proporcao_receita = total_receita / total_partido) %>%
   mutate(partido = padroniza_sigla(partido)) %>% 
@@ -49,7 +50,7 @@ deputados <- read_csv(here("crawler/raw_data/parlamentares.csv")) %>%
 
 deputados_receita <- deputados %>% 
   left_join(receita %>% 
-              select(cpf, partido, total_receita, proporcao_receita), 
+              select(cpf, partido, total_receita, proporcao_receita, n_candidatos), 
             by = c("cpf" = "cpf", "sg_partido" = "partido")) %>% 
   mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", sg_partido, "/", uf))
 ```
@@ -137,11 +138,11 @@ deputados_receita %>%
 ### Quem teve maior investimento proporcional?
 ```{r}
 levels <- deputados_receita %>%
-  arrange(desc(proporcao_receita)) %>% 
+  arrange(desc(total_receita)) %>% 
   pull(nome)
 
-deputados_receita %>% 
-  arrange(desc(proporcao_receita)) %>% 
+deputados_receita %>%
+  arrange(desc(total_receita)) %>% 
   mutate(proporcao_receita = proporcao_receita * 100) %>% 
   head(15) %>% 
   ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = proporcao_receita, fill = "a")) +
@@ -200,26 +201,26 @@ deputados_receita %>%
   geom_count() +
   geom_point(aes(y = proporcao_receita_lider*100), color = "#dc267f", size = 1) +
   scale_x_discrete(position = "right") +
-  scale_y_continuous(limits = c(0, 32), breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
+  # scale_y_continuous(limits = c(0, 32), breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
   scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
   coord_flip() +
   scale_shape_identity() +
   
-  annotate("text", label = "Mediana do partido", x = "PT", y = 7.7, color = "#4b4545") +
-  geom_curve(aes(x = "NOVO", y = 0.65, xend = "PT", yend = 4.5),
-             color = "#7d7373", size = 0.4, curvature = 0.35,
-             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
-  
-  annotate("text", label = "Líder do Partido", x = "AVANTE", y = 23.3, color = "#4b4545") +
-  geom_segment(aes(x = "AVANTE", y = 18, xend = "AVANTE", yend = 20.5), colour="#7d7373", size=0.5, 
-               arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+  # annotate("text", label = "Mediana do partido", x = "PT", y = 7.7, color = "#4b4545") +
+  # geom_curve(aes(x = "NOVO", y = 5.3, xend = "PT", yend = 4.5),
+  #            color = "#7d7373", size = 0.4, curvature = 0.35,
+  #            arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+
+  # annotate("text", label = "Líder do Partido", x = "AVANTE", y = 23.3, color = "#4b4545") +
+  # geom_segment(aes(x = "AVANTE", y = 18, xend = "AVANTE", yend = 20.5), colour="#7d7373", size=0.5, 
+  #              arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
 
   geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
   labs(x = "", y = "Doado pelo Partido (%)",
        title = "Distribuição das doações por partido") +
   guides(color = FALSE, size = FALSE) +
   theme_ipsum_rc() +
-  geom_text(aes(label = ifelse(proporcao_receita > 15, 
+  geom_text(aes(label = ifelse(proporcao_receita > 100, 
                                paste0(str_to_title(nome_eleitoral), " ", sg_partido, "/", uf), 
                                "")),
             vjust = 2,
@@ -256,20 +257,20 @@ deputados_receita %>%
   geom_density_ridges(
     aes(height = ..density..),
     stat = "density", trim = TRUE,
-    scale = 1
+    scale = 0.9
   ) +
   scale_shape_identity() +
   geom_point(aes(x = proporcao_receita, color = "b"), size = 2, alpha = 0.7, shape = 124) +
 
-  annotate("text", label = "Mediana", x = 5, y = 3.52, color = "#4b4545") +
-  geom_curve(aes(x = 1.8, y = 3.9, xend = 3.7, yend = 3.5),
-             color = "#7d7373", size = 0.4, curvature = 0.35,
-             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
-
-  annotate("text", label = "um deputado", x = 9.9, y = 3.62, color = "#4b4545") +
-  geom_curve(aes(x = 6.1, y = 3.92, xend = 8, yend = 3.59),
-             color = "#7d7373", size = 0.4, curvature = 0.38,
-             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+  # annotate("text", label = "Mediana", x = 5, y = 3.52, color = "#4b4545") +
+  # geom_curve(aes(x = 1.8, y = 3.9, xend = 3.7, yend = 3.5),
+  #            color = "#7d7373", size = 0.4, curvature = 0.35,
+  #            arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+  # 
+  # annotate("text", label = "um deputado", x = 9.9, y = 3.62, color = "#4b4545") +
+  # geom_curve(aes(x = 6.1, y = 3.92, xend = 8, yend = 3.59),
+  #            color = "#7d7373", size = 0.4, curvature = 0.38,
+  #            arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
   
   
   geom_point(aes(x = median, color = "a"), size = 3.8, shape = 124) +
@@ -308,16 +309,24 @@ deputados_receita <- deputados_receita %>%
             by = c("id" = "id_parlamentar", "sg_partido" = "partido"))
 ```
 
-```{r fig.height=6}
-deputados_receita %>% 
+```{r fig.width = 5, fig.height = 4}
+g <- deputados_receita %>% 
   ggplot(aes(x = proporcao_receita * 100, y = aderencia * 100)) +
-  geom_point(height = 0.2, col="tomato3") +
+  geom_point(aes(text = sprintf("%s \nAderência: %s \nProporção da receita %s", 
+                                nome, 
+                                scales::percent(aderencia),
+                                scales::percent(proporcao_receita))), 
+             height = 0.2, col="tomato3") +
   scale_x_continuous(breaks = seq(0, 100, 5)) +
   scale_y_continuous(breaks = seq(0, 100, 5), limits = c(20, 100)) +
   labs(x = "Doado pelo Partido (%)",
        y = "Aderência (%)",
        title = "Aderência x Proporção da Doação do Partido") +
   theme_ipsum_rc()
+  
+plotly::ggplotly(g, tooltip = "text") %>% 
+  plotly::config(displayModeBar = F) %>% 
+  plotly::layout(autosize = F)
 ```
 
 Não é possível afirmar uma relação direta entre a obediência/aderência ao partido e o investimento proporcional recebido pelo partido.
@@ -365,7 +374,7 @@ ggplot(
         color = group)
   ) + 
   geom_text(size = 3.5, fontface = "bold", nudge_y = 0.6,
-            mapping = aes(label = ifelse(sg_partido == "PODEMOS", 
+            mapping = aes(label = ifelse(sg_partido == "DEM", 
                                          ifelse(group == "F",
                                                "Mulher",
                                                "Homem"),
@@ -374,27 +383,27 @@ ggplot(
             ) +
   
   ## retangulo das diferencas
-  geom_rect(mapping = aes(xmin = 10.4, xmax = Inf , ymin = -Inf, ymax = Inf),
+  geom_rect(mapping = aes(xmin = 103, xmax = Inf , ymin = -Inf, ymax = Inf),
             fill = "white",
             color = "white") +
-  geom_rect(mapping = aes(xmin = 10.5, xmax = 11.5 , ymin = -Inf, ymax = Inf),
+  geom_rect(mapping = aes(xmin = 103.5, xmax = 115.5 , ymin = -Inf, ymax = Inf),
             fill = "#eef0e2",
             color = "#eef0e2") +
-  geom_text(fontface = "bold", size = 3.3, colour = "#5f5757", 
-            mapping = aes(x = 11, y = sg_partido, 
+  geom_text(fontface = "bold", size = 3.3, colour = "#5f5757",
+            mapping = aes(x = 109.5, y = sg_partido,
                           label = ifelse(group == "M", "",
-                                         ifelse(diff > 0, paste0("+", as.character(round(diff, 2))), 
+                                         ifelse(diff > 0, paste0("+", as.character(round(diff, 2))),
                                                 paste0(as.character(round(diff, 2)))
                                                 )
                                          )
                           )
             ) +
   geom_text(size = 3, colour = "#9e9191", nudge_y = 0.6,
-            mapping = aes(x = 11, y = sg_partido, label = ifelse(sg_partido == "PODEMOS", "diferença", ""))) +
+            mapping = aes(x = 109.5, y = sg_partido, label = ifelse(sg_partido == "DEM", "diferença", ""))) +
   ## fim retangulo das diferencas
   
   scale_color_manual(values = c("#DEAC7C", "#83ACB8")) +
-  scale_x_continuous(breaks = seq(0, 10, 1), limits = c(0, 12)) +
+  scale_x_continuous(breaks = seq(0, 100, 10), limits = c(0, 120)) +
   scale_y_discrete(
     expand = expand_scale(add=c(0.65,1))
   ) +
@@ -412,6 +421,16 @@ Pela visualização é possível identificar a diferença entre as medianas da p
 ## Senadores
 
 ```{r}
+receita <- read_csv(here("crawler/raw_data/receitas_tse_2018.csv")) %>% 
+  group_by(partido, uf) %>% 
+  mutate(total_partido = sum(total_receita),
+         n_candidatos = n()) %>% 
+  ungroup() %>% 
+  mutate(proporcao_receita = total_receita / total_partido) %>%
+  mutate(partido = padroniza_sigla(partido)) %>% 
+  mutate(partido = if_else(str_detect(partido, "PATRI"), "PATRIOTA", partido)) %>% 
+  mutate(partido = if_else(str_detect(partido, "PC DO B"), "PCdoB", partido))
+
 senadores <- read_csv(here("crawler/raw_data/senadores.csv")) %>% 
   mutate(sg_partido = padroniza_sigla(sg_partido)) %>% 
   filter(casa == "senado", em_exercicio == 1)
@@ -422,7 +441,8 @@ senadores_receita <- senadores %>%
               mutate(nome = format_string(nome)) %>% 
               mutate(partido = if_else(partido == "PODE", "PODEMOS", partido)), 
             by = c("nome_civil" = "nome", "sg_partido" = "partido")) %>% 
-  select(id, casa, nome_eleitoral, uf = uf.x, genero, sg_partido, total_receita, total_partido, proporcao_receita) %>% 
+  select(id, casa, nome_eleitoral, uf = uf.x, genero, sg_partido, total_receita, 
+         total_partido, proporcao_receita, n_candidatos) %>% 
   mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", sg_partido, "/", uf))
 ```
 
@@ -493,6 +513,7 @@ senadores_receita %>%
   ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = proporcao_receita, fill = "a")) +
   geom_chicklet(width = .7, radius = grid::unit(5, "pt")) +
   coord_flip() +
+  geom_text(aes(label = n_candidatos), nudge_y = ) +
   scale_fill_manual(values = c("#806CCC")) +
   scale_y_continuous(breaks = seq(0, 100, 5)) +
   guides(fill = FALSE) + 
@@ -540,27 +561,27 @@ senadores_receita %>%
   geom_count() +
   geom_point(aes(y = proporcao_receita_lider*100), color = "#dc267f", size = 1) +
   scale_x_discrete(position = "right") +
-  scale_y_continuous(limits = c(0, 70), breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
+  scale_y_continuous(limits = c(0, 140), breaks = seq(0, 140, 5), position = "bottom", sec.axis = dup_axis()) +
   scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
   coord_flip() +
   scale_shape_identity() +
   
-  annotate("text", label = "Mediana do partido", x = "PODEMOS", y = 17, color = "#4b4545") +
-  geom_curve(aes(x = 14.25, y = 4, xend = "PODEMOS", yend = 10),
-             color = "#7d7373", size = 0.4, curvature = -0.5,
-             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
-  
-  annotate("text", label = "líder do partido", x = 11.4, y = 29.2, color = "#4b4545") +
-  geom_curve(aes(x = 11.25, y = 38, xend = 11.4, yend = 35),
-             color = "#7d7373", size = 0.4, curvature = 0.5,
-             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+  # annotate("text", label = "Mediana do partido", x = "PODEMOS", y = 17, color = "#4b4545") +
+  # geom_curve(aes(x = 14.25, y = 4, xend = "PODEMOS", yend = 10),
+  #            color = "#7d7373", size = 0.4, curvature = -0.5,
+  #            arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+  # 
+  # annotate("text", label = "líder do partido", x = 11.4, y = 29.2, color = "#4b4545") +
+  # geom_curve(aes(x = 11.25, y = 38, xend = 11.4, yend = 35),
+  #            color = "#7d7373", size = 0.4, curvature = 0.5,
+  #            arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
 
   geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
   labs(x = "", y = "Doado pelo Partido (%)",
        title = "Distribuição das doações por partido") +
   guides(color = FALSE, size = FALSE) +
   theme_ipsum_rc() +
-  geom_text(aes(label = ifelse(proporcao_receita > 25, 
+  geom_text(aes(label = ifelse(proporcao_receita > 85, 
                                paste0(str_to_title(nome_eleitoral), " ", sg_partido, "/", uf), 
                                "")),
             hjust = -.07,
