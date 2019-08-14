@@ -43,7 +43,7 @@ senadores <- read_csv(here("crawler/raw_data/senadores.csv")) %>%
   filter(em_exercicio == 1) %>% 
   mutate(nome_exibido = paste0(nome_eleitoral, " - ", sg_partido, "/", uf),
          id = as.character(id)) %>% 
-  select(id, nome_exibido)
+  select(id, nome_exibido, partido_senador = sg_partido)
 
 partidos <- read_csv(here("crawler/raw_data/partidos.csv")) %>% 
   select(id, sigla)
@@ -55,19 +55,16 @@ aderencia <-
   filter(str_detect(id_parlamentar_voz, "^2.*")) %>% 
   mutate(id = str_remove(id_parlamentar_voz, "^(\\d){1}")) %>%  #remove o dígito 2 do id_parlamentar_voz
   left_join(senadores, by="id") %>% 
-  filter(!is.na(nome_exibido), aderencia >= 0) %>% 
-  left_join(partidos, by=c("id_partido"="id")) %>% 
-  select(-id_partido) %>% 
-  rename(partido = sigla) %>% 
+  filter(!is.na(nome_exibido), aderencia >= 0) %>%
   mutate(freq = (seguiu / (seguiu + nao_seguiu)) * 100) %>%
   mutate(freq = if_else(is.nan(freq), -1, freq))
   
 
 aderencia_governo <- aderencia  %>% 
-  filter(partido == "Governo", id_tema == 99)
+  filter(id_partido == 0, id_tema == 99)
 
 aderencia_partido <- aderencia %>% 
-  filter(partido != "Governo")
+  filter(id_partido != 0)
 
 proposicoes <- fetch_proposicoes_plenario_selecionadas_senado()
 ```
@@ -116,9 +113,11 @@ aderencia_governo %>%
     theme_ipsum_rc()
 ```
 
-É possível observar os senadores que frequentemente seguem menos a orientação do governo: o partido que possui deputados menos aderentes é o PODEMOS, 
+É possível observar os senadores que frequentemente seguem menos a orientação do governo: o partido que possui senadores menos aderentes é o PODEMOS, representados por Eduardo Girão, Oriovisto Guimarães, Lasier Martins, Alvaro Dias e Elmano Férrer. Pode-se ver também outros partidos de direita, até o próprio PSL, que é o partido do presidente do Brasil.
 
 ### Mais detalhes sobre quem não adere
+
+No gráfico abaixo, é possível detalhar os votos dos senadores menos aderentes ao Governo.
 
 ```{r}
 paleta <- c("#91bfda", "#CCCCCC", "#e06264")
@@ -166,6 +165,7 @@ data_long %>%
 ```
 
 ### Quem tem mais aderência?
+
 ```{r fig.height=7}
 levels <- aderencia_governo %>%
   arrange(desc(freq), desc(seguiu), faltou) %>% 
@@ -185,9 +185,14 @@ aderencia_governo %>%
   scale_y_continuous(breaks = seq(0, 100, 2)) +
   labs(title = "Senadores com mais aderência ao Governo",
        y = "Nº de votações em que seguiu o Governo",
-       x = "Senador") +
+       x = "Senador",
+       subtitle = "Os que mais frequentemente não seguem o governo") +
     theme_ipsum_rc()
 ```
+
+Os senadores mais aderentes ao Governo são marjitoriamente dos partidos MDB, PODEMOS, PSDB e DEM. Estes são também os partidos dos senadores que possuem cargos de liderança (líder e vice-líder) do Governo: Fernando Bezerra Coelho é o líder do Governo e aparece com aderência máxima; Chico Rodrigues e Izalci Lucas são vice-líderes do Governo e também estão nesta lista, faltando apenas Elmano Férrer, que possui menor frequência de aderência em relação aos outros.
+
+Abaixo detalhamos o resultado dos senadores mais frequentemente aderentes ao Governo.
 
 ```{r}
 paleta <- c("#91bfda", "#CCCCCC", "#e06264")
@@ -234,30 +239,35 @@ data_long %>%
 ```
 
 ### Aderência nos partidos
+
+Abaixo é possível analisar como os partidos políticos seguem a orientação do Governo.
+
+A marca "**|**" demarca a mediana das aderência dos senadores por partido; ou seja, o traço no gráfico é o valor que separa a metade é mais frequentemente aderente da outra metade com menor frequência. O tamanho do ponto é proporcional ao número de senadores com mesma aderência: quanto maior, mais senadores aglomerados com aderências iguais.
+
 ```{r}
-partidos <- aderencia %>% 
-  filter(partido != "Governo", partido != "SPART") %>% 
-  group_by(partido) %>% 
+partidos_summary <- aderencia_governo %>% 
+  filter(partido_senador != "S/Partido") %>% 
+  group_by(partido_senador) %>% 
   summarise(n = n(),
          median = median(freq)) %>% 
   ungroup() %>% 
   arrange(median) %>% 
-  mutate(partido = factor(partido, levels = unique(partido)))
+  mutate(partido_senador = factor(partido_senador, levels = unique(partido_senador)))
 
-levels <- partidos %>% 
-  pull(partido)
+levels <- partidos_summary %>% 
+  pull(partido_senador)
 ```
 
 ```{r}
-aderencia_partido %>% 
-  filter(partido != "SPART") %>% 
-  group_by(partido) %>% 
+aderencia_governo %>% 
+  group_by(partido_senador) %>% 
   mutate(n = n(),
-         median = median(freq),
-         aderencia = aderencia * 100) %>% 
+         median = median(freq)) %>% 
   ungroup() %>% 
-  filter(partido %in% (partidos %>% pull(partido))) %>% 
-  ggplot(aes(x = factor(partido, levels = levels), y = freq, color = factor(partido, levels = levels))) +
+  filter(partido_senador %in% (partidos_summary %>% pull(partido_senador))) %>% 
+  ggplot(aes(x = factor(partido_senador, levels = levels), 
+             y = freq, 
+             color = factor(partido_senador, levels = levels))) +
   geom_count() +
   scale_x_discrete(position = "left") +
   scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
@@ -266,12 +276,17 @@ aderencia_partido %>%
   scale_shape_identity() +
   geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
   labs(x = "", y = "Aderência ao Governo (%)",
-       title = "Distribuição da aderência dos senadores \nnos partidos") +
+       title = "Distribuição da aderência dos deputados \nnos partidos") +
   guides(color = FALSE, size = FALSE) +
   theme_ipsum_rc()
 ```
 
+Alguns partidos possuem aproximadamente metade dos senados com maior aderência: PSDB, PSC, PRB, PDT, MDB e DEM; isso é indicado pela mediana igual a 100%. Os demais partidos. Entre os partidos cujo senadores frequentemente não aderem ao governo estão REDE, PODEMOS e PSL. Os demais partidos possuem aderência com maior variância, mas todos com aderência ainda bem alta, alternando entre 85% a 100% de aderência ao Governo.
+
+
 ### Aderência nas Comissões
+
+A seguir, analisaremos como as comissões compostas pelos senadores seguem a orientação do Governo.
 
 ```{r}
 comissoes <- readr::read_csv(here::here("crawler/raw_data/comissoes.csv")) %>% 
@@ -320,3 +335,6 @@ senadores_comissoes %>%
   guides(color = FALSE, size = FALSE) +
   theme_ipsum_rc()
 ```
+
+Pode-se visualizar que, nas comissões, metade dos senadores que as compõe geralmente se concetra em torno dos 100% de aderência ao Governo; a outra metade se mostra bem diversa, com senadores que possuem aderências variando de 78% a 95%.
+
