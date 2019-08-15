@@ -24,7 +24,7 @@ compara_voto_com_orientacao <- function(voto_deputado, voto_partido) {
   
   if (!is.na(voto_deputado)) {
     if (!is.na(voto_partido)) {
-      if (voto_partido != 5 && voto_deputado != 0) {
+      if (voto_partido != 5 && voto_deputado != 0 && voto_deputado != 4) {
         if(voto_deputado == voto_partido) {
           return(1) ## deputado seguiu orientação
         } else {
@@ -33,6 +33,10 @@ compara_voto_com_orientacao <- function(voto_deputado, voto_partido) {
       } else {
         if (voto_deputado == 0) {
           return(-2) ## deputado faltou
+        }
+        
+        if (voto_deputado == 4) {
+          return(0) ## deputado é presidente da casa
         }
         
         if (voto_partido == 5) {

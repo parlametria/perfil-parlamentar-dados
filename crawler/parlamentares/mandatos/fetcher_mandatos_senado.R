@@ -7,6 +7,8 @@
 #' @examples
 #' extract_mandatos_senado(5322)
 extract_mandatos_senado <- function(id_senador) {
+  library(fuzzyjoin)
+  library(tidyverse)
   source(here::here("crawler/parlamentares/mandatos/utils_mandatos.R"))
   url <-
     paste0("http://legis.senado.leg.br/dadosabertos/senador/",
@@ -14,16 +16,14 @@ extract_mandatos_senado <- function(id_senador) {
            "/mandatos")
   
   mandatos <- tryCatch({
-    data <-
-      RCurl::getURL(url) %>%
+      mandatos <- RCurl::getURL(url) %>%
       xml2::read_xml() %>%
       xml2::xml_find_all(".//Mandato") %>%
-      
       purrr::map_df(function(x) {
         mandato <- tribble(
           ~ id_legislatura,
-          ~ data_inicio,
-          ~ data_fim,
+          ~ data_inicio_mandato,
+          ~ data_fim_mandato,
           extract_text_from_node(x, "./PrimeiraLegislaturaDoMandato/NumeroLegislatura"),
           extract_text_from_node(x, "./PrimeiraLegislaturaDoMandato/DataInicio"),
           extract_text_from_node(x, "./PrimeiraLegislaturaDoMandato/DataFim"),
@@ -34,37 +34,61 @@ extract_mandatos_senado <- function(id_senador) {
           mutate(
             situacao =
               extract_text_from_node(x, "./DescricaoParticipacao"),
-            cod_causa_fim_exercicio =
-              extract_text_from_node(x, "./Exercicios/Exercicio/CodigoExercicio"),
-            desc_causa_fim_exercicio =
-              extract_text_from_node(x, "./Exercicios/Exercicio/DescricaoCausaAfastamento")
+            data_inicio_mandato = as.Date(data_inicio_mandato),
+            data_fim_mandato = as.Date(data_fim_mandato)
           )
-      })
-    
-    data <- data %>%
-      dplyr::mutate(
-        id_parlamentar = as.integer(id_senador),
-        casa = "senado",
-        id_legislatura = as.integer(id_legislatura),
-        data_inicio = as.Date(data_inicio, "%Y-%m-%d"),
-        data_fim = as.Date(data_fim, "%Y-%m-%d"),
-        cod_causa_fim_exercicio = 
-          if_else(is.na(desc_causa_fim_exercicio), 
-                  as.integer(NA), 
-                  as.integer(cod_causa_fim_exercicio))) %>%
-      dplyr::select(
-        id_parlamentar,
-        casa,
-        id_legislatura,
-        data_inicio,
-        data_fim,
-        situacao,
-        cod_causa_fim_exercicio,
-        desc_causa_fim_exercicio
-      ) %>% 
-      arrange(id_legislatura)
-    
-    return(data)
+        
+        exercicios <- xml2::xml_find_all(x, ".//Exercicio") %>%
+          purrr::map_df(function(y) {
+            tribble(
+              ~ data_inicio,
+              ~ data_fim,
+              ~ cod_causa_fim_exercicio,
+              ~ desc_causa_fim_exercicio,
+              extract_text_from_node(y, "./DataInicio") %>% as.Date(),
+              extract_text_from_node(y, "./DataFim") %>% as.Date(),
+              extract_text_from_node(y, "./SiglaCausaAfastamento"),
+              extract_text_from_node(y, "./DescricaoCausaAfastamento")
+            )
+          }) 
+        
+          mandatos <- fuzzyjoin::fuzzy_full_join(
+            exercicios,
+            mandato,
+            by = c("data_inicio" = "data_inicio_mandato",
+                 "data_inicio" = "data_fim_mandato"),
+            match_fun = list(`>=`, `<=`)
+        ) %>% 
+          arrange(data_inicio, id_legislatura) %>% 
+          mutate(
+            data_inicio = 
+              if_else(is.na(data_inicio), 
+                      data_inicio_mandato %>% as.Date(),
+                      data_inicio),
+            data_fim = if_else(!is.na(lead(data_fim_mandato)) & is.na(data_fim), data_fim_mandato, data_fim))
+      }) 
+      
+      mandatos <- mandatos %>% 
+        dplyr::mutate(
+          id_parlamentar = as.integer(id_senador),
+          casa = "senado",
+          cod_causa_fim_exercicio = 
+            if_else(is.na(desc_causa_fim_exercicio), 
+                    as.integer(NA), 
+                    as.integer(cod_causa_fim_exercicio))
+          ) 
+      
+      mandatos <- mandatos %>%
+        dplyr::select(
+          id_parlamentar,
+          casa,
+          id_legislatura,
+          data_inicio,
+          data_fim,
+          situacao,
+          cod_causa_fim_exercicio,
+          desc_causa_fim_exercicio
+        )
     
   }, error = function(e) {
     data <- tribble(
@@ -73,7 +97,7 @@ extract_mandatos_senado <- function(id_senador) {
       ~ id_legislatura,
       ~ data_inicio,
       ~ data_fim,
-      ~ situacao,
+      ~ situacao, 
       ~ cod_causa_fim_exercicio,
       ~ desc_causa_fim_exercicio
     )

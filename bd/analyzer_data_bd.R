@@ -381,10 +381,10 @@ processa_mandatos <- function(mandatos_path = here::here("crawler/raw_data/manda
   
   mandatos <- mandatos %>% 
     mutate(casa_enum = dplyr::if_else(casa == "camara", 1, 2),
-      id_parlamentar_voz = paste0(casa_enum, as.character(id_parlamentar))) %>% 
+      id_parlamentar_voz = paste0(casa_enum, as.character(id_parlamentar)),
+      id_mandato_voz = paste0(id_parlamentar_voz, id_legislatura, gsub("-", "", data_inicio))) %>% 
     arrange(cod_causa_fim_exercicio) %>% 
-    distinct(id_parlamentar_voz, id_legislatura, .keep_all = TRUE) %>% 
-    select(id_parlamentar_voz, id_legislatura, data_inicio, 
+    select(id_mandato_voz, id_parlamentar_voz, id_legislatura, data_inicio, 
            data_fim, situacao, cod_causa_fim_exercicio, 
            desc_causa_fim_exercicio)
   
