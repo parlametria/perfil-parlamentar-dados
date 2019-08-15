@@ -202,7 +202,7 @@ processa_proposicoes_temas <- function() {
     distinct(id_proposicao, casa, id_tema) %>% 
     mutate(id_proposicao_voz = paste0(if_else(casa == "camara", 1, 2), 
                                       id_proposicao)) %>% 
-    select(id_proposicao_voz, casa, id_tema)
+    select(id_proposicao_voz, id_tema)
   
   return(proposicoes)
 }
@@ -380,12 +380,14 @@ processa_mandatos <- function(mandatos_path = here::here("crawler/raw_data/manda
   mandatos <- read.csv(mandatos_path, stringsAsFactors = FALSE)
   
   mandatos <- mandatos %>% 
-    dplyr::mutate(casa_enum = dplyr::if_else(casa == "camara", 1, 2),
-      id_parlamentar_voz = paste0(casa_enum, as.character(id_parlamentar))) %>% 
-    dplyr::select(-c(casa_enum, id_parlamentar, casa)) %>% 
-    dplyr::select(id_parlamentar_voz, 
-                  id_legislatura, data_inicio, data_fim, situacao, 
-                  cod_causa_fim_exercicio, desc_causa_fim_exercicio)
+    mutate(casa_enum = dplyr::if_else(casa == "camara", 1, 2),
+      id_parlamentar_voz = paste0(casa_enum, as.character(id_parlamentar)),
+      id_mandato_voz = paste0(id_parlamentar_voz, id_legislatura, gsub("-", "", data_inicio))) %>% 
+    arrange(cod_causa_fim_exercicio) %>% 
+    select(id_mandato_voz, id_parlamentar_voz, id_legislatura, data_inicio, 
+           data_fim, situacao, cod_causa_fim_exercicio, 
+           desc_causa_fim_exercicio)
+  
   return(mandatos)
 }
 
