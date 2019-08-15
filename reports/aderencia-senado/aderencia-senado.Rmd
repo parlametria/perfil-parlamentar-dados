@@ -79,14 +79,17 @@ Analisamos os senadores que mais seguem e o menos "obedientes" ao governo nas vo
 
 Aderência é uma faceta da atuação dos Deputados e Senadores Federais nas votações em plenário de cada casa. Um parlamentar é aderente ao Governo quando segue as orientações do Governo em votações nominais. Neste relatório, focamos nos senadores.
 
-Para cada votação de cada senador, identificamos se ele seguiu a orientação do Governo ou não. Em seguida, calculamos o grau de aderência como a proporção das votações em que ele seguiu a orientação do Governo. Quando o Governo não apresentou orientação em uma votação, consideramos o voto do Líder do Governo como orientação.
+A orientação do governo é feita com base no voto do Líder do Governo. Quando ele não está presente, consideramos o voto do Vice-líder.
+
+Para cada votação de cada senador, identificamos se ele seguiu a orientação do Governo ou não. Em seguida, calculamos o grau de aderência como a proporção das votações em que ele seguiu a orientação do Governo. 
+
 
 Ao total temos `r votos %>% count(id_votacao) %>% nrow()` votações em plenário.
 
 ## Aderência ao Governo
 ### Quem tem menos aderência?
 
-Abaixo temos os 20 senadores que possuem menos aderência ao governo. Eles estão ordenados pela frequência dos votos em que não seguiram a orientação do Governo. Esta frequência é definida como **nº de votos que seguiu / nº de votos totais** que o senador teve, ignorando os casos onde o partido liberou ou o senador faltou.
+Abaixo temos os 20 senadores que possuem menos aderência ao governo. Eles estão ordenados pela frequência dos votos em que não seguiram a orientação do Governo. Esta frequência é definida como **nº de votos que seguiu / nº de votos totais** que o senador teve, ignorando os casos onde o senador faltou.
 
 ```{r fig.height=7}
 
@@ -281,8 +284,7 @@ aderencia_governo %>%
   theme_ipsum_rc()
 ```
 
-Alguns partidos possuem aproximadamente metade dos senados com maior aderência: PSDB, PSC, PRB, PDT, MDB e DEM; isso é indicado pela mediana igual a 100%. Os demais partidos. Entre os partidos cujo senadores frequentemente não aderem ao governo estão REDE, PODEMOS e PSL. Os demais partidos possuem aderência com maior variância, mas todos com aderência ainda bem alta, alternando entre 85% a 100% de aderência ao Governo.
-
+Alguns partidos possuem metade de seus representantes com aderência máxima: PSDB, PSC, PRB, PDT, MDB e DEM; isso é indicado pela mediana igual a 100%. Entre os partidos cujo senadores frequentemente não aderem ao governo estão REDE, PODEMOS e PSL. Os demais partidos possuem aderência com maior variância, mas todos ainda bastante aderentes, alternando entre 85% a 100%.
 
 ### Aderência nas Comissões
 
