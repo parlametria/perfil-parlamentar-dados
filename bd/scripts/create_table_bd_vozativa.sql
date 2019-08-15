@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS "usuarios" (
 
 CREATE TABLE IF NOT EXISTS "partidos" (    
     "id_partido" INTEGER,
-    "sigla" VARCHAR(40),
+    "sigla" VARCHAR(255),
     "tipo" VARCHAR(90),
     "situacao" VARCHAR(60),
     PRIMARY KEY("id_partido")
@@ -154,6 +154,7 @@ CREATE TABLE IF NOT EXISTS "aderencias" (
 CREATE TABLE IF NOT EXISTS "liderancas" (    
     "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
     "id_partido" INTEGER REFERENCES "partidos" ("id_partido") ON DELETE SET NULL ON UPDATE CASCADE,
+    "casa" VARCHAR(40),
     "cargo" VARCHAR(40),
     PRIMARY KEY("id_parlamentar_voz", "id_partido")
 );

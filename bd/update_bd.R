@@ -17,7 +17,7 @@ write_log <- function(message, log_output) {
   system(paste0('echo ', message, ' >> ', log_output))
 }
 
-log_file <- here::here(paste0("bd/scripts/logs/",  Sys.Date(), "_log.txt"))
+log_file <- here::here(paste0("bd/scripts/logs/",  gsub(":", "", gsub(" ", "_", Sys.time())), "_log.txt"))
 
 write_log(Sys.time(), log_file)
 write_log("=======================================================", log_file)
