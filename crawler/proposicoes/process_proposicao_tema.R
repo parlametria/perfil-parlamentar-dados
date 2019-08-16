@@ -26,8 +26,13 @@ getIdfromTema <- function(tema_nome) {
 #' @return Dataframe com proposições e os temas (ids)
 #' @examples
 #' proposicoes_temas <- process_proposicoes_plenario_selecionadas_temas(url)
-process_proposicoes_plenario_selecionadas_temas <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvvT0fmGUMwOHnEPe9hcAMC_l-u9d7sSplNYkMMzgiE_vFiDcWXWwl4Ys7qaXuWwx4VcPtFLBbMdBd/pub?gid=399933255&single=true&output=csv") {
+process_proposicoes_plenario_selecionadas_temas <- function(url = NULL) {
   library(tidyverse)
+  
+  if(is.null(url)) {
+    source(here::here("crawler/proposicoes/utils_proposicoes.R"))
+    url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+  }
   
   proposicoes <- read_csv(url, col_types = cols(id = "c"))
   
@@ -37,16 +42,21 @@ process_proposicoes_plenario_selecionadas_temas <- function(url = "https://docs.
     unnest(tema) %>% 
     ungroup() %>% 
     rowwise() %>% 
-    mutate(tema_id = getIdfromTema(tema)) %>% 
+    mutate(id_tema = getIdfromTema(tema)) %>% 
     ungroup() %>% 
     mutate(id_proposicao = id) %>% 
-    distinct(id_proposicao, tema_id)
+    distinct(id_proposicao, id_tema)
   
   return(proposicoes_va)
 }
 
-process_proposicoes_questionario_temas <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMcbeHRm_dqX-i2gNVaCiHMFg6yoIjNl9cHj0VBIlQ5eMX3hoHB8cM8FGOukjfNajWDtfvfhqxjji7/pub?gid=0&single=true&output=csv") {
+process_proposicoes_questionario_temas <- function(url = NULL) {
   library(tidyverse)
+  
+  if(is.null(url)) {
+    source(here::here("crawler/proposicoes/utils_proposicoes.R"))
+    url <- .URL_PROPOSICOES_VOZATIVA
+  }
   
   proposicoes <- read_csv(url, col_types = cols(id_proposicao = "c"))
   
@@ -60,9 +70,32 @@ process_proposicoes_questionario_temas <- function(url = "https://docs.google.co
     unnest(tema) %>% 
     ungroup() %>% 
     rowwise() %>% 
-    mutate(tema_id = getIdfromTema(tema)) %>% 
+    mutate(id_tema = getIdfromTema(tema)) %>% 
     ungroup() %>% 
-    distinct(id_proposicao, tema_id)
+    distinct(id_proposicao, id_tema)
     
   return(proposicoes_va)
+}
+
+#' @title Cria dados dos temas
+#' @description Cria os dados dos temas
+#' @return Dataframe com informações dos temas (descrição e id)
+processa_temas_proposicoes <- function() {
+  temas <- data.frame(id_tema = c(0, 1, 2, 3, 5, 99),
+                      tema = c("Meio Ambiente", 
+                               "Direitos Humanos", 
+                               "Integridade e Transparência", 
+                               "Agenda Nacional", 
+                               "Educação",
+                               "Geral"), 
+                      slug = c("meio-ambiente",
+                               "direitos-humanos",
+                               "transparencia",
+                               "agenda-nacional",
+                               "educacao",
+                               "geral"),
+                      ativo = c(1, 1, 1, 1, 1, 0),
+                      stringsAsFactors = FALSE)
+  
+  return(temas)
 }

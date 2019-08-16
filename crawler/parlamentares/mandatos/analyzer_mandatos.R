@@ -26,8 +26,9 @@ extract_mandatos <- function(id_parlamentar, casa) {
 #' data de inicio, data de fim, situacao, código e descrição da causa do fim do exercício.
 #' @examples
 #' extract_all_mandatos(readr::read_csv(here::here("crawler/raw_data/parlamentares.csv")))
-extract_all_mandatos <- function(df_parlamentares) {
+extract_all_mandatos <- function(df_parlamentares = readr::read_csv(here::here("crawler/raw_data/parlamentares.csv"))) {
   library(tidyverse)
+  
   mandatos <-
     purrr::map2_df(df_parlamentares$id, df_parlamentares$casa, 
                    ~ extract_mandatos(.x, .y)) %>% 

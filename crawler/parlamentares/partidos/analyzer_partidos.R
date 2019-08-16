@@ -11,20 +11,20 @@ processa_partidos_blocos <- function() {
   
   partidos_camara <- process_partidos_por_leg()
   
-  # partidos_senado <- fetch_partidos_senado() %>% 
-  #   filter(!str_detect(sigla, "PODEMOS"))
-  # 
-  # partidos_senado_filtrado <- partidos_senado %>% 
-  #   filter(!(sigla %in% (partidos_camara %>% pull(sigla))))
-  # 
-  # partidos <- partidos_camara %>% 
-  #   rbind(partidos_senado_filtrado)
-  # 
-  # check_unique_id <- partidos %>% count(id) %>% nrow()
-  # 
-  # if (check_unique_id != (partidos %>% nrow())) {
-  #   stop("IDs repetidos para o dataframe de Partidos")
-  # }
+  partidos_senado <- fetch_partidos_senado() %>%
+    filter(!str_detect(sigla, "PODEMOS"))
+
+  partidos_senado_filtrado <- partidos_senado %>%
+    filter(!(sigla %in% (partidos_camara %>% pull(sigla))))
+
+  partidos <- partidos_camara %>%
+    rbind(partidos_senado_filtrado)
+
+  check_unique_id <- partidos %>% count(id) %>% nrow()
+
+  if (check_unique_id != (partidos %>% nrow())) {
+    stop("IDs repetidos para o dataframe de Partidos")
+  }
   
-  return(partidos_camara)
+  return(partidos)
 }

@@ -53,7 +53,13 @@ processa_votos_camara <- function(votacoes) {
 #' @return Dataframe contendo o id da votação, o id do parlamentar, a casa e o voto dos parlamentares
 #' @examples
 #' processa_votos(url)
-processa_votos <- function(url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMcbeHRm_dqX-i2gNVaCiHMFg6yoIjNl9cHj0VBIlQ5eMX3hoHB8cM8FGOukjfNajWDtfvfhqxjji7/pub?gid=0&single=true&output=csv") {
+processa_votos <- function(url = NULL) {
+  
+  if(is.null(url)) {
+    source(here::here("crawler/proposicoes/utils_proposicoes.R"))
+    url <- .URL_PROPOSICOES_VOZATIVA
+  }
+  
   votacoes_lista <- read_csv(url, col_types = cols(id_proposicao = "c"))
     # filter(status_proposicao == "Ativa") %>% 
     # filter(id_sessao != 99999) # remove votacao da PL 6299/2002 (nao possui votacoes em plenário)
@@ -84,7 +90,7 @@ process_votos_por_ano_camara <- function(ano = 2019, url = NULL) {
   library(tidyverse)
   library(here)
   
-  source(here("crawler/votacoes/fetcher_votacoes.R"))
+  source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
   source(here("crawler/votacoes/votos/fetcher_votos_camara.R"))
   source(here("crawler/votacoes/utils_votacoes.R"))
   
@@ -134,8 +140,14 @@ process_votos_por_ano_camara <- function(ano = 2019, url = NULL) {
 #' @examples
 #' votos <- process_votos_anos_url_camara(2019)
 process_votos_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
-                                              url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvvT0fmGUMwOHnEPe9hcAMC_l-u9d7sSplNYkMMzgiE_vFiDcWXWwl4Ys7qaXuWwx4VcPtFLBbMdBd/pub?gid=399933255&single=true&output=csv") {
+                                              url = NULL) {
   library(tidyverse)
+  library(here)
+  
+  if(is.null(url)) {
+    source(here("crawler/proposicoes/utils_proposicoes.R"))
+    url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+  }
   
   votos <- tibble(ano = anos) %>%
     mutate(dados = map(
@@ -149,4 +161,115 @@ process_votos_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
     mutate(casa = "camara")
   
   return(votos)
+}
+
+#' @title Processa votos de plenário para um conjunto de votações com votos faltosos
+#' @description Adiciona linhas com votos faltosos quando os senadores faltam às votações
+#' @param votos Dataframe com os votos
+#' @param senadores Dataframe com os dados dos senadores
+#' @return Dataframe com os votos processados dos votos faltosos
+processa_votacoes_com_votos_incompletos <- function(votacoes,
+                                                    votos, 
+                                                    senadores, 
+                                                    mandatos_datapath = here::here("crawler/raw_data/mandatos.csv")) {
+  library(tidyverse)
+  
+  mandatos <- read_csv(mandatos_datapath)
+  
+  votacoes_incompletas <- votos %>% 
+    count(id_votacao) %>% 
+    filter(n < 81) %>% 
+    pull(id_votacao) 
+  
+  votacoes_incompletas <- votacoes %>% 
+    filter(id_votacao %in% votacoes_incompletas)
+  
+  senadores <- senadores %>% 
+    select(id, nome_eleitoral, sg_partido, casa)
+  
+  votacoes_incompletas <-
+    purrr::map2_df(votacoes_incompletas$id_votacao, votacoes_incompletas$datetime, function(x, y) {
+      
+      votacao <- votos %>%
+        filter(id_votacao %in% x)
+        
+      id_proposicao_votacao <-  votacao %>% 
+        head(1) %>% 
+        pull(id_proposicao)
+      
+      senadores_em_exercicio <- mandatos %>% 
+        filter(data_inicio <= y, y <= data_fim | is.na(data_fim)) %>% 
+        select(id_parlamentar)
+      
+      if (nrow(senadores_em_exercicio) == 81) {
+        senadores_em_exercicio <- senadores %>% 
+          filter(id %in% senadores_em_exercicio$id_parlamentar)
+        
+        votacao <- votacao %>% 
+          select(-nome_eleitoral) %>% 
+          right_join(senadores_em_exercicio, by=c("id", "casa")) %>% 
+          mutate(partido = if_else(!is.na(partido), partido, sg_partido),
+                 ano = if_else(is.na(ano), lubridate::year(y), ano),
+                 id_proposicao = if_else(is.na(id_proposicao), id_proposicao_votacao, id_proposicao),
+                 id_votacao = if_else(is.na(id_votacao), x, id_votacao),
+                 voto = if_else(is.na(voto), 0 , voto)) %>% 
+          select(-sg_partido)
+      }
+      
+      return(votacao)
+      
+    })
+  
+  return(votacoes_incompletas)
+}
+
+#' @title Processa votos de plenário para um conjunto de votações
+#' @description Recupera informação dos votos para um conjunto de votações no senado.
+#' @param votacoes_senado_filepath Caminho para o dataframe de votações no senado.
+#' @return Dataframe com os votos processados
+#' @examples
+#' votos <- process_votos_url_senado()
+process_votos_url_senado <- function(proposicoes_url = NULL) {
+  library(tidyverse)
+  source(here::here("crawler/votacoes/votos/fetcher_votos_senado.R"))
+  source(here::here("crawler/votacoes/utils_votacoes.R"))
+  source(here::here("crawler/votacoes/fetcher_votacoes_senado.R"))
+  
+  
+  if(is.null(proposicoes_url)) {
+    source(here::here("crawler/proposicoes/utils_proposicoes.R"))
+    proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
+  }
+  
+  votacoes <- fetcher_votacoes_por_intervalo_senado()
+  votos <- fetch_all_votos_senado(proposicoes_url)
+  
+  senadores <- read_csv(here::here("crawler/raw_data/parlamentares.csv")) %>% 
+    filter(casa == "senado")
+  
+  votos_padronizados <- votos %>%
+    enumera_voto() %>%
+    mutate(partido = padroniza_sigla(partido),
+           senador = str_remove(senador, "^\\s")) %>%
+    select(ano, id_proposicao, id_votacao, senador, voto, partido, casa) %>%
+    rename(nome_eleitoral = senador) %>%
+    mapeia_nome_eleitoral_to_id_senado() 
+  
+  votos_finais <-
+  rbind(votos_padronizados,
+        processa_votacoes_com_votos_incompletos(votacoes,
+                                                votos_padronizados,
+                                                senadores)) %>%
+  select(ano,
+           id_proposicao,
+           id_votacao,
+           id_parlamentar = id,
+           voto,
+           partido,
+           casa) %>% 
+    distinct()
+  
+  
+    
+  return(votos_finais)
 }

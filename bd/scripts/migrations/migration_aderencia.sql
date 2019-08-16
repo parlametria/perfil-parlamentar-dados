@@ -1,4 +1,5 @@
 -- ADERENCIA DOS PARLAMENTARES
+BEGIN;
 CREATE TEMP TABLE temp_aderencia AS SELECT * FROM aderencias LIMIT 0;
 
 \copy temp_aderencia FROM './data/aderencia.csv' DELIMITER ',' CSV HEADER;
@@ -6,7 +7,7 @@ CREATE TEMP TABLE temp_aderencia AS SELECT * FROM aderencias LIMIT 0;
 INSERT INTO aderencias (id_parlamentar_voz, id_partido, id_tema, faltou, partido_liberou, nao_seguiu, seguiu, aderencia)
 SELECT id_parlamentar_voz, id_partido, id_tema, faltou, partido_liberou, nao_seguiu, seguiu, aderencia
 FROM temp_aderencia
-ON CONFLICT (id_parlamentar_voz, id_partido, id_tema) 
+ON CONFLICT (id_parlamentar_voz, id_partido, id_tema)
 DO
   UPDATE
   SET 
@@ -22,3 +23,4 @@ WHERE (id_parlamentar_voz, id_partido, id_tema) NOT IN
    FROM temp_aderencia); 
 
 DROP TABLE temp_aderencia;
+COMMIT;

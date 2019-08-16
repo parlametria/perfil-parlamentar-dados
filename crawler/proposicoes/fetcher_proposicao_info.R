@@ -67,7 +67,7 @@ map_tema_camara_tema_va <- function(tema_camara) {
 fetch_votacoes_plenario_tema <- function() {
   library(tidyverse)
   library(here)
-  source(here("crawler/votacoes/fetcher_votacoes.R"))
+  source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
   
   proposicoes_votadas <-
     purrr::map_df(

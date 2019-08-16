@@ -1,0 +1,21 @@
+{
+  "name": "log_server",
+  "version": "1.0.0",
+  "description": "Servidor de arquivos do módulo Voz Ativa Dados",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/analytics-ufcg/vozativa-dados.git"
+  },
+  "keywords": [],
+  "author": "Voz Ativa",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "serve-index": "^1.9.1"
+  }
+}

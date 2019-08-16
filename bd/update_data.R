@@ -1,5 +1,6 @@
 library(tidyverse)
 library(here)
+Sys.setenv(TZ='America/Recife')
 
 source(here::here("bd/send_log_to_bot.R"))
 

@@ -1,0 +1,940 @@
+---
+title: "Investimento dos Partidos em Parlamentares"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+library(ggchicklet)
+library(ggridges)
+library(ggrepel)
+library(ggalt)
+library(plotly)
+library(DT)
+library(ineq)
+source(here("reports/investimento-partidos/scripts/utils.R"))
+source(here("crawler/votacoes/utils_votacoes.R"))
+
+theme_set(theme_minimal())
+options(scipen = 999)
+```
+
+```{r}
+receita <- read_csv(here("crawler/raw_data/receitas_tse_2018.csv")) %>% 
+  group_by(uf, cargo) %>% 
+  mutate(media_uf = mean(total_receita)) %>% 
+  ungroup() %>% 
+  
+  mutate(proporcao_receita_uf = total_receita / media_uf) %>%
+  mutate(partido = padroniza_sigla(partido)) %>% 
+  mutate(partido = if_else(str_detect(partido, "PATRI"), "PATRIOTA", partido)) %>% 
+  mutate(partido = if_else(str_detect(partido, "PC DO B"), "PCdoB", partido)) %>% 
+  
+  group_by(partido) %>% 
+  mutate(campanhas_total_partido = sum(proporcao_receita_uf)) %>% 
+  ungroup() %>% 
+  mutate(proporcao_receita = proporcao_receita_uf / campanhas_total_partido)
+  
+deputados <- read_csv(here("crawler/raw_data/parlamentares.csv")) %>% 
+  filter(casa == "camara", em_exercicio == 1) %>% 
+  mutate(sg_partido = padroniza_sigla(sg_partido))
+
+deputados_receita <- deputados %>% 
+  left_join(receita %>% 
+              select(cpf, partido, total_receita, proporcao_receita), 
+            by = c("cpf" = "cpf", "sg_partido" = "partido")) %>% 
+  mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", sg_partido, "/", uf))
+```
+
+### Resumo
+
+Analisamos os **valores doados pelos partidos para os Deputados Federais e Senadores** nas Eleições de 2018. Identificamos e comparamos parlamentares de um partido e entre partidos.
+<br>
+<br>
+
+## Deputados
+### Sobre os dados
+
+Os dados das receitas dos Deputados Federais, enquanto candidatos nas Eleições de 2018, foram obtidos do **TSE** (Tribunal Superior Eleitoral) e estão disponíveis [aqui](http://www.tse.jus.br/eleicoes/estatisticas/repositorio-de-dados-eleitorais-1/repositorio-de-dados-eleitorais). Filtramos apenas deputados que mantiveram seus partidos desde a eleição de 2018. Consideramos apenas as doações dos partidos feitas para candidatos do mesmo partido, excluindo as doações feitas para candidatos de outros partidos. O valor investido pelo partido abrange os diretórios nacionais e estaduais.
+
+```{r fig.height=4}
+deputados_receita %>% 
+  ggplot(aes(x = total_receita / 1e6)) +
+  geom_histogram(boundary = 0, color = "#231D38", fill = "#3E3463") + 
+  scale_x_continuous(breaks = seq(0, 5, 0.5)) +
+  scale_y_continuous(breaks = seq(0, 100, 10)) +
+  labs(title = "Histograma do valor investido pelos partidos",
+       x = "Valor Investido (em milhões de Reais)",
+       y = "Nº de Deputados") +
+  theme_ipsum_rc()
+```
+
+Pela distribuição do histograma é possível perceber que a maioria dos deputados recebeu menos de 1 milhão de seus respectivos partidos. A faixa de valores próxima ao 0 é a que apresenta o maior pico com quase 90 deputados.
+
+Olhar o valor absoluto doado torna-se insuficiente uma vez que os partidos possuem uma diferente quantidade de dinheiro e de candidatos para distribuir este dinheiro. 
+
+**Calculamos a média das campanhas para deputados em cada Unidade Federativa (UF). Em seguida para cada deputado calculamos a proporção do total investido pelo partido dividido pela média das campanhas na UF). Esse valor mostra quantas campanhas médias o partido investiu no candidato durante a eleição. Depois somamos todas as campanhas médias de um partido e calculamos a proporção para o candidato. Ou seja, campanhas médias do candidato / soma de todas as campanhas médias do partido.**
+
+**Essa medida busca identificar o nível de investimento que o partido deu ao deputado nas eleições de 2018.**
+
+**Consideramos no cálculo candidatos eleitos e não eleitos. No entanto, mostraremos nesse relatório a lista apenas dos deputados atualmente em exercício.**
+
+```{r fig.height=4}
+deputados_receita %>% 
+  ggplot(aes(x = proporcao_receita * 100)) +
+  geom_histogram(boundary = 0, color = "#231D38", fill = "#3E3463") + 
+  scale_x_continuous(breaks = seq(0, 100, 5)) +
+  scale_y_continuous(breaks = seq(0, 300, 20)) +
+  labs(title = "Histograma da proporção de campanhas médias investidas \npelos partidos nos Deputados Federais",
+       x = "Proporção de campanhas médias (%)",
+       y = "Nº de Deputados") +
+  theme_ipsum_rc()
+```
+
+Fica claro que quando olhamos para a proporção de campanhas médias, poucos são os deputados que possuem mais de 10% do total investido pelo partido. Abaixo é possível conferir alguns nomes.
+
+### Quem teve maior investimento absoluto?
+
+```{r fig.height=7}
+levels <- deputados_receita %>%
+  arrange(desc(total_receita)) %>% 
+  pull(nome)
+
+valor_inicial <- 2.1e6
+valor_final <- 2.51e6
+
+breaks <- seq(valor_inicial, valor_final, 2e5)
+labels <- breaks %>% 
+  format_currency()
+
+deputados_receita %>% 
+  arrange(desc(total_receita)) %>% 
+  head(15) %>% 
+  mutate(valor = format_currency_value(total_receita)) %>% 
+  ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = total_receita)) +
+  geom_point(col = "tomato3", size = 3) + 
+  geom_segment(aes(x = nome, 
+                   xend = nome, 
+                   y = valor_inicial, 
+                   yend = total_receita), 
+               size = 0.1) +
+  geom_text(aes(label = valor),
+            hjust = -0.3,
+            size = 3.3) +
+  coord_flip() +
+  scale_y_continuous(limits = c(valor_inicial, valor_final), 
+                     breaks = breaks,
+                     labels = labels
+                     ) + 
+  labs(title = "Deputados com maior investimento do Partido",
+       y = "Total recebido (R$)",
+       x = "Deputado") +
+  theme_ipsum_rc()
+```
+
+### Quem teve maior investimento proporcional?
+```{r}
+levels <- deputados_receita %>%
+  arrange(desc(proporcao_receita)) %>% 
+  pull(nome)
+
+deputados_receita %>% 
+  arrange(desc(proporcao_receita)) %>% 
+  mutate(proporcao_receita = proporcao_receita * 100) %>% 
+  head(15) %>% 
+  ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = proporcao_receita, fill = "a")) +
+  geom_chicklet(width = .7, radius = grid::unit(5, "pt")) +
+  coord_flip() +
+  scale_fill_manual(values = c("#806CCC")) +
+  scale_y_continuous(breaks = seq(0, 100, 5)) +
+  guides(fill = FALSE) + 
+  labs(title = "Deputados com maior investimento do Partido",
+       y = "Proporção de campanhas médias (%)",
+       x = "Deputado") +
+  theme_ipsum_rc()
+```
+
+O Deputado Federal com maior investimento proporcional do partido é **Luciano Bivar do PSL/PE** com quase 30%. Ele também é **presidente do PSL** (na data de análise desses dados 07/08/2019).
+
+### Investimento por Partido
+
+A seguir iremos olhar todos os deputados federais atuais na visão de seus partidos. Deixamos de fora partidos com menos de 5 membros.
+
+```{r}
+liderancas <- read_csv(here("crawler/raw_data/liderancas.csv")) %>% 
+  filter(bloco_partido == partido,
+         str_detect(iconv(cargo, from="UTF-8",to="ASCII//TRANSLIT"), "Lider|Representante")) %>% 
+  select(bloco_partido, id, cargo) %>% 
+  left_join(deputados_receita %>% select(id, proporcao_receita), by  = c("id"))
+```
+
+```{r fig.height = 10}
+minimo_membros_partido <- 5
+
+levels <- deputados_receita %>% 
+  filter(!is.na(proporcao_receita)) %>% 
+  group_by(sg_partido) %>% 
+  summarise(n = n(),
+            median = median(proporcao_receita)) %>% 
+  arrange(desc(median)) %>% 
+  ungroup() %>% 
+  filter(n >= minimo_membros_partido) %>% 
+  pull(sg_partido)
+
+deputados_receita %>% 
+  filter(!is.na(proporcao_receita)) %>% 
+  left_join(liderancas %>% 
+              select(bloco_partido, proporcao_receita_lider = proporcao_receita), 
+            by = c("sg_partido" = "bloco_partido")) %>% 
+  mutate(proporcao_receita = proporcao_receita * 100) %>% 
+  group_by(sg_partido) %>% 
+  mutate(n = n(),
+         median = median(proporcao_receita)) %>% 
+  ungroup() %>% 
+  filter(n > minimo_membros_partido) %>% 
+  ggplot(aes(x = factor(sg_partido, levels = levels), 
+             y = proporcao_receita, 
+             color = factor(sg_partido, levels = levels))) +
+  geom_count() +
+  geom_point(aes(y = proporcao_receita_lider*100), color = "#dc267f", size = 1) +
+  scale_x_discrete(position = "right") +
+  scale_y_continuous(limits = c(0, 32), breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
+  scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
+  coord_flip() +
+  scale_shape_identity() +
+  
+  annotate("text", label = "Mediana do partido", x = "PT", y = 7.7, color = "#4b4545") +
+  geom_curve(aes(x = "NOVO", y = 0.65, xend = "PT", yend = 4.5),
+             color = "#7d7373", size = 0.4, curvature = 0.35,
+             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+  
+  annotate("text", label = "Líder do Partido", x = "AVANTE", y = 26.3, color = "#4b4545") +
+  geom_segment(aes(x = "AVANTE", y = 20.5, xend = "AVANTE", yend = 23.5), colour="#7d7373", size=0.5, 
+               arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+
+  geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
+  labs(x = "", y = "Proporção de campanhas médias (%)",
+       title = "Distribuição do investimento dos partidos") +
+  guides(color = FALSE, size = FALSE) +
+  theme_ipsum_rc() +
+  geom_text(aes(label = ifelse(proporcao_receita > 15, 
+                               paste0(str_to_title(nome_eleitoral), " ", sg_partido, "/", uf), 
+                               "")),
+            vjust = 2,
+            size = 3.5,
+            color = "#4b4545")
+```
+
+Os partidos estão ordenados de acordo com a mediana do valor proporcional investido em seus membros. Estão identificados no gráfico os parlamentares com mais de 15% recebidos do total de campanhas médias do partido. É possível afirmar que esses deputados possuem uma importância elevada para o partido uma vez que houve um investimento alto na candidatura dos mesmos. Em rosa estão apontados os líderes dos partidos na Câmara (até a data de 07/08/2019). A mediana do partido é apontada pela marca "|".
+
+#### Coeficiente de Gini
+
+O coeficiente de Gini é uma medida de desigualdade proposta por Conrado Gini e busca medir a desigualdade em uma distribuição. A seguir, iremos calcular o coeficiente de GINI para cada partido a fim de avaliar a desigualdade dentro do partido.
+
+```{r fig.height=10}
+levels <- deputados_receita %>% 
+  group_by(sg_partido) %>%
+  summarise(gini = ineq(proporcao_receita, type = "Gini")) %>%
+  ungroup() %>% 
+  arrange(gini) %>% 
+  pull(sg_partido)
+
+deputados_receita %>% 
+  group_by(sg_partido) %>%
+  summarise(gini = ineq(proporcao_receita, type = "Gini"),
+            n = n()) %>%
+  ungroup() %>% 
+  filter(!is.na(gini)) %>% 
+  ggplot(aes(x = factor(sg_partido, levels = levels), y = gini)) +
+  geom_chicklet(width = .7, radius = grid::unit(5, "pt"), fill = "#E88584") +
+  coord_flip() +
+  geom_text(aes(label = paste0(round(gini, 2), " (", n, " dep)")),
+            hjust = -0.1,
+            size = 3.3) +
+  scale_y_continuous(breaks = seq(0, 1, 0.1), limits = c(0, 1), sec.axis = dup_axis()) +
+  labs(title = "Coeficiente de Gini para os Partidos",
+       y = "Coeficiente de Gini (de 0 a 1)",
+       x = "") +
+  theme_ipsum_rc() +
+  theme(panel.grid = element_blank(), panel.grid.major.x = element_line(colour = "#f4f4f4", size = 1),
+        panel.grid.minor.x = element_line(colour = "#f4f4f4", size = 1))
+
+```
+
+O coeficiente de Gini vai de 0 a 1, onde 0 corresponde a maior igualdade da distribuição da proporção de campanhas médias entre os partidos e 1 onde a desigualdade é maior. Ou seja, uma pessoa ou um grupo pequeno de pessoas recebeu bem mais que os demais membros do partido.
+
+Pela visualização é possível notar que o PSL é o partido com maior desigualdade na distribuição entre seus deputados durante as eleições de 2018. Seguido do PATRIOTA.
+
+### Relação com Mandatos
+
+O gráfico a seguir busca responder o questionamento de se os deputados mais experientes na câmara são aqueles que mais recebem investimento dos partidos.
+
+```{r}
+mandatos <- read_csv(here("crawler/raw_data/mandatos.csv")) %>% 
+  group_by(id_parlamentar) %>% 
+  summarise(n_mandatos = n_distinct(id_legislatura))
+```
+
+```{r}
+deputados_receita <- deputados_receita %>% 
+  left_join(mandatos, by = c("id" = "id_parlamentar"))
+```
+
+```{r fig.height=8}
+deputados_receita %>% 
+  filter(!is.na(proporcao_receita)) %>% 
+  mutate(proporcao_receita = proporcao_receita * 100) %>% 
+  mutate(n_mandatos = as.ordered(n_mandatos)) %>% 
+  group_by(n_mandatos) %>% 
+  mutate(median = median(proporcao_receita)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = proporcao_receita, y = n_mandatos, fill = "a")) + 
+  geom_density_ridges(
+    aes(height = ..density..),
+    stat = "density", trim = TRUE,
+    scale = 1
+  ) +
+  scale_shape_identity() +
+  geom_point(aes(x = proporcao_receita, color = "b"), size = 2, alpha = 0.7, shape = 124) +
+
+  annotate("text", label = "Mediana", x = 5, y = 3.52, color = "#4b4545") +
+  geom_curve(aes(x = 1.8, y = 3.9, xend = 3.7, yend = 3.5),
+             color = "#7d7373", size = 0.4, curvature = 0.35,
+             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+
+  annotate("text", label = "um deputado", x = 11.3, y = 3.62, color = "#4b4545") +
+  geom_curve(aes(x = 6.9, y = 3.92, xend = 9.5, yend = 3.59),
+             color = "#7d7373", size = 0.4, curvature = 0.38,
+             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+  
+  
+  geom_point(aes(x = median, color = "a"), size = 3.8, shape = 124) +
+  scale_x_continuous(breaks = seq(0, 100, 5)) +
+  labs(y = "Nº de mandatos na Câmara", x = "Proporção de campanhas médias (%)") +
+  scale_fill_manual(
+    name = "", values = c("#91BFDA"), guide = FALSE
+  ) +
+  scale_color_manual(
+    name = "", values = c("#dc267f", "black"), guide = FALSE
+  ) +
+  theme_ipsum_rc() 
+```
+
+Olhando o número de mandatos dos atuais Deputados Federais, o gráfico acima mostra que não podemos apontar uma relação direta entre o número de mandatos e a proporção da doação do partido. No entanto, é possível observar que deputados com mais de 1 mandato geralmente recebem mais do que os que estão em seu primeiro mandato. Isso é mostrado pelo valor da mediana apontado na visualização e pelo início da curva de densidade que mostra valores mais baixos para os deputados novatos.
+
+### Relação com Aderência ao Partido
+
+Analisamos todas as votações nominais realizadas no plenário da Câmara no primeiro semestre de 2019 e calculamos quantas vezes um deputado seguiu a orientação explícita de seu partido ou não. Dizemos que o deputado é 100% aderente se seguiu seu partido em todas as vezes que votou e 0% caso não tiver seguido.
+
+Cruzamos esses dados de aderência com o investimento proporcional dos partidos nos Deputados Federais e visualizamos a seguir.
+
+```{r}
+partidos <- read_csv(here("bd/data/partidos.csv"))
+
+aderencia <- read_csv(here("bd/data/aderencia.csv"), col_types = cols(id_parlamentar_voz = "c")) %>% 
+  filter(substring(id_parlamentar_voz, 1, 1) == "1") %>% 
+  mutate(id_parlamentar = substring(id_parlamentar_voz, 2)) %>% 
+  filter(id_tema == 99, id_partido != 0) %>% # id_tema 99 é o tema geral. id_partido 0 é o Governo
+  left_join(partidos, by = c("id_partido" = "id")) %>% 
+  mutate(sigla = if_else(sigla == "PODE", "PODEMOS", sigla)) %>%
+  select(id_parlamentar, partido = sigla, aderencia)
+
+deputados_receita <- deputados_receita %>% 
+  left_join(aderencia %>% mutate(id_parlamentar = as.numeric(id_parlamentar)), 
+            by = c("id" = "id_parlamentar", "sg_partido" = "partido"))
+```
+
+```{r fig.width = 5, fig.height = 4}
+g <- deputados_receita %>%
+ ggplot(aes(x = (proporcao_receita * 100 + 1), y = aderencia * 100)) +
+ geom_point(aes(text = sprintf("%s \nAderência: %s \nProporção da receita %s",
+                               nome,
+                               scales::percent(aderencia),
+                               scales::percent(proporcao_receita))),
+            height = 0.2, col="tomato3") +
+ scale_y_continuous(breaks = seq(0, 100, 5), limits = c(20, 100)) +
+ scale_x_continuous(trans='log2') +
+ labs(x = "Log na base 2 da Proporção de campanhas médias (%)",
+      y = "Aderência (%)",
+      title = "Aderência x Proporção da Doação do Partido") +
+ theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+ config(displayModeBar = F) %>%
+ layout(autosize = F)
+```
+
+<br>
+Não é possível afirmar uma relação direta entre a obediência/aderência ao partido e o investimento proporcional recebido pelo partido. No entanto, temos a presença de alguns outliers que é possível identificar passando o mouse.
+
+### Investimento por Gênero
+```{r}
+receita_por_genero <- deputados_receita %>% 
+  filter(!is.na(proporcao_receita)) %>% 
+  group_by(sg_partido, genero) %>% 
+  summarise(median = median(proporcao_receita)) %>% 
+  ungroup() %>% 
+  mutate(median = median * 100) %>% 
+  spread(key = genero, value = median) %>% 
+  mutate(diff = (`F` - `M`)) %>% 
+  gather(key = "group", value = "median", `F`, `M`) %>% 
+  mutate(diff = replace_na(diff, 0)) %>% 
+  select(sg_partido, group, median, diff)
+```
+
+```{r fig.height=10}
+levels <- receita_por_genero %>%
+  arrange(desc(diff)) %>% 
+  distinct(sg_partido) %>% 
+  pull(sg_partido)
+
+receita_por_genero %>%
+ggplot(
+  mapping = aes(
+    y = fct_rev(factor(sg_partido, levels = levels)), 
+    x = median, 
+    color = group)
+  ) + 
+  geom_line(
+    mapping = aes(group = sg_partido),
+    color = "#bbbbbb",
+    size = 1
+  ) +
+  geom_point(size = 3, pch = 19) +
+  geom_text_repel(
+    size = 3,
+    nudge_y = -0.38,
+    mapping = 
+      aes(
+        label = paste0(as.character(round(median, 1))),
+        color = group)
+  ) + 
+  geom_text(size = 3.5, fontface = "bold", nudge_y = 0.6,
+            mapping = aes(label = ifelse(sg_partido == "PODEMOS", 
+                                         ifelse(group == "F",
+                                               "Mulher",
+                                               "Homem"),
+                                          ""),
+                          color = group)
+            ) +
+  
+  ## retangulo das diferencas
+  geom_rect(mapping = aes(xmin = 13.4, xmax = Inf , ymin = -Inf, ymax = Inf),
+            fill = "white",
+            color = "white") +
+  geom_rect(mapping = aes(xmin = 13.5, xmax = 15 , ymin = -Inf, ymax = Inf),
+            fill = "#eef0e2",
+            color = "#eef0e2") +
+  geom_text(fontface = "bold", size = 3.3, colour = "#5f5757",
+            mapping = aes(x = 14.25, y = sg_partido,
+                          label = ifelse(group == "M", "",
+                                         ifelse(diff > 0, paste0("+", as.character(round(diff, 2))),
+                                                paste0(as.character(round(diff, 2)))
+                                                )
+                                         )
+                          )
+            ) +
+  geom_text(size = 3, colour = "#9e9191", nudge_y = 0.6,
+            mapping = aes(x = 14.25, y = sg_partido, label = ifelse(sg_partido == "PODEMOS", "diferença", ""))) +
+  ## fim retangulo das diferencas
+  
+  scale_color_manual(values = c("#DEAC7C", "#83ACB8")) +
+  scale_x_continuous(breaks = seq(0, 13, 1), limits = c(0, 16)) +
+  scale_y_discrete(
+    expand = expand_scale(add=c(0.65,1))
+  ) +
+  labs(title = "Investimento por gênero e partido",
+       y = "",
+       x = "Mediana da Proporção de campanhas médias (%)",
+       color = "Gênero") +
+  guides(color = FALSE) +
+  theme_ipsum_rc() +
+  theme(panel.grid = element_blank(), panel.grid.major.y = element_line(colour = "#f4f4f4", size = 1))
+```
+
+Pela visualização é possível identificar a diferença entre as medianas da proporção de investimento do partido considerando o gênero do Parlamentar. É possível saber quais partidos doaram mais para mulheres do que para homens nas eleições de 2018.
+
+Essa diferença das candidatas em relação aos candidatos talvez seja explicada pela decisão do Tribunal Superior Eleitoral de que os partidos repassem pelo menos 30% dos recursos do Fundo Especial de Financiamento de Campanha (FEFC) para candidaturas de mulheres. Mais informações [aqui](https://g1.globo.com/politica/noticia/tse-fundo-eleitoral-deve-destinar-30-dos-recursos-para-campanhas-de-mulheres.ghtml) e [aqui](https://oglobo.globo.com/brasil/so-15-de-35-partidos-cumpriram-cota-de-verba-para-candidaturas-femininas-na-eleicao-23243747).
+
+### Investimento refletido nos cargos em comissões e partidos
+
+Abaixo apresentamos para cada cargo como ocorre a distribuição da proporção de campanhas médias entre os deputados.
+Um deputado pode aparecer mais de uma vez na visualização a depender do número de cargos que possui.
+
+```{r}
+cargos_liderancas <- read_csv(here("crawler/raw_data/liderancas.csv")) %>% 
+  filter(casa == "camara") %>% 
+  select(id, cargo, local = bloco_partido)
+
+cargos_comissoes <- read_csv(here("crawler/raw_data/composicao_comissoes.csv")) %>% 
+  filter(casa == "camara") %>% 
+  left_join(read_csv(here("crawler/raw_data/comissoes.csv")) %>% 
+              select(id, sigla), 
+            by = c("comissao_id" = "id")) %>% 
+  select(id = id_parlamentar, cargo, local = sigla)
+
+deputados_cargos <- cargos_liderancas %>% 
+  rbind(cargos_comissoes) %>% 
+  left_join(deputados_receita %>% 
+              select(id, nome, total_receita, proporcao_receita), 
+            by = "id")
+```
+
+```{r}
+levels <- deputados_cargos %>% 
+  filter(cargo != "Representante",
+         !is.na(proporcao_receita)) %>% 
+  group_by(cargo) %>% 
+  summarise(median = median(proporcao_receita)) %>% 
+  ungroup() %>% 
+  arrange(median) %>% 
+  pull(cargo)
+
+deputados_cargos %>% 
+  filter(cargo != "Representante",
+         !is.na(proporcao_receita)) %>% 
+  mutate(proporcao_receita = proporcao_receita * 100) %>% 
+  group_by(cargo) %>% 
+  mutate(median = median(proporcao_receita)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = proporcao_receita, y = factor(cargo, levels = levels))) +
+  geom_density_ridges(
+    aes(height = ..density..),
+    stat = "density", trim = TRUE,
+    scale = 0.9
+  ) +
+  geom_count(alpha = 0.5) +
+  scale_shape_identity() +
+  geom_point(aes(x = median), size = 3.5, color = "#dc267f", shape = 124) +
+  
+  geom_point(aes(x = 13.5, y = 7.5), size = 3.5, color = "#dc267f", shape = 124) +
+  annotate("text", label = "é a mediana", x = 15.2, y = 7.5, color = "#4b4545") +
+  
+  scale_x_continuous(breaks = seq(0, 100, 2)) +
+  guides(size = FALSE) +
+  labs(title = "Distribuição do investimento por cargo \nna câmara",
+       x = "Proporção de campanhas médias (%)",
+       y = "Cargo") + 
+  theme_ipsum_rc()
+```
+
+
+
+### Investimento por voto
+
+Abaixo vemos a relação entre a proporção de campanhas médias do deputado dentro de seu partido e a quantidade de votos que o mesmo recebeu nas eleiçõe de 2018
+
+```{r}
+votos_eleicao <- read_csv(here("reports/investimento-partidos/data/DeputadosFederais2018_votos_totais_ordered.csv"))
+
+deputados_votos <- deputados_receita %>% 
+  left_join(votos_eleicao %>% 
+              select(cpf, votos_totais),
+            by = c("cpf")) %>% 
+  mutate(receita_por_voto = total_receita / votos_totais)
+```
+
+```{r fig.width = 5, fig.height = 4}
+g <- deputados_votos %>%
+  filter(!is.na(proporcao_receita)) %>% 
+  ggplot(aes(x = (proporcao_receita * 100 + 1), y = votos_totais)) +
+  geom_point(aes(text = sprintf("%s \nVotos: %s \nProporção da receita %s",
+                               nome,
+                               votos_totais,
+                               scales::percent(proporcao_receita))),
+            height = 0.2, col="tomato3") +
+  scale_x_continuous(trans='log2') +
+  scale_y_continuous(trans='log10') +
+  labs(x = "Log na base 2 da Proporção de campanhas médias (%)",
+      y = "Log na base 10 dos votos recebidos",
+      title = "Votos recebidos x Proporção da Doação do Partido") +
+  theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+ config(displayModeBar = F) %>%
+ layout(autosize = F)
+```
+
+## Senadores
+
+```{r}
+receita_raw <- read_csv(here("crawler/raw_data/receitas_tse_2018.csv"))
+  
+receita_media_uf <- receita_raw %>% 
+  filter(cargo == "Deputado Federal") %>% 
+  group_by(uf) %>% 
+  summarise(media_uf = mean(total_receita)) %>% 
+  ungroup()
+
+receita_senado <- receita_raw %>% 
+  left_join(receita_media_uf, by = "uf") %>% 
+  
+  mutate(proporcao_receita_uf = total_receita / media_uf) %>%
+  mutate(partido = padroniza_sigla(partido)) %>% 
+  mutate(partido = if_else(str_detect(partido, "PATRI"), "PATRIOTA", partido)) %>% 
+  mutate(partido = if_else(str_detect(partido, "PC DO B"), "PCdoB", partido)) %>% 
+  
+  group_by(partido) %>% 
+  mutate(campanhas_total_partido = sum(proporcao_receita_uf)) %>% 
+  ungroup() %>% 
+  mutate(proporcao_receita = proporcao_receita_uf / campanhas_total_partido)
+
+senadores <- read_csv(here("crawler/raw_data/senadores.csv")) %>% 
+  mutate(sg_partido = padroniza_sigla(sg_partido)) %>% 
+  filter(casa == "senado", em_exercicio == 1)
+
+senadores_receita <- senadores %>%
+  mutate(nome_civil = format_string(nome_civil)) %>%
+  left_join(receita_senado %>% 
+              mutate(nome = format_string(nome)) %>% 
+              mutate(partido = if_else(partido == "PODE", "PODEMOS", partido)), 
+            by = c("nome_civil" = "nome", "sg_partido" = "partido")) %>% 
+  select(id, casa, nome_eleitoral, uf = uf.x, genero, sg_partido, total_receita, proporcao_receita) %>% 
+  mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", sg_partido, "/", uf))
+```
+
+A seguir iremos realizar a análise considerando dados de Senadores. Assim como na análise dos deputados, em que consideramos a média dos deputados na UF, para o Senado, também consideramos a média do valor investido em cargos para Deputado Fedetal. Ou seja, considerando a soma do valor investido nos deputados na média da UF. Essa decisão foi tomada uma vez que existem poucos candidatos por partido para o Senado no cenário Estadual.
+
+Coletamos dados de `r senadores_receita %>% filter(!is.na(total_receita)) %>% nrow()` senadores dos 81 atuais. Nas eleições de 2018, 2 senadores de cada unidade federativa foram eleitos para um mandato de 8 anos.
+
+```{r fig.height=6}
+senadores_receita %>% 
+  ggplot(aes(x = proporcao_receita * 100)) +
+  geom_histogram(boundary = 0, color = "#231D38", fill = "#3E3463") + 
+  scale_x_continuous(breaks = seq(0, 100, 1)) +
+  scale_y_continuous(breaks = seq(0, 30, 2)) +
+  labs(title = "Histograma da proporção do valor investido pelos partidos \nnos Senadores",
+       x = "Proporção de campanhas médias (%)",
+       y = "Nº de Senadores") +
+  theme_ipsum_rc()
+```
+
+Os sendores receberam 10% ou menos na proporção de seu partido na unidade de campanhas médias por estado. 
+
+### Quem teve maior investimento absoluto?
+```{r fig.height=6}
+levels <- senadores_receita %>%
+  arrange(desc(total_receita)) %>% 
+  pull(nome)
+
+valor_inicial <- 1e6
+valor_final <- 4.5e6
+
+breaks <- seq(valor_inicial, valor_final, 1e6)
+labels <- breaks %>% 
+  format_currency()
+
+senadores_receita %>% 
+  arrange(desc(total_receita)) %>% 
+  head(15) %>% 
+  mutate(valor = format_currency_value(total_receita)) %>% 
+  ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = total_receita)) +
+  geom_point(col = "tomato3", size = 3) + 
+  geom_segment(aes(x = nome, 
+                   xend = nome, 
+                   y = valor_inicial, 
+                   yend = total_receita), 
+               size = 0.1) +
+  geom_text(aes(label = valor),
+            hjust = -0.3,
+            size = 3.3) +
+  coord_flip() +
+  scale_y_continuous(limits = c(valor_inicial, valor_final), 
+                     breaks = breaks,
+                     labels = labels
+                     ) + 
+  labs(title = "Senadores com maior investimento do Partido",
+       y = "Total recebido (R$)",
+       x = "Senador(a)") +
+  theme_ipsum_rc()
+```
+
+### Quem teve maior investimento proporcional?
+```{r fig.height=6}
+levels <- senadores_receita %>%
+  arrange(desc(proporcao_receita)) %>% 
+  pull(nome)
+
+senadores_receita %>% 
+  arrange(desc(proporcao_receita)) %>% 
+  mutate(proporcao_receita = proporcao_receita * 100) %>% 
+  head(15) %>% 
+  ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = proporcao_receita, fill = "a")) +
+  geom_chicklet(width = .7, radius = grid::unit(5, "pt")) +
+  coord_flip() +
+  scale_fill_manual(values = c("#806CCC")) +
+  scale_y_continuous(breaks = seq(0, 100, 2)) +
+  guides(fill = FALSE) + 
+  labs(title = "Senadores com maior investimento do Partido",
+       y = "Proporção de campanhas médias (%)",
+       x = "Senador(a)") +
+  theme_ipsum_rc()
+```
+
+### Investimento por partido
+
+Em seguida, vamos analisar por partido como o valor de doação foi distribuído entre os senadores.
+
+```{r}
+liderancas_senado <- read_csv(here("reports/investimento-partidos/data/liderancas_senado.csv")) %>% 
+  filter(bloco_partido == partido,
+         str_detect(iconv(cargo, from="UTF-8",to="ASCII//TRANSLIT"), "Lider|Representante")) %>% 
+  select(bloco_partido, id, cargo) %>% 
+  left_join(senadores_receita %>% select(id, proporcao_receita), by  = c("id"))
+```
+
+```{r}
+levels <- senadores_receita %>% 
+  filter(!is.na(proporcao_receita)) %>% 
+  group_by(sg_partido) %>% 
+  summarise(n = n(),
+            median = median(proporcao_receita)) %>% 
+  arrange(desc(median)) %>% 
+  ungroup() %>% 
+  pull(sg_partido)
+
+senadores_receita %>% 
+  filter(!is.na(proporcao_receita)) %>% 
+  mutate(proporcao_receita = proporcao_receita * 100) %>% 
+  group_by(sg_partido) %>% 
+  mutate(n = n(),
+         median = median(proporcao_receita)) %>% 
+  ungroup() %>% 
+  left_join(liderancas_senado %>% 
+              select(bloco_partido, proporcao_receita_lider = proporcao_receita), 
+            by = c("sg_partido" = "bloco_partido")) %>% 
+  ggplot(aes(x = factor(sg_partido, levels = levels), 
+             y = proporcao_receita, 
+             color = factor(sg_partido, levels = levels))) +
+  geom_count() +
+  geom_point(aes(y = proporcao_receita_lider*100), color = "#dc267f", size = 1) +
+  scale_x_discrete(position = "right") +
+  scale_y_continuous(limits = c(0, 20), breaks = seq(0, 100, 2), position = "bottom", sec.axis = dup_axis()) +
+  scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
+  coord_flip() +
+  scale_shape_identity() +
+  
+  annotate("text", label = "líder do partido", x = "REDE", y = 13.1, color = "#4b4545") +
+  geom_curve(aes(x = "REDE", y = 10.2, xend = "REDE", yend = 11.5),
+             color = "#7d7373", size = 0.4, curvature = 0,
+             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+
+  geom_point(aes(y = median), size = 3.5, color = "black", shape = 124) +
+  labs(x = "", y = "Proporção de campanhas médias (%)",
+       title = "Distribuição das doações por partido") +
+  guides(color = FALSE, size = FALSE) +
+  theme_ipsum_rc() +
+  geom_text(aes(label = ifelse(proporcao_receita > 25, 
+                               paste0(str_to_title(nome_eleitoral), " ", sg_partido, "/", uf), 
+                               "")),
+            hjust = -.07,
+            size = 3.5,
+            color = "#4b4545")
+```
+
+### Relação com Mandatos
+O gráfico a seguir busca responder o questionamento de se os senadores mais experientes no Senado são aqueles que mais recebem investimento dos partidos. Contamos um mandato quando um senador assume seu cargo por algum período durante alguma das duas legislaturas do mandato (8 anos). Usamos os [Dados Abertos](https://www12.senado.leg.br/dados-abertos) do Senado para capturar informação dos mandatos.
+
+```{r}
+mandatos_senado <- read_csv(here("reports/investimento-partidos/data/mandatos_senado.csv")) %>% 
+  group_by(id_parlamentar) %>% 
+  summarise(n_mandatos = n_distinct(id_legislatura)) %>% 
+  ungroup() %>% 
+  mutate(n_mandatos = n_mandatos / 2)
+```
+
+```{r}
+senadores_receita <- senadores_receita %>% 
+  left_join(mandatos_senado, by = c("id" = "id_parlamentar"))
+```
+
+```{r}
+set.seed(1245)
+
+senadores_receita %>% 
+  filter(!is.na(proporcao_receita)) %>% 
+  mutate(proporcao_receita = proporcao_receita * 100) %>% 
+  mutate(n_mandatos = as.ordered(n_mandatos)) %>% 
+  group_by(n_mandatos) %>% 
+  mutate(median = median(proporcao_receita)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = proporcao_receita, y = n_mandatos, fill = "a")) + 
+  geom_density_ridges(
+    scale = 0.9
+  ) +
+  scale_shape_identity() +
+  geom_point(aes(x = proporcao_receita, color = "b"), size = 3, shape = 124) +
+  
+  annotate("text", label = "um deputado", x = 13.5, y = 1.71, color = "#4b4545") +
+  geom_curve(aes(x = 10, y = 1.94, xend = 12.5, yend = 1.7),
+             color = "#7d7373", size = 0.4, curvature = 0.35,
+             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+
+  annotate("text", label = "Mediana", x = 4.7, y = 1.71, color = "#4b4545") +
+  geom_curve(aes(x = 1.6, y = 1.9, xend = 4, yend = 1.7),
+             color = "#7d7373", size = 0.4, curvature = 0.48,
+             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+
+  geom_point(aes(x = median, color = "a"), size = 5, shape = 124) +
+  scale_x_continuous(breaks = seq(0, 100, 2), limits = c(0, 15)) +
+  labs(y = "Nº de mandatos", x = "Proporção de campanhas médias (%)") +
+  scale_fill_manual(name = "", values = c("#91BFDA"), guide = FALSE) +
+  scale_color_manual(name = "", values = c("#dc267f", "black"), guide = FALSE) +
+  theme_ipsum_rc() +
+  geom_text_repel(aes(label = ifelse(n_mandatos > 2, 
+                               paste0(str_to_title(nome_eleitoral), " ", sg_partido, "/", uf), 
+                               "")),
+            vjust = -1,
+            arrow = arrow(length = unit(0.006, "npc"), ends = "first"),
+            size = 4,
+            color = "#4b4545")
+```
+
+Nota-se que a mediana do grupo de deputados que estão no segundo mandato é bem parecida com a mediana do grupo que está no primeiro mandato. Ou seja, o investimento do partido não cresceu, considerando a mediana geral, em relação a experiência do parlamentar no Senado.
+
+### Investimento por Gênero
+
+```{r}
+receita_por_genero <- senadores_receita %>% 
+  filter(!is.na(proporcao_receita)) %>% 
+  group_by(sg_partido, genero) %>% 
+  summarise(median = median(proporcao_receita)) %>% 
+  ungroup() %>% 
+  mutate(median = median * 100) %>% 
+  spread(key = genero, value = median) %>% 
+  mutate(diff = (`F` - `M`)) %>% 
+  gather(key = "group", value = "median", `F`, `M`) %>% 
+  mutate(diff = replace_na(diff, 0)) %>% 
+  select(sg_partido, group, median, diff)
+```
+
+```{r}
+levels <- receita_por_genero %>%
+  arrange(desc(diff)) %>% 
+  distinct(sg_partido) %>% 
+  pull(sg_partido)
+
+receita_por_genero %>% 
+ggplot(
+  mapping = aes(
+    y = fct_rev(factor(sg_partido, levels = levels)), 
+    x = median, 
+    color = group)
+  ) + 
+  geom_line(
+    mapping = aes(group = sg_partido),
+    color = "#bbbbbb",
+    size = 1
+  ) +
+  geom_point(size = 3, pch = 19) +
+  geom_text(
+    size = 3,
+    nudge_y = -0.38,
+    mapping = 
+      aes(
+        label = paste0(as.character(round(median, 1))),
+        color = group)
+  ) + 
+  geom_text(size = 3.5, fontface = "bold", nudge_y = 0.6,
+            mapping = aes(label = ifelse(sg_partido == "CIDADANIA", 
+                                         ifelse(group == "F",
+                                               "Mulher",
+                                               "Homem"),
+                                          ""),
+                          color = group)
+            ) +
+  
+  ## retangulo das diferencas
+  geom_rect(mapping = aes(xmin = 5.1, xmax = Inf , ymin = -Inf, ymax = Inf),
+            fill = "white",
+            color = "white") +
+  geom_rect(mapping = aes(xmin = 5.2, xmax = 6.0, ymin = -Inf, ymax = Inf),
+            fill = "#eef0e2",
+            color = "#eef0e2") +
+  geom_text(fontface = "bold", size = 3.3, colour = "#5f5757", 
+            mapping = aes(x = 5.6, y = sg_partido, 
+                          label = ifelse(group == "M", "",
+                                         ifelse(diff > 0, paste0("+", as.character(round(diff, 2))), 
+                                                paste0(as.character(round(diff, 2)))
+                                                )
+                                         )
+                          )
+            ) +
+  geom_text(size = 3.3, colour = "#9e9191", nudge_y = 0.6,
+            mapping = aes(x = 5.6, 
+                          y = sg_partido, label = ifelse(sg_partido == "CIDADANIA", "diferença", ""))) +
+  ## fim retangulo das diferencas
+  
+  scale_color_manual(values = c("#DEAC7C", "#83ACB8")) +
+  scale_x_continuous(breaks = seq(0, 5, 1), limits = c(0, 6)) +
+  scale_y_discrete(
+    expand = expand_scale(add=c(0.65,1))
+  ) +
+  labs(title = "Proporção mediana do investimento \npor gênero e partido",
+       y = "",
+       x = "Mediana da Proporção de campanhas médias (%)",
+       color = "Gênero") +
+  guides(color = FALSE) +
+  theme_ipsum_rc() +
+  theme(panel.grid = element_blank(), panel.grid.major.y = element_line(colour = "#f4f4f4", size = 1))
+```
+
+Pela visualização é possível identificar a diferença entre as medianas da proporção de investimento do partido considerando o gênero do Parlamentar. É possível saber quais partidos doaram mais para mulheres do que para homens nas eleições de 2018.
+
+
+## Mais dados
+
+Para descobrir sobre outros parlamentares que não foram citados nessa análise use as tabelas abaixo.
+
+### Deputados
+```{r}
+deputados_receita %>% 
+  arrange(desc(proporcao_receita)) %>% 
+  mutate(proporcao_receita = proporcao_receita * 100) %>% 
+  mutate(aderencia = round(aderencia*100, 2)) %>% 
+  mutate(total_receita = format_currency(total_receita)) %>% 
+  select(nome, sg_partido, uf, total_receita, proporcao_receita, n_mandatos, aderencia) %>% 
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            options = list(pageLength = 5,
+                           dom = 'ftp'),
+            rownames = FALSE, 
+            colnames = c("Nome", "Partido", "UF", "Total recebido", "Proporção de campanhas médias (%)", 
+                         "Nº de mandatos", "Aderência ao partido (%)"))
+```
+
+### Senadores
+```{r}
+senadores_receita %>% 
+  arrange(desc(proporcao_receita)) %>% 
+  mutate(proporcao_receita = proporcao_receita * 100) %>% 
+  mutate(total_receita = format_currency(total_receita)) %>% 
+  select(nome, sg_partido, uf, total_receita, proporcao_receita, n_mandatos) %>% 
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE, 
+            options = list(pageLength = 5,
+                           dom = 'ftp'),
+            colnames = c("Nome", "Partido", "UF", "Total recebido", "Proporção de campanhas médias (%)", 
+                         "Nº de mandatos"))
+
+```
+
+
+

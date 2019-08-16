@@ -1,4 +1,5 @@
 -- PROPOSICOES
+BEGIN;
 CREATE TEMP TABLE temp_proposicoes AS SELECT * FROM proposicoes LIMIT 0;
 
 \copy temp_proposicoes FROM './data/proposicoes.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
@@ -19,4 +20,13 @@ DO
     status_proposicao = EXCLUDED.status_proposicao,
     status_importante = EXCLUDED.status_importante;    
 
+
+UPDATE proposicoes
+SET status_proposicao = 'Inativa', status_importante = 'Inativa'
+WHERE (id_proposicao) NOT IN
+  (SELECT id_proposicao
+   FROM temp_proposicoes);
+   
 DROP TABLE temp_proposicoes;
+
+COMMIT;

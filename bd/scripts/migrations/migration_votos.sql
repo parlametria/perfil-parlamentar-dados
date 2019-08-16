@@ -1,4 +1,5 @@
 -- VOTOS
+BEGIN;
 CREATE TEMP TABLE temp_votos AS SELECT * FROM votos LIMIT 0;
 
 \copy temp_votos FROM './data/votos.csv' DELIMITER ',' CSV HEADER;
@@ -18,3 +19,4 @@ WHERE (id_votacao, id_parlamentar_voz) NOT IN
    FROM temp_votos);
 
 DROP TABLE temp_votos;
+COMMIT;

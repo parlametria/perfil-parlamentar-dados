@@ -19,10 +19,16 @@ services:
     networks:
       - voz-network
 
-networks:
-  proxynet:
-    name: voz_ativa_network
-    
+  log_server:
+    build: ./bd/server/  
+    container_name: log-server
+    volumes:
+      - ./bd:/log-server/bd
+      - ./bd/server/server.js:/log-server/bd/server/server.js
+      - /log-server/bd/server/node_modules/
+    ports:
+      - "8080:8080"
+
 networks:
   voz-network:
     external:

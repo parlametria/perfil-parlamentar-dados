@@ -1,15 +1,16 @@
 -- MANDATOS
+BEGIN;
 CREATE TEMP TABLE temp_mandatos AS SELECT * FROM mandatos LIMIT 0;
 
 \copy temp_mandatos FROM './data/mandatos.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
 
-INSERT INTO mandatos (id_parlamentar_voz, id_legislatura, data_inicio, 
+INSERT INTO mandatos (id_mandato_voz, id_parlamentar_voz, id_legislatura, data_inicio, 
   data_fim, situacao, cod_causa_fim_exercicio, desc_causa_fim_exercicio)
 
-SELECT id_parlamentar_voz, id_legislatura, data_inicio, 
+SELECT id_mandato_voz, id_parlamentar_voz, id_legislatura, data_inicio, 
 data_fim, situacao, cod_causa_fim_exercicio, desc_causa_fim_exercicio
 FROM temp_mandatos
-ON CONFLICT (id_parlamentar_voz, id_legislatura) 
+ON CONFLICT (id_mandato_voz) 
 DO
   UPDATE
     SET 
@@ -20,8 +21,9 @@ DO
       desc_causa_fim_exercicio = EXCLUDED.desc_causa_fim_exercicio;
       
 DELETE FROM mandatos
-WHERE (id_parlamentar_voz, id_legislatura) NOT IN
-  (SELECT id_parlamentar_voz, id_legislatura
+WHERE (id_mandato_voz) NOT IN
+  (SELECT id_mandato_voz
    FROM temp_mandatos);
 
 DROP TABLE temp_mandatos; 
+COMMIT;
