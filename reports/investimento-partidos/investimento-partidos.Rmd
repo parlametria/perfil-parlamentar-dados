@@ -689,7 +689,7 @@ senadores_receita %>%
 
 ### Investimento por partido
 
-Em seguida, vamos analisar por partido como o valor de doação foi distribuído entre os senadores
+Em seguida, vamos analisar por partido como o valor de doação foi distribuído entre os senadores.
 
 ```{r}
 liderancas_senado <- read_csv(here("reports/investimento-partidos/data/liderancas_senado.csv")) %>% 
