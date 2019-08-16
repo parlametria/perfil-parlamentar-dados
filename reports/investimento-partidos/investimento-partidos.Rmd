@@ -71,7 +71,7 @@ Analisamos os **valores doados pelos partidos para os Deputados Federais e Senad
 ## Deputados
 ### Sobre os dados
 
-Os dados das receitas dos Deputados Federais, enquanto candidatos nas Eleições de 2018, foram obtidos do **TSE** (Tribunal Superior Eleitoral) e estão disponíveis [aqui](http://www.tse.jus.br/eleicoes/estatisticas/repositorio-de-dados-eleitorais-1/repositorio-de-dados-eleitorais). Filtramos para considerar apenas deputados que mantiveram seus partidos desde a eleição de 2018. Consideramos todos os valores doados pelo partido independente do diretório (nacional ou estadual). Consideramos apenas as doações dos partidos feitas para candidatos do mesmo partido, excluindo as doações feitas para candidatos de outros partidos.
+Os dados das receitas dos Deputados Federais, enquanto candidatos nas Eleições de 2018, foram obtidos do **TSE** (Tribunal Superior Eleitoral) e estão disponíveis [aqui](http://www.tse.jus.br/eleicoes/estatisticas/repositorio-de-dados-eleitorais-1/repositorio-de-dados-eleitorais). Filtramos apenas deputados que mantiveram seus partidos desde a eleição de 2018. Consideramos apenas as doações dos partidos feitas para candidatos do mesmo partido, excluindo as doações feitas para candidatos de outros partidos. O valor investido pelo partido abrange os diretórios nacionais e estaduais.
 
 ```{r fig.height=4}
 deputados_receita %>% 
@@ -380,6 +380,7 @@ ggplotly(g, tooltip = "text") %>%
  layout(autosize = F)
 ```
 
+<br>
 Não é possível afirmar uma relação direta entre a obediência/aderência ao partido e o investimento proporcional recebido pelo partido. No entanto, temos a presença de alguns outliers que é possível identificar passando o mouse.
 
 ### Investimento por Gênero
@@ -468,6 +469,8 @@ ggplot(
 ```
 
 Pela visualização é possível identificar a diferença entre as medianas da proporção de investimento do partido considerando o gênero do Parlamentar. É possível saber quais partidos doaram mais para mulheres do que para homens nas eleições de 2018.
+
+Essa diferença das candidatas em relação aos candidatos talvez seja explicada pela decisão do Tribunal Superior Eleitoral de que os partidos repassem pelo menos 30% dos recursos do Fundo Especial de Financiamento de Campanha (FEFC) para candidaturas de mulheres. Mais informações [aqui](https://g1.globo.com/politica/noticia/tse-fundo-eleitoral-deve-destinar-30-dos-recursos-para-campanhas-de-mulheres.ghtml) e [aqui](https://oglobo.globo.com/brasil/so-15-de-35-partidos-cumpriram-cota-de-verba-para-candidaturas-femininas-na-eleicao-23243747).
 
 ### Investimento refletido nos cargos em comissões e partidos
 
@@ -686,7 +689,7 @@ senadores_receita %>%
 
 ### Investimento por partido
 
-Em seguida, vamos analisar por partido como o valor de doação foi distribuído entre os deputados.
+Em seguida, vamos analisar por partido como o valor de doação foi distribuído entre os senadores
 
 ```{r}
 liderancas_senado <- read_csv(here("reports/investimento-partidos/data/liderancas_senado.csv")) %>% 
