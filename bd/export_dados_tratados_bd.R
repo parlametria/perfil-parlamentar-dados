@@ -17,22 +17,37 @@ message("Use --help para mais informações\n")
               metavar="character")	
 )	
 
- opt_parser <- OptionParser(option_list=option_list)	
+opt_parser <- OptionParser(option_list=option_list)	
 
- opt <- parse_args(opt_parser)	
+opt <- parse_args(opt_parser)	
 
- output <- opt$output	
+output <- opt$output	
 
- source(here::here("bd/analyzer_data_bd.R"))	
+source(here("bd/analyzer_data_bd.R"))	
 
 message("Processando dados...")	
+
+source(here("bd/processor/parlamentares/processa_parlamentares.R"))
 parlamentares <- processa_parlamentares()	
+
+source(here("bd/processor/perguntas/processa_perguntas.R"))
 perguntas <- processa_perguntas()	
+
+source(here("bd/processor/proposicoes/processa_proposicoes.R"))
 proposicoes <- processa_proposicoes()	
+
+source(here("bd/processor/proposicoes/processa_proposicoes_temas.R"))
 proposicoes_temas <- processa_proposicoes_temas()
+
+source(here("bd/processor/respostas/processa_respostas.R"))
 respostas <- processa_respostas()
+
+source(here("bd/processor/temas/processa_temas.R"))
 temas <- processa_temas()
+
+source(here("bd/processor/votos/processa_votos.R"))
 votos <- processa_votos()
+
 votacoes <- processa_votacoes()
 orientacoes <- processa_orientacoes()
 comissoes <- processa_comissoes()
