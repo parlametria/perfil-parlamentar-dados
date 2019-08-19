@@ -17,22 +17,34 @@ message("Use --help para mais informações\n")
               metavar="character")	
 )	
 
- opt_parser <- OptionParser(option_list=option_list)	
+opt_parser <- OptionParser(option_list=option_list)	
 
- opt <- parse_args(opt_parser)	
+opt <- parse_args(opt_parser)	
 
- output <- opt$output	
- 
- library(here)
+output <- opt$output	
 
 message("Processando dados...")	
-# parlamentares <- processa_parlamentares()	
-# perguntas <- processa_perguntas()	
-# proposicoes <- processa_proposicoes()	
-# proposicoes_temas <- processa_proposicoes_temas()
-# respostas <- processa_respostas()
-# temas <- processa_temas()
-# votos <- processa_votos()
+
+source(here("bd/processor/parlamentares/processa_parlamentares.R"))
+parlamentares <- processa_parlamentares()	
+
+source(here("bd/processor/perguntas/processa_perguntas.R"))
+perguntas <- processa_perguntas()	
+
+source(here("bd/processor/proposicoes/processa_proposicoes.R"))
+proposicoes <- processa_proposicoes()	
+
+source(here("bd/processor/proposicoes/processa_proposicoes_temas.R"))
+proposicoes_temas <- processa_proposicoes_temas()
+
+source(here("bd/processor/respostas/processa_respostas.R"))
+respostas <- processa_respostas()
+
+source(here("bd/processor/temas/processa_temas.R"))
+temas <- processa_temas()
+
+source(here("bd/processor/votos/processa_votos.R"))
+votos <- processa_votos()
 
 source(here("bd/processor/votacoes/processa_votacoes.R"))
 votacoes <- processa_votacoes()
