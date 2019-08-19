@@ -1,0 +1,29 @@
+#' @title Processa dados dos mandatos
+#' @description Processa os dados dos mandatos e retorna no formato  a ser utilizado pelo banco de dados
+#' @param mandatos_path Caminho para o arquivo de dados de mandatos sem tratamento
+#' @return Dataframe com informações dos mandatos
+processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/liderancas.csv")) {
+  library(tidyverse)
+  source(here::here("crawler/parlamentares/partidos/utils_partidos.R"))
+  
+  liderancas <- read_csv(liderancas_path) %>% 
+    mutate(
+      casa_enum = dplyr::if_else(casa == "camara", 1, 2),
+      id_parlamentar_voz = paste0(casa_enum, as.character(id)),
+      bloco_partido = gsub("Bloco ", "", bloco_partido)
+    )
+  
+  liderancas_partidos <- liderancas %>% 
+    group_by(bloco_partido) %>% 
+    summarise(n = n()) %>% 
+    rowwise() %>% 
+    dplyr::mutate(id_partido = map_sigla_id(bloco_partido)) %>% 
+    ungroup()
+  
+  liderancas_alt <- liderancas %>%
+    left_join(liderancas_partidos %>% select(bloco_partido, id_partido),
+              by = c("bloco_partido")) %>% 
+    select(id_parlamentar_voz, id_partido, casa, cargo)
+  
+  return(liderancas_alt)
+}
