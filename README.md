@@ -1,6 +1,6 @@
-# vozativa-monkey-ui
+# Voz Ativa - Dados
 
-Coletor de respostas do Survey Monkey que alimenta o Voz Ativa.
+Crawler e banco de dados que alimentam o Voz Ativa.
 
 # Como iniciar o banco de dados local
 
