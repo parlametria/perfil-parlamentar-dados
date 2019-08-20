@@ -3068,7 +3068,6 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,135603,5947,PDT,1,senado
 2019,135983,5953,PDT,1,senado
 2019,135983,5954,PDT,1,senado
-2019,136173,5957,PDT,0,senado
 2019,137178,5969,PDT,1,senado
 2019,137178,5970,PDT,1,senado
 2019,116081,5967,PL,1,senado
@@ -3160,7 +3159,6 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,135603,5947,PRB,1,senado
 2019,135983,5953,PRB,1,senado
 2019,135983,5954,PRB,1,senado
-2019,136173,5957,PRB,0,senado
 2019,137178,5969,PRB,0,senado
 2019,137178,5970,PRB,0,senado
 2019,116081,5967,PROS,1,senado
@@ -3183,7 +3181,6 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,135603,5947,PROS,1,senado
 2019,135983,5953,PROS,1,senado
 2019,135983,5954,PROS,1,senado
-2019,136173,5957,PROS,0,senado
 2019,137178,5969,PROS,1,senado
 2019,137178,5970,PROS,1,senado
 2019,116081,5967,PSB,1,senado
@@ -3229,7 +3226,6 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,135603,5947,PSC,1,senado
 2019,135983,5953,PSC,1,senado
 2019,135983,5954,PSC,1,senado
-2019,136173,5957,PSC,0,senado
 2019,137178,5969,PSC,1,senado
 2019,137178,5970,PSC,1,senado
 2019,116081,5967,PSD,0,senado
@@ -3321,7 +3317,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,135603,5947,PT,1,senado
 2019,135983,5953,PT,1,senado
 2019,135983,5954,PT,1,senado
-2019,136173,5957,PT,0,senado
+2019,136173,5957,PT,1,senado
 2019,137178,5969,PT,1,senado
 2019,137178,5970,PT,1,senado
 2019,116081,5967,REDE,1,senado

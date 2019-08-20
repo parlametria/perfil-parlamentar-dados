@@ -9,6 +9,7 @@ RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-k
 RUN apt-get update
 RUN yes Y | apt-get install postgresql-client-10
 
+RUN apt-get install -y libpoppler-cpp-dev
 
 ## Cria arquivo para indicar raiz do repositório (Usado pelo pacote here)
 RUN touch .here
@@ -18,3 +19,5 @@ RUN R -e "install.packages(c('here', 'optparse', 'RCurl', 'xml2'), repos='http:/
 
 RUN R -e "devtools::install_github('analytics-ufcg/rcongresso', force = T)"
 RUN R -e "devtools::install_github('analytics-ufcg/leggoR', force = T)"
+
+RUN R -e "install.packages('pdftools')"

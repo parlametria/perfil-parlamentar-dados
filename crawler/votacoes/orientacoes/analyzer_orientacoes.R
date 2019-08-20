@@ -211,7 +211,7 @@ define_orientacao_governo <- function(votos) {
              filter(cargo == "Líder") %>% 
              pull(id)) %>% 
     mutate(partido = "Governo",
-           voto = if_else(voto == 0, 5, voto)) %>% 
+           voto = if_else(voto == 0, 5, as.numeric(voto))) %>% 
     select(-id_parlamentar, ano, id_proposicao, id_votacao, partido, voto, casa)
   
   return(orientacoes)

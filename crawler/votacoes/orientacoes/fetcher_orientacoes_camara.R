@@ -189,7 +189,7 @@ fetch_orientacao_from_xml_camara <- function(cod_sessao, hora, xml) {
     select(id_votacao,
            partido = sigla,
            voto = orientacao) %>% 
-    enumera_voto() %>% 
+    enumera_voto() %>%
     distinct()
   
   return(orientacoes)
