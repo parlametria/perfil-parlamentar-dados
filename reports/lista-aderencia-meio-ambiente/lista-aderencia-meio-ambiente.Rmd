@@ -236,4 +236,114 @@ ggplotly(g, tooltip = "text") %>%
   layout(autosize = F)
 ```
 
+#### Coautorias conjuntas considerando aderência
 
+O novo cálculo dos links do grafo foi feito considerando, além do peso das relações, o inverso da aderência dos deputados ao Governo (levando em conta que quem vota com o Governo, vota contra o Meio Ambiente).
+
+ novo_peso_arestas = peso_arestas * ((1 - aderencia.x) + (1 - aderencia.y))
+ 
+```{r}
+source(here("reports/lista-aderencia-meio-ambiente/scripts/generate-graph.R"))
+
+aderencia_filtered <- aderencia %>% 
+  select(id_parlamentar, aderencia)
+
+coautorias <- read_csv(here("crawler/raw_data/coautorias.csv")) %>% 
+  mutate(id.x = as.character(id.x),
+         id.y = as.character(id.y)) %>% 
+  left_join(aderencia_filtered, by = c("id.x" = "id_parlamentar")) %>% 
+  left_join(aderencia_filtered, by = c("id.y" = "id_parlamentar"))
+  
+coautorias <- coautorias %>% 
+  mutate(aderencia.x = 1 - aderencia.x,
+         aderencia.y = 1 - aderencia.y,
+         novo_peso_arestas = peso_arestas * (aderencia.x + aderencia.y)) %>% 
+  distinct()
+
+nodes <- generate_nodes(coautorias = coautorias)
+edges <- generate_edges(coautorias, nodes)
+
+fn <- generate_graph(nodes, edges)
+      # .style('fill', '#000000') para mudar a cor
+      fn <- 
+        htmlwidgets::onRender(fn, 
+                                '
+          function(el,x) {
+            var tooltip = d3.select("body")
+          	  .append("div")
+          	  .style("position", "absolute")
+          	  .style("z-index", "10")
+          	  .style("visibility", "hidden")
+          	  .style("background-color", "#ffffff")
+          	  .style("padding", "5px")
+          	  .style("border", "solid 2px #000")
+          	  .style("border-radius", "6px")
+          	  .style("font-size", "1.2rem")
+        
+            d3.selectAll(".node")
+              .on("mouseover", null)
+              .style("opacity", 1)
+              .style("cursor", "pointer");
+        
+            d3.selectAll("circle")
+              .on("mouseover", function(d) { 
+                  return tooltip.html(d.name )
+                    .style("visibility", "visible")
+                    .style("top",(event.pageY-10)+"px")
+                    .style("left",(event.pageX+10)+"px");})
+        	    .on("mouseout", function(d) {
+                  return tooltip.html(d.name)
+                    .style("visibility", "hidden");});
+            }
+              '
+        )
+fn
+  
+```
+
+Este novo grafo modifica apenas a espessura dos links, e os grupos formados ainda são os mesmos:
+
+ * Ambientalistas com Molon: é possível notar a importância e influência de Alessandro Molon na conexão de dois grandes grupos, indicando que este deputado coautora tanto com os deputados do mesmo partido que o seu, o PSB, quanto de partidos diferentes, como PSD, PSDB, PP, PDT, DEM, PT e PTB, mas todos com aderências ao Meio Ambiente bastante consideráveis. As ligações mais fortes são entre Aliel Machado, Weliton Prado e Alessandro Molon, sendo a mais forte entre os dois primeiros.
+
+ * Unidos por Brumadinho: O grupo composto por deputados de diversos partidos, como PSL, PSOL, PT, AVANTE, PATRIOTA, PODEMOS, SOLIDARIEDADE, PRB e MDB, são do estado de Minas Gerais e se uniram ao coautorarem juntos em 6 proposições relacionadas ao desastre de Brumadinho/MG. Podemos notar a diversidade na espessura do grafo, indicando que alguns deputados são mais aderentes ao Governo, como Lucas Gonzalez.
+
+ * Grupo de partidos mais articulados: Alguns grupos são formados por deputados do mesmo partido e com aderência bastante semelhantes, como é o caso do NOVO e PT. Os deputados do NOVO coautoraram em um projeto de temática Energia, Recursos Hídricos e Minerais - o PL 2302/2019; e o grupo do PT, criaram juntos o PFC 8/2019, uma proposta com tema Agricultura, Pecuária, Pesca e Extrativismo. Dois deputados do PT se destacam por possuírem relações mais fortes: Afonso Florence e Bohn Gass.
+ 
+```{r}
+coautorias %>%
+  select(
+    nome_eleitoral.x,
+    nome_eleitoral.y,
+    peso_arestas,
+    num_coautorias,
+    aderencia.x,
+    aderencia.y,
+    novo_peso_arestas
+    ) %>%
+  distinct() %>%
+  mutate(aderencia.x = round(aderencia.x, 2),
+         aderencia.y = round(aderencia.y, 2),
+         peso_arestas = round(peso_arestas, 2),
+         novo_peso_arestas = round(novo_peso_arestas, 2)) %>% 
+  arrange(desc(novo_peso_arestas)) %>%
+  datatable(
+   class = 'cell-border stripe',
+    filter = 'top',
+   rownames = FALSE,
+   options = list(pageLength = 5,
+    dom = 'ftp'),
+    colnames = c(
+    "Deputado A",
+    "Deputado B",
+    "Peso da relação",
+    "Num. de autorias conjuntas",
+    "Aderência ao MA do deputado A",
+    "Aderência ao MA do deputado B",
+    "Novo peso da relação"
+  )
+  ) %>%
+  formatStyle(columns = dplyr::everything(.), 'font-size' = "13px")
+```
+
+
+ 
