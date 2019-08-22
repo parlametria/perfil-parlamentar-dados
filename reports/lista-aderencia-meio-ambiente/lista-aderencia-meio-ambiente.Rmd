@@ -1,0 +1,177 @@
+---
+title: "Deputados alinhados ao meio ambiente"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+library(ggchicklet)
+library(DT)
+
+source(here("crawler/votacoes/utils_votacoes.R"))
+```
+
+
+```{r}
+receita <- read_csv(here("crawler/raw_data/receitas_tse_2018.csv")) %>% 
+  group_by(uf, cargo) %>% 
+  mutate(media_uf = mean(total_receita)) %>% 
+  ungroup() %>% 
+  
+  mutate(proporcao_receita_uf = total_receita / media_uf) %>%
+  mutate(partido = padroniza_sigla(partido)) %>% 
+  mutate(partido = if_else(str_detect(partido, "PATRI"), "PATRIOTA", partido)) %>% 
+  mutate(partido = if_else(str_detect(partido, "PC DO B"), "PCdoB", partido)) %>% 
+  
+  group_by(partido) %>% 
+  mutate(campanhas_total_partido = sum(proporcao_receita_uf)) %>% 
+  ungroup() %>% 
+  mutate(proporcao_receita = proporcao_receita_uf / campanhas_total_partido)
+  
+deputados_raw <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")) %>% 
+  filter(casa == "camara", em_exercicio == 1) %>% 
+  mutate(sg_partido = padroniza_sigla(sg_partido))
+
+deputados_receita <- deputados_raw %>% 
+  left_join(receita %>% 
+              select(cpf, partido, total_receita, proporcao_receita), 
+            by = c("cpf" = "cpf", "sg_partido" = "partido")) %>% 
+  mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", sg_partido, "/", uf))
+```
+
+```{r}
+aderencia <- read_csv(here("bd/data/aderencia.csv"), col_types = cols(id_parlamentar_voz = "c")) %>% 
+  filter(id_tema == 0, id_partido == 0) %>%
+  mutate(id_parlamentar = substring(id_parlamentar_voz, 2)) %>% 
+  select(id_parlamentar, faltou, partido_liberou, nao_seguiu, seguiu, aderencia)
+
+deputados <- deputados_receita %>% 
+  left_join(aderencia, by = c("id" = "id_parlamentar"))
+```
+
+`r deputados %>% filter(aderencia != 1) %>% nrow()` deputados não puderam ter sua aderência calculada pois faltaram várias votações relacionadas ao Meio Ambiente.
+
+```{r fig.height=6}
+deputados %>% 
+  filter(aderencia != -1) %>% 
+  mutate(aderencia = aderencia * 100) %>% 
+  ggplot(aes(x = aderencia)) +
+  geom_histogram(boundary = 0, color = "#231D38", fill = "#3E3463") +
+  labs(x = "Aderência ao Governo em votações de Meio Ambiente",
+       y = "Nº de deputados",
+       title = "Distribuição dos deputados \nna aderência ao Governo em Meio Ambiente") +
+  theme_ipsum_rc()
+```
+
+```{r fig.height=6}
+paleta <- c("#b54142", "#c17a66", "#c6ac8d", "#6b92a5", "#247fb5")
+
+total <- nrow(deputados %>% filter(aderencia != -1))
+
+deputados %>%
+  filter(aderencia != -1) %>%
+  mutate(
+    classe = case_when(
+      aderencia <= 0.2 ~ "0-20%",
+      aderencia <= 0.4 ~ "20-40%",
+      aderencia <= 0.6 ~ "40-60%",
+      aderencia <= 0.8 ~ "60-80%",
+      aderencia <= 1 ~ "80-100%"
+    )
+  ) %>%
+  group_by(classe) %>%
+  summarise(n = n(),
+            perc = round((n / total) * 100, 2)) %>%
+  ggplot(aes(x = classe, y = n, fill = classe)) +
+  geom_chicklet(width = .5) +
+  geom_text(aes(label = paste0(n, " (", perc, "%)")),
+            hjust = -0.1,) +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 400)) +
+  scale_fill_manual(values = c(
+    "0-20%" = paleta[1],
+    "20-40%" = paleta[2],
+    "40-60%" = paleta[3],
+    "60-80%" = paleta[4],
+    "80-100%" = paleta[5]
+  )) +
+  labs(x = "Faixa de aderência",
+       y = "Quantidade de deputados",
+       fill = "Faixa de aderência",
+       title = "Distribuição dos deputados \nem faixas de aderência",
+       caption = paste0("Calculado para ", total, " deputados")) +
+  guides(fill = FALSE) +
+  theme_ipsum_rc()
+```
+
+```{r}
+deputados %>%
+  filter(aderencia != -1) %>%
+  mutate(nome_eleitoral = str_to_title(nome_eleitoral)) %>% 
+  mutate(aderencia = aderencia * 100,
+         proporcao_receita = proporcao_receita * 100) %>%
+  mutate(aderencia = round(aderencia, 2),
+         proporcao_receita = round(proporcao_receita, 2)) %>% 
+  arrange(aderencia, desc(nao_seguiu)) %>%
+  select(nome_eleitoral, sg_partido, uf, faltou, seguiu, nao_seguiu, aderencia, proporcao_receita) %>%
+  datatable(
+    class = 'cell-border stripe',
+    filter = 'top',
+    rownames = FALSE,
+    options = list(pageLength = 5,
+                   dom = 'ftp'),
+    colnames = c(
+      "Nome",
+      "Partido",
+      "UF",
+      "Faltou",
+      "Seguiu",
+      "Não seguiu",
+      "Aderência (%)",
+      "Investimento do partido (%)"
+    )
+  ) %>% 
+  formatStyle(columns = dplyr::everything(.), 'font-size' = "13px")
+```
+
+```{r}
+deputados %>% 
+  filter(aderencia == -1) %>% 
+  mutate(nome_eleitoral = str_to_title(nome_eleitoral)) %>% 
+  mutate(proporcao_receita = proporcao_receita * 100) %>%
+  mutate(proporcao_receita = round(proporcao_receita, 2)) %>% 
+    select(nome_eleitoral, sg_partido, uf, faltou, seguiu, nao_seguiu, proporcao_receita) %>%
+  datatable(
+    class = 'cell-border stripe',
+    filter = 'top',
+    rownames = FALSE,
+    options = list(pageLength = 5,
+                   dom = 'ftp'),
+    colnames = c(
+      "Nome",
+      "Partido",
+      "UF",
+      "Faltou",
+      "Seguiu",
+      "Não seguiu",
+      "Investimento do partido (%)"
+    )
+  ) %>% 
+  formatStyle(columns = dplyr::everything(.), 'font-size' = "13px")
+```
