@@ -215,4 +215,25 @@ ggplotly(g, tooltip = "text") %>%
   layout(autosize = F)
 ```
 
+```{r fig.width = 5, fig.height = 4}
+library(plotly)
+
+g <- deputados %>%
+  filter(aderencia != -1) %>% 
+  ggplot(aes(x = (aderencia * 100), y = proporcao_receita * 100)) +
+  geom_point(aes(text = sprintf("%s \nInvestimento: %s \nAderência %s",
+                                nome,
+                                scales::percent(proporcao_receita),
+                                scales::percent(aderencia))), 
+             height = 0.2, col = "tomato3") +
+  labs(x = "Aderência ao Governo (%)",
+       y = "Investimento do partido nas eleições de 2018",
+       title = "Investimento do partido x Aderência") +
+  theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+  config(displayModeBar = F) %>%
+  layout(autosize = F)
+```
+
 
