@@ -27,7 +27,6 @@ library(DT)
 source(here("crawler/votacoes/utils_votacoes.R"))
 ```
 
-
 ```{r}
 receita <- read_csv(here("crawler/raw_data/receitas_tse_2018.csv")) %>% 
   group_by(uf, cargo) %>% 
@@ -64,6 +63,8 @@ aderencia <- read_csv(here("bd/data/aderencia.csv"), col_types = cols(id_parlame
 deputados <- deputados_receita %>% 
   left_join(aderencia, by = c("id" = "id_parlamentar"))
 ```
+
+Analisamos votações de Meio Ambiente ocorridas no plenário da Câmara em 2019. 
 
 `r deputados %>% filter(aderencia != 1) %>% nrow()` deputados não puderam ter sua aderência calculada pois faltaram várias votações relacionadas ao Meio Ambiente.
 
@@ -175,3 +176,43 @@ deputados %>%
   ) %>% 
   formatStyle(columns = dplyr::everything(.), 'font-size' = "13px")
 ```
+
+```{r}
+atores_meio_ambiente <- read_csv(here("reports/lista-aderencia-meio-ambiente/data/atores_meio_ambiente.csv"),
+                                 col_types = cols(id_autor = "c"))
+
+deputados_atores <- atores_meio_ambiente %>% 
+  group_by(id_autor) %>% 
+  summarise(
+    nome_autor = first(nome_autor),
+    n = n(),
+    n_documentos = sum(qtd_de_documentos))
+```
+
+```{r}
+deputados <- deputados %>% 
+  left_join(deputados_atores, by = c("id" = "id_autor"))
+```
+
+```{r fig.width = 5, fig.height = 4}
+library(plotly)
+
+g <- deputados %>%
+  filter(aderencia != -1) %>% 
+  ggplot(aes(x = (aderencia * 100 + 1), y = n_documentos)) +
+  geom_point(aes(text = sprintf("%s \nNúmero de documentos: %s \nAderência %s",
+                                nome,
+                                n_documentos,
+                                scales::percent(aderencia))), 
+             height = 0.2, col = "tomato3") +
+  labs(x = "Aderência ao Governo (%)",
+       y = "Número de documentos em proposições de Meio Ambiente",
+       title = "Atividade parlamentar x Aderência") +
+  theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+  config(displayModeBar = F) %>%
+  layout(autosize = F)
+```
+
+
