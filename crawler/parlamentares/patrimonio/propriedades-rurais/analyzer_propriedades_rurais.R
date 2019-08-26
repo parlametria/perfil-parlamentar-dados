@@ -18,6 +18,7 @@ process_deputados_propriedades_rurais <- function() {
     group_by(NR_CPF_CANDIDATO) %>% 
     summarise(
       link = first(link),
+      descricao = paste0(DS_BEM_CANDIDATO, collapse = "; "),
       n_propriedades = n(),
       total = sum(VR_BEM_CANDIDATO)) %>% 
     ungroup()
@@ -29,7 +30,8 @@ process_deputados_propriedades_rurais <- function() {
     left_join(bens_rurais, by = c("cpf" = "NR_CPF_CANDIDATO")) %>% 
     filter(!is.na(n_propriedades)) %>% 
     mutate(total = round(total, 2)) %>% 
-    select(cpf, id_camara = id, nome_eleitoral, uf, sg_partido, n_propriedades, total_declarado = total, link)
+    select(cpf, id_camara = id, nome_eleitoral, uf, sg_partido, n_propriedades, total_declarado = total, 
+           descricao, link)
   
   return(deputados_bens_rurais)
 }
