@@ -64,9 +64,13 @@ deputados <- deputados_receita %>%
   left_join(aderencia, by = c("id" = "id_parlamentar"))
 ```
 
-Analisamos votações de Meio Ambiente ocorridas no plenário da Câmara em 2019. 
+<br>
+<br>
+Analisamos votações de Meio Ambiente ocorridas no plenário da Câmara em 2019. Calculamos a aderência dos deputados ao Governo nessas votações. A aderência vai de 0 a 100% sendo 100% o valor mais aderente ao Governo.
 
-`r deputados %>% filter(aderencia != 1) %>% nrow()` deputados não puderam ter sua aderência calculada pois faltaram várias votações relacionadas ao Meio Ambiente.
+`r deputados %>% filter(aderencia == -1 | is.na(aderencia)) %>% nrow()` deputados não puderam ter sua aderência calculada pois faltaram várias votações relacionadas ao Meio Ambiente.
+
+Calculamos a aderência para `r deputados %>% filter(aderencia != -1) %>% nrow()` deputados e mostramos a distribuição dessa variável seguir.
 
 ```{r fig.height=6}
 deputados %>% 
@@ -121,6 +125,8 @@ deputados %>%
   theme_ipsum_rc()
 ```
 
+
+### Lista com aderência dos Deputados
 ```{r}
 deputados %>%
   filter(aderencia != -1) %>%
@@ -151,6 +157,7 @@ deputados %>%
   formatStyle(columns = dplyr::everything(.), 'font-size' = "13px")
 ```
 
+### Lista de Deputados com aderência indefinida
 ```{r}
 deputados %>% 
   filter(aderencia == -1) %>% 
@@ -194,12 +201,15 @@ deputados <- deputados %>%
   left_join(deputados_atores, by = c("id" = "id_autor"))
 ```
 
+### Relação entre atividade parlamentar e Aderência
+
+No eixo x temos a aderência ao Governo em votações de Meio Ambiente. Já no eixo y temos o número de documentos (emendas, requerimentos, etc) com autoria do deputado. Cada ponto na visualização é um deputado e é possível identificá-lo com o mouse.
 ```{r fig.width = 5, fig.height = 4}
 library(plotly)
 
 g <- deputados %>%
   filter(aderencia != -1) %>% 
-  ggplot(aes(x = (aderencia * 100 + 1), y = n_documentos)) +
+  ggplot(aes(x = (aderencia * 100), y = n_documentos)) +
   geom_point(aes(text = sprintf("%s \nNúmero de documentos: %s \nAderência %s",
                                 nome,
                                 n_documentos,
@@ -214,6 +224,11 @@ ggplotly(g, tooltip = "text") %>%
   config(displayModeBar = F) %>%
   layout(autosize = F)
 ```
+
+
+### Relação entre investimento no partido e Aderência
+
+No eixo x temos a aderência ao Governo em votações de Meio Ambiente. Já no eixo y temos o investimento proporcional em campanhas médias feitas pelo partido no deputado. A proporção de campanhas médias vai de 0 a 100% e indica o nível de investimento do partido no deputado durante as eleições de 2018. Mais sobre como esse cálculo foi feito pode ser lido [aqui](https://analytics-ufcg.github.io/vozativa-dados/investimento-partidos-novo-calculo.html).
 
 ```{r fig.width = 5, fig.height = 4}
 library(plotly)
