@@ -21,12 +21,19 @@ process_propriedades_rurais <- function(
   library(here)
   
   classificacao_rural <- c("lote rural", "lotes rurais", "imovel rural", "imoveis rurais",
-                           "gleba de terra", "fazenda", "agricola", "sitio", "rurais", "chacara", 
-                           "area rural", "areas rurais", "area no loteamento", "terreno agricola", 
+                           "gleba de terra", "fazenda", "agricola", "sitio", "rurais", "chacara",
+                           "area rural", "areas rurais", "area no loteamento", "terreno agricola",
                            "terrenos agricolas", "estabelecimento rural", "estabelecimentos rurais",
                            "atividade agricola", "atividade agricolas", "terra rural", "terras rurais",
-                           "lt rural", "propriedade rural", "propriedades rurais", "zona rural", 
-                           "zonas rurais", "Lote Colonial Rural", "terreno rural")
+                           "lt rural", "propriedade rural", "propriedades rurais", "zona rural",
+                           "fração de terra", "frações de terra", "zonas rurais", "Lote Colonial Rural",
+                           "terreno rural", "terrenos rurais",
+                           ## Sugestões de Bruno Carazza
+                           "rural", "gleba", "incra", "hectar", "hec", "[:digit:]ha",
+                           "[:digit:] ha", "gado", "bovino", "terra nua", "alqueire",
+                           "hara", "faz.", "[:digit:]alq", "[:digit:] alq", "colheita", "colheitadeira",
+                           "trator", "bovino", "nelore", "cabeças", "rebanho",
+                           "semovente", "ovino", "equestre", "equino", "caprino", "plantação")
   
   bens <- read_delim(bens_data_path, delim = ";", col_types = cols(SQ_CANDIDATO = "c"),
                            locale = locale(encoding = 'latin1'))
