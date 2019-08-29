@@ -1,0 +1,462 @@
+id_ext,casa,id_autor,tipo_autor,nome_autor,partido,uf,tipo_generico,sigla_local,qtd_de_documentos
+14562,camara,160556,deputado,Padre João,PT,MG,Requerimento,PEC21500,17
+14562,camara,166401,deputado,Nilson Leitão,PSDB,MT,Requerimento,PEC21500,16
+14562,camara,73463,deputado,Osmar Serraglio,PP,PR,Requerimento,PEC21500,6
+14562,camara,74010,deputado,Valdir Colatto,MDB,SC,Requerimento,PEC21500,5
+14562,camara,73463,deputado,Osmar Serraglio,PP,PR,Parecer,PEC21500,4
+14562,camara,73483,deputado,Luis Carlos Heinze,PP,NA,Requerimento,PEC21500,4
+14562,camara,74210,deputado,Sarney Filho,PV,MA,Requerimento,PEC21500,4
+14562,camara,73483,deputado,Luis Carlos Heinze,PP,NA,Requerimento,PLEN,2
+14562,camara,73531,deputado,Ivan Valente,PSOL,SP,Requerimento,PEC21500,2
+14562,camara,73926,deputado,Janete Capiberibe,PSB,AP,Requerimento,PEC21500,2
+14562,camara,73933,deputado,Zequinha Marinho,PSC,NA,Requerimento,SEPUB(SGM),2
+14562,camara,74077,deputado,Giovanni Queiroz,PDT,PA,Requerimento,PEC21500,2
+14562,camara,141405,deputado,Celso Maldaner,MDB,SC,Requerimento,PEC21500,2
+14562,camara,141537,deputado,Moreira Mendes,PSD,NA,Parecer,CCJC,2
+14562,camara,141552,deputado,Valtenir Pereira,MDB,MT,Requerimento,MESA,2
+14562,camara,160544,deputado,Junji Abe,MDB,SP,Requerimento,PEC21500,2
+14562,camara,160559,deputado,Alceu Moreira,MDB,NA,Requerimento,PEC21500,2
+14562,camara,160615,deputado,Reinaldo Azambuja,PSDB,NA,Requerimento,PEC21500,2
+14562,camara,73463,deputado,Osmar Serraglio,PP,PR,Emenda,CCJC,1
+14562,camara,73463,deputado,Osmar Serraglio,PP,PR,Parecer,CCJC,1
+14562,camara,73472,deputado,Gervásio Silva,PSDB,SC,Proposição Apensada,PEC21500,1
+14562,camara,73490,deputado,Ricarte De Freitas,PTB,MT,Proposição Apensada,PEC21500,1
+14562,camara,73553,deputado,Nelson Marquezelli,PTB,SP,Requerimento,PEC21500,1
+14562,camara,73568,deputado,Celso Jacob,MDB,RJ,Requerimento,CLP,1
+14562,camara,73764,deputado,Abelardo Lupion,DEM,PR,Proposição Apensada,PEC21500,1
+14562,camara,73926,deputado,Janete Capiberibe,PSB,AP,Voto em Separado,PEC21500,1
+14562,camara,73933,deputado,Zequinha Marinho,PSC,NA,Proposição Apensada,PEC21500,1
+14562,camara,73934,deputado,Carlos Souza,PSDB,NA,Proposição Apensada,PEC21500,1
+14562,camara,73934,deputado,Carlos Souza,PSDB,NA,Requerimento,SEPUB(SGM),1
+14562,camara,74041,deputado,Luiz Couto,PT,PB,Voto em Separado,CCJC,1
+14562,camara,74160,deputado,Patrus Ananias,PT,MG,Outros,CCP,1
+14562,camara,74197,deputado,Domingos Dutra,SD,MA,Requerimento,GTTERRAS,1
+14562,camara,74210,deputado,Sarney Filho,PV,MA,Outros,1,1
+14562,camara,74210,deputado,Sarney Filho,PV,MA,Voto em Separado,PEC21500,1
+14562,camara,74216,deputado,Raimundo Gomes De Matos,PSDB,CE,Requerimento,PEC21500,1
+14562,camara,74270,deputado,Gilberto Nascimento,PSC,SP,Requerimento,PLEN,1
+14562,camara,74341,deputado,Almir Sá,PR,RR,Proposição Apensada,PLEN,1
+14562,camara,74366,deputado,João Campos,PRB,GO,Requerimento,MESA,1
+14562,camara,74392,deputado,Zonta,PSB,NA,Proposição Apensada,PEC21500,1
+14562,camara,74566,deputado,Geraldo Simões,PT,BA,Requerimento,PEC21500,1
+14562,camara,74585,deputado,Lincoln Portela,PL,MG,Requerimento,CLP,1
+14562,camara,74858,deputado,Lindberg Farias,PT,NA,Proposição Apensada,MESA,1
+14562,camara,134812,deputado,Edmilson Rodrigues,PSOL,PA,Requerimento,PEC21500,1
+14562,camara,134812,deputado,Edmilson Rodrigues,PSOL,PA,Voto em Separado,PEC21500,1
+14562,camara,141335,deputado,Beto Faro,PT,PA,Outros,CCP,1
+14562,camara,141405,deputado,Celso Maldaner,MDB,SC,Proposição Apensada,PEC21500,1
+14562,camara,141405,deputado,Celso Maldaner,MDB,SC,Requerimento,SEPUB(SGM),1
+14562,camara,141411,deputado,Dagoberto,PDT,MS,Requerimento,PEC21500,1
+14562,camara,141417,deputado,Edio Lopes,PL,RR,Proposição Apensada,PEC21500,1
+14562,camara,141423,deputado,Eliene Lima,PSD,MT,Proposição Apensada,PEC21500,1
+14562,camara,141423,deputado,Eliene Lima,PSD,MT,Requerimento,PEC21500,1
+14562,camara,141425,deputado,Ernandes Amorim,PTB,RO,Proposição Apensada,PEC21500,1
+14562,camara,141442,deputado,Geraldo Pudim,PR,RJ,Requerimento,CCJC,1
+14562,camara,141442,deputado,Geraldo Pudim,PR,RJ,Requerimento,MESA,1
+14562,camara,141470,deputado,José Guimarães,PT,CE,Outros,CCP,1
+14562,camara,141470,deputado,José Guimarães,PT,CE,Requerimento,PLEN,1
+14562,camara,141483,deputado,Lindomar Garçon,PRB,RO,Requerimento,SEPUB(SGM),1
+14562,camara,141492,deputado,Manuela D'ávila,PCdoB,RS,Requerimento,PLEN,1
+14562,camara,141537,deputado,Moreira Mendes,PSD,NA,Requerimento,PEC21500,1
+14562,camara,160508,deputado,Afonso Florence,PT,BA,Outros,CCP,1
+14562,camara,160511,deputado,Alessandro Molon,PSB,RJ,Requerimento,CCJC,1
+14562,camara,160535,deputado,Marcon,PT,RS,Outros,CCP,1
+14562,camara,160541,deputado,Arthur Lira,PP,AL,Requerimento,MESA,1
+14562,camara,160544,deputado,Junji Abe,MDB,SP,Requerimento,SEPUB(SGM),1
+14562,camara,160566,deputado,Nelson Padovani,PSDB,PR,Requerimento,PEC21500,1
+14562,camara,160575,deputado,Erika Kokay,PT,DF,Requerimento,PEC21500,1
+14562,camara,160575,deputado,Erika Kokay,PT,DF,Voto em Separado,PEC21500,1
+14562,camara,160610,deputado,Valmir Assunção,PT,BA,Outros,CCP,1
+14562,camara,160633,deputado,Mandetta,DEM,MS,Requerimento,MESA,1
+14562,camara,160633,deputado,Mandetta,DEM,MS,Requerimento,PEC21500,1
+14562,camara,160668,deputado,Paulo Cesar Quartiero,DEM,NA,Requerimento,PEC21500,1
+14562,camara,166401,deputado,Nilson Leitão,PSDB,MT,Requerimento,MESA,1
+14562,camara,166401,deputado,Nilson Leitão,PSDB,MT,Requerimento,PLEN,1
+14562,camara,167722,deputado,Marcos Rogério,DEM,NA,Requerimento,PLEN,1
+14562,camara,171617,deputado,Paulão,PT,AL,Outros,CCP,1
+14562,camara,178825,deputado,Leo De Brito,PT,NA,Requerimento,PEC21500,1
+14562,camara,178961,deputado,Shéridan,PSDB,RR,Requerimento,PEC21500,1
+14562,camara,178986,deputado,Nilto Tatto,PT,SP,Outros,CCP,1
+46249,camara,160666,deputado,Félix Mendonça Júnior,PDT,BA,Emenda,CCJC,27
+46249,camara,162332,deputado,Luiz Nishimori,PL,PR,Requerimento,PL629902,25
+46249,camara,141537,deputado,Moreira Mendes,PSD,NA,Emenda,CCJC,10
+46249,camara,178901,deputado,Tereza Cristina,DEM,NA,Requerimento,PLEN,9
+46249,camara,160666,deputado,Félix Mendonça Júnior,PDT,BA,Parecer,CCJC,6
+46249,camara,160538,deputado,Bohn Gass,PT,RS,Requerimento,PL629902,5
+46249,camara,160511,deputado,Alessandro Molon,PSB,RJ,Requerimento,PL629902,4
+46249,camara,178901,deputado,Tereza Cristina,DEM,NA,Requerimento,PL629902,4
+46249,camara,74150,deputado,Dr. Francisco Gonçalves,PPS,MG,Parecer,CSSF,3
+46249,camara,141389,deputado,Indio Da Costa,PSD,RJ,Parecer,CCJC,3
+46249,camara,160542,deputado,Márcio Macêdo,PT,SE,Parecer,CCJC,3
+46249,camara,178986,deputado,Nilto Tatto,PT,SP,Requerimento,PL629902,3
+46249,camara,204478,deputado,Vinicius Farah,MDB,RJ,Requerimento,PLEN,3
+46249,camara,73459,deputado,Dr. Rosinha,PT,PR,Requerimento,SEPUB(SGM),2
+46249,camara,73483,deputado,Luis Carlos Heinze,PP,NA,Proposição Apensada,PL629902,2
+46249,camara,73483,deputado,Luis Carlos Heinze,PP,NA,Requerimento,PLEN,2
+46249,camara,73674,deputado,Roberto Balestra,PP,GO,Parecer,CAPADR,2
+46249,camara,74010,deputado,Valdir Colatto,MDB,SC,Parecer,CAPADR,2
+46249,camara,74563,deputado,Jorge Alberto,PMDB,SE,Parecer,CSSF,2
+46249,camara,74692,deputado,Paulo Baltazar,PSB,RJ,Parecer,CMADS,2
+46249,camara,74848,deputado,Jandira Feghali,PCdoB,RJ,Voto em Separado,PL629902,2
+46249,camara,141488,deputado,Paulo Teixeira,PT,SP,Requerimento,PLEN,2
+46249,camara,141488,deputado,Paulo Teixeira,PT,SP,Voto em Separado,PL629902,2
+46249,camara,160538,deputado,Bohn Gass,PT,RS,Voto em Separado,PL629902,2
+46249,camara,160556,deputado,Padre João,PT,MG,Proposição Apensada,MESA,2
+46249,camara,160556,deputado,Padre João,PT,MG,Requerimento,PL629902,2
+46249,camara,160556,deputado,Padre João,PT,MG,Requerimento,PLEN,2
+46249,camara,160556,deputado,Padre João,PT,MG,Voto em Separado,PL629902,2
+46249,camara,160576,deputado,César Halum,PRB,TO,Requerimento,PLEN,2
+46249,camara,162332,deputado,Luiz Nishimori,PL,PR,Parecer,PL629902,2
+46249,camara,162332,deputado,Luiz Nishimori,PL,PR,Requerimento,PLEN,2
+46249,camara,178843,deputado,Marx Beltrão,PSD,AL,Parecer,CSSF,2
+46249,camara,178970,deputado,João Daniel,PT,SE,Proposição Apensada,MESA,2
+46249,camara,178970,deputado,João Daniel,PT,SE,Requerimento,PL629902,2
+46249,camara,178970,deputado,João Daniel,PT,SE,Voto em Separado,PL629902,2
+46249,camara,178986,deputado,Nilto Tatto,PT,SP,Voto em Separado,PL629902,2
+46249,camara,72442,deputado,Felipe Carreras,PSB,PE,Proposição Apensada,CCP,1
+46249,camara,72442,deputado,Felipe Carreras,PSB,PE,Proposição Apensada,MESA,1
+46249,camara,73427,deputado,Alberto Goldman,PSDB,NA,Requerimento,MESA,1
+46249,camara,73459,deputado,Dr. Rosinha,PT,PR,Proposição Apensada,MESA,1
+46249,camara,73459,deputado,Dr. Rosinha,PT,PR,Requerimento,MESA,1
+46249,camara,73466,deputado,Rubens Bueno,CIDADANIA,PR,Proposição Apensada,PL629902,1
+46249,camara,73466,deputado,Rubens Bueno,CIDADANIA,PR,Requerimento,MESA,1
+46249,camara,73471,deputado,Fernando Coruja,PPS,SC,Proposição Apensada,PL629902,1
+46249,camara,73531,deputado,Ivan Valente,PSOL,SP,Voto em Separado,PL629902,1
+46249,camara,73553,deputado,Nelson Marquezelli,PTB,SP,Requerimento,MESA,1
+46249,camara,73592,deputado,Kátia Abreu,PFL,TO,Proposição Apensada,29,1
+46249,camara,73592,deputado,Kátia Abreu,PFL,TO,Requerimento,MESA,1
+46249,camara,73768,deputado,Dilceu Sperafico,PP,PR,Requerimento,PL629902,1
+46249,camara,73776,deputado,José Janene,PP**,PR,Proposição Apensada,PL629902,1
+46249,camara,73776,deputado,José Janene,PP**,PR,Requerimento,MESA,1
+46249,camara,73778,deputado,Luiz Carlos Hauly,PSDB,PR,Requerimento,PL629902,1
+46249,camara,73825,deputado,Carlos Nader,PR,RJ,Proposição Apensada,PL629902,1
+46249,camara,74010,deputado,Valdir Colatto,MDB,SC,Requerimento,PL629902,1
+46249,camara,74160,deputado,Patrus Ananias,PT,MG,Requerimento,PL629902,1
+46249,camara,74160,deputado,Patrus Ananias,PT,MG,Voto em Separado,PL629902,1
+46249,camara,74171,deputado,Chico Alencar,PSOL,RJ,Voto em Separado,PL629902,1
+46249,camara,74210,deputado,Sarney Filho,PV,MA,Requerimento,PL629902,1
+46249,camara,74265,deputado,Dimas Ramalho,PPS,NA,Requerimento,MESA,1
+46249,camara,74269,deputado,Enéas,PR,NA,Requerimento,MESA,1
+46249,camara,74286,deputado,Thelma De Oliveira,PSDB,MT,Voto em Separado,CSSF,1
+46249,camara,74343,deputado,Dr. Benedito Dias,PP**,AP,Requerimento,PLEN,1
+46249,camara,74343,deputado,Dr. Benedito Dias-Pres. Da Cssf,PP**,AP,Requerimento,MESA,1
+46249,camara,74379,deputado,Cezar Silvestri,PPS,PR,Parecer,CAPADR,1
+46249,camara,74400,deputado,Paulo Pimenta,PT,RS,Proposição Apensada,CCP,1
+46249,camara,74693,deputado,Rodrigo Maia,DEM,RJ,Requerimento,MESA,1
+46249,camara,74800,deputado,Lino Rossi,PP**,MT,Proposição Apensada,PL629902,1
+46249,camara,133968,deputado,Paulo Ramos,PDT,RJ,Proposição Apensada,CCP,1
+46249,camara,134812,deputado,Edmilson Rodrigues,PSOL,PA,Voto em Separado,PL629902,1
+46249,camara,141389,deputado,Indio Da Costa,PSD,RJ,Parecer,CSSF,1
+46249,camara,141488,deputado,Paulo Teixeira,PT,SP,Proposição Apensada,MESA,1
+46249,camara,141500,deputado,Marcos Montes,PSD,MG,Parecer,CMADS,1
+46249,camara,141501,deputado,Cida Diogo,PT,RJ,Emenda,CSSF,1
+46249,camara,141501,deputado,Cida Diogo,PT,RJ,Parecer,CSSF,1
+46249,camara,141522,deputado,Sabino Castelo Branco,PTB,AM,Proposição Apensada,PL629902,1
+46249,camara,141536,deputado,Rômulo Gouveia,NA,PB,Proposição Apensada,PL629902,1
+46249,camara,141536,deputado,Rômulo Gouveia,NA,PB,Requerimento,PL629902,1
+46249,camara,141537,deputado,Moreira Mendes,PSD,NA,Parecer,CCJC,1
+46249,camara,148134,deputado,Professor Victório Galli,PSL,MT,Proposição Apensada,MESA,1
+46249,camara,160538,deputado,Bohn Gass,PT,RS,Outros,.,1
+46249,camara,160556,deputado,Padre João,PT,MG,Outros,.,1
+46249,camara,160565,deputado,Mara Gabrilli,PSDB,SP,Proposição Apensada,PL629902,1
+46249,camara,160576,deputado,César Halum,PRB,TO,Proposição Apensada,PL629902,1
+46249,camara,160646,deputado,Delegado Francischini,PSL,NA,Proposição Apensada,CCP,1
+46249,camara,160651,deputado,Rogério Peninha Mendonça,MDB,SC,Requerimento,PL629902,1
+46249,camara,164360,deputado,Carmen Zanotto,CIDADANIA,SC,Proposição Apensada,MESA,1
+46249,camara,178832,deputado,Leandre,PV,PR,Requerimento,PLEN,1
+46249,camara,178857,deputado,Jorge Solla,PT,BA,Proposição Apensada,PL629902,1
+46249,camara,178857,deputado,Jorge Solla,PT,BA,Requerimento,CSSF,1
+46249,camara,178890,deputado,Adelmo Carneiro Leão,PT,MG,Parecer,CSSF,1
+46249,camara,178890,deputado,Adelmo Carneiro Leão,PT,MG,Voto em Separado,CSSF,1
+46249,camara,178930,deputado,Evandro Roman,PSD,PR,Requerimento,PL629902,1
+46249,camara,178933,deputado,Sergio Souza,MDB,PR,Requerimento,PL629902,1
+46249,camara,178963,deputado,Covatti Filho,PP,NA,Proposição Apensada,MESA,1
+46249,camara,178963,deputado,Covatti Filho,PP,NA,Proposição Apensada,PL629902,1
+46249,camara,178963,deputado,Covatti Filho,PP,NA,Requerimento,MESA,1
+46249,camara,178963,deputado,Covatti Filho,PP,NA,Requerimento,PLEN,1
+46249,camara,178964,deputado,Heitor Schuch,PSB,RS,Requerimento,PL629902,1
+46249,camara,178970,deputado,João Daniel,PT,SE,Outros,.,1
+46249,camara,178970,deputado,João Daniel,PT,SE,Proposição Apensada,CCP,1
+46249,camara,178970,deputado,João Daniel,PT,SE,Requerimento,PLEN,1
+46249,camara,178986,deputado,Nilto Tatto,PT,SP,Emenda,CMADS,1
+46249,camara,178986,deputado,Nilto Tatto,PT,SP,Parecer,CMADS,1
+46249,camara,178986,deputado,Nilto Tatto,PT,SP,Proposição Apensada,CCP,1
+46249,camara,178993,deputado,Carlos Henrique Gaguim,DEM,TO,Proposição Apensada,MESA,1
+46249,camara,198198,deputado,Luzia Ferreira,PPS,MG,Proposição Apensada,PL629902,1
+257161,camara,124411,deputado,Mauro Pereira,MDB,RS,Parecer,CFT,23
+257161,camara,141472,deputado,Ricardo Tripoli,PSDB,SP,Parecer,CMADS,5
+257161,camara,80920,deputado,Penna,PV,SP,Parecer,CMADS,4
+257161,camara,73655,deputado,Augusto Carvalho,SOLIDARIEDADE,DF,Proposição Apensada,CCJC,3
+257161,camara,141516,deputado,Paulo Abi-Ackel,PSDB,MG,Requerimento,PLEN,3
+257161,camara,160515,deputado,Ronaldo Benedet,MDB,SC,Requerimento,PLEN,3
+257161,camara,178832,deputado,Leandre,PV,PR,Requerimento,PLEN,3
+257161,camara,74010,deputado,Valdir Colatto,MDB,SC,Parecer,CMADS,2
+257161,camara,74010,deputado,Valdir Colatto,MDB,SC,Requerimento,SEPUB(SGM),2
+257161,camara,74153,deputado,Ivo José,PT,MG,Proposição Apensada,CCJC,2
+257161,camara,74171,deputado,Chico Alencar,PSOL,RJ,Requerimento,PLEN,2
+257161,camara,74471,deputado,André De Paula,PSD,PE,Parecer,CMADS,2
+257161,camara,141537,deputado,Moreira Mendes,PSD,NA,Parecer,CAPADR,2
+257161,camara,160511,deputado,Alessandro Molon,PSB,RJ,Requerimento,PLEN,2
+257161,camara,160515,deputado,Ronaldo Benedet,MDB,SC,Proposição Apensada,CCJC,2
+257161,camara,178954,deputado,Lucio Mosquini,MDB,RO,Requerimento,PLEN,2
+257161,camara,204536,deputado,Kim Kataguiri,DEM,SP,Requerimento,PLEN,2
+257161,camara,73454,deputado,João Grandão,PT,MS,Proposição Apensada,CCJC,1
+257161,camara,73474,deputado,Luci Choinacki,PT,SC,Proposição Apensada,CCJC,1
+257161,camara,73531,deputado,Ivan Valente,PSOL,SP,Proposição Apensada,CCJC,1
+257161,camara,73545,deputado,Luciano Zica,PT,SP,Proposição Apensada,CCJC,1
+257161,camara,73569,deputado,Jorge Pinheiro,PRB,GO,Proposição Apensada,CCJC,1
+257161,camara,73569,deputado,Jorge Pinheiro,PRB,GO,Requerimento,SEPUB(SGM),1
+257161,camara,73584,deputado,Antonio Carlos Mendes Thame,PV,SP,Proposição Apensada,CCJC,1
+257161,camara,73655,deputado,Augusto Carvalho,SOLIDARIEDADE,DF,Requerimento,PLEN,1
+257161,camara,73666,deputado,Jovair Arantes,PTB,GO,Requerimento,PLEN,1
+257161,camara,73928,deputado,Ann Pontes,PMDB,PA,Proposição Apensada,CCJC,1
+257161,camara,73945,deputado,Eduardo Gomes,SD,TO,Proposição Apensada,CCJC,1
+257161,camara,74010,deputado,Valdir Colatto,MDB,SC,Requerimento,CAPADR,1
+257161,camara,74031,deputado,João Alfredo,PSOL,CE,Proposição Apensada,CCJC,1
+257161,camara,74133,deputado,Luiz Alberto,PT,BA,Proposição Apensada,CCJC,1
+257161,camara,74137,deputado,Luiz Eduardo Greenhalgh,PT,SP,Proposição Apensada,CCJC,1
+257161,camara,74145,deputado,Zezéu Ribeiro,PT,NA,Proposição Apensada,CCJC,1
+257161,camara,74162,deputado,Iriny Lopes,PT,ES,Proposição Apensada,CCJC,1
+257161,camara,74171,deputado,Chico Alencar,PSOL,RJ,Proposição Apensada,CCJC,1
+257161,camara,74171,deputado,Chico Alencar,PSOL,RJ,Requerimento,SEPUB(SGM),1
+257161,camara,74210,deputado,Sarney Filho,PV,MA,Proposição Apensada,CCJC,1
+257161,camara,74212,deputado,Aníbal Gomes,DEM,CE,Requerimento,PLEN,1
+257161,camara,74218,deputado,Walter Pinheiro,PT,BA,Proposição Apensada,CCJC,1
+257161,camara,74253,deputado,Julio Lopes,PP,RJ,Proposição Apensada,CCJC,1
+257161,camara,74253,deputado,Julio Lopes,PP,RJ,Requerimento,PLEN,1
+257161,camara,74254,deputado,Leonardo Picciani,MDB,RJ,Requerimento,PLEN,1
+257161,camara,74262,deputado,Carlos Sampaio,PSDB,SP,Requerimento,PLEN,1
+257161,camara,74285,deputado,Carlos Abicalil,PT,MT,Proposição Apensada,CCJC,1
+257161,camara,74300,deputado,Marcelo Teixeira,PR,CE,Proposição Apensada,CCJC,1
+257161,camara,74321,deputado,Betinho Rosado,PP**,RN,Proposição Apensada,CCJC,1
+257161,camara,74321,deputado,Betinho Rosado,PP**,RN,Requerimento,MESA,1
+257161,camara,74321,deputado,Betinho Rosado,PP**,RN,Requerimento,SEPUB(SGM),1
+257161,camara,74356,deputado,Silas Câmara,PRB,AM,Proposição Apensada,CCJC,1
+257161,camara,74356,deputado,Silas Câmara,PRB,AM,Requerimento,PLEN,1
+257161,camara,74363,deputado,Marcio Bittar,PSDB,AC,Emenda,CMADS,1
+257161,camara,74363,deputado,Marcio Bittar,PSDB,AC,Parecer,CMADS,1
+257161,camara,74389,deputado,Mauro Passos,PT,SC,Proposição Apensada,CCJC,1
+257161,camara,74391,deputado,Vignatti,PT,SC,Proposição Apensada,CCJC,1
+257161,camara,74397,deputado,Luciana Genro,PSOL,RS,Proposição Apensada,CCJC,1
+257161,camara,74439,deputado,Wolney Queiroz,PDT,PE,Proposição Apensada,CCJC,1
+257161,camara,74439,deputado,Wolney Queiroz,PDT,PE,Requerimento,PLEN,1
+257161,camara,74491,deputado,Nazareno Fonteles,PT,PI,Proposição Apensada,CCJC,1
+257161,camara,74665,deputado,Jaime Martins,PROS,MG,Proposição Apensada,CCJC,1
+257161,camara,74777,deputado,Rita Camata,PSDB,ES,Proposição Apensada,CCJC,1
+257161,camara,74780,deputado,Iara Bernardi,PT,SP,Proposição Apensada,CCJC,1
+257161,camara,74841,deputado,Fernando Gabeira,PV,RJ,Proposição Apensada,CCJC,1
+257161,camara,76874,deputado,Marcelo Freixo,PSOL,RJ,Proposição Apensada,MESA,1
+257161,camara,81232,deputado,Irajá Abreu,PSD,TO,Requerimento,PLEN,1
+257161,camara,134812,deputado,Edmilson Rodrigues,PSOL,PA,Requerimento,PLEN,1
+257161,camara,141421,deputado,Eduardo Da Fonte,PP,PE,Requerimento,PLEN,1
+257161,camara,141431,deputado,Fernando Coelho Filho,DEM,PE,Requerimento,PLEN,1
+257161,camara,141472,deputado,Ricardo Tripoli,PSDB,SP,Requerimento,PLEN,1
+257161,camara,141480,deputado,Lázaro Botelho,PP,TO,Parecer,CAPADR,1
+257161,camara,141482,deputado,Leonardo Quintão,MDB,MG,Requerimento,PLEN,1
+257161,camara,141483,deputado,Lindomar Garçon,PRB,RO,Proposição Apensada,CCJC,1
+257161,camara,141484,deputado,Lúcio Vale,PR,NA,Requerimento,PLEN,1
+257161,camara,141516,deputado,Paulo Abi-Ackel,PSDB,MG,Proposição Apensada,CCJC,1
+257161,camara,141536,deputado,Rômulo Gouveia,NA,PB,Proposição Apensada,CCJC,1
+257161,camara,141550,deputado,Dr. Talmir,PV,SP,Proposição Apensada,CCJC,1
+257161,camara,144523,deputado,Daniel Vilela,MDB,GO,Requerimento,PLEN,1
+257161,camara,160426,deputado,Rogério Rosso,PSD,DF,Requerimento,PLEN,1
+257161,camara,160511,deputado,Alessandro Molon,PSB,RJ,Proposição Apensada,CCJC,1
+257161,camara,160511,deputado,Alessandro Molon,PSB,RJ,Requerimento,CFT,1
+257161,camara,160559,deputado,Alceu Moreira,MDB,NA,Proposição Apensada,CCJC,1
+257161,camara,160618,deputado,Edson Pimenta,PSD,BA,Emenda,CMADS,1
+257161,camara,160618,deputado,Edson Pimenta,PSD,BA,Parecer,CMADS,1
+257161,camara,160630,deputado,Ságuas Moraes,PT,MT,Requerimento,PLEN,1
+257161,camara,160636,deputado,Wilson Filho,PTB,PB,Proposição Apensada,CCJC,1
+257161,camara,160643,deputado,Dr. Jorge Silva,SOLIDARIEDADE,ES,Proposição Apensada,CCJC,1
+257161,camara,160643,deputado,Dr. Jorge Silva,SOLIDARIEDADE,ES,Requerimento,PLEN,1
+257161,camara,160677,deputado,Francisco Floriano,DEM,RJ,Proposição Apensada,CCJC,1
+257161,camara,167722,deputado,Marcos Rogério,DEM,NA,Emenda,CCJC,1
+257161,camara,167722,deputado,Marcos Rogério,DEM,NA,Parecer,CCJC,1
+257161,camara,167722,deputado,Marcos Rogério,DEM,NA,Requerimento,MESA,1
+257161,camara,167722,deputado,Marcos Rogério,DEM,NA,Requerimento,PLEN,1
+257161,camara,178835,deputado,Afonso Motta,PDT,RS,Requerimento,PLEN,1
+257161,camara,178850,deputado,Marcos Rotta,MDB,NA,Requerimento,PLEN,1
+257161,camara,178869,deputado,Vitor Valim,PROS,CE,Requerimento,PLEN,1
+257161,camara,178896,deputado,Newton Cardoso Jr,MDB,MG,Proposição Apensada,CCJC,1
+257161,camara,178896,deputado,Newton Cardoso Jr,MDB,MG,Requerimento,PLEN,1
+257161,camara,178954,deputado,Lucio Mosquini,MDB,RO,Proposição Apensada,CCJC,1
+257161,camara,178975,deputado,Baleia Rossi,MDB,SP,Requerimento,PLEN,1
+345311,camara,73886,deputado,Adão Pretto,PT,NA,Emenda,CAPADR,7
+345311,camara,160570,deputado,Jerônimo Goergen,PP,RS,Parecer,CCJC,6
+345311,camara,74162,deputado,Iriny Lopes,PT,ES,Parecer,CDHM,3
+345311,camara,141559,deputado,Waldir Neves,PSDB,NA,Parecer,CAPADR,3
+345311,camara,204478,deputado,Vinicius Farah,MDB,RJ,Requerimento,PLEN,3
+345311,camara,73933,deputado,Zequinha Marinho,PSC,NA,Requerimento,SEPUB(SGM),2
+345311,camara,141417,deputado,Edio Lopes,PL,RR,Proposição Apensada,MESA,2
+345311,camara,141417,deputado,Edio Lopes,PL,RR,Requerimento,PLEN,2
+345311,camara,73531,deputado,Ivan Valente,PSOL,SP,Voto em Separado,CCJC,1
+345311,camara,73933,deputado,Zequinha Marinho,PSC,NA,Proposição Apensada,MESA,1
+345311,camara,74010,deputado,Valdir Colatto,MDB,SC,Proposição Apensada,MESA,1
+345311,camara,74171,deputado,Chico Alencar,PSOL,RJ,Voto em Separado,CCJC,1
+345311,camara,74210,deputado,Sarney Filho,PV,MA,Requerimento,PLEN,1
+345311,camara,74542,deputado,Félix Mendonça,DEM,BA,Proposição Apensada,MESA,1
+345311,camara,74566,deputado,Geraldo Simões,PT,BA,Proposição Apensada,MESA,1
+345311,camara,74650,deputado,Bonifácio De Andrada,DEM,MG,Requerimento,CCJC,1
+345311,camara,141335,deputado,Beto Faro,PT,PA,Voto em Separado,CAPADR,1
+345311,camara,141417,deputado,Edio Lopes,PL,RR,Requerimento,SEPUB(SGM),1
+345311,camara,141448,deputado,Homero Pereira,PSD,NA,Proposição Apensada,CCJC,1
+345311,camara,141448,deputado,Homero Pereira,PSD,NA,Requerimento,CAPADR,1
+345311,camara,141448,deputado,Homero Pereira,PSD,NA,Requerimento,MESA,1
+345311,camara,141448,deputado,Homero Pereira,PSD,NA,Requerimento,SEPUB(SGM),1
+345311,camara,148134,deputado,Professor Victório Galli,PSL,MT,Proposição Apensada,MESA,1
+345311,camara,160559,deputado,Alceu Moreira,MDB,NA,Proposição Apensada,MESA,1
+345311,camara,160559,deputado,Alceu Moreira,MDB,NA,Requerimento,PLEN,1
+345311,camara,160559,deputado,Alceu Moreira,MDB,NA,Requerimento,SEPUB(SGM),1
+345311,camara,160600,deputado,Arthur Oliveira Maia,DEM,BA,Requerimento,PLEN,1
+345311,camara,160670,deputado,Padre Ton,PT,RO,Proposição Apensada,MESA,1
+345311,camara,160670,deputado,Padre Ton,PT,RO,Requerimento,PLEN,1
+345311,camara,166401,deputado,Nilson Leitão,PSDB,MT,Proposição Apensada,MESA,1
+345311,camara,178963,deputado,Covatti Filho,PP,NA,Proposição Apensada,MESA,1
+345311,camara,178963,deputado,Covatti Filho,PP,NA,Requerimento,PLEN,1
+604557,camara,160511,deputado,Alessandro Molon,PSB,RJ,Parecer,CMADS,4
+604557,camara,160511,deputado,Alessandro Molon,PSB,RJ,Parecer,CCJC,2
+604557,camara,160511,deputado,Alessandro Molon,PSB,RJ,Requerimento,PLEN,2
+604557,camara,74210,deputado,Sarney Filho,PV,MA,Proposição Apensada,PLEN,1
+604557,camara,74459,deputado,Átila Lira,PSB,PI,Requerimento,CMADS,1
+604557,camara,160511,deputado,Alessandro Molon,PSB,RJ,Proposição Apensada,PLEN,1
+604557,camara,178871,deputado,Evair De Melo,PP,ES,Requerimento,CAPADR,1
+604557,camara,178871,deputado,Evair De Melo,PP,ES,Voto em Separado,CAPADR,1
+604557,camara,178875,deputado,Alexandre Baldy,PP,GO,Parecer,CAPADR,1
+944279,camara,73655,deputado,Augusto Carvalho,SOLIDARIEDADE,DF,Parecer,CMADS,5
+944279,camara,178993,deputado,Carlos Henrique Gaguim,DEM,TO,Emenda,CAPADR,3
+944279,camara,73483,deputado,Luis Carlos Heinze,PP,NA,Parecer,CAPADR,1
+944279,camara,73768,deputado,Dilceu Sperafico,PP,PR,Requerimento,PLEN,1
+944279,camara,74010,deputado,Valdir Colatto,MDB,SC,Voto em Separado,CMADS,1
+944279,camara,74210,deputado,Sarney Filho,PV,MA,Proposição Apensada,MESA,1
+944279,camara,160511,deputado,Alessandro Molon,PSB,RJ,Requerimento,CMADS,1
+944279,camara,178993,deputado,Carlos Henrique Gaguim,DEM,TO,Voto em Separado,CAPADR,1
+1307190,camara,160604,deputado,Pedro Uczai,PT,SC,Emenda,PL191715,52
+1307190,camara,73433,deputado,Arlindo Chinaglia,PT,SP,Requerimento,PL191715,28
+1307190,camara,160575,deputado,Erika Kokay,PT,DF,Requerimento,PL191715,28
+1307190,camara,178986,deputado,Nilto Tatto,PT,SP,Requerimento,PL191715,28
+1307190,camara,73584,deputado,Antonio Carlos Mendes Thame,PV,SP,Emenda,PL191715,26
+1307190,camara,160575,deputado,Erika Kokay,PT,DF,Emenda,PL191715,24
+1307190,camara,74299,deputado,Leônidas Cristino,PDT,CE,Emenda,PL191715,20
+1307190,camara,74553,deputado,José Carlos Aleluia,DEM,BA,Emenda,PL191715,18
+1307190,camara,73433,deputado,Arlindo Chinaglia,PT,SP,Emenda,PL191715,16
+1307190,camara,141482,deputado,Leonardo Quintão,MDB,MG,Emenda,PL191715,16
+1307190,camara,141391,deputado,Arnaldo Jardim,CIDADANIA,SP,Emenda,PL191715,14
+1307190,camara,178917,deputado,João Fernando Coutinho,PROS,PE,Emenda,PL191715,14
+1307190,camara,73891,deputado,Darcísio Perondi,MDB,RS,Emenda,PL191715,8
+1307190,camara,178905,deputado,Fabio Garcia,DEM,MT,Parecer,PL191715,8
+1307190,camara,73655,deputado,Augusto Carvalho,SOLIDARIEDADE,DF,Emenda,PL191715,4
+1307190,camara,141398,deputado,Carlos Zarattini,PT,SP,Emenda,PL191715,4
+1307190,camara,160666,deputado,Félix Mendonça Júnior,PDT,BA,Emenda,PL191715,4
+1307190,camara,178905,deputado,Fabio Garcia,DEM,MT,Requerimento,PL191715,4
+1307190,camara,178917,deputado,João Fernando Coutinho,PROS,PE,Requerimento,CME,4
+1307190,camara,73584,deputado,Antonio Carlos Mendes Thame,PV,SP,Proposição Apensada,PLEN,2
+1307190,camara,73655,deputado,Augusto Carvalho,SOLIDARIEDADE,DF,Proposição Apensada,PLEN,2
+1307190,camara,73786,deputado,Reinhold Stephanes,PSD,PR,Emenda,PL191715,2
+1307190,camara,74235,deputado,Marcus Vicente,PP,ES,Requerimento,CME,2
+1307190,camara,74253,deputado,Julio Lopes,PP,RJ,Emenda,PL191715,2
+1307190,camara,74445,deputado,João Castelo,PSDB,NA,Requerimento,CME,2
+1307190,camara,118594,deputado,Marcelo Squassoni,PRB,SP,Emenda,PL191715,2
+1307190,camara,118594,deputado,Marcelo Squassoni,PRB,SP,Proposição Apensada,PLEN,2
+1307190,camara,118594,deputado,Marcelo Squassoni,PRB,SP,Requerimento,CME,2
+1307190,camara,133439,deputado,André Figueiredo,PDT,CE,Emenda,PL191715,2
+1307190,camara,137070,deputado,Vicentinho Júnior,PL,TO,Requerimento,CME,2
+1307190,camara,141408,deputado,Cleber Verde,PRB,MA,Requerimento,PLEN,2
+1307190,camara,141450,deputado,Hugo Leal,PSD,RJ,Requerimento,CME,2
+1307190,camara,141454,deputado,Alfredo Kaefer,PP,PR,Emenda,PL191715,2
+1307190,camara,141458,deputado,João Carlos Bacelar,PL,BA,Emenda,PL191715,2
+1307190,camara,160536,deputado,Marco Tebaldi,PSDB,SC,Requerimento,CME,2
+1307190,camara,160602,deputado,Arnaldo Jordy,PPS,PA,Requerimento,CME,2
+1307190,camara,160607,deputado,Jose Stédile,PSB,RS,Requerimento,CME,2
+1307190,camara,178844,deputado,Pedro Vilela,PSDB,AL,Proposição Apensada,PLEN,2
+1307190,camara,178868,deputado,Odorico Monteiro,PSB,CE,Proposição Apensada,PLEN,2
+1307190,camara,178893,deputado,Delegado Edson Moreira,PR,MG,Requerimento,CME,2
+1307190,camara,178905,deputado,Fabio Garcia,DEM,MT,Requerimento,PLEN,2
+1307190,camara,178910,deputado,Joaquim Passarinho,PSD,PA,Emenda,PL191715,2
+1307190,camara,178917,deputado,João Fernando Coutinho,PROS,PE,Parecer,CDC,2
+1307190,camara,178917,deputado,João Fernando Coutinho,PROS,PE,Requerimento,PL191715,2
+1307190,camara,178934,deputado,Toninho Wandscheer,PROS,PR,Emenda,PL191715,2
+1307190,camara,178937,deputado,Altineu Côrtes,PL,RJ,Requerimento,CME,2
+1307190,camara,178948,deputado,Beto Rosado,PP,RN,Requerimento,CME,2
+1307190,camara,178954,deputado,Lucio Mosquini,MDB,RO,Requerimento,CME,2
+1307190,camara,178957,deputado,Abel Mesquita Jr.,DEM,RR,Requerimento,CME,2
+1307190,camara,178958,deputado,Carlos Andrade,PHS,RR,Requerimento,CME,2
+1307190,camara,178970,deputado,João Daniel,PT,SE,Requerimento,PLEN,2
+1307190,camara,178984,deputado,Miguel Haddad,PSDB,SP,Requerimento,CME,2
+1307190,camara,178990,deputado,Samuel Moreira,PSDB,SP,Requerimento,CME,2
+1307190,camara,204505,deputado,Vavá Martins,PRB,PA,Proposição Apensada,CCP,2
+1307190,camara,141531,deputado,Rodrigo de Castro,PSDB,MG,Proposição Apensada,PLEN,1
+1307190,camara,141531,deputado,Rodrigo De Castro,PSDB,MG,Proposição Apensada,PLEN,1
+1738598,camara,160655,deputado,Ricardo Izar,PP,SP,Parecer,CMADS,2
+1738598,camara,73808,deputado,Sérgio Brito,PSD,NA,Proposição Apensada,MESA,1
+1738598,camara,73808,deputado,Sérgio Brito,PSD,NA,Requerimento,PLEN,1
+1738598,camara,160535,deputado,Marcon,PT,RS,Requerimento,CAPADR,1
+1738598,camara,160535,deputado,Marcon,PT,RS,Voto em Separado,CAPADR,1
+1738598,camara,178930,deputado,Evandro Roman,PSD,PR,Emenda,CAPADR,1
+1738598,camara,178930,deputado,Evandro Roman,PSD,PR,Parecer,CAPADR,1
+2056568,camara,73674,deputado,Roberto Balestra,PP,GO,Parecer,CMADS,3
+2056568,camara,141454,deputado,Alfredo Kaefer,PP,PR,Emenda,CFT,2
+2056568,camara,141454,deputado,Alfredo Kaefer,PP,PR,Parecer,CFT,2
+2056568,camara,134812,deputado,Edmilson Rodrigues,PSOL,PA,Voto em Separado,CFT,1
+2056568,camara,160611,deputado,Toninho Pinheiro,PP,MG,Proposição Apensada,MESA,1
+2056568,camara,178986,deputado,Nilto Tatto,PT,SP,Voto em Separado,CMADS,1
+2085536,camara,73674,deputado,Roberto Balestra,PP,GO,Emenda,CMADS,2
+2085536,camara,73674,deputado,Roberto Balestra,PP,GO,Parecer,CMADS,2
+2085536,camara,93083,deputado,Cacá Leão,PP,BA,Parecer,CDU,1
+2085536,camara,160611,deputado,Toninho Pinheiro,PP,MG,Proposição Apensada,MESA,1
+2120775,camara,160604,deputado,Pedro Uczai,PT,SC,Requerimento,PL667016,12
+2120775,camara,178986,deputado,Nilto Tatto,PT,SP,Requerimento,PL667016,9
+2120775,camara,178970,deputado,João Daniel,PT,SE,Requerimento,PL667016,5
+2120775,camara,160511,deputado,Alessandro Molon,PSB,RJ,Requerimento,PL667016,4
+2120775,camara,160556,deputado,Padre João,PT,MG,Requerimento,PL667016,3
+2120775,camara,178901,deputado,Tereza Cristina,DEM,NA,Requerimento,PLEN,2
+2120775,camara,178986,deputado,Nilto Tatto,PT,SP,Parecer,PL667016,2
+2120775,camara,73531,deputado,Ivan Valente,PSOL,SP,Requerimento,PL667016,1
+2120775,camara,74010,deputado,Valdir Colatto,MDB,SC,Voto em Separado,PL667016,1
+2120775,camara,74160,deputado,Patrus Ananias,PT,MG,Requerimento,PL667016,1
+2120775,camara,134812,deputado,Edmilson Rodrigues,PSOL,PA,Requerimento,PL667016,1
+2120775,camara,160535,deputado,Marcon,PT,RS,Requerimento,PL667016,1
+2120775,camara,178901,deputado,Tereza Cristina,DEM,NA,Requerimento,PL667016,1
+2120775,camara,178926,deputado,Rodrigo Martins,PSB,PI,Requerimento,MESA,1
+2120775,camara,178970,deputado,João Daniel,PT,SE,Requerimento,PLEN,1
+2120775,camara,178986,deputado,Nilto Tatto,PT,SP,Requerimento,PLEN,1
+2170839,camara,178986,deputado,Nilto Tatto,PT,SP,Emenda,CMADS,42
+2170839,camara,178986,deputado,Nilto Tatto,PT,SP,Parecer,CMADS,3
+2170839,camara,204386,deputado,Jose Mario Schreiner,DEM,GO,Requerimento,PLEN,2
+2170839,camara,160511,deputado,Alessandro Molon,PSB,RJ,Outros,CCJC,1
+2170839,camara,160511,deputado,Alessandro Molon,PSB,RJ,Proposição Apensada,CMADS,1
+102721,senado,952,senador,Mozarildo Cavalcanti,PTB,RR,Parecer,CDR,2
+102721,senado,952,senador,Mozarildo Cavalcanti,PTB,RR,Parecer,CRA,2
+102721,senado,3372,senador,Valdir Raupp,MDB,RO,Parecer,CAE,2
+102721,senado,4990,senador,Jorge Viana,PT,AC,Requerimento,Plenário,2
+102721,senado,5004,senador,Ivo Cassol,PP,RO,Parecer,CCT,2
+102721,senado,5012,senador,Randolfe Rodrigues,REDE,AP,Requerimento,Plenário,2
+102721,senado,3372,senador,Valdir Raupp,MDB,RO,Parecer,CDR,1
+102721,senado,3372,senador,Valdir Raupp,MDB,RO,Parecer,CMA,1
+102721,senado,3372,senador,Valdir Raupp,MDB,RO,Parecer,CRA,1
+102721,senado,3394,senador,João Capiberibe,PSB,AP,Requerimento,Plenário,1
+102721,senado,3398,senador,Cristovam Buarque,CIDADANIA,DF,Emenda,Plenário,1
+102721,senado,4593,senador,Rodrigo Rollemberg,PSB,DF,Parecer,CAE,1
+102721,senado,4981,senador,Acir Gurgacz,PDT,RO,Parecer,CMA,1
+103831,senado,453,senador,Pedro Chaves,PRB,MS,Parecer,CMA,3
+103831,senado,453,senador,Pedro Chaves,PSC,MS,Parecer,CAE,3
+103831,senado,5108,senador,Cidinho Santos,PL,MT,Parecer,CCJ,3
+103831,senado,5116,senador,Pedro Chaves,PRB,MS,Parecer,CMA,3
+103831,senado,5116,senador,Pedro Chaves,PSC,MS,Parecer,CAE,3
+103831,senado,453,senador,Pedro Chaves,PRB,MS,Requerimento,CMA,1
+103831,senado,4767,senador,Eduardo Lopes,PRB,RJ,Parecer,CCJ,1
+103831,senado,5108,senador,Cidinho Santos,PL,MT,Requerimento,Plenário,1
+103831,senado,5116,senador,Pedro Chaves,PRB,MS,Requerimento,CMA,1
+126049,senado,3777,senador,Eduardo Gomes,MDB,TO,Emenda,CI,4
+126049,senado,3396,senador,Tasso Jereissati,PSDB,CE,Parecer,CAE,2
+126049,senado,5422,senador,Marcos Rogério,DEM,RO,Requerimento,CI,1
+126049,senado,5540,senador,Fernando Bezerra Coelho,MDB,PE,Parecer,CCJ,1
+131906,senado,3396,senador,Tasso Jereissati,PSDB,CE,Outros,Plenário,1
+131906,senado,5531,senador,Elmano Férrer,PODEMOS,PI,Parecer,CCJ,1
+132865,senado,5012,senador,Randolfe Rodrigues,REDE,AP,Emenda,CCJ,42
+132865,senado,1173,senador,Wellington Fagundes,PL,MT,Emenda,CCJ,24
+132865,senado,5012,senador,Randolfe Rodrigues,REDE,AP,Requerimento,Plenário,3
+132865,senado,4981,senador,Acir Gurgacz,PDT,RO,Outros,Plenário,1
+135799,senado,285,senador,Marcio Bittar,MDB,AC,Outros,Plenário,1
+135799,senado,285,senador,Marcio Bittar,MDB,AC,Requerimento,Plenário,1
+135799,senado,4560,senador,Sérgio Petecão,PSD,AC,Outros,Plenário,1
+135799,senado,5953,senador,Fabiano Contarato,REDE,ES,Requerimento,Plenário,1
