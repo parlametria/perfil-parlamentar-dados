@@ -76,62 +76,125 @@ filter_empresas_doadoras <- function(socios_folderpath = here::here("crawler/raw
   return(empresas_doadoras)
 }
 
-#' @title Retorna dados da empresa e dos sócios a partir de um CNPJ
-#' @description Recebe um CNPJ e retorna os dados da empresa e seus sócios
+#' @title Retorna dados da empresa e seus CNAEs cadastrados na Receita Federal
+#' @description Recebe um CNPJ e retorna os dados da empresa
 #' @param cnpj CNPJ da empresa
-#' @return Lista de dataframes com os dados da empresa e dos sócios
-#' @example fetch_dados_empresa_socios_por_cnpj("04515711000150")
+#' @return Dataframe com informações das empresas e seus CNAES. Para CNAE uma observação é criada no Dataframe
+#' @example fetch_dados_empresa_por_cnpj("04515711000150")
 fetch_dados_empresa_por_cnpj <- function(cnpj) {
   library(tidyverse)
   library(httr)
   
+  print(paste0("Baixando dados para o CNPJ ", cnpj))
+  
   data <- list(
-    cnpj = 19131243000197
+    cnpj = cnpj
   )
   
-  res <- POST(paste0("http://localhost:8000/"), body = data, encode = "json", verbose())
+  url_api <- "http://localhost:8000/"
   
-  json <- RCurl::getURI(url) %>% 
-    jsonlite::fromJSON()
+  json <- POST(url_api, body = data, encode = "form", verbose()) %>% 
+    content(as = "parsed") 
   
   empresa <- tibble(
-    nome = json$nome,
-    nome_fantasia = json$fantasia,
     cnpj = json$cnpj,
-    tipo = json$tipo,
-    natureza_juridica = json$natureza_juridica,
-    porte = json$porte,
-    data_abertura = json$abertura,
-    endereco = paste0(json$logradouro, ", ", json$numero, ", ", json$bairro),
-    cep = json$cep,
-    municipio = json$municipio,
-    uf = json$uf,
-    cod_atividade_princial = json$atividade_principal$code,
-    atividade_principal = json$atividade_principal$text,
+    razao_social = json$razao_social,
     capital_social = json$capital_social,
-    cod_atividade_secundaria = (json$atividades_secundarias %>% head(1))$code,
-    atividade_secundaria = (json$atividades_secundarias %>% head(1))$text,
-    data_situacao = json$data_situacao,
-    situacao = json$situacao,
-    motivo_situacao = json$motivo_situacao
+    uf = json$uf
   )
   
-  return(list(empresa))
+  if (!is.null(json$cnaes_secundarios)) {
+    cnaes_secundarios <- json$cnaes_secundarios %>% 
+      map(function(x) {
+        cnae_sec <- tibble(cnae_tipo = "cnae_secundario",
+                           cnae_codigo = x$cnae_codigo,
+                           cnae_descricao = x$cnae_descricao)
+        return(cnae_sec)
+      }) %>% 
+      reduce(rbind) %>% 
+      distinct()
+  } else {
+    cnaes_secundarios <- tribble(~ cnae_tipo, ~ cnae_codigo, ~ cnae_descricao)
+  }
+  
+  empresa_cnaes <- tibble(
+    cnae_tipo = "cnae_fiscal",
+    cnae_codigo = json$cnae_fiscal,
+    cnae_descricao = ""
+  ) %>%
+    rbind(cnaes_secundarios) %>% 
+    mutate(cnpj = cnpj) %>% 
+    left_join(empresa, by = "cnpj") %>% 
+    select(cnpj, razao_social, capital_social, uf, cnae_tipo, cnae_codigo, cnae_descricao)
+  
+  return(empresa_cnaes)
 }
 
-
-process_empresas <- function(
-  empresas_path = 
-    here::here("crawler/raw_data/empresas_parlamentares_ruralistas.csv")) {
-  
+#' @title Processa dados das empresas agrícolas que possuem deputados como sócios
+#' @description A partir de um um dataframe contendo cnpj das empresas e os deputados sócios e
+#' filtra as que são agrícolas e adiciona novas informações
+#' @param empresas_deputados_datapath Caminho para o dataframe com as 
+#' informações dos deputados que são sócios em empresas
+#' @return Dataframe com informações dos sócios e das empresas agrícolas
+#' @example process_empresas_rurais_deputados()
+process_empresas_rurais_deputados <- function(
+  empresas_deputados_datapath = here::here("crawler/raw_data/empresas_parlamentares.csv")) {
   library(tidyverse)
+  library(here)
   
-  empresas_parlamentares_ruralistas <- 
-    read_csv(empresas_parlamentares_ruralistas_path, col_types = "ccccccccccccc") %>% 
-    filter(validado == 'sim')
+  empresas_deputados <- read_csv(empresas_deputados_datapath)
   
-  df <- purrr::map(empresas_parlamentares_ruralistas$cnpj, ~ fetch_dados_empresa_socios_por_cnpj(.x))
+  lista_empresas <- empresas_deputados %>% 
+    distinct(cnpj)
+  
+  lista_empresas_cnaes <- purrr::pmap_dfr(
+    list(lista_empresas$cnpj),
+    ~ fetch_dados_empresa_por_cnpj(..1)
+  )
+  
+  lista_empresas_cnaes_agricultura <- lista_empresas_cnaes %>% 
+    mutate(cnae_codigo = str_pad(cnae_codigo, 7, pad = "0")) %>% 
+    mutate(classe_cnae = substr(cnae_codigo, 1, 2)) %>% 
+    mutate(is_agricola = classe_cnae %in% c("01", "02", "03")) %>% 
+    filter(is_agricola) %>% 
+    distinct(cnpj, is_agricola)
+  
+  empresas_deputados_agricolas <- empresas_deputados %>% 
+    left_join(lista_empresas_cnaes_agricultura, by = "cnpj") %>% 
+    filter(!is.na(is_agricola)) %>% 
+    select(id_deputado = id, cnpj, nome_socio, cnpj_cpf_do_socio, percentual_capital_social, data_entrada_sociedade)
+  
 }
 
-
-
+#' @title Processa dados das empresas agrícolas que possuem doadores de campanha como sócios
+#' @description A partir de um um dataframe contendo cnpj das empresas e os doadores de campanha sócios e
+#' filtra as que são agrícolas e adiciona novas informações
+#' @param empresas_doadores_datapath Caminho para o dataframe com as 
+#' informações dos doadores que são sócios em empresas
+#' @return Dataframe com informações dos sócios e das empresas agrícolas
+#' @example process_empresas_rurais_doadores()
+process_empresas_rurais_doadores <- function(
+  empresas_doadores = readr::read_csv(here::here("crawler/raw_data/empresas_doadores.csv"))) {
+  library(tidyverse)
+  library(here)
+  
+  lista_empresas <- empresas_doadores %>% 
+    distinct(cnpj)
+  
+  lista_empresas_cnaes <- purrr::pmap_dfr(
+    list(lista_empresas$cnpj),
+    ~ fetch_dados_empresa_por_cnpj(..1)
+  )
+  
+  lista_empresas_cnaes_agricultura <- lista_empresas_cnaes %>% 
+    mutate(cnae_codigo = str_pad(cnae_codigo, 7, pad = "0")) %>% 
+    mutate(classe_cnae = substr(cnae_codigo, 1, 2)) %>% 
+    mutate(is_agricola = classe_cnae %in% c("01", "02", "03")) %>% 
+    filter(is_agricola) %>% 
+    distinct(cnpj, is_agricola)
+  
+  empresas_doadores_agricolas <- empresas_doadores %>% 
+    left_join(lista_empresas_cnaes_agricultura, by = "cnpj") %>% 
+    filter(!is.na(is_agricola)) %>% 
+    select(id_deputado = id, cnpj, nome_socio, cnpj_cpf_do_socio, percentual_capital_social, data_entrada_sociedade)
+}
