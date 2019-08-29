@@ -12,7 +12,9 @@ args = commandArgs(trailingOnly=TRUE)
 message("LEIA O README deste diretório")
 
 option_list = list(
-  make_option(c("-o", "--out"), type="character", default=here::here("crawler/raw_data/resumo_parlamentares.csv"), 
+  make_option(c("-o", "--out"), type="character", default=here::here("crawler/raw_data/parlamentares_investimento.csv"), 
+              help="nome do arquivo de saída [default= %default]", metavar="character"),
+  make_option(c("-oa", "--outaderencia"), type="character", default=here::here("crawler/raw_data/parlamentares_aderencia.csv"), 
               help="nome do arquivo de saída [default= %default]", metavar="character")
 ) 
 
@@ -21,10 +23,16 @@ opt = parse_args(opt_parser)
 
 saida <- opt$out
 
-message("Iniciando processamento...")
-resumo <- process_resumo_deputados()
+saida_aderencia <- opt$outaderencia
 
-message(paste0("Salvando o resultado em ", saida))
-readr::write_csv(resumo, saida)
+message("Iniciando processamento...")
+investimento <- process_resumo_deputados_investimento()
+aderencia <- process_resumo_deputados_aderencia()
+
+message(paste0("Salvando o resultado de investimento em ", saida))
+readr::write_csv(investimento, saida)
+
+message(paste0("Salvando o resultado de aderência em ", saida_aderencia))
+readr::write_csv(aderencia, saida_aderencia)
 
 message("Concluído!")
