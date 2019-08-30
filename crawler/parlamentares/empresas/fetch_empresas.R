@@ -198,3 +198,28 @@ process_empresas_rurais_doadores <- function(
     filter(!is.na(is_agricola)) %>% 
     select(id_deputado = id, cnpj, nome_socio, cnpj_cpf_do_socio, percentual_capital_social, data_entrada_sociedade)
 }
+
+#' @title Classifica cnpjs como empresas exportadoras ou não usando Lista do Min. da Economia
+#' @description A partir de um dataframe com um coluna cnpj retorna o mesmo dataframe com uma coluna a mais indicando
+#' se o cnpj é de uma empresa exportadora ou não.
+#' @param df Dataframe com pelo menos uma coluna chamada cnpj
+#' @return Dataframe com informação sobre se a empresa tem cnpj ou não
+#' @example classifica_empresas_exportacao()
+classifica_empresas_exportacao <- function(df) {
+  library(tidyverse)
+  library(here)
+  
+  source(here("crawler/parlamentares/empresas/process_empresas_exportadoras.R"))
+  
+  empresas_exportadoras <- process_empresas_exportadoras()
+  
+  lista_empresas_exportadoras <- empresas_exportadoras %>% 
+    select(cnpj = CNPJ) %>% 
+    distinct(cnpj) %>% 
+    pull(cnpj)
+  
+  df <- df %>% 
+    mutate(exportadora = if_else(cnpj %in% lista_empresas_exportadoras, "sim", "não")) 
+    
+  return(df)
+}
