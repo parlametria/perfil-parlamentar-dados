@@ -219,7 +219,7 @@ classifica_empresas_exportacao <- function(df) {
     pull(cnpj)
   
   df <- df %>% 
-    mutate(exportadora = if_else(cnpj %in% lista_empresas_exportadoras, "sim", "não")) 
+    mutate(exportadora = if_else(cnpj %in% lista_empresas_exportadoras, "sim", "nao")) 
     
   return(df)
 }
