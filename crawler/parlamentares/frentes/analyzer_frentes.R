@@ -1,3 +1,8 @@
+#' @title Recupera informações das frentes e de seus membros
+#' @description Retorna dados de frentes da Câmara dos Deputados e também seus membros
+#' @return Lista com dois Dataframes: frentes e membros das frentes
+#' @examples
+#' processa_frentes()
 processa_frentes <- function(ids_frentes_df = readr::read_csv(here::here("crawler/raw_data/frentes/ids_frentes.csv"))) {
   library(tidyverse)
   library(here)
