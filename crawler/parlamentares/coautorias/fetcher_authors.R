@@ -1,5 +1,12 @@
 library(tidyverse)
 
+#' @title Recupera dados de autores de uma proposição 
+#' @description Recupera dados de autores de proposições a partir do id da proposição, 
+#' raspando da página web da câmara
+#' @param id ID da proposição
+#' @return Dataframe contendo informações sobre os autores da proposição
+#' @examples
+#' fetch_autores(2121442)
 fetch_autores <- function(id) {
   print(paste0("Extraindo autores da proposição cujo id é ", id))
   
@@ -29,6 +36,12 @@ fetch_autores <- function(id) {
   return(autores)
 }
 
+#' @title Recupera todos os autores de um conjunto de proposições que estão no conjunto de parlamentares
+#' @description Recupera dados de autores de proposições a partir do conjunto de ids das proposições 
+#' e que estão no dataframe de parlamentares
+#' @param proposicoes Dataframe das proposições contendo uma coluna "id"
+#' @param proposicoes Dataframe dos parlamentares
+#' @return Dataframe contendo informações sobre os autores da proposição
 fetch_all_autores <- function(proposicoes, parlamentares) {
   autores <- purrr::map_df(proposicoes$id, ~ fetch_autores(.x))
   
@@ -45,6 +58,13 @@ fetch_all_autores <- function(proposicoes, parlamentares) {
   return(autores)
 }
 
+#' @title Gera dataframe de coautorias
+#' @description A partir de um conjunto de parlamentares e autores de proposições,
+#' retorna um dataframe de coautorias, onde cada linha representa um par de deputados
+#' que coautoraram em proposições
+#' @return Dataframe contendo informações sobre as coautorias
+#' @param parlamentares Dataframe dos parlamentares
+#' @param autores Dataframe dos autores de proposições
 get_coautorias <- function(parlamentares, autores) {
   coautorias <- autores %>%
     distinct() %>%
@@ -68,11 +88,20 @@ get_coautorias <- function(parlamentares, autores) {
   return(coautorias)
 }
 
-mapeia_nome_para_id <- function(df, parlamentares) {
+#' @title Mapeia nome para id de autores de proposições
+#' @description A partir de um conjunto de parlamentares e autores de proposições,
+#' adiciona uma coluna id correspondente ao nome do parlamentar
+#' @return Dataframe contendo nova coluna "id"
+#' @param autores Dataframe dos autores de proposições
+#' @param parlamentares Dataframe dos parlamentares
+mapeia_nome_para_id <- function(autores, parlamentares) {
+  library(tidyverse)
+  source(here::here("crawler/utils/utils.R"))
+  
   parlamentares <- parlamentares %>%
     mutate(nome_eleitoral_padronizado = padroniza_nome(nome_eleitoral))
   
-  df <- df %>%
+  df <- autores %>%
     mutate(nome_eleitoral_padronizado = padroniza_nome(nome_eleitoral)) %>%
     left_join(parlamentares, by = "nome_eleitoral_padronizado") %>%
     filter(!is.na(sg_partido))
@@ -80,20 +109,25 @@ mapeia_nome_para_id <- function(df, parlamentares) {
   return(df)
 }
 
-padroniza_nome <- function(nome) {
-  return(toupper(nome) %>%
-           stringr::str_remove('( -|<).*'))
-}
-
-
+#' @title Concateca dois elementos com um separador no meio
+#' @description Recebe duas variáveis x e y e retorna a união "x:y".
+#' @param x Primeira variável a ser concatenada
+#' @param y Segunda variável a ser concatenada
+#' @param sep Separador a ser concatenado
+#' @return String concatenada com a primeira variável + separador + segunda variável
 paste_cols <- function(x, y, sep = ":") {
   stopifnot(length(x) == length(y))
   return(lapply(1:length(x), function(i) {
-    paste0(sort(c(x[i], y[i])), collapse = ":")
+    paste0(sort(c(x[i], y[i])), collapse = sep)
   }) %>%
     unlist())
 }
 
+#' @title Remove pares duplicados
+#' @description Recebe um dataframe com pares repetidos em ordens diferentes (x e y, y e x) e
+#' remove a repetição.
+#' @param df Dataframe contendo os pares duplicados
+#' @return Dataframe com pares únicos
 remove_duplicated_edges <- function(df) {
   df %>%
     mutate(col_pairs =
