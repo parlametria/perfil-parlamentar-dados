@@ -18,7 +18,7 @@ padroniza_nome <- function(nome) {
 #' @param socios_folderpath Caminho para a pasta que contém arquivos csv sobre as empresas e seus sócios
 #' @param parlamentares_folderpath Caminho para o dataframe com dados de parlamentares
 #' @return Dataframe das empresas que possuem sócios com os mesmos nomes e parte do cpf dos parlamentares
-filter_empresas_parlamentares <- function(socios_folderpath = here::here("crawler/raw_data/socio.csv.zip"),
+filter_socios_empresas_parlamentares <- function(socios_folderpath = here::here("crawler/raw_data/socio.csv.zip"),
                                parlamentares_folderpath = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
 
@@ -51,7 +51,7 @@ filter_empresas_parlamentares <- function(socios_folderpath = here::here("crawle
 #' @param socios_folderpath Caminho para a pasta que contém arquivos csv sobre as empresas e seus sócios
 #' @param doadores_folderpath Caminho para o dataframe com dados de doadores de campanhas
 #' @return Dataframe das empresas que possuem sócios com os mesmos nomes dos doadores
-filter_empresas_doadoras <- function(socios_folderpath = here::here("crawler/raw_data/socio.csv.zip"),
+filter_socios_empresas_doadoras <- function(socios_folderpath = here::here("crawler/raw_data/socio.csv.zip"),
                                       doadores_folderpath = here::here("crawler/raw_data/deputados_doadores.csv")) {
   library(tidyverse)
   
@@ -164,6 +164,8 @@ process_empresas_rurais_deputados <- function(
     filter(!is.na(is_agricola)) %>% 
     select(id_deputado = id, cnpj, nome_socio, cnpj_cpf_do_socio, percentual_capital_social, data_entrada_sociedade)
   
+  return(empresas_deputados_agricolas)
+  
 }
 
 #' @title Processa dados das empresas agrícolas que possuem doadores de campanha como sócios
@@ -172,8 +174,8 @@ process_empresas_rurais_deputados <- function(
 #' @param empresas_doadores_datapath Caminho para o dataframe com as 
 #' informações dos doadores que são sócios em empresas
 #' @return Dataframe com informações dos sócios e das empresas agrícolas
-#' @example process_empresas_rurais_doadores()
-process_empresas_rurais_doadores <- function(
+#' @example fetch_socios_empresas_rurais_doadores()
+fetch_socios_empresas_rurais_doadores <- function(
   empresas_doadores = readr::read_csv(here::here("crawler/raw_data/empresas_doadores.csv"))) {
   library(tidyverse)
   library(here)
@@ -197,6 +199,8 @@ process_empresas_rurais_doadores <- function(
     left_join(lista_empresas_cnaes_agricultura, by = "cnpj") %>% 
     filter(!is.na(is_agricola)) %>% 
     select(id_deputado = id, cnpj, nome_socio, cnpj_cpf_do_socio, percentual_capital_social, data_entrada_sociedade)
+  
+  return(empresas_doadores_agricolas)
 }
 
 #' @title Classifica cnpjs como empresas exportadoras ou não usando Lista do Min. da Economia
@@ -222,4 +226,56 @@ classifica_empresas_exportacao <- function(df) {
     mutate(exportadora = if_else(cnpj %in% lista_empresas_exportadoras, "sim", "nao")) 
     
   return(df)
+}
+
+#' @title Filtra as empresas que possuem sócios com os mesmos nomes dos doadores
+#' @description Recebe um conjunto de dados de sócios de empresas e dos doadores e filtra as empresas
+#' que possuem sócios com os mesmos nomes dos doadores
+#' @param socios_folderpath Caminho para a pasta que contém arquivos csv sobre as empresas e seus sócios
+#' @param doadores_folderpath Caminho para o dataframe com dados de doadores de campanhas
+#' @return Dataframe das empresas que possuem sócios com os mesmos nomes dos doadores
+filter_empresas_doadoras <- function(doadores_folderpath = here::here("crawler/raw_data/deputados_doadores.csv")) {
+  library(tidyverse)
+  
+  empresas_doadoras <- read_csv(doadores_folderpath) %>% 
+    filter(nchar(cpf_cnpj_doador) > 11) %>% 
+    select(id, cpf_cnpj_doador, nome_doador, origem_receita, valor_receita) 
+  
+  
+  return(empresas_doadoras)
+}
+
+#' @title Processa dados das empresas agrícolas que possuem doadores de campanha como sócios
+#' @description A partir de um um dataframe contendo cnpj das empresas e os doadores de campanha sócios e
+#' filtra as que são agrícolas e adiciona novas informações
+#' @param empresas_doadores_datapath Caminho para o dataframe com as 
+#' informações dos doadores que são sócios em empresas
+#' @return Dataframe com informações dos sócios e das empresas agrícolas
+#' @example fetch_empresas_rurais_doadores()
+fetch_empresas_rurais_doadores <- function(
+  empresas_doadores = readr::read_csv(here::here("crawler/raw_data/empresas_doadores.csv"))) {
+  library(tidyverse)
+  library(here)
+  
+  lista_empresas <- empresas_doadores %>% 
+    distinct(cnpj)
+  
+  lista_empresas_cnaes <- purrr::pmap_dfr(
+    list(lista_empresas$cnpj),
+    ~ fetch_dados_empresa_por_cnpj(..1)
+  )
+  
+  lista_empresas_cnaes_agricultura <- lista_empresas_cnaes %>% 
+    mutate(cnae_codigo = str_pad(cnae_codigo, 7, pad = "0")) %>% 
+    mutate(classe_cnae = substr(cnae_codigo, 1, 2)) %>% 
+    mutate(is_agricola = classe_cnae %in% c("01", "02", "03")) %>% 
+    filter(is_agricola) %>% 
+    distinct(cnpj, is_agricola)
+  
+  empresas_doadores_agricolas <- empresas_doadores %>% 
+    left_join(lista_empresas_cnaes_agricultura, by = "cnpj") %>% 
+    filter(!is.na(is_agricola)) %>% 
+    select(-is_agricola)
+  
+  return(empresas_doadores_agricolas)
 }
