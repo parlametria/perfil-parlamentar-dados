@@ -2,7 +2,7 @@ library(tidyverse)
 library(here)
 
 source(here("crawler/proposicoes/fetcher_propoposicoes_camara.R"))
-source(here("crawler/coautorias/fetcher_authors.R"))
+source(here("crawler/parlamentares/coautorias/fetcher_authors.R"))
 
 parlamentares <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(.default = "c")) %>% 
   filter(casa == "camara", em_exercicio == 1) %>% 
