@@ -1,17 +1,3 @@
-#' @title Padroniza os nomes, retirando acentos, cedilhas e colcoando todas as letras em uppercase
-#' @description Recebe um nome e o padroniza no formato: sem acentos, cedilhas, letras maiúsculas
-#' @param nome Nome a ser padronizado
-#' @return Nome padronizado
-#' @examples
-#' padroniza_nome("çíço do álcórdéón")
-padroniza_nome <- function(nome) {
-  library(tidyverse)
-  
-  return(nome %>% 
-           iconv(to="ASCII//TRANSLIT") %>% 
-           toupper())
-}
-
 #' @title Filtra as empresas que possuem sócios com os mesmos nomes e parte do cpf dos parlamentares
 #' @description Recebe um conjunto de dados de sócios de empresas e dos parlamentares e filtra as empresas
 #' que possuem sócios com os mesmos nomes e parte do cpf dos parlamentares
@@ -20,8 +6,11 @@ padroniza_nome <- function(nome) {
 #' @return Dataframe das empresas que possuem sócios com os mesmos nomes e parte do cpf dos parlamentares
 filter_empresas_parlamentares <- function(socios_folderpath = here::here("crawler/raw_data/socio.csv.zip"),
                                parlamentares_folderpath = here::here("crawler/raw_data/parlamentares.csv")) {
+
   library(tidyverse)
 
+  source(here::here("crawler/utils/utils.R"))
+  
   socio <- read_csv(socios_folderpath, col_types = "cccccccccc")
   
   socio <- socio %>% 
@@ -54,6 +43,8 @@ filter_empresas_parlamentares <- function(socios_folderpath = here::here("crawle
 filter_empresas_doadoras <- function(socios_folderpath = here::here("crawler/raw_data/socio.csv.zip"),
                                       doadores_folderpath = here::here("crawler/raw_data/deputados_doadores.csv")) {
   library(tidyverse)
+  
+  source(here::here("crawler/utils/utils.R"))
   
   socio <- read_csv(socios_folderpath, col_types = "cccccccccc")
   
