@@ -63,3 +63,52 @@ process_resumo_deputados_aderencia <- function() {
   
   return(deputados)
 }
+
+#' @title Processa dados de cargos em comissões e de presidência em partidos e blocos partidários
+#' @description Agrupa dados de cargos em comissões e partidos dos deputados
+#' @return Dataframe contendo informações de cargos e lideranças
+#' @examples
+#' process_resumo_deputados_cargos()
+process_resumo_deputados_cargos <- function() {
+  library(tidyverse)
+  library(here)
+  
+  source(here("crawler/votacoes/utils_votacoes.R"))
+  
+  deputados_raw <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")) %>% 
+    filter(casa == "camara", em_exercicio == 1) %>% 
+    mutate(sg_partido = padroniza_sigla(sg_partido))
+  
+  comissoes <- read_csv(here("crawler/raw_data/comissoes.csv"))
+  cargos_comissoes <- read_csv(here("crawler/raw_data/composicao_comissoes.csv"), 
+                               col_types = cols(id_parlamentar = "c")) %>% 
+    filter(casa == "camara")
+  
+  cargos_comissoes <- cargos_comissoes %>% 
+    left_join(comissoes, by = c("comissao_id" = "id")) %>% 
+    select(id_parlamentar, cargo, sigla) %>% 
+    
+    group_by(id_parlamentar, cargo) %>% 
+    summarise(comissoes = paste0(sigla, collapse = ";")) %>% 
+    
+    spread(cargo, comissoes)
+  
+  liderancas <- read_csv(here("crawler/raw_data/liderancas.csv"), col_types = cols(id = "c")) %>% 
+    filter(casa == "camara") %>% 
+    select(id_parlamentar = id, cargo, bloco_partido) %>% 
+    
+    group_by(id_parlamentar, cargo) %>% 
+    summarise(liderancas = paste0(bloco_partido, collapse = ";")) %>% 
+    
+    spread(cargo, liderancas)
+  
+  deputados <- deputados_raw %>% 
+    left_join(cargos_comissoes, by = c("id" = "id_parlamentar")) %>% 
+    left_join(liderancas, by = c("id" = "id_parlamentar")) %>% 
+    select(id, cpf, nome_eleitoral, uf, sg_partido, Presidente, `Primeiro Vice-presidente`, 
+           `Segundo Vice-presidente`, `Terceiro Vice-presidente`, Titular, Suplente, `Líder`, 
+           `Vice-líder`, `Representante`) %>% 
+    arrange(`Presidente`)
+  
+  return(deputados)
+}
