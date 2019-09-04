@@ -62,7 +62,7 @@ filter_empresas_agricolas_doadoras <- function(
 #' @return Dataframe com mais dados sobre os sócios, as empresas, e os deputados
 process_socios_empresas_agricolas_parlamentares <- function(
   parlamentares_folderpath = here::here("crawler/raw_data/parlamentares.csv"),
-  socios_folderpath = here::here("crawler/raw_data/socio.csv.zip")) {
+  socios_folderpath = here::here("crawler/raw_data/socio.csv.gz")) {
   library(tidyverse)
   library(here)
   

@@ -7,7 +7,7 @@ fetch_socios_empresas_agricolas_parlamentares <- function(
   empresas_deputados = here::here("crawler/raw_data/empresas_parlamentares.csv")) {
   library(tidyverse)
   
-  source(here::here("crawler/parlamentares/empresas/fetch_empresas.R"))
+  source(here::here("crawler/parlamentares/empresas/fetcher_empresas.R"))
   
   empresas_socios_agricolas <- 
     fetch_empresas_agricolas(empresas_deputados)
