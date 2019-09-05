@@ -176,8 +176,8 @@ process_socios_empresas_agricolas_doadores <- function(
   
   res_socios <- process_socios_empresas_doadores(socios_empresas_agricolas, ano)
   
-  if(ano == 2018) {
-    return(res_socios)
+  if(ano >= 2018) {
+    return(list(res_socios))
   }
   
   empresas_doadoras <- filter_empresas_agricolas_doadoras(doadores_folderpath) %>% 

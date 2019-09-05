@@ -9,7 +9,7 @@ Essa relação pode ocorrer de três formas, gerando diferentes dados:
 
 Os dados utilizados estão descritos na lista abaixo.
 - Receitas de doações declaradas pelos candidatos e disponibilizados pelo [TSE](http://www.tse.jus.br/eleicoes/estatisticas/repositorio-de-dados-eleitorais-1/repositorio-de-dados-eleitorais);
-- Cadastros das empresas brasileiras, disponíveis na [Receita Federal](http://receita.economia.gov.br/orientacao/tributaria/cadastros/cadastro-nacional-de-pessoas-juridicas-cnpj/dados-publicos-cnpj) e disponibilzados em uma API por [Cuducos](https://github.com/cuducos/minha-receita);
+- Cadastros das empresas brasileiras, disponíveis na [Receita Federal](http://receita.economia.gov.br/orientacao/tributaria/cadastros/cadastro-nacional-de-pessoas-juridicas-cnpj/dados-publicos-cnpj) e disponibilizados em uma API por [Cuducos](https://github.com/cuducos/minha-receita);
 - Sócios de empresas, também disponíveis na Receita Federal e processados por [Turicas](https://github.com/turicas/socios-brasil);
 
 Filtramos as empresas de acordo com o seu CNAE - Classificação Nacional de Atividades Econômicas. 
