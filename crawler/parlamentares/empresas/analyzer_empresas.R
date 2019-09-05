@@ -1,53 +1,22 @@
-#' @title Adiciona dados sobre os deputados, valor doado e se a empresa é exportadora
-#' @description A partir de um dataframe de empresas com socios doadores de campanha, adiciona
-#' novas informações.
-#' @param empresas_agricolas_doadores_datapath Caminho para o dataframe de empresas agricolas cujos
-#' socios doaram em campanhas
-#' @return Dataframe com mais dados sobre os deputados, valor doado e se a empresa é exportadora
-#' @example process_empresas_doadores()
-process_empresas_doadores <- function(
-  empresas_agricolas_doadores_datapath = here::here("crawler/raw_data/empresas_doadores_agricolas_raw.csv")) {
+#' @title Processa os dados das empresas e sócios 
+#' @description A partir do dataframe de doadores e do arquivo com todos os sócios existentes nos cnpjs cadastrados
+#' na Receita Federal, retorna um dataframe com as informações dos sócios de empresas agrícolas
+#' @param ano_eleicao Ano da eleição de interesse
+#' @param tipo Tipo do sócio: "parlamentares" ou "doadores"
+#' @return Dataframe com mais dados sobre os sócios e as empresas agrícolas
+process_socios_empresas_agricolas <- function(ano_eleicao = 2018, tipo = "parlamentares") {
   library(tidyverse)
   library(here)
   
-  source(here("crawler/parlamentares/receitas/analyzer_receitas_tse.R"))
-  source(here("crawler/parlamentares/empresas/fetch_empresas.R"))
+  socios_empresas_agricolas <- tribble()
   
-  parlamentares_doacoes <- processa_doacoes_deputados_tse() %>% 
-    filter(casa == "camara") %>% 
-    select(id, 
-           nome_deputado = nome_eleitoral, 
-           partido_deputado = sg_partido, 
-           uf_deputado = uf, 
-           valor_doado = valor_receita,
-           cpf_cnpj_doador,
-           nome_doador) %>% 
-    mutate(id = as.character(id),
-           cpf_cnpj_doador = as.character(cpf_cnpj_doador))
+  if(tolower(tipo) == "parlamentares") {
+    source(here("crawler/parlamentares/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_parlamentares.R"))
+    socios_empresas_agricolas <- process_socios_empresas_agricolas_parlamentares()
+  } else {
+    source(here("crawler/parlamentares/empresas/socios_empresas/doadores_campanha/analyzer_socios_empresas_doadores_campanha.R"))
+    socios_empresas_agricolas <- process_socios_empresas_agricolas_doadores(ano_eleicao)
+  }
   
-  empresas_doadores <- read_csv(empresas_agricolas_doadores_datapath,
-                                col_types = cols(.default = "c"))
-  
-  empresas_doadores_com_nome_deputado <- empresas_doadores %>% 
-    left_join(parlamentares_doacoes, by = c("id_deputado" = "id", "nome_socio" = "nome_doador")) %>% 
-    rename(cpf_cnpj_socio = cnpj_cpf_do_socio) %>% 
-    mutate(cpf_cnpj_socio = cpf_cnpj_doador) %>% 
-    select(-cpf_cnpj_doador)
-  
- res <- classifica_empresas_exportacao(empresas_doadores_com_nome_deputado)
- 
- res <- res %>% 
-   select(cnpj_empresa = cnpj,
-          exportadora,
-          cpf_cnpj_socio,
-          nome_socio,
-          data_entrada_sociedade, 
-          id_deputado,
-          nome_deputado,
-          partido_deputado,
-          uf_deputado,
-          valor_doado)
-  
-  return(res)
-  
+  return(socios_empresas_agricolas)
 }
