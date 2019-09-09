@@ -22,7 +22,10 @@ padroniza_nome <- function(nome) {
 padroniza_texto <- function(texto) {
   library(tidyverse)
   texto <- 
-    gsub('http\\S+\\s*|(#|@)([a-z|A-Z|0-9|_])*|[[:punct:]]|[0-9]*',
+    padroniza_nome(texto)
+  
+  texto <-  
+    gsub('HTTP\\S+\\s*|@([A-Z|0-9|_])*|[[:punct:]]|[0-9]*|R$',
          "", 
          texto) %>% 
     tolower()
