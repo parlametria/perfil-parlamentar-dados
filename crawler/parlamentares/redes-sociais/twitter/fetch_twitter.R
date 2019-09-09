@@ -3,11 +3,10 @@
 #' @examples
 #' create_token_twitter_api()
 create_token_twitter_api <- function() {
-  library(here)
   library(config)
   library(rtweet)
   
-  keys <- config::get(file = here("crawler/parlamentares/redes-sociais/twitter/config.yml"))
+  keys <- config::get(file = here::here("crawler/parlamentares/redes-sociais/twitter/config.yml"))
   
   create_token(
     app = "16299739",
@@ -52,8 +51,7 @@ fetch_tweets_from_parlamentares <- function() {
   library(tidyverse)
   library(jsonlite)
   library(lubridate)
-  library(here)
-  source(here("crawler/parlamentares/redes-sociais/twitter/constants.R"))
+  source(here::here("crawler/parlamentares/redes-sociais/twitter/constants.R"))
   
   data <- read_csv(.URL_REDES_SOCIAIS_PARLAMENTARES_DATAHUB)
   

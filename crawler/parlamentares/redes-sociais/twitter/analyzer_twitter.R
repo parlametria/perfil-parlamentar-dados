@@ -5,10 +5,9 @@
 #' deputados_username_twitter <- fetch_deputados_twitter_name()
 fetch_deputados_twitter_name <- function() {
   library(tidyverse)
-  library(here)
-  source(here("crawler/parlamentares/redes-sociais/twitter/constants.R"))
+  source(here::here("crawler/parlamentares/redes-sociais/twitter/constants.R"))
   
-  deputados <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")) %>% 
+  deputados <- read_csv(here::here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")) %>% 
     filter(casa == "camara", em_exercicio == 1)
   
   redes_sociais_deputados <- read_csv(.URL_REDES_SOCIAIS_PARLAMENTARES,
@@ -31,8 +30,7 @@ fetch_deputados_twitter_name <- function() {
 #' tweets_deputados <- process_tweets_deputados()
 process_tweets_deputados <- function() {
   library(tidyverse)
-  library(here)
-  source(here("crawler/parlamentares/redes-sociais/twitter/fetch_twitter.R"))
+  source(here::here("crawler/parlamentares/redes-sociais/twitter/fetch_twitter.R"))
   
   deputados <- fetch_deputados_twitter_name() %>% 
     filter(!is.na(twitter))
