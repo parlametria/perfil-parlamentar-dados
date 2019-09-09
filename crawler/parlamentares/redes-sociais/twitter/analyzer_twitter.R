@@ -18,7 +18,8 @@ fetch_deputados_twitter_name <- function() {
   
   deputados_twitter <- deputados %>% 
     select(id, cpf, nome_eleitoral, sg_partido, uf) %>% 
-    left_join(redes_sociais_deputados, by = "id")
+    left_join(redes_sociais_deputados, by = "id") %>% 
+    mutate(twitter = str_replace_all(twitter, "[^[:alnum:]]", ""))
   
   return(deputados_twitter)
 }
@@ -29,4 +30,25 @@ fetch_deputados_twitter_name <- function() {
 #' @examples
 #' tweets_deputados <- process_tweets_deputados()
 process_tweets_deputados <- function() {
+  library(tidyverse)
+  library(here)
+  source(here("crawler/parlamentares/redes-sociais/twitter/fetch_twitter.R"))
+  
+  deputados <- fetch_deputados_twitter_name() %>% 
+    filter(!is.na(twitter))
+  
+  deputados <- deputados_301_400 %>% rbind(deputados_401_468)
+  
+  tweets_deputados <- purrr::map_df(.x = deputados$twitter, ~ fetch_tweets_from_username(.x, n = 1000, timeout = 70)) %>% 
+    mutate(screen_name = tolower(screen_name)) %>% 
+    select(user_id, screen_name, created_at, text, favorite_count, retweet_count, media_url, media_expanded_url, mentions_screen_name)
+  
+  deputados_merge <- deputados %>% 
+    mutate(twitter = tolower(twitter)) %>% 
+    full_join(tweets_deputados, by = c("twitter" = "screen_name")) %>% 
+    mutate(media_url = as.character(media_url)) %>% 
+    mutate(media_expanded_url = as.character(media_expanded_url)) %>% 
+    mutate(mentions_screen_name = as.character(mentions_screen_name))
+
+  return(deputados_merge)
 }
