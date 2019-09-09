@@ -3,7 +3,7 @@ const serveIndex = require('serve-index');
 
 
 const app = express();
-const PORT = process.env.PORT = 8080;
+const PORT = process.env.PORT = 5421;
 
 app.use('/logs', express.static('../scripts/logs'), serveIndex('../scripts/logs', {'icons': true}))
 
