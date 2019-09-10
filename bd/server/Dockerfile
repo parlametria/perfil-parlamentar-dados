@@ -6,6 +6,6 @@ COPY package* ./
 
 RUN npm install
 
-EXPOSE 8080
+EXPOSE 5421
 
 CMD npm start
