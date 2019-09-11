@@ -13,8 +13,8 @@ calcula_score_propriedades_rurais <- function(
   library(tidyverse)
   
   propriedades_rurais <- read_csv(propriedades_rurais_datapath, col_types = cols(id_camara = "c")) %>% 
-    mutate(proprietario_de_terras = 1) %>% 
-    select(id_camara, cpf, proprietario_de_terras)
+    mutate(proprietario_de_terras = 1, indice_propriedade = total_declarado / max(total_declarado)) %>% 
+    select(id_camara, cpf, indice_propriedade)
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(casa == "camara", em_exercicio == 1) %>% 
@@ -23,7 +23,7 @@ calcula_score_propriedades_rurais <- function(
   parlamentares_propriedades_rurais <- parlamentares %>% 
     left_join(propriedades_rurais,
               by = c("cpf", "id" = "id_camara")) %>% 
-    mutate(proprietario_de_terras = if_else(is.na(proprietario_de_terras), 0, proprietario_de_terras))
+    mutate(indice_propriedade = if_else(is.na(indice_propriedade), 0, indice_propriedade))
   
   return(parlamentares_propriedades_rurais)
 }
