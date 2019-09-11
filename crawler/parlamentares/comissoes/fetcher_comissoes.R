@@ -52,15 +52,16 @@ fetch_comissoes_composicao_senado <- function() {
 
 #' @title Recupera informações da Comissão na Câmara dos Deputados
 #' @description Utiliza o rcongresso para recuperar informações sobre uma Comissão específica na câmara dos deputados
-#' @param sigla Sigla da Comissão
+#' @param sigla_comissao Sigla da Comissão
 #' @return Dataframe com informações da Comissão
 #' @examples
 #' fetch_comissao_info_camara("CCJC")
-fetch_comissao_info_camara <- function(sigla) {
+fetch_comissao_info_camara <- function(sigla_comissao) {
   library(tidyverse)
   library(rcongresso)
   
-  comissao_info <- rcongresso::fetch_orgao_camara(sigla) %>% 
+  comissao_info <- rcongresso::fetch_orgao_camara(sigla_comissao) %>% 
+    dplyr::filter(sigla == sigla_comissao) %>% 
     dplyr::select(comissao_id = id, nome_comissao = nome)
   
   return(comissao_info)
