@@ -20,3 +20,18 @@ RUN R -e "install.packages(c('here', 'optparse', 'RCurl', 'xml2'), repos='http:/
 RUN R -e "devtools::install_github('analytics-ufcg/rcongresso', force = T)"
 RUN R -e "devtools::install_github('analytics-ufcg/leggoR', force = T)"
 RUN R -e "install.packages('pdftools')"
+
+## Configura cron para execução automática da atualização
+RUN apt-get update && apt-get -y install cron
+
+RUN echo "0 10 * * * /bin/sh /app/bd/update.sh >> /app/bd/cron-job.log 2>&1" > /etc/cron.d/cron-job
+
+RUN chmod 0644 /etc/cron.d/cron-job
+
+RUN crontab /etc/cron.d/cron-job
+
+COPY .env .env
+
+RUN cp .env /etc/environment 
+
+ENTRYPOINT ["cron", "-f"]
