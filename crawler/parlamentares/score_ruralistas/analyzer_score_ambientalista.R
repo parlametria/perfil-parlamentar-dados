@@ -46,6 +46,7 @@ calcula_score_socios_empresas_rurais <- function(
   socios_empresas_rurais <- read_csv( socios_empresas_rurais_datapath, col_types = cols(id_deputado = "c")) %>% 
     group_by(id_deputado) %>% 
     summarise(numero_empresas_associadas = n()) %>% 
+    mutate(numero_empresas_associadas = log(numero_empresas_associadas) / log(max(numero_empresas_associadas))) %>% 
     select(id_deputado, numero_empresas_associadas)
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
@@ -117,9 +118,10 @@ calcula_score_doacoes_empresas_rurais <- function(
     select(id, cpf)
   
   parlamentares_socios_empresas_rurais <- parlamentares %>% 
-    left_join(socios_empresas_rurais,
+    left_join(empresas_doadoras,
               by = c("id" = "id_deputado")) %>% 
-    mutate(socio_empresas = if_else(is.na(socio_empresas), 0, socio_empresas))
+    mutate(proporcao_doacao_campanha_2014 = if_else(is.na(proporcao_doacao_campanha_2014), 0, proporcao_doacao_campanha_2014),
+           proporcao_doacao_campanha_2018 = if_else(is.na(proporcao_doacao_campanha_2018), 0, proporcao_doacao_campanha_2018))
   
   return(parlamentares_socios_empresas_rurais)
 }
