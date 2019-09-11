@@ -4,7 +4,7 @@
 #' @param empresas_parlamentares_datapath Caminho para o dataframe de empresas_parlamentares
 #' @return Dataframe com informações processadas e se a empresa é exportadora ou não.
 #' @example process_empresas_parlamentares()
-process_empresas_parlamentares <- function(
+processa_empresas_parlamentares <- function(
   empresas_parlamentares_datapath = here::here("crawler/raw_data/empresas_parlamentares.csv")) {
   
   library(tidyverse)
@@ -23,4 +23,3 @@ process_empresas_parlamentares <- function(
   return(empresas_parlamentares)
 
 }
-

@@ -1,0 +1,50 @@
+#' @title Processa os dados de parlamentares que receberam doações de sócios de empresas
+#' sem filtrar pela classe do CNAE
+#' @description A partir de um dataframe com todas as informações dos parlamentares que 
+#' receberam doações de sócios de empresas, processamos esses dados e classificamos a 
+#' empresa como exportadora ou não
+#' @param empresas_doadores_datapath Caminho para o dataframe de empresas_doadores
+#' @return Dataframe com informações processadas e se a empresa é exportadora ou não.
+#' @example processa_empresas_doadores()
+processa_empresas_doadores <- function(
+  empresas_doadores_datapath = here::here("crawler/raw_data/empresas_doadores.csv"),
+  parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
+  
+  library(tidyverse)
+  
+  source(here::here("crawler/parlamentares/empresas/process_empresas_exportadoras.R"))
+  
+  empresas_doadores <- read_csv(empresas_doadores_datapath) %>% 
+    select(id_deputado = id,
+           cnpj,
+           nome_socio,
+           cnpj_cpf_do_socio,
+           percentual_capital_social,
+           data_entrada_sociedade,
+           valor_doado = valor_receita) %>% 
+    classifica_empresas_exportacao() 
+  
+  parlamentares <- read_csv(parlamentares_datapath) %>% 
+    select(id, 
+           nome_deputado = nome_eleitoral, 
+           partido_deputado = sg_partido, 
+           uf_deputado = uf)
+  
+  empresas_doadores_parlamentares <- empresas_doadores %>% 
+    left_join(parlamentares, by = c("id_deputado" = "id"))
+  
+  empresas_doadores_parlamentares <- empresas_doadores_parlamentares %>% 
+    select(cnpj_empresa = cnpj,
+           exportadora,
+           cpf_cnpj_socio = cnpj_cpf_do_socio,
+           nome_socio,
+           data_entrada_sociedade,
+           id_deputado,
+           nome_deputado,
+           partido_deputado,
+           uf_deputado,
+           valor_doado)
+  
+  return(empresas_doadores_parlamentares)
+  
+}
