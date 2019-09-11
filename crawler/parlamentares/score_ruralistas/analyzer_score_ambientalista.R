@@ -45,8 +45,8 @@ calcula_score_socios_empresas_rurais <- function(
   
   socios_empresas_rurais <- read_csv( socios_empresas_rurais_datapath, col_types = cols(id_deputado = "c")) %>% 
     group_by(id_deputado) %>% 
-    summarise(socio_empresas = 1) %>% 
-    select(id_deputado, socio_empresas)
+    summarise(numero_empresas_associadas = n()) %>% 
+    select(id_deputado, numero_empresas_associadas)
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(casa == "camara", em_exercicio == 1) %>% 
@@ -55,39 +55,7 @@ calcula_score_socios_empresas_rurais <- function(
   parlamentares_socios_empresas_rurais <- parlamentares %>% 
     left_join(socios_empresas_rurais,
               by = c("id" = "id_deputado")) %>% 
-    mutate(socio_empresas = if_else(is.na(socio_empresas), 0, socio_empresas))
-  
-  return(parlamentares_socios_empresas_rurais)
-}
-
-#' @title Recupera informações dos parlamentares que possuem ou não empresas agrícolas
-#' @description A partir do dataframe de parlamentares com empresas agrícolas e do
-#' dataframe de parlamentares, retorna um dataframe que contém id, cpf e socios_empresas_rurais,
-#' sendo 1 quando o parlamentar for socio de alguma empresa agrícola e 0, caso contrário.
-#' @param socios_empresas_rurais_datapath Caminho para o dataframe de parlamentares sócios de
-#' empresas rurais
-#' @param parlamentares_datapath Caminho para o dataframe de parlamentares
-#' @return Dataframe contendo informações dos parlamentares (cpf e id) e se possuem empresas 
-#' agrícolas ou não.
-calcula_score_socios_empresas_rurais <- function(
-  socios_empresas_rurais_datapath = here::here("crawler/raw_data/empresas_parlamentares_agricolas.csv"),
-  parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
-  
-  library(tidyverse)
-  
-  socios_empresas_rurais <- read_csv( socios_empresas_rurais_datapath, col_types = cols(id_deputado = "c")) %>% 
-    group_by(id_deputado) %>% 
-    summarise(socio_empresas = 1) %>% 
-    select(id_deputado, socio_empresas)
-  
-  parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
-    filter(casa == "camara", em_exercicio == 1) %>% 
-    select(id, cpf)
-  
-  parlamentares_socios_empresas_rurais <- parlamentares %>% 
-    left_join(socios_empresas_rurais,
-              by = c("id" = "id_deputado")) %>% 
-    mutate(socio_empresas = if_else(is.na(socio_empresas), 0, socio_empresas))
+    mutate(numero_empresas_associadas = if_else(is.na(numero_empresas_associadas), 0, as.numeric(numero_empresas_associadas)))
   
   return(parlamentares_socios_empresas_rurais)
 }
