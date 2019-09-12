@@ -21,12 +21,14 @@ opt = parse_args(opt_parser);
 
 output_path = opt$output
 
+options(scipen = 999)
+
 message("Iniciando processamento...")
 
 indice_vinculo_economico <- processa_indice_vinculo_economico()
 
 message(paste0("Salvando o resultado em: ", output_path))
 
-readr::write_csv(indice_vinculo_economico, output_path)
+write.csv(indice_vinculo_economico, output_path)
 
 message("Concluído!")
