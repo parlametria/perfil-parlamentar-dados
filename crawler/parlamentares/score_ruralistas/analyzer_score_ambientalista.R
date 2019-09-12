@@ -13,8 +13,7 @@ calcula_score_propriedades_rurais <- function(
   library(tidyverse)
   
   propriedades_rurais <- read_csv(propriedades_rurais_datapath, col_types = cols(id_camara = "c")) %>% 
-    mutate(proprietario_de_terras = 1, indice_propriedade = total_declarado / max(total_declarado)) %>% 
-    select(id_camara, cpf, indice_propriedade)
+    select(id_camara, cpf, total_declarado)
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(casa == "camara", em_exercicio == 1) %>% 
@@ -23,7 +22,7 @@ calcula_score_propriedades_rurais <- function(
   parlamentares_propriedades_rurais <- parlamentares %>% 
     left_join(propriedades_rurais,
               by = c("cpf", "id" = "id_camara")) %>% 
-    mutate(indice_propriedade = if_else(is.na(indice_propriedade), 0, indice_propriedade))
+    mutate(total_declarado = if_else(is.na(total_declarado), 0, total_declarado))
   
   return(parlamentares_propriedades_rurais)
 }
@@ -46,7 +45,6 @@ calcula_score_socios_empresas_rurais <- function(
   socios_empresas_rurais <- read_csv( socios_empresas_rurais_datapath, col_types = cols(id_deputado = "c")) %>% 
     group_by(id_deputado) %>% 
     summarise(numero_empresas_associadas = n()) %>% 
-    mutate(numero_empresas_associadas = log(numero_empresas_associadas) / log(max(numero_empresas_associadas))) %>% 
     select(id_deputado, numero_empresas_associadas)
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
@@ -76,52 +74,65 @@ calcula_score_socios_empresas_rurais <- function(
 #' empresas ou sócios de empresas agrícolas ou não e se essas empresas são exportadoras ou não (1 ou 0, res-
 #' pectivamente)
 calcula_score_doacoes_empresas_rurais <- function(
+  doadores_gerais_2018_datapath = here::here("crawler/raw_data/deputados_doadores.csv"),
   doadores_socios_empresas_rurais_2018_datapath = here::here("crawler/raw_data/empresas_doadores_agricolas.csv"),
-  doadores_socios_empresas_rurais_2014_datapath = here::here("crawler/raw_data/empresas_doadores_agricolas_2014.csv"),
-  doadores_empresas_rurais_2014_datapath = here::here("crawler/raw_data/somente_empresas_agricolas_2014.csv"),
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
   
   library(tidyverse)
   
-  empresas_doadoras <- 
-    purrr::map2_df(
-      list(doadores_socios_empresas_rurais_2018_datapath,
-           doadores_socios_empresas_rurais_2014_datapath,
-           doadores_empresas_rurais_2014_datapath),
-      list(2018, 2014, 2014),
-      function(x, y) {
-        read_csv(x, col_types = cols(id_deputado = "c")) %>%
-          select(id_deputado, cnpj_empresa, valor_doado, exportadora) %>% 
-          mutate(ano = y,
-                 exportadora = if_else(exportadora == 'sim', 1, 0)) %>% 
-          group_by(cnpj_empresa, ano) %>% 
-          mutate(exportadora = max(exportadora)) %>% 
-          distinct()
-        })
-
-  empresas_doadoras <- empresas_doadoras %>% 
-    group_by(cnpj_empresa, ano) %>% 
-    mutate(valor_total_doado_por_campanha = sum(valor_doado))
+  doadores <- read_csv( doadores_gerais_2018_datapath, col_types = cols(id = "c"))
   
-  empresas_doadoras <- empresas_doadoras %>% 
-    group_by(cnpj_empresa, id_deputado, ano) %>% 
-    mutate(proporcao_doacao_campanha = valor_doado / valor_total_doado_por_campanha)
+  doadores_totais <- doadores %>%
+    group_by(id) %>% 
+    summarise(total_doacao = sum(valor_receita)) %>% 
+    select(id, total_doacao)
   
-  empresas_doadoras <- empresas_doadoras %>% 
-    spread(ano, proporcao_doacao_campanha) %>% 
-    rename(proporcao_doacao_campanha_2018 = `2018`,
-           proporcao_doacao_campanha_2014 = `2014`) %>% 
-    select(-c(valor_doado, valor_total_doado_por_campanha))
+  doadores_rurais_todos <- read_csv(doadores_socios_empresas_rurais_2018_datapath, col_types = cols(id_deputado = "c")) %>% 
+    group_by(cpf_cnpj_socio) %>% 
+    summarise(n = n())
+  
+  doadores_rurais <- doadores %>% 
+    left_join(doadores_rurais_todos, by = c("cpf_cnpj_doador" = "cpf_cnpj_socio")) %>% 
+    filter(!is.na(n)) %>% 
+    group_by(id) %>% 
+    summarise(total_doacao_agro = sum(valor_receita))
+  
+  indice_doadores = doadores_totais %>% 
+    inner_join(doadores_rurais, by = c("id")) %>% 
+    mutate(proporcao_doacoes_agro = total_doacao_agro/total_doacao)
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(casa == "camara", em_exercicio == 1) %>% 
     select(id, cpf)
   
-  parlamentares_socios_empresas_rurais <- parlamentares %>% 
-    left_join(empresas_doadoras,
-              by = c("id" = "id_deputado")) %>% 
-    mutate(proporcao_doacao_campanha_2014 = if_else(is.na(proporcao_doacao_campanha_2014), 0, proporcao_doacao_campanha_2014),
-           proporcao_doacao_campanha_2018 = if_else(is.na(proporcao_doacao_campanha_2018), 0, proporcao_doacao_campanha_2018))
+  parlamentares_doacoes <- parlamentares %>% 
+    left_join(indice_doadores, by = c("id"))
   
-  return(parlamentares_socios_empresas_rurais)
+  return(parlamentares_doacoes)
+}
+
+#' @title Índice de Vínculo Econômico
+#' @description Unifica as informações de propriedades rurais, sociedades em empresas ruraris e doações de ruralistas
+#' para gerar um Índice de Vínculo Economico com o agronegócio
+#' @param parlamentares_datapath Caminho para o dataframe de parlamentares
+#' @return Dataframe contendo informações dos parlamentares (id, cpf, nome, uf e partido), valor total em propriedades rurais,
+#' quantidade de empresas rurais as quais é socio e proporção de doações de empresas rurais em relação ao total doado
+processa_indice_vinculo_economico <- function(
+  parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")
+) {
+  propriedades_rurais <- calcula_score_propriedades_rurais()
+  socios <- calcula_score_socios_empresas_rurais()
+  doacoes <- calcula_score_doacoes_empresas_rurais()
+  
+  parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
+    filter(casa == "camara", em_exercicio == 1) %>% 
+    select(id, cpf, nome_eleitoral, uf, sg_partido)
+  
+  indice_vinculo_economico <- parlamentares %>% 
+    left_join(propriedades_rurais, by = c("id", "cpf")) %>% 
+    left_join(socios, by = c("id", "cpf")) %>% 
+    left_join(doacoes, by = c("id", "cpf")) %>% 
+    select(id, cpf, nome_eleitoral, uf, sg_partido, total_declarado, numero_empresas_associadas, proporcao_doacoes_agro)
+  
+  return(indice_vinculo_economico)
 }
