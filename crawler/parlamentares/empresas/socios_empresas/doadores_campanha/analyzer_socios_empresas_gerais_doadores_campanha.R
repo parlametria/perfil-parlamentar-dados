@@ -8,11 +8,13 @@
 #' @example processa_empresas_doadores()
 processa_empresas_doadores <- function(
   empresas_doadores_datapath = here::here("crawler/raw_data/empresas_doadores.csv"),
-  parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
+  parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv"),
+  empresas_info_datapath = here::here("crawler/raw_data/empresas_info_2018.csv")) {
   
   library(tidyverse)
   
   source(here::here("crawler/parlamentares/empresas/process_empresas_exportadoras.R"))
+  source(here::here("crawler/parlamentares/empresas/fetcher_empresas.R"))
   
   empresas_doadores <- read_csv(empresas_doadores_datapath) %>% 
     select(id_deputado = id,
@@ -34,7 +36,7 @@ processa_empresas_doadores <- function(
     left_join(parlamentares, by = c("id_deputado" = "id"))
   
   empresas_doadores_parlamentares <- empresas_doadores_parlamentares %>% 
-    select(cnpj_empresa = cnpj,
+    select(cnpj,
            exportadora,
            cpf_cnpj_socio = cnpj_cpf_do_socio,
            nome_socio,
@@ -45,6 +47,14 @@ processa_empresas_doadores <- function(
            uf_deputado,
            valor_doado)
   
-  return(empresas_doadores_parlamentares)
+  cnpjs <- empresas_doadores %>% distinct(cnpj) 
+  
+  empresas_info <- read_csv(empresas_info_datapath,
+                            col_types = cols(.default = "c"))
+  
+  empresas_doadores_parlamentares_res <- empresas_doadores_parlamentares %>% 
+    left_join(empresas_info, by = "cnpj")
+  
+  return(empresas_doadores_parlamentares_res)
   
 }

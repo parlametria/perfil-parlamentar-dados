@@ -10,15 +10,24 @@ processa_empresas_parlamentares <- function(
   library(tidyverse)
   
   source(here::here("crawler/parlamentares/empresas/process_empresas_exportadoras.R"))
+  source(here::here("crawler/parlamentares/empresas/fetcher_empresas.R"))
   
-  empresas_parlamentares <- read_csv(empresas_parlamentares_datapath) %>% 
+  empresas_parlamentares <- read_csv(empresas_parlamentares_datapath) 
+  
+  empresas_info <- purrr::map_df(empresas_parlamentares %>% distinct(cnpj) %>% pull(cnpj),
+                                 ~ fetch_dados_empresa_por_cnpj(.x))
+  
+  empresas_parlamentares <- empresas_parlamentares %>% 
     select(id_deputado = id,
            cnpj,
            nome_socio,
            cnpj_cpf_do_socio,
            percentual_capital_social,
            data_entrada_sociedade) %>% 
-  classifica_empresas_exportacao()  
+    classifica_empresas_exportacao() 
+  
+  empresas_parlamentares <- empresas_parlamentares %>% 
+    left_join(empresas_info, by="cnpj")
   
   return(empresas_parlamentares)
 
