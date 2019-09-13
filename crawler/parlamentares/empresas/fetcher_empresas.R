@@ -22,10 +22,12 @@ fetch_dados_empresa_por_cnpj <- function(cnpj) {
   
   empresa <- tibble(
     cnpj = json$cnpj,
+    cnae_fiscal = json$cnae_fiscal,
     razao_social = json$razao_social,
     capital_social = json$capital_social,
     uf = json$uf
-  )
+  ) %>% 
+    mutate(porte = json$porte)
   
   if (!is.null(json$cnaes_secundarios)) {
     cnaes_secundarios <- json$cnaes_secundarios %>% 
@@ -49,7 +51,7 @@ fetch_dados_empresa_por_cnpj <- function(cnpj) {
     rbind(cnaes_secundarios) %>% 
     mutate(cnpj = cnpj) %>% 
     left_join(empresa, by = "cnpj") %>% 
-    select(cnpj, razao_social, capital_social, uf, cnae_tipo, cnae_codigo, cnae_descricao)
+    select(cnpj, razao_social, capital_social, uf, porte, cnae_tipo, cnae_codigo, cnae_descricao)
   
   return(empresa_cnaes)
 }
