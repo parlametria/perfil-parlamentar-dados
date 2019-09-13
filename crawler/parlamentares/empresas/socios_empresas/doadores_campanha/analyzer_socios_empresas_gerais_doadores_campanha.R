@@ -71,7 +71,7 @@ processa_socios_empresas_doadores <- function(
 #' @return Dataframe com informações processadas e se a empresa é exportadora ou não.
 #' @example processa_empresas_doadores()
 processa_empresas_doadores <- function(
-  empresas_doadores_datapath = here::here("crawler/raw_data/somente_empresas_agricolas_2014.csv"),
+  empresas_doadores_datapath = here::here("crawler/raw_data/somente_empresas_gerais_2014.csv"),
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv"),
   empresas_info_datapath = NULL) {
   
