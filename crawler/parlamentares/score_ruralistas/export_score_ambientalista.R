@@ -29,6 +29,6 @@ indice_vinculo_economico <- processa_indice_vinculo_economico()
 
 message(paste0("Salvando o resultado em: ", output_path))
 
-write.csv(indice_vinculo_economico, output_path)
+write.csv(indice_vinculo_economico, output_path, row.names = FALSE)
 
 message("Concluído!")
