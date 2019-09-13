@@ -149,4 +149,4 @@ Pronto! A migração foi realizada com sucesso!
 
 #### Atualização automática
 
-O r-updater já vem configurado com um job que executa diariamente às 10 horas da manha no horário de Recife. Para alterar este horário configure o comando crontab presente no Dockerfile neste mesmo diretório.
+O r-updater já vem configurado com um job que executa todas as terças às 7 horas da manhã no horário de Recife. Para alterar este horário configure o comando crontab presente no Dockerfile neste mesmo diretório.
