@@ -26,7 +26,7 @@ ENV TZ=America/Recife
 
 RUN apt-get update && apt-get -y install cron
 
-RUN echo "0 7 * * * /bin/sh /app/bd/update.sh >> /app/bd/cron-job.log 2>&1" > /etc/cron.d/cron-job
+RUN echo "0 7 * * 2 /bin/sh /app/bd/update.sh >> /app/bd/cron-job.log 2>&1" > /etc/cron.d/cron-job
 
 RUN chmod 0644 /etc/cron.d/cron-job
 
