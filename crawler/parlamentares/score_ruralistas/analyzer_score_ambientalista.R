@@ -1,11 +1,12 @@
 #' @title Recupera informações dos parlamentares que possuem ou não propriedades rurais
 #' @description A partir do dataframe de parlamentares com propriedades rurais e do
-#' dataframe de parlamentares, retorna um dataframe que contém id, cpf e proprietario_de_terras,
-#' sendo 1 quando o parlamentar tiver alguma propriedade rural e 0, caso contrário.
+#' dataframe de parlamentares, retorna um dataframe que contém id, cpf e o total declarado
+#' no TSE em propriedades rurais.
 #' @param propriedades_rurais_datapath Caminho para o dataframe de parlamentares com propriedades
 #' rurais
 #' @param parlamentares_datapath Caminho para o dataframe de parlamentares
-#' @return Dataframe contendo informações dos parlamentares (cpf e id) e se possuem terras ou não
+#' @return Dataframe contendo informações dos parlamentares (cpf e id) e total declarado no TSE
+#' em propriedades rurais
 calcula_score_propriedades_rurais <- function(
   propriedades_rurais_datapath = here::here("crawler/raw_data/propriedades_rurais.csv"),
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
@@ -29,13 +30,12 @@ calcula_score_propriedades_rurais <- function(
 
 #' @title Recupera informações dos parlamentares que possuem ou não empresas agrícolas
 #' @description A partir do dataframe de parlamentares com empresas agrícolas e do
-#' dataframe de parlamentares, retorna um dataframe que contém id, cpf e socios_empresas_rurais,
-#' sendo 1 quando o parlamentar for socio de alguma empresa agrícola e 0, caso contrário.
+#' dataframe de parlamentares, retorna um dataframe que contém id, cpf e a quatidade de empresas
+#' as quais os parlamentares são sócios.
 #' @param socios_empresas_rurais_datapath Caminho para o dataframe de parlamentares sócios de
 #' empresas rurais
 #' @param parlamentares_datapath Caminho para o dataframe de parlamentares
-#' @return Dataframe contendo informações dos parlamentares (cpf e id) e se possuem empresas 
-#' agrícolas ou não.
+#' @return Dataframe contendo informações dos parlamentares (cpf e id) e a quantidade de empresas.
 calcula_score_socios_empresas_rurais <- function(
   socios_empresas_rurais_datapath = here::here("crawler/raw_data/empresas_parlamentares_agricolas.csv"),
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
@@ -63,16 +63,12 @@ calcula_score_socios_empresas_rurais <- function(
 #' @description A partir do dataframe de doações de parlamentares que são empresas agrícolas 
 #' ou de sócios de empresas agrícolas, e do dataframe de parlamentares, 
 #' retorna um dataframe com informações do parlamentar e das doações
+#' @param doadores_gerais_2018_datapath Caminho para o dataframe com todos os doadores de campanha
 #' @param doadores_socios_empresas_rurais_2018_datapath Caminho para o dataframe de doações de campanha 
 #' de sócios de empresas rurais em 2018
-#' @param doadores_socios_empresas_rurais_2014_datapath Caminho para o dataframe de doações de campanha 
-#' de sócios de empresas rurais em 2014
-#' @param doadores_empresas_rurais_2014_datapath Caminho para o dataframe de doações de campanha 
-#' de empresas rurais em 2014
 #' @param parlamentares_datapath Caminho para o dataframe de parlamentares
-#' @return Dataframe contendo informações dos parlamentares (cpf e id), doacao_empresas_agricolas se possuem 
-#' empresas ou sócios de empresas agrícolas ou não e se essas empresas são exportadoras ou não (1 ou 0, res-
-#' pectivamente)
+#' @return Dataframe contendo informações dos parlamentares (cpf e id) e proporção de doações de 
+#' empresas rurais em relação ao total doado
 calcula_score_doacoes_empresas_rurais <- function(
   doadores_gerais_2018_datapath = here::here("crawler/raw_data/deputados_doadores.csv"),
   doadores_socios_empresas_rurais_2018_datapath = here::here("crawler/raw_data/empresas_doadores_agricolas.csv"),
