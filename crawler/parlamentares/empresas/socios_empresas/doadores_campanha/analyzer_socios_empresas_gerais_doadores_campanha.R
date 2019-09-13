@@ -16,12 +16,12 @@ processa_socios_empresas_doadores <- function(
   source(here::here("crawler/parlamentares/empresas/process_empresas_exportadoras.R"))
   
   empresas_doadores <- read_csv(empresas_doadores_datapath) %>% 
-    select(id_deputado,
-           cnpj = cnpj_empresa,
+    select(id_deputado = id,
+           cnpj,
            nome_socio,
-           cpf_cnpj_socio,
+           cpf_cnpj_socio = cpf_cnpj_doador,
            data_entrada_sociedade,
-           valor_doado) %>% 
+           valor_doado = valor_receita) %>% 
     classifica_empresas_exportacao() 
   
   parlamentares <- read_csv(parlamentares_datapath) %>% 
