@@ -204,7 +204,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 141513,camara,53,2007-02-01,2011-01-03,Titular,12,Secretário de Estado
 141513,camara,54,2011-02-01,2011-02-03,Titular,12,Secretário de Estado
 141513,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
-141513,camara,56,2019-02-01,NA,Titular,NA,NA
+141513,camara,56,2019-02-01,2019-08-29,Titular,12,Secretário de Estado
 160538,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 160538,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
 160538,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1049,6 +1049,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 141509,camara,54,2011-02-01,2015-01-02,Titular,12,Secretário de Estado
 141509,camara,55,2015-02-01,2015-02-06,Titular,12,Secretário de Estado
 178984,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
+178984,camara,56,2019-08-20,NA,Suplente,NA,NA
 178985,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
 178985,camara,56,2019-02-01,NA,Titular,NA,NA
 74787,camara,52,2003-02-01,2007-01-31,Titular,99,Término da Legislatura
@@ -1611,7 +1612,6 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204561,camara,56,2019-02-01,NA,Titular,NA,NA
 204397,camara,56,2019-02-01,NA,Titular,NA,NA
 204551,camara,56,2019-02-01,NA,Titular,NA,NA
-204520,camara,56,2019-02-01,NA,Titular,NA,NA
 204352,camara,56,2019-02-01,NA,Titular,NA,NA
 204572,camara,56,2019-02-01,NA,Titular,NA,NA
 204487,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1667,6 +1667,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 207309,camara,56,2019-02-07,2019-07-09,Suplente,53,Afastamento
 204537,camara,56,2019-02-01,NA,Titular,NA,NA
 204482,camara,56,2019-02-01,NA,Titular,NA,NA
+211866,camara,56,2019-08-29,NA,Suplente,NA,NA
 68720,camara,56,2019-02-01,NA,Titular,NA,NA
 204368,camara,56,2019-02-01,NA,Titular,NA,NA
 204477,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1733,6 +1734,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204420,camara,56,2019-02-01,NA,Titular,NA,NA
 204372,camara,56,2019-02-01,NA,Titular,NA,NA
 204457,camara,56,2019-02-01,NA,Titular,NA,NA
+204520,camara,56,2019-02-01,NA,Titular,NA,NA
 204502,camara,56,2019-02-01,NA,Titular,NA,NA
 204497,camara,56,2019-02-01,NA,Titular,NA,NA
 204574,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -2106,6 +2108,8 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 3811,senado,55,2015-02-01,NA,Titular,NA,NA
 5144,senado,54,2011-07-11,2019-01-31,1º Suplente,NA,Término do mandato
 5144,senado,55,2015-02-01,NA,1º Suplente,NA,NA
+5184,senado,55,2018-12-13,2019-01-31,2º Suplente,NA,Término do mandato
+5184,senado,54,2011-02-01,NA,2º Suplente,NA,NA
 4697,senado,54,2011-02-01,2019-01-31,Titular,NA,Término do mandato
 4697,senado,55,2015-02-01,NA,Titular,NA,NA
 4981,senado,55,2015-02-01,2016-09-08,Titular,NA,Licença Saúde-Particular
@@ -2149,7 +2153,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 5976,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
 5976,senado,57,2023-02-01,NA,Titular,NA,NA
 3777,senado,56,2019-02-01,2019-07-12,Titular,NA,Afastamento do exercício
-3777,senado,56,2019-08-14,2023-01-31,Titular,NA,NA
+3777,senado,56,2019-08-15,2023-01-31,Titular,NA,NA
 3777,senado,57,2023-02-01,NA,Titular,NA,NA
 5718,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
 5718,senado,57,2023-02-01,NA,Titular,NA,NA
@@ -2335,7 +2339,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 5621,senado,56,2019-02-01,NA,2º Suplente,NA,NA
 5527,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
 5527,senado,56,2019-02-01,NA,Titular,NA,NA
-6005,senado,56,2019-07-16,2019-08-13,1º Suplente,NA,Retorno do titular
+6005,senado,56,2019-07-16,2019-08-14,1º Suplente,NA,Retorno do titular
 6005,senado,57,2023-02-01,NA,1º Suplente,NA,NA
 5988,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
 5988,senado,57,2023-02-01,NA,Titular,NA,NA
