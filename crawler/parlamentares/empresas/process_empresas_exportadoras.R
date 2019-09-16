@@ -29,9 +29,8 @@ process_empresas_exportadoras <-
   function(zip_data_path = here::here("crawler/parlamentares/empresas/exportadoras.zip")) {
   
   library(tidyverse)
-  library(here)
     
-  output_path = here("crawler/parlamentares/empresas/exportadoras/")
+  output_path = here::here("crawler/parlamentares/empresas/exportadoras/")
   
   # Descompactando o arquivo .zip
   unzip(zip_data_path, exdir = output_path)
@@ -48,4 +47,26 @@ process_empresas_exportadoras <-
            natureza_juridica = `NATUREZA JURÍDICA`)
   
   return(empresas_exportadoras)
+}
+
+#' @title Classifica cnpjs como empresas exportadoras ou não usando Lista do Min. da Economia
+#' @description A partir de um dataframe com um coluna cnpj retorna o mesmo dataframe com uma coluna a mais indicando
+#' se o cnpj é de uma empresa exportadora ou não.
+#' @param df Dataframe com pelo menos uma coluna chamada cnpj
+#' @return Dataframe com informação sobre se a empresa tem cnpj ou não
+#' @example classifica_empresas_exportacao()
+classifica_empresas_exportacao <- function(df) {
+  library(tidyverse)
+  
+  empresas_exportadoras <- process_empresas_exportadoras()
+  
+  lista_empresas_exportadoras <- empresas_exportadoras %>% 
+    select(cnpj = CNPJ) %>% 
+    distinct(cnpj) %>% 
+    pull(cnpj)
+  
+  df <- df %>% 
+    mutate(exportadora = if_else(cnpj %in% lista_empresas_exportadoras, "sim", "nao")) 
+  
+  return(df)
 }
