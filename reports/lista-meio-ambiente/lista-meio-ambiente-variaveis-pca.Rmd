@@ -26,6 +26,8 @@ library(factoextra)
 library(hrbrthemes)
 library(plotly)
 library(DT)
+library(cluster)
+library(RColorBrewer)
 theme_set(theme_minimal())
 
 source(here("reports/lista-meio-ambiente/scripts/process_info_deputados.R"))
@@ -47,13 +49,14 @@ Nosso **objetivo** é aplicar PCA aos dados de deputados que envolvem domínios 
 ### Sobre os dados
 
 As variáveis selecionadas foram:
+
 - **total_declarado:** Total declarado pelo deputado ao TSE nas eleições de 2018 em bens relacionados a Agricultura e Pecuária. Ex: imóveis rurais, fazendas, cabeças de gado, etc.
 - **numero_empresas_associadas:** Número de empresas nas quais o deputado é sócio. Dados obtidos da Receita Federal por meio do [Brasil.IO](brasil.io) em Agosto de 2019.
 - **proporcao_doacoes_agro:** razão entre o total doado por empresas relacionadas a Agricultura (pelo CNAE) e o total doado para o parlamentar durante as eleições de 2018.
-- **Aderência ao Governo em votações de Meio Ambiente:** indicador da proporção do número de votações em que seguiu a orientação do Governo em votações de Meio Ambiente. Valor entre 0 e 1, mas também pode ser indefinido quando não há votações suficientes para o cálculo da aderência.
-- **Investimento recebido pelo Partido:** indicador do nível de investimento do partido no deputado durante as eleições de 2018. Valor entre 0 e 1 que é melhor explicado neste [relatório](https://analytics-ufcg.github.io/vozativa-dados/investimento-partidos).
-- **Número de frentes relacionadas ao Meio Ambiente:** quantidade de frentes relacionadas ao Meio Ambiente que o deputado faz parte.
-- **Atuação em proposições de Meio Ambiente:** número de documentos que o deputado foi autor relacionadas ao tema de Meio Ambiente.
+- **aderencia:** aderência ao Governo em votações de Meio Ambiente. Indicador da proporção do número de votações em que seguiu a orientação do Governo em votações de Meio Ambiente. Valor entre 0 e 1, mas também pode ser indefinido quando não há votações suficientes para o cálculo da aderência.
+- **proporcao_campanhas_medias_receita** indicador do nível de investimento do partido no deputado durante as eleições de 2018. Valor entre 0 e 1 que é melhor explicado neste [relatório](https://analytics-ufcg.github.io/vozativa-dados/investimento-partidos).
+- **n_frentes** quantidade de frentes relacionadas ao Meio Ambiente que o deputado faz parte.
+- **total_documentos** número de documentos que o deputado foi autor relacionadas ao tema de Meio Ambiente.
 
 <!-- - **Número de frentes relacionadas a Integridade e Transparência:** quantidade de frentes relacionadas a Integridade e Transparência que o deputado faz parte. -->
 <!-- - **Atuação em proposições de Integridade e Transparência:** número de documentos que o deputado foi autor relacionadas ao de Integridade e Transparência. -->
@@ -127,15 +130,17 @@ A seguir apresentamos quais variáveis mais influenciaram as dimensões geradas 
 ```{r}
 info_pca <- get_pca_var(dados_pca)
 
-(info_pca$contrib) %>% 
-  as.data.frame() %>% 
+(info_pca$contrib) %>%
+  as.data.frame() %>%
   rownames_to_column(var = "variavel") %>% 
- datatable(class = 'cell-border stripe',
-          filter = 'top',
-          rownames = FALSE, 
-          options = list(pageLength = 5,
-                         dom = 't'),
-          colnames = c("Variável", "Dim1", "Dim2", "Dim3", "Dim4", "Dim5", "Dim6", "Dim7"))
+
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE,
+            options = list(pageLength = 5,
+                           dom = 't',
+                           scrollX = TRUE),
+            colnames = c("Variável", "Dim1", "Dim2", "Dim3", "Dim4", "Dim5", "Dim6", "Dim7"))
 ```
 
 A seguir apresentamos como os deputados estão distribuídos considerando essas as duas dimensões que melhor explicam os dados.
@@ -200,4 +205,79 @@ g <- dados_pca_augment %>%
 ggplotly(g, tooltip = "text") %>%
  config(displayModeBar = F) %>%
  layout(autosize = F)
+```
+
+## Agrupamento
+
+Nosso objetivo a seguir é identificar grupos de deputados que são parecidos entre si, a partir das 4 dimensões principais obtidas via PCA. A técnica utilizada para o agrupamento será o k-means. O k-means é um dos algoritmos mais usados para agrupamento e para usá-lo é necessário definir a quantidade de grupos que devem ser formados e os critérios (variáveis) para que elementos sejam agrupados.
+
+### Dimensões escolhidas
+
+- **Dim1:** indica o vínculo com o agro no domínio do negócio e é inflluenciada pelas variáveis originais: **numero_empresas_associadas**	e **proporcao_doacoes_agro**.
+- **Dim2:** indica a atuação na câmara dos deputados com relação a proposições e votações de Meio Ambiente. É influenciada pelas variáveis **aderencia** e **total_documentos**.
+- **Dim3:** indica relaciomento com o agro com relação a posse de propriedades rurais e o recebido em doações vindas desse setor. É influenciada pelas variáveis: **total_declarado** e **proporcao_doacoes_agro**.
+- **Dim4:** indica a atuação dos parlamentares em frentes relacionadas ao Meio Ambiente. É influenciada pela variável **n_frentes**.
+
+```{r}
+set.seed(12346)
+
+km <- dados_pca_augment %>% 
+    select(.fittedPC1, .fittedPC2, .fittedPC3, .fittedPC4) %>% 
+    kmeans(centers = 4, nstart = 20)
+
+dists <- dist(dados_pca_augment %>% 
+                select(.fittedPC1, .fittedPC2, .fittedPC3, .fittedPC4), 
+              method = 'euclidean')
+
+colors <- brewer.pal(4, 'Set2')
+
+plot(silhouette(km$cluster, dists), col = colors, border = NA, main = 'Silhueta dos grupos usando o K-means')
+```
+
+Quanto maior é a medida da silhouette maior é a homogeneidade em um grupo, ou seja, os deputados de um grupo parecem mais com deputados do próprio grupo do que com deputados de outro grupo. A divisão em 4, é o máximo que podemos obter em termos da medida da silhouette e que faça sentido.
+
+```{r}
+dados_pca_augment_km <- dados_pca_augment %>%
+  mutate(cluster = km$cluster %>% as.factor)
+
+dados_pca_augment_km_long <- dados_pca_augment_km %>%
+  select(id, Dim1 = .fittedPC1, Dim2 = .fittedPC2, Dim3 = .fittedPC3, Dim4 = .fittedPC4, cluster) %>% 
+  gather('variable', 'value', -id, -cluster, factor_key=T)
+```
+
+```{r}
+ggplot(dados_pca_augment_km_long, aes(x = variable, y = value, colour = variable)) +
+  geom_boxplot() +
+  geom_jitter(alpha = 0.2, width = 0.2) +
+  geom_hline(alpha = 0.3, yintercept = 0) + 
+  facet_wrap(~ cluster, ncol = 2) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  labs(title = 'Agrupamento de deputados', x = '', y = '', color = "Variável") +
+  scale_color_brewer(palette='Dark2')
+```
+
+Tanto pelo gráfico da Silhoeutte quanto pela visualização acima é possível perceber que existem deputados que não se encaixam muito bem no grupo no qual foi classificado pelo algoritmo. Isto pode ocorrer devido a proximidade desses deputados de dois ou mais grupos sem que o mesmo se encaixe perfeitamente em nenhum deles. Portanto, pode existir casos isolados de deputados que pertecem a um grupo embora não seja tão parecido com ele.
+
+#### Grupos
+
+- **Grupo 1 (Agro é pop):** estão presentes aqueles que possuem um alto vínculo com o agronegócio, seja em sociedades de empresas agrícolas ou ainda em doações recebidas do setor, variáveis que influenciam a Dim1. Também são deputados estão ligados ao agro como proprietários Rurais. São deputados que, em sua maioria, participam de frentes ligadas ao Meio Ambiente.
+
+- **Grupo 2 (Zona cinza):** a maioria deste grupo não está ligado ao agro através das variáveis de doações e sociedade em empresas, embora existam casos que sim. Também não se destacam pela atuação na Câmara em proposições de Meio Ambiente ou ainda aderência alta ao Governo em votações de Meio Ambiente. Ou seja, nesse grupo podem existir deputados que são contra ao Governo em votações de Meio Ambiente em 2019.
+
+- **Grupo 3 (Atuantes):** a maioria dos deputados deste grupo destaca-se ou pela atuação em proposições de Meio Ambiente (na autoria de documentos) ou por ser bem aderente ao Governo. É possível que apenas uma dessas variáveis seja a causa deste deputado está presente neste grupo.
+
+- **Grupo 4 (Agro é super pop):** este grupo é o menor em número e concentra aqueles deputados que possuem altos valores na primeira dimensão (Dim1). Ou seja, valores altos na dimensão influenciada pelas variáveis de número de sociedades em empresas e a porcentagem de doação do Agro com relação a sua campanha.
+
+##### Integrantes dos grupos
+
+```{r}
+dados_pca_augment %>% 
+    mutate(cluster = km$cluster %>% as.factor) %>% 
+    datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE,
+            options = list(pageLength = 5,
+                           dom = 't',
+                           scrollX = TRUE))
 ```
