@@ -22,3 +22,5 @@ candidatos_link.json
 .Rhistory
 
 .env
+
+/bd/cron-job.log

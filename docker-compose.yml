@@ -7,15 +7,15 @@ services:
     container_name: r-updater
     restart: always
     environment:
-      - PASSWORD=${R_PASSWORD:-secret}      
-      - PGHOST=${POSTGRES_HOST:-postgres}
-      - PGUSER=${POSTGRES_USER:-postgres}
-      - PGDATABASE=${POSTGRES_DATABASE:-vozativa}
-      - PGPASSWORD=${POSTGRES_PASSWORD:-secret}
-      - APP_SECRET=${BOT_SECRET:-ops}      
+      - PASSWORD=${PASSWORD:-secret}      
+      - PGHOST=${PGHOST:-postgres}
+      - PGUSER=${PGUSER:-postgres}
+      - PGDATABASE=${PGDATABASE:-vozativa}
+      - PGPASSWORD=${PGPASSWORD:-secret}
+      - APP_SECRET=${APP_SECRET:-ops}      
     volumes:
       - ./bd:/app/bd
-      - ./crawler:/app/crawler
+      - ./crawler:/app/crawler      
     networks:
       - voz-network
 
@@ -28,7 +28,7 @@ services:
       - ./bd/server/server.js:/log-server/bd/server/server.js
       - /log-server/bd/server/node_modules/
     ports:
-      - "8080:8080"
+      - "5421:5421"
 
 networks:
   voz-network:

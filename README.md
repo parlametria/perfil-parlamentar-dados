@@ -106,12 +106,12 @@ Para configurar essas variáveis de ambiente execute os seguintes passos:
 2. Preencha o arquivo .env com o seguinte conteúdo:
 
 ```
-R_PASSWORD=secret
-POSTGRES_HOST=<host>
-POSTGRES_USER=<user>
-POSTGRES_DATABASE=<database>
-POSTGRES_PASSWORD=<password>
-BOT_SECRET=<app-secret-voz-ativa-bot>
+PASSWORD=secret
+PGHOST=<host>
+PGUSER=<user>
+PGDATABASE=<database>
+PGPASSWORD=<password>
+APP_SECRET=<app-secret-voz-ativa-bot>
 ```
 
 O docker-compose ficará responsável por interpretar essas variáveis de ambiente.
@@ -146,3 +146,7 @@ docker exec -it r-updater sh -c "cd /app/bd && Rscript update_bd.R"
 ```
 
 Pronto! A migração foi realizada com sucesso!
+
+#### Atualização automática
+
+O r-updater já vem configurado com um job que executa todas as terças às 7 horas da manhã no horário de Recife. Para alterar este horário configure o comando crontab presente no Dockerfile neste mesmo diretório.
