@@ -10,7 +10,8 @@
 fetch_eleicoes <- function(
   anos = c(2018), 
   cargos = c("Presidente", "Governador", "Senador", "Deputado Federal", "Deputado Estadual"),
-  nivel_detalhamento = "Brasil") {
+  nivel_detalhamento = "Brasil",
+  elected = TRUE) {
   
   library(tidyverse)
   library(cepespR)
@@ -23,17 +24,23 @@ fetch_eleicoes <- function(
         function(y) {
           print(paste0("Baixando resultado das eleições de ", x, " para o cargo ", y, "..."))
           return(get_elections(x, 
-                          only_elected = TRUE,
+                          only_elected = elected,
                           position = y,
                           regional_aggregation = nivel_detalhamento) %>% 
-            mutate(CPF_CANDIDATO = as.character(CPF_CANDIDATO)) %>% 
-            select(CPF_CANDIDATO, 
-                   DESCRICAO_CARGO, 
-                   ANO_ELEICAO, 
-                   NOME_CANDIDATO, 
-                   NOME_URNA_CANDIDATO,
+            mutate(CPF_CANDIDATO = as.character(CPF_CANDIDATO)) %>%
+            select(CPF_CANDIDATO,
+                   ANO_ELEICAO,
+                   NUM_TURNO,
+                   DESCRICAO_CARGO,
+                   SIGLA_UE,
+                   DES_SITUACAO_CANDIDATURA,
+                   DESC_SIT_TOT_TURNO, 
+                   NUMERO_CANDIDATO, 
                    SIGLA_PARTIDO,
-                   SIGLA_UF_NASCIMENTO))
+                   COMPOSICAO_COLIGACAO, 
+                   QTDE_VOTOS
+                )
+            )
         }
       )
   })
@@ -51,10 +58,14 @@ fetch_all_cargos_politicos <- function(parlamentares_datapath = here::here("craw
   library(tidyverse)
   library(purrr)
   
-  cargos_nacionais <- c("Presidente", "Governador", "Senador", "Deputado Federal", "Deputado Estadual")
+  cargos_nacionais <- list(cargos = c("Presidente", "Governador", "Senador", "Deputado Federal", "Deputado Estadual"),
+                           elected = c(TRUE, TRUE, FALSE, FALSE, TRUE))
   anos_eleicoes_nacionais <- seq(1998, 2018, 4)
-  cargos_eleicoes_nacionais <- fetch_eleicoes(anos_eleicoes_nacionais,
-                                              cargos_nacionais)
+  cargos_eleicoes_nacionais <- purrr::map2_df(cargos_nacionais$cargos,
+                                              cargos_nacionais$elected,
+                                              ~ fetch_eleicoes(anos_eleicoes_nacionais,
+                                              .x, 
+                                              elected = FALSE))
   
   cargos_municipais <- c("Vereador", "Prefeito")
   anos_eleicoes_municipais <- seq(2000, 2016, 4)
@@ -70,5 +81,5 @@ fetch_all_cargos_politicos <- function(parlamentares_datapath = here::here("craw
   
   cargos_parlamentares <- left_join(parlamentares, todos_cargos, by = c("cpf" =  "CPF_CANDIDATO"))
   
-  return(eleicoes)
+  return(cargos_parlamentares)
 } 
