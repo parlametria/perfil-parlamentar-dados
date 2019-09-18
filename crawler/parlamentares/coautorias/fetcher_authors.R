@@ -7,12 +7,12 @@ library(tidyverse)
 #' @return Dataframe contendo informações sobre os autores da proposição
 #' @examples
 #' fetch_autores(2121442)
-fetch_autores <- function(id) {
-  print(paste0("Extraindo autores da proposição cujo id é ", id))
+fetch_autores <- function(id_prop) {
+  print(paste0("Extraindo autores da proposição cujo id é ", id_prop))
   
   url <-
     paste0("https://www.camara.leg.br/proposicoesWeb/prop_autores?idProposicao=",
-           id)
+           id_prop)
   
   autores <- tryCatch({
     data <-
@@ -21,16 +21,18 @@ fetch_autores <- function(id) {
       httr::content('text', encoding = 'utf-8') %>%
       xml2::read_html()  %>%
       rvest::html_nodes('#content') %>%
-      rvest::html_nodes('span') %>%
-      rvest::html_text()
+      rvest::html_nodes('a') %>% 
+      rvest::html_attr("href") %>% 
+      as.data.frame()
     
-    res <-
-      purrr::map_df(data[3:length(data)], function(x) {
-        return(tribble( ~ id, ~ deputado, id, x))
-      })
+    data <- 
+      data %>% mutate(id_req = id_prop, 
+                      id_deputado = str_extract(., "\\d.*")) %>% 
+      filter(!is.na(id_deputado)) %>% 
+      select(id_req, id = id_deputado)
     
   }, error = function(e) {
-    return(tribble(~ id, ~ deputado))
+    return(tribble(~ id_req, ~ id))
   })
   
   return(autores)
@@ -46,10 +48,6 @@ fetch_all_autores <- function(proposicoes, parlamentares) {
   autores <- purrr::map_df(proposicoes$id, ~ fetch_autores(.x))
   
   autores <- autores %>%
-    rename(id_req = id, nome_eleitoral = deputado)
-  
-  autores <- autores %>%
-    mapeia_nome_para_id(parlamentares) %>%
     distinct() %>%
     group_by(id_req) %>%
     mutate(peso_arestas = 1 / n()) %>%
@@ -68,6 +66,7 @@ fetch_all_autores <- function(proposicoes, parlamentares) {
 get_coautorias <- function(parlamentares, autores) {
   coautorias <- autores %>%
     distinct() %>%
+    filter(peso_arestas < 1) %>% 
     full_join(autores, by = c("id_req", "peso_arestas")) %>%
     filter(id.x != id.y) %>%
     distinct()
