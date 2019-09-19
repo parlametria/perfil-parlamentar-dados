@@ -35,8 +35,8 @@ filter_deputados_ambientalistas <- function(
   ambientalistas <- read_csv(url_ambientalistas, col_types = cols(`Identificação Deputado` = "c")) %>% 
     arrange(desc(`Índice de Ativismo Ambiental`)) %>% 
     head(100) %>% 
-    select(id_deputado = `Identificação Deputado`,
-           nome_deputado = `Deputado`)
+    select(id_coautor_ambientalista = `Identificação Deputado`,
+           nome_coautor_ambientalista = `Deputado`)
   
   return(ambientalistas)
   
@@ -55,8 +55,19 @@ coautorias_ambientalistas <- function(
   library(tidyverse)
   
   coautores_ambientalistas <- coautorias %>% 
-    filter(id.x %in% ambientalistas$id_deputado | id.y %in% ambientalistas$id_deputado) %>% 
-    select(-id_req) %>% 
+    filter(!id.x %in% ambientalistas$id_coautor_ambientalista,
+           id.y %in% ambientalistas$id_coautor_ambientalista)
+  
+  coautores_ambientalistas <- coautores_ambientalistas %>%
+    group_by(id.x) %>%
+    mutate(coautores_ambientalistas =
+             paste(nome_eleitoral.y %>%
+                     unique(),
+                   collapse = ", ")) %>%
+    select (-c(id.y, nome_eleitoral.y, sg_partido.y, uf.y)) %>%
+    distinct() %>%
+    mutate(total_peso_relacao_ambientalistas = sum(peso_arestas)) %>%
+    select(-c(id_req, peso_arestas)) %>%
     distinct()
   
   return(coautores_ambientalistas)

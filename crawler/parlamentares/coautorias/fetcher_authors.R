@@ -71,13 +71,13 @@ get_coautorias <- function(parlamentares, autores) {
     filter(id.x != id.y) %>%
     distinct()
   
-  coautorias <- coautorias %>%
-    remove_duplicated_edges() %>%
-    mutate(peso_arestas = sum(peso_arestas),
-           num_coautorias = n()) %>%
-    ungroup() %>%
-    mutate(id.x = as.character(id.x),
-           id.y = as.character(id.y))
+  # coautorias <- coautorias %>%
+  #   remove_duplicated_edges() %>%
+  #   mutate(peso_arestas = sum(peso_arestas),
+  #          num_coautorias = n()) %>%
+  #   ungroup() %>%
+  #   mutate(id.x = as.character(id.x),
+  #          id.y = as.character(id.y))
   
   coautorias <- coautorias %>%
     inner_join(parlamentares, by = c("id.x" = "id")) %>%
