@@ -13,8 +13,8 @@
 #' 2. A classificação de um bem como sendo propriedade rural é feita utilizando um conjunto de exemplos que 
 #' pode ser observado na variavel classificacao_rural do código abaixo.
 process_propriedades_rurais <- function(
-  bens_data_path = here::here("crawler/parlamentares/patrimonio/propriedades-rurais/bem_candidato_2018_BRASIL.csv"),
-  candidatos_data_path = here::here("crawler/parlamentares/patrimonio/propriedades-rurais/consulta_cand_2018_BRASIL.csv")
+  bens_data_path = here::here("parlametria/crawler/patrimonio/propriedades-rurais/bem_candidato_2018_BRASIL.csv"),
+  candidatos_data_path = here::here("parlametria/crawler/patrimonio/propriedades-rurais/consulta_cand_2018_BRASIL.csv")
   ) {
   
   library(tidyverse)

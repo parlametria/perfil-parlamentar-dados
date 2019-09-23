@@ -7,7 +7,7 @@ process_deputados_propriedades_rurais <- function() {
   library(tidyverse)
   library(here)
   
-  source(here("crawler/parlamentares/patrimonio/propriedades-rurais/process_propriedades_rurais.R"))
+  source(here("parlametria/crawler/patrimonio/propriedades-rurais/process_propriedades_rurais.R"))
   
   bens_rurais <- process_propriedades_rurais() %>% 
     mutate(link = paste0("http://divulgacandcontas.tse.jus.br/divulga/#/candidato/2018/2022802018/", 

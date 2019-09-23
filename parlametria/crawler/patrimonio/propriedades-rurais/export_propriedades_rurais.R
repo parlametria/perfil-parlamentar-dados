@@ -1,6 +1,6 @@
 library(tidyverse)
 library(here)
-source(here::here("crawler/parlamentares/patrimonio/propriedades-rurais/analyzer_propriedades_rurais.R"))
+source(here::here("parlametria/crawler/patrimonio/propriedades-rurais/analyzer_propriedades_rurais.R"))
 
 if(!require(optparse)){
   install.packages("optparse")
@@ -13,7 +13,7 @@ message("LEIA O README deste diretório")
 message("Use --help para mais informações\n")
 
 option_list = list(
-  make_option(c("-o", "--out"), type="character", default=here::here("crawler/raw_data/propriedades_rurais.csv"), 
+  make_option(c("-o", "--out"), type="character", default=here::here("parlametria/raw_data/patrimonio/propriedades_rurais.csv"), 
               help="nome do arquivo de saída [default= %default]", metavar="character")
 ) 
 
