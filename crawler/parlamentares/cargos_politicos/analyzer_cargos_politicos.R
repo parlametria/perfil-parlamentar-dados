@@ -58,10 +58,10 @@ filter_suplentes_com_exercicio <- function(
         case_when(
           ano_eleicao == 2018 ~ 56,
           ano_eleicao == 2014 ~ 55,
-          ano_eleicao == 2010 ~ 56,
-          ano_eleicao == 2006 ~ 56,
-          ano_eleicao == 2002 ~ 56,
-          ano_eleicao == 1998 ~ 56,
+          ano_eleicao == 2010 ~ 54,
+          ano_eleicao == 2006 ~ 53,
+          ano_eleicao == 2002 ~ 52,
+          ano_eleicao == 1998 ~ 51,
           TRUE ~ as.numeric(NA)
         )
     ) %>%
