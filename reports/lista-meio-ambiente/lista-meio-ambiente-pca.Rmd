@@ -136,7 +136,7 @@ Os vetores que representam as variáveis de proporção de doações do agro e o
 
 A direção dos vetores indica o sentido de crescimento das variáveis quando explicadas pelas dimensões obtidas via PCA.
 
-Abaixo iremos identificar quais os deputados representados na visualização
+Abaixo podemos identificar quais os deputados representados na visualização anterior.
 ```{r}
 dados_pca_augment <- augment(dados_pca, dados_pre_pca) %>% 
   left_join(dados_parlamentares %>% 

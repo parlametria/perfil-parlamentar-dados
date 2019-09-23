@@ -82,7 +82,7 @@ ggpairs(dados_pre_pca %>% select(-id)) +
   theme(panel.grid.major = element_blank())
 ```
 
-Não existe uma correlação forte entre as variáveis, contudo pela distribuição das mesmas é possível perceber o quanto são enviesadas a direita, observada uma cauda bem longa. Isso evidencia a presença de poucos valores bastante altos na escala de cada variável, enquanto que a maior parte dos dados se concentra numa faixa menor em relação a esses valores mais raros.
+Não existe uma correlação forte entre as variáveis, contudo pela distribuição das mesmas é possível perceber o quanto são enviesadas à direita, observada uma cauda bem longa. Isso evidencia a presença de poucos valores bastante altos na escala de cada variável, enquanto que a maior parte dos dados se concentra numa faixa menor em relação a esses valores mais raros.
 
 Para remediar esse problema podemos usar a escala de log nos dados que irá considerar a magnitude de grandeza dos valores e não os valores absolutos em si.
 
@@ -177,7 +177,7 @@ fviz_pca_biplot(dados_pca, repel = FALSE,
 
 A direção dos vetores indica o sentido de crescimento das variáveis quando explicadas pelas dimensões obtidas via PCA.
 
-Abaixo iremos identificar quais os deputados representados na visualização
+Abaixo iremos identificar quais os deputados representados na visualização anterior:
 ```{r}
 dados_pca_augment <- augment(dados_pca, dados_pre_pca) %>% 
   left_join(dados_parlamentares %>% 
