@@ -1,0 +1,364 @@
+---
+title: "Deputados alinhados ao meio ambiente"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+library(ggchicklet)
+library(DT)
+
+source(here("crawler/votacoes/utils_votacoes.R"))
+```
+
+```{r}
+receita <- read_csv(here("crawler/raw_data/receitas_tse_2018.csv")) %>% 
+  group_by(uf, cargo) %>% 
+  mutate(media_uf = mean(total_receita)) %>% 
+  ungroup() %>% 
+  
+  mutate(proporcao_receita_uf = total_receita / media_uf) %>%
+  mutate(partido = padroniza_sigla(partido)) %>% 
+  mutate(partido = if_else(str_detect(partido, "PATRI"), "PATRIOTA", partido)) %>% 
+  mutate(partido = if_else(str_detect(partido, "PC DO B"), "PCdoB", partido)) %>% 
+  
+  group_by(partido) %>% 
+  mutate(campanhas_total_partido = sum(proporcao_receita_uf)) %>% 
+  ungroup() %>% 
+  mutate(proporcao_receita = proporcao_receita_uf / campanhas_total_partido)
+  
+deputados_raw <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")) %>% 
+  filter(casa == "camara", em_exercicio == 1) %>% 
+  mutate(sg_partido = padroniza_sigla(sg_partido))
+
+deputados_receita <- deputados_raw %>% 
+  left_join(receita %>% 
+              select(cpf, partido, total_receita, proporcao_receita), 
+            by = c("cpf" = "cpf", "sg_partido" = "partido")) %>% 
+  mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", sg_partido, "/", uf))
+```
+
+```{r}
+aderencia <- read_csv(here("bd/data/aderencia.csv"), col_types = cols(id_parlamentar_voz = "c")) %>% 
+  filter(id_tema == 0, id_partido == 0) %>%
+  mutate(id_parlamentar = substring(id_parlamentar_voz, 2)) %>% 
+  select(id_parlamentar, faltou, partido_liberou, nao_seguiu, seguiu, aderencia)
+
+deputados <- deputados_receita %>% 
+  left_join(aderencia, by = c("id" = "id_parlamentar"))
+```
+
+<br>
+<br>
+Analisamos votações de Meio Ambiente ocorridas no plenário da Câmara em 2019. Calculamos a aderência dos deputados ao Governo nessas votações. A aderência vai de 0 a 100% sendo 100% o valor mais aderente ao Governo.
+
+`r deputados %>% filter(aderencia == -1 | is.na(aderencia)) %>% nrow()` deputados não puderam ter sua aderência calculada pois faltaram várias votações relacionadas ao Meio Ambiente.
+
+Calculamos a aderência para `r deputados %>% filter(aderencia != -1) %>% nrow()` deputados e mostramos a distribuição dessa variável seguir.
+
+```{r fig.height=6}
+deputados %>% 
+  filter(aderencia != -1) %>% 
+  mutate(aderencia = aderencia * 100) %>% 
+  ggplot(aes(x = aderencia)) +
+  geom_histogram(boundary = 0, color = "#231D38", fill = "#3E3463") +
+  labs(x = "Aderência ao Governo em votações de Meio Ambiente",
+       y = "Nº de deputados",
+       title = "Distribuição dos deputados \nna aderência ao Governo em Meio Ambiente") +
+  theme_ipsum_rc()
+```
+
+```{r fig.height=6}
+paleta <- c("#b54142", "#c17a66", "#c6ac8d", "#6b92a5", "#247fb5")
+
+total <- nrow(deputados %>% filter(aderencia != -1))
+
+deputados %>%
+  filter(aderencia != -1) %>%
+  mutate(
+    classe = case_when(
+      aderencia <= 0.2 ~ "0-20%",
+      aderencia <= 0.4 ~ "20-40%",
+      aderencia <= 0.6 ~ "40-60%",
+      aderencia <= 0.8 ~ "60-80%",
+      aderencia <= 1 ~ "80-100%"
+    )
+  ) %>%
+  group_by(classe) %>%
+  summarise(n = n(),
+            perc = round((n / total) * 100, 2)) %>%
+  ggplot(aes(x = classe, y = n, fill = classe)) +
+  geom_chicklet(width = .5) +
+  geom_text(aes(label = paste0(n, " (", perc, "%)")),
+            hjust = -0.1,) +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 400)) +
+  scale_fill_manual(values = c(
+    "0-20%" = paleta[1],
+    "20-40%" = paleta[2],
+    "40-60%" = paleta[3],
+    "60-80%" = paleta[4],
+    "80-100%" = paleta[5]
+  )) +
+  labs(x = "Faixa de aderência",
+       y = "Quantidade de deputados",
+       fill = "Faixa de aderência",
+       title = "Distribuição dos deputados \nem faixas de aderência",
+       caption = paste0("Calculado para ", total, " deputados")) +
+  guides(fill = FALSE) +
+  theme_ipsum_rc()
+```
+
+
+### Lista com aderência dos Deputados
+```{r}
+deputados %>%
+  filter(aderencia != -1) %>%
+  mutate(nome_eleitoral = str_to_title(nome_eleitoral)) %>% 
+  mutate(aderencia = aderencia * 100,
+         proporcao_receita = proporcao_receita * 100) %>%
+  mutate(aderencia = round(aderencia, 2),
+         proporcao_receita = round(proporcao_receita, 2)) %>% 
+  arrange(aderencia, desc(nao_seguiu)) %>%
+  select(nome_eleitoral, sg_partido, uf, faltou, seguiu, nao_seguiu, aderencia, proporcao_receita) %>%
+  datatable(
+    class = 'cell-border stripe',
+    filter = 'top',
+    rownames = FALSE,
+    options = list(pageLength = 5,
+                   dom = 'ftp'),
+    colnames = c(
+      "Nome",
+      "Partido",
+      "UF",
+      "Faltou",
+      "Seguiu",
+      "Não seguiu",
+      "Aderência (%)",
+      "Investimento do partido (%)"
+    )
+  ) %>% 
+  formatStyle(columns = dplyr::everything(.), 'font-size' = "13px")
+```
+
+### Lista de Deputados com aderência indefinida
+```{r}
+deputados %>% 
+  filter(aderencia == -1) %>% 
+  mutate(nome_eleitoral = str_to_title(nome_eleitoral)) %>% 
+  mutate(proporcao_receita = proporcao_receita * 100) %>%
+  mutate(proporcao_receita = round(proporcao_receita, 2)) %>% 
+    select(nome_eleitoral, sg_partido, uf, faltou, seguiu, nao_seguiu, proporcao_receita) %>%
+  datatable(
+    class = 'cell-border stripe',
+    filter = 'top',
+    rownames = FALSE,
+    options = list(pageLength = 5,
+                   dom = 'ftp'),
+    colnames = c(
+      "Nome",
+      "Partido",
+      "UF",
+      "Faltou",
+      "Seguiu",
+      "Não seguiu",
+      "Investimento do partido (%)"
+    )
+  ) %>% 
+  formatStyle(columns = dplyr::everything(.), 'font-size' = "13px")
+```
+
+```{r}
+atores_meio_ambiente <- read_csv(here("reports/lista-aderencia-meio-ambiente/data/atores_meio_ambiente.csv"),
+                                 col_types = cols(id_autor = "c"))
+
+deputados_atores <- atores_meio_ambiente %>% 
+  group_by(id_autor) %>% 
+  summarise(
+    nome_autor = first(nome_autor),
+    n = n(),
+    n_documentos = sum(qtd_de_documentos))
+```
+
+```{r}
+deputados <- deputados %>% 
+  left_join(deputados_atores, by = c("id" = "id_autor"))
+```
+
+### Relação entre atividade parlamentar e Aderência
+
+No eixo x temos a aderência ao Governo em votações de Meio Ambiente. Já no eixo y temos o número de documentos (emendas, requerimentos, etc) com autoria do deputado. Cada ponto na visualização é um deputado e é possível identificá-lo com o mouse.
+```{r fig.width = 5, fig.height = 4}
+library(plotly)
+
+g <- deputados %>%
+  filter(aderencia != -1) %>% 
+  ggplot(aes(x = (aderencia * 100), y = n_documentos)) +
+  geom_point(aes(text = sprintf("%s \nNúmero de documentos: %s \nAderência %s",
+                                nome,
+                                n_documentos,
+                                scales::percent(aderencia))), 
+             height = 0.2, col = "tomato3") +
+  labs(x = "Aderência ao Governo (%)",
+       y = "Número de documentos em proposições de Meio Ambiente",
+       title = "Atividade parlamentar x Aderência") +
+  theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+  config(displayModeBar = F) %>%
+  layout(autosize = F)
+```
+
+
+### Relação entre investimento no partido e Aderência
+
+No eixo x temos a aderência ao Governo em votações de Meio Ambiente. Já no eixo y temos o investimento proporcional em campanhas médias feitas pelo partido no deputado. A proporção de campanhas médias vai de 0 a 100% e indica o nível de investimento do partido no deputado durante as eleições de 2018. Mais sobre como esse cálculo foi feito pode ser lido [aqui](https://analytics-ufcg.github.io/vozativa-dados/investimento-partidos-novo-calculo.html).
+
+```{r fig.width = 5, fig.height = 4}
+library(plotly)
+
+g <- deputados %>%
+  filter(aderencia != -1) %>% 
+  ggplot(aes(x = (aderencia * 100), y = proporcao_receita * 100)) +
+  geom_point(aes(text = sprintf("%s \nInvestimento: %s \nAderência %s",
+                                nome,
+                                scales::percent(proporcao_receita),
+                                scales::percent(aderencia))), 
+             height = 0.2, col = "tomato3") +
+  labs(x = "Aderência ao Governo (%)",
+       y = "Investimento do partido nas eleições de 2018",
+       title = "Investimento do partido x Aderência") +
+  theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+  config(displayModeBar = F) %>%
+  layout(autosize = F)
+```
+
+#### Coautorias conjuntas considerando aderência
+
+O novo cálculo dos links do grafo foi feito considerando, além do peso das relações, o inverso da aderência dos deputados ao Governo (levando em conta que quem vota com o Governo, vota contra o Meio Ambiente).
+
+ novo_peso_arestas = peso_arestas * ((1 - aderencia.x) + (1 - aderencia.y))
+ 
+```{r}
+source(here("reports/lista-aderencia-meio-ambiente/scripts/generate-graph.R"))
+
+aderencia_filtered <- aderencia %>% 
+  select(id_parlamentar, aderencia)
+
+coautorias <- read_csv(here("crawler/raw_data/coautorias.csv")) %>% 
+  mutate(id.x = as.character(id.x),
+         id.y = as.character(id.y)) %>% 
+  left_join(aderencia_filtered, by = c("id.x" = "id_parlamentar")) %>% 
+  left_join(aderencia_filtered, by = c("id.y" = "id_parlamentar"))
+  
+coautorias <- coautorias %>% 
+  mutate(aderencia.x = 1 - aderencia.x,
+         aderencia.y = 1 - aderencia.y,
+         novo_peso_arestas = peso_arestas * (aderencia.x + aderencia.y)) %>% 
+  distinct()
+
+nodes <- generate_nodes(coautorias = coautorias)
+edges <- generate_edges(coautorias, nodes)
+
+fn <- generate_graph(nodes, edges)
+      # .style('fill', '#000000') para mudar a cor
+      fn <- 
+        htmlwidgets::onRender(fn, 
+                                '
+          function(el,x) {
+            var tooltip = d3.select("body")
+          	  .append("div")
+          	  .style("position", "absolute")
+          	  .style("z-index", "10")
+          	  .style("visibility", "hidden")
+          	  .style("background-color", "#ffffff")
+          	  .style("padding", "5px")
+          	  .style("border", "solid 2px #000")
+          	  .style("border-radius", "6px")
+          	  .style("font-size", "1.2rem")
+        
+            d3.selectAll(".node")
+              .on("mouseover", null)
+              .style("opacity", 1)
+              .style("cursor", "pointer");
+        
+            d3.selectAll("circle")
+              .on("mouseover", function(d) { 
+                  return tooltip.html(d.name )
+                    .style("visibility", "visible")
+                    .style("top",(event.pageY-10)+"px")
+                    .style("left",(event.pageX+10)+"px");})
+        	    .on("mouseout", function(d) {
+                  return tooltip.html(d.name)
+                    .style("visibility", "hidden");});
+            }
+              '
+        )
+fn
+  
+```
+
+Este novo grafo modifica apenas a espessura dos links, e os grupos formados ainda são os mesmos:
+
+ * Ambientalistas com Molon: é possível notar a importância e influência de Alessandro Molon na conexão de dois grandes grupos, indicando que este deputado coautora tanto com os deputados do mesmo partido que o seu, o PSB, quanto de partidos diferentes, como PSD, PSDB, PP, PDT, DEM, PT e PTB, mas todos com aderências ao Meio Ambiente bastante consideráveis. As ligações mais fortes são entre Aliel Machado, Weliton Prado e Alessandro Molon, sendo a mais forte entre os dois primeiros.
+
+ * Unidos por Brumadinho: O grupo composto por deputados de diversos partidos, como PSL, PSOL, PT, AVANTE, PATRIOTA, PODEMOS, SOLIDARIEDADE, PRB e MDB, são do estado de Minas Gerais e se uniram ao coautorarem juntos em 6 proposições relacionadas ao desastre de Brumadinho/MG. Podemos notar a diversidade na espessura do grafo, indicando que alguns deputados são mais aderentes ao Governo, como Lucas Gonzalez.
+
+ * Grupo de partidos mais articulados: Alguns grupos são formados por deputados do mesmo partido e com aderência bastante semelhantes, como é o caso do NOVO e PT. Os deputados do NOVO coautoraram em um projeto de temática Energia, Recursos Hídricos e Minerais - o PL 2302/2019; e o grupo do PT, criaram juntos o PFC 8/2019, uma proposta com tema Agricultura, Pecuária, Pesca e Extrativismo. Dois deputados do PT se destacam por possuírem relações mais fortes: Afonso Florence e Bohn Gass.
+ 
+```{r}
+coautorias %>%
+  select(
+    nome_eleitoral.x,
+    nome_eleitoral.y,
+    peso_arestas,
+    num_coautorias,
+    aderencia.x,
+    aderencia.y,
+    novo_peso_arestas
+    ) %>%
+  distinct() %>%
+  mutate(aderencia.x = round(aderencia.x, 2),
+         aderencia.y = round(aderencia.y, 2),
+         peso_arestas = round(peso_arestas, 2),
+         novo_peso_arestas = round(novo_peso_arestas, 2)) %>% 
+  arrange(desc(novo_peso_arestas)) %>%
+  datatable(
+   class = 'cell-border stripe',
+    filter = 'top',
+   rownames = FALSE,
+   options = list(pageLength = 5,
+    dom = 'ftp'),
+    colnames = c(
+    "Deputado A",
+    "Deputado B",
+    "Peso da relação",
+    "Num. de autorias conjuntas",
+    "Aderência ao MA do deputado A",
+    "Aderência ao MA do deputado B",
+    "Novo peso da relação"
+  )
+  ) %>%
+  formatStyle(columns = dplyr::everything(.), 'font-size' = "13px")
+```
+
+
+ 

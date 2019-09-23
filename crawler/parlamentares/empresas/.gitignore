@@ -1,0 +1,4 @@
+empresas/
+*.zip
+exportadoras/
+paraleliza_empresas_doadores.R

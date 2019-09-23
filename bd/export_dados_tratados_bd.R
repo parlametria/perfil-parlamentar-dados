@@ -17,36 +17,64 @@ message("Use --help para mais informações\n")
               metavar="character")	
 )	
 
- opt_parser <- OptionParser(option_list=option_list)	
+opt_parser <- OptionParser(option_list=option_list)	
 
- opt <- parse_args(opt_parser)	
+opt <- parse_args(opt_parser)	
 
- output <- opt$output	
-
- source(here::here("bd/analyzer_data_bd.R"))	
+output <- opt$output	
 
 message("Processando dados...")	
+
+source(here("bd/processor/parlamentares/processa_parlamentares.R"))
 parlamentares <- processa_parlamentares()	
+
+source(here("bd/processor/perguntas/processa_perguntas.R"))
 perguntas <- processa_perguntas()	
+
+source(here("bd/processor/proposicoes/processa_proposicoes.R"))
 proposicoes <- processa_proposicoes()	
+
+source(here("bd/processor/proposicoes/processa_proposicoes_temas.R"))
 proposicoes_temas <- processa_proposicoes_temas()
+
+source(here("bd/processor/respostas/processa_respostas.R"))
 respostas <- processa_respostas()
+
+source(here("bd/processor/temas/processa_temas.R"))
 temas <- processa_temas()
+
+source(here("bd/processor/votos/processa_votos.R"))
 votos <- processa_votos()
+
+source(here("bd/processor/votacoes/processa_votacoes.R"))
 votacoes <- processa_votacoes()
+
+source(here("bd/processor/orientacoes/processa_orientacoes.R"))
 orientacoes <- processa_orientacoes()
+
+source(here("bd/processor/comissoes/processa_comissoes.R"))
 comissoes <- processa_comissoes()
+
+source(here("bd/processor/comissoes/processa_composicao_comissoes.R"))
 composicao_comissoes <- processa_composicao_comissoes()
+
+source(here("bd/processor/mandatos/processa_mandatos.R"))
 mandatos <- processa_mandatos()
+
+source(here("bd/processor/liderancas/processa_liderancas.R"))
 liderancas <- processa_liderancas()
+
+source(here("bd/processor/aderencia/processa_aderencia.R"))
 aderencia <- processa_aderencia()
+
+source(here("bd/processor/partidos/processa_partidos.R"))
 partidos <- processa_partidos()
 
 message("Escrevendo dados em csv...")	
-write_csv(parlamentares, paste0(output, "parlamentares.csv"))	
-write_csv(perguntas, paste0(output, "perguntas.csv"))	
-write_csv(proposicoes, paste0(output, "proposicoes.csv"))	
-write_csv(proposicoes_temas, paste0(output, "proposicoes_temas.csv"))	
+write_csv(parlamentares, paste0(output, "parlamentares.csv"))
+write_csv(perguntas, paste0(output, "perguntas.csv"))
+write_csv(proposicoes, paste0(output, "proposicoes.csv"))
+write_csv(proposicoes_temas, paste0(output, "proposicoes_temas.csv"))
 write_csv(respostas, paste0(output, "respostas.csv"))
 write_csv(temas, paste0(output, "temas.csv"))
 write_csv(votos, paste0(output, "votos.csv"))

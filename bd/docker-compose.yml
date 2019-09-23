@@ -5,6 +5,7 @@ services:
   db:
     image: postgres:11.1-alpine
     container_name: postgres
+    restart: always
     environment:
       - POSTGRES_DB=vozativa
       - POSTGRES_USER=postgres

@@ -1,0 +1,168 @@
+---
+title: "Aplicando PCA em dados de vínculo de parlamentares com o agronegócio"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(GGally, quietly = TRUE)
+library(broom)
+library(factoextra)
+library(hrbrthemes)
+library(plotly)
+theme_set(theme_minimal())
+```
+
+```{r}
+dados_parlamentares <- read_csv(here("crawler/raw_data/indice_vinculo_economico_agro.csv"), col_types = cols(id = "c"))
+```
+
+### Contexto
+
+PCA é um procedimento matemático que utiliza uma transformação ortogonal (ortogonalização de vetores) para converter um conjunto de observações de variáveis possivelmente correlacionadas num conjunto de valores de variáveis linearmente não correlacionadas chamadas de componentes principais.
+
+Em outras palavras, PCA é uma tentativa de reduzir muitas dimensões a duas dimensões principais.
+
+Nosso **objetivo** é aplicar PCA aos dados de vínculo de deputados atualmente em exercício com relação ao agronegócio.
+
+### Sobre os dados
+
+As variáveis selecionadas foram:
+- **total_declarado:** Total declarado pelo deputado ao TSE nas eleições de 2018 em bens relacionados a Agricultura e Pecuária. Ex: imóveis rurais, fazendas, cabeças de gado, etc.
+- **numero_empresas_associadas:** Número de empresas nas quais o deputado é sócio. Dados obtidos da Receita Federal por meio do [Brasil.IO](brasil.io) em Agosto de 2019.
+- **proporcao_doacoes_agro:** razão entre o total doado por empresas relacionadas a Agricultura (pelo CNAE) e o total doado para o parlamentar durante as eleições de 2018.
+<!-- Adicione mais colunas conforme mais variáveis forem sendo calculadas -->
+
+```{r}
+dados_pre_pca <- dados_parlamentares %>% 
+  mutate(proporcao_doacoes_agro = if_else(is.na(proporcao_doacoes_agro), 0, proporcao_doacoes_agro)) %>% 
+  select(id, total_declarado, numero_empresas_associadas, proporcao_doacoes_agro)
+```
+
+A seguir iremos analisar essas variáveis e como se correlacionam.
+
+```{r fig.height = 6}
+ggpairs(dados_pre_pca %>% select(-id)) +
+  theme(panel.grid.major = element_blank())
+```
+
+Não existe uma correlação forte entre as variáveis, contudo pela distribuição das mesmas é possível perceber o quanto são Enviesadas a direita com uma cauda bem longa. Isso evidencia a presença de poucos valores bastante altos na escala de cada variável, enquanto que a maior parte dos dados se concentra numa faixa menor em relação a esses valores mais raros.
+
+Para remediar esse problema podemos usar a escala de log nos dados que irá considerar a magnitude de grandeza dos valores e não os valores absolutos em si.
+
+```{r}
+dados_pre_pca_com_log <- dados_pre_pca %>% 
+  mutate_each(funs(log2(. + 1)), -c(id))
+```
+
+```{r fig.height = 6}
+ggpairs(dados_pre_pca_com_log %>% select(-id)) +
+  theme(panel.grid.major = element_blank())
+```
+
+É possível perceber para a variável do total declarado em bens rurais que houve um mudança na distribuição. Como esperado a escala de log espalha as observações de forma que é possível observar os pontos de forma mais clara e com o objetivo de entender as grandes diferenças entre as variáveis mas também as pequenas diferenças.
+
+```{r}
+dados_pre_pca_com_log_scaled <- dados_pre_pca_com_log %>% 
+  mutate_each(funs(scale(.) %>% c), -c(id))
+```
+
+Com o objetivo de normalizar as variáveis de forma que cada uma tenha o mesmo "poder" de influência no cálculo das dimensões via PCA todas elas foram colocadas numa mesma escala.
+
+```{r}
+dados_pca <- dados_pre_pca_com_log_scaled %>% 
+    select(-id) %>%
+    prcomp(scale = FALSE) 
+```
+
+Aplicamos o PCA aos dados e obtivemos três dimensões que são resultado da combinação linear das variáveis escolhidas.
+
+```{r fig.height = 6}
+fviz_eig(dados_pca) +
+  labs(title = "Porcentagem de variância explicada pelas dimensões",
+       x = "Dimensões",
+       y = "Porcentagem de varîância explicada") +
+  theme_ipsum_rc()
+```
+
+Cada dimensão obtida representa uma porcentagem da variância nos dados, em outras palavras, cada dimensão consegue explicar parte dos dados. Como estamos interessados em reduzir as dimensões iremos considerar apenas as duas primeiras dimensões que explicam ~45% e ~34%, respectivamente.
+
+A seguir apresentamos como os deputados estão distribuídos considerando essas duas dimensões que melhor explicam os dados.
+
+```{r}
+fviz_pca_ind(dados_pca,
+             col.ind = "cos2", # Color by the quality of representation
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             geom = c("point"),
+             repel = FALSE     # Avoid text overlapping
+             ) +
+  labs(title = "PCA aplicado aos dados de deputados",
+       color = "Qualidade de representação") +
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom")
+```
+
+Deputados que estão próximos no gráfico são parecidos em relação as variáveis iniciais escolhidas.
+A cor do deputado indica a qualidade de representação das dimensões com relação as variáveis originais.
+
+As variáveis originais tiveram suas dimensões reduzidas a duas, no entanto podemos observar como essas variáveis influenciam as dimensões obtidas via PCA.
+
+```{r}
+fviz_pca_biplot(dados_pca, repel = FALSE,
+                geom = c("point"),
+                col.var = "#2E9FDF", # Variables color
+                col.ind = "#696969"  # Individuals color
+                ) +
+  labs(title = "Variáveis explicadas via PCA") +
+  theme_ipsum_rc()
+```
+
+Os vetores que representam as variáveis de proporção de doações do agro e o número de empresas associadas possuem direções parecidas, o que corrobora visualizações anteriores que mostraram que essas variáveis eram as mais correlacionadas.
+
+A direção dos vetores indica o sentido de crescimento das variáveis quando explicadas pelas dimensões obtidas via PCA.
+
+Abaixo podemos identificar quais os deputados representados na visualização anterior.
+```{r}
+dados_pca_augment <- augment(dados_pca, dados_pre_pca) %>% 
+  left_join(dados_parlamentares %>% 
+              mutate(nome = paste0(nome_eleitoral, " - ", sg_partido, "/", uf)) %>% 
+              select(id, nome),
+            by = "id")
+```
+
+```{r fig.width = 5, fig.height = 4}
+g <- dados_pca_augment %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2)) +
+  geom_point(aes(text = sprintf("%s \nDeclarado: %.2f \nNº de empresas: %.2f \nDoações Agro: %s",
+                               nome,
+                               round(total_declarado, 2),
+                               round(numero_empresas_associadas, 2),
+                               scales::percent(proporcao_doacoes_agro)
+                               )
+                 ),
+            height = 0.2, col="steelblue") +
+  labs(x = "Dim1",
+       y = "Dim2",
+       title = "Deputados distribuídos nas dimensões obtidas via PCA") +
+  theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+ config(displayModeBar = F) %>%
+ layout(autosize = F)
+```
+
