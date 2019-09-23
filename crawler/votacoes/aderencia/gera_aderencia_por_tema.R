@@ -1,10 +1,10 @@
 #' @title Exporta dados de proposições votadas em 2019 com temas específicos e informações de aderência nessas proposições
 #' @description Exporta proposições votadas em 2019 a partir de um tema e aderência de deputados nessas votações
 #' @param ano Ano de ocorrência das votações
-#' @param tema Nome do tema classificado e obtido pela Câmara dos deputados (https://dadosabertos.camara.leg.br/api/v2/referencias/proposicoes/codTema)
+#' @param tema_filtro Nome do tema classificado e obtido pela Câmara dos deputados (https://dadosabertos.camara.leg.br/api/v2/referencias/proposicoes/codTema)
 #' @examples
 #' votos <- export_aderencia_votacoes_camara_por_tema(2019, "Energia, Recursos Hídricos e Minerais|Agricultura, Pecuária, Pesca e Extrativismo")
-export_aderencia_votacoes_camara_por_tema <- function(ano, tema) {
+export_aderencia_votacoes_camara_por_tema <- function(ano = 2019, tema_filtro = "Energia, Recursos Hídricos e Minerais|Agricultura, Pecuária, Pesca e Extrativismo") {
   library(tidyverse)
   source(here::here("crawler/votacoes/fetcher_votacoes_camara.R"))
   source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
@@ -14,8 +14,6 @@ export_aderencia_votacoes_camara_por_tema <- function(ano, tema) {
   source(here("crawler/votacoes/orientacoes/fetcher_orientacoes_camara.R"))
   source(here("crawler/votacoes/aderencia/processa_dados_aderencia.R"))
   
-  ano = 2019
-  
   votacoes <-
     fetch_all_votacoes_por_intervalo_camara(ano, ano)
   
@@ -24,7 +22,7 @@ export_aderencia_votacoes_camara_por_tema <- function(ano, tema) {
                   ~ fetch_info_proposicao(.x))
   
   proposicoes_votadas_filtradas <- proposicoes_votadas_detalhadas %>% 
-    filter(str_detect(tema, "Energia, Recursos Hídricos e Minerais|Agricultura, Pecuária, Pesca e Extrativismo"))
+    filter(str_detect(tema, tema_filtro))
   
   write_csv(proposicoes_votadas_filtradas, here("crawler/raw_data/proposicoes_agricultura_energia_minerais.csv"))
   
