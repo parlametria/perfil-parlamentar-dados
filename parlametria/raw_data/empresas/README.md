@@ -27,3 +27,6 @@
 - **somente_empresas_gerais_2014.csv**: Lista de empresas que doaram para campanha nas eleições de 2014 de parlamentres atualmente em exerício (eleitos em 2018).
 
 - **somente_empresas_gerais_doadoras_2014.csv**: Lista de empresas que doaram para campanha nas eleições de 2014 de parlamentres atualmente em exerício (eleitos em 2018) com informações de qual deputado recebeu a doação dessas empresas.
+
+
+Os dados brutos utilizados nesse módulo (foram usados para dar origem aos datasets suprecitados) foram processados pelo [Brasil.io](Brasil.io). Também utilizamos a api [Minha Receita](https://github.com/cuducos/minha-receita) feita por Cuducos.
