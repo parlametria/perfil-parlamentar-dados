@@ -39,7 +39,7 @@ process_indice_vinculo_agro <- function() {
     select(id, tem_propriedade_rural, total_declarado_propriedade_rural, tem_empresa_agricola, proporcao_doacoes_agro) %>%
     
     ## Substituindo NA por 0
-    mutate_at(.funs = funs(replace_na(., 0)), .vars = vars(tem_propriedade_rural,
+    mutate_at(.funs = list(~replace_na(., 0)), .vars = vars(tem_propriedade_rural,
                                                            total_declarado_propriedade_rural,
                                                            tem_empresa_agricola,
                                                            proporcao_doacoes_agro
