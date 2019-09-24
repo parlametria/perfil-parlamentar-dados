@@ -47,7 +47,7 @@ process_socios_empresas_doadores <- function(
   library(tidyverse)
   library(here)
   
-  source(here("crawler/parlamentares/receitas/analyzer_receitas_tse.R"))
+  source(here("parlametria/crawler/receitas/analyzer_receitas_tse.R"))
   source(here("crawler/parlamentares/empresas/process_empresas_exportadoras.R"))
   
   parlamentares_doacoes <- processa_doacoes_deputados_tse(ano) %>% 
@@ -97,7 +97,7 @@ process_empresas_doadores <- function(
   library(tidyverse)
   library(here)
   
-  source(here("crawler/parlamentares/receitas/analyzer_receitas_tse.R"))
+  source(here("parlametria/crawler/receitas/analyzer_receitas_tse.R"))
   source(here("crawler/parlamentares/empresas/fetcher_empresas.R"))
   
   parlamentares_doacoes <- processa_doacoes_deputados_tse(ano) %>% 

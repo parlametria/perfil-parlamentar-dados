@@ -1,6 +1,6 @@
 library(tidyverse)
 library(here)
-source(here::here("crawler/parlamentares/cargos_politicos/analyzer_cargos_politicos.R"))
+source(here::here("parlametria/crawler/cargos_politicos/analyzer_cargos_politicos.R"))
 
 if(!require(optparse)){
   install.packages("optparse")
@@ -13,7 +13,7 @@ message("LEIA O README deste diretório")
 message("Use --help para mais informações\n")
 
 option_list = list(
-  make_option(c("-o", "--out"), type="character", default=here::here("crawler/raw_data/historico_parlamentares_cargos_politicos.csv"), 
+  make_option(c("-o", "--out"), type="character", default=here::here("parlametria/raw_data/cargos_politicos/historico_parlamentares_cargos_politicos.csv"), 
               help="nome do arquivo de saída [default= %default]", metavar="character")
 ) 
 
