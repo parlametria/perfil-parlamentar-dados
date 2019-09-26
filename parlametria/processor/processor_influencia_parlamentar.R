@@ -27,34 +27,73 @@ processor_influencia_parlamentar <- function() {
     group_by(id_parlamentar) %>% 
     summarise(numero_de_mandatos = n_distinct(ano_eleicao))
   
-  lideranca_partido <- read_csv(here("parlametria/raw_data/resumo/parlamentares_cargos.csv"),
-                     col_types = cols(id = "c")) %>% 
-    select(id, Líder) %>% 
-    mutate(lideranca_partido = if_else(is.na(Líder), 0, 1)) %>% 
-    select(-Líder)
-  
-  titularidade_comissoes <- read_csv(here("parlametria/raw_data/resumo/parlamentares_cargos.csv"),
-                                     col_types = cols(id = "c")) %>% 
+  n_max_comissoes <-  read_csv(here("parlametria/raw_data/resumo/parlamentares_cargos.csv"),
+                               col_types = cols(id = "c")) %>% 
     select(id, Titular) %>% 
     separate_rows(Titular, sep = ";") %>% 
-    group_by(id) %>% 
-    summarise(n_comissoes = n_distinct(Titular))
+    filter(!is.na(Titular)) %>% 
+    count(id) %>% 
+    pull(n) %>% 
+    max()
     
+  indice_comissoes_cargos <- read_csv(here("parlametria/raw_data/resumo/parlamentares_cargos.csv"),
+                     col_types = cols(id = "c")) %>% 
+    select(id, 
+           Presidente, 
+           `Primeiro Vice-presidente`,
+           `Segundo Vice-presidente`, 
+           `Terceiro Vice-presidente`,
+           Titular) %>% 
+    gather(key = "cargo", value = "comissao", Presidente:Titular) %>% 
+    filter(!is.na(comissao)) %>% 
+    separate_rows(comissao, sep = ";") %>% 
+    mutate(peso = case_when(
+      str_detect(cargo, "Presidente") ~ 4,
+      str_detect(cargo, "Primeiro Vice-presidente") ~ 3,
+      str_detect(cargo, "Segundo Vice-presidente") ~ 2,
+      str_detect(cargo, "Terceiro Vice-presidente") ~ 1,
+      str_detect(cargo, "Titular") ~ 1 / n_max_comissoes,
+    )) %>% 
+    group_by(id) %>% 
+    summarise(score_comissoes = sum(peso)) %>% 
+    ungroup() %>% 
+    mutate(indice_comissoes = score_comissoes / 11 ) %>%  ## 11 é a soma dos pesos 4 + 3 + 2 + 1 + 1 (peso máximo para comissões)
+    select(id, indice_comissoes)
+    
+  lideranca_partido <- read_csv(here("parlametria/raw_data/resumo/parlamentares_cargos.csv"),
+                                     col_types = cols(id = "c")) %>% 
+    select(id, Líder, `Vice-líder`, `Representante`) %>%
+    gather(key = "cargo", value = "partido", Líder:Representante) %>% 
+    filter(!is.na(partido)) %>% 
+    separate_rows(partido, sep = ";") %>% 
+    mutate(peso = case_when(
+      str_detect(cargo, "Líder") ~ 3,
+      str_detect(cargo, "Vice-líder") ~ 2,
+      str_detect(cargo, "Representante") ~ 3
+    )) %>% 
+    group_by(id) %>% 
+    summarise(score_liderancas = sum(peso)) %>% 
+    ungroup() %>% 
+    mutate(indice_liderancas = score_liderancas / 8) %>%  ## 8 é a soma dos pesos 3 + 2 + 3
+    select(id, indice_liderancas)
+  
   ## TODO: porcentagem dos votos recebidos em 2018 com relação a UF e ao partido
   
   deputados_processed <- deputados_id %>% 
     left_join(movimentos_renovacao, by = "id") %>% 
     left_join(investimento_partidario, by = "id") %>% 
     left_join(mandatos_cargos, by = c("id" = "id_parlamentar")) %>% 
+    left_join(indice_comissoes_cargos, by = "id") %>% 
     left_join(lideranca_partido, by = "id") %>% 
-    left_join(titularidade_comissoes, by = "id") %>% 
     ## Substituindo NA por 0
     mutate_at(.funs = list(~replace_na(., 0)), .vars = vars(participou_movimento_renovacao,
-                                                           investimento_partidario)
+                                                           investimento_partidario,
+                                                           indice_comissoes,
+                                                           indice_liderancas)
               ) %>% 
     
     mutate(indice_influencia_parlamentar = 
-             (lideranca_partido + n_comissoes + (numero_de_mandatos / 6)) / 3)
+             (indice_liderancas + indice_comissoes + (numero_de_mandatos / 6)) / 3)
 
   return(deputados_processed)
 }
