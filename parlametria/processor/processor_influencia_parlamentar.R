@@ -1,7 +1,7 @@
 #' @title Processa e cruza dados de atuação dos parlamentares para construção de um índice de influência
 #' @description Processa e cruza dados de atuação dos parlamentares para construção de um índice de influência
 #' @return Dataframe contendo variáveis utilizadas para construção de índice de influência.
-processor_influencia_parlamentar <- function() {
+process_indice_influencia_parlamentar <- function() {
   library(tidyverse)
   library(here)
   options(scipen=999)
