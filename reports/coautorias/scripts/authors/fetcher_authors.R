@@ -45,12 +45,14 @@ fetch_autores <- function(id) {
       as.data.frame() %>%
       filter(!is.na(.)) %>%
       mutate(id_deputado = stringr::str_extract(., "[\\d]+"),
-             id = as.character(id)) %>%
-      select(id, id_deputado)
+             id = as.character(id))
     
     if (nrow(data) == 0) {
       return(tribble( ~ id, ~ id_deputado))
     }
+  
+    data <- data %>% 
+      select(id, id_deputado)
 
   }, error = function(e) {
     return(tribble( ~ id, ~ id_deputado))
