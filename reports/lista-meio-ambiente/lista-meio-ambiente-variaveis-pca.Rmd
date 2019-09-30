@@ -1,0 +1,283 @@
+---
+title: "Aplicando PCA em dados de parlamentares"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(GGally, quietly = TRUE)
+library(broom)
+library(factoextra)
+library(hrbrthemes)
+library(plotly)
+library(DT)
+library(cluster)
+library(RColorBrewer)
+theme_set(theme_minimal())
+
+source(here("reports/lista-meio-ambiente/scripts/process_info_deputados.R"))
+```
+
+```{r}
+# dados_parlamentares <- read_csv(here("crawler/raw_data/indice_vinculo_economico_agro.csv"), col_types = cols(id = "c"))
+dados_parlamentares <- process_info_deputados()
+```
+
+### Contexto
+
+PCA é um procedimento matemático que utiliza uma transformação ortogonal (ortogonalização de vetores) para converter um conjunto de observações de variáveis possivelmente correlacionadas num conjunto de valores de variáveis linearmente não correlacionadas chamadas de componentes principais.
+
+Em outras palavras, PCA é uma tentativa de reduzir muitas dimensões a um conjunto menor de dimensões principais.
+
+Nosso **objetivo** é aplicar PCA aos dados de deputados que envolvem domínios diversos como atuação na câmara em proposições de Meio Ambiente, aderência ao governo em votações de Meio Ambiente, posições em votações importantes da legislatura passada, vínculo com o agronegócio, dentre outras.
+
+### Sobre os dados
+
+As variáveis selecionadas foram:
+
+- **total_declarado:** Total declarado pelo deputado ao TSE nas eleições de 2018 em bens relacionados a Agricultura e Pecuária. Ex: imóveis rurais, fazendas, cabeças de gado, etc.
+- **numero_empresas_associadas:** Número de empresas nas quais o deputado é sócio. Dados obtidos da Receita Federal por meio do [Brasil.IO](brasil.io) em Agosto de 2019.
+- **proporcao_doacoes_agro:** razão entre o total doado por empresas relacionadas a Agricultura (pelo CNAE) e o total doado para o parlamentar durante as eleições de 2018.
+- **aderencia:** aderência ao Governo em votações de Meio Ambiente. Indicador da proporção do número de votações em que seguiu a orientação do Governo em votações de Meio Ambiente. Valor entre 0 e 1, mas também pode ser indefinido quando não há votações suficientes para o cálculo da aderência.
+- **proporcao_campanhas_medias_receita** indicador do nível de investimento do partido no deputado durante as eleições de 2018. Valor entre 0 e 1 que é melhor explicado neste [relatório](https://analytics-ufcg.github.io/vozativa-dados/investimento-partidos).
+- **n_frentes** quantidade de frentes relacionadas ao Meio Ambiente que o deputado faz parte.
+- **total_documentos** número de documentos que o deputado foi autor relacionadas ao tema de Meio Ambiente.
+
+<!-- - **Número de frentes relacionadas a Integridade e Transparência:** quantidade de frentes relacionadas a Integridade e Transparência que o deputado faz parte. -->
+<!-- - **Atuação em proposições de Integridade e Transparência:** número de documentos que o deputado foi autor relacionadas ao de Integridade e Transparência. -->
+<!-- - **Aderência ao Meio Ambiente em votações passadas:** aderência à orientação do Instituto Democracia e Sustentabilidade em votações importante no contexto de Meio Ambiente na legislatura passada. -->
+
+<!-- Adicione mais colunas conforme mais variáveis forem sendo calculadas -->
+
+```{r}
+dados_pre_pca <- dados_parlamentares %>% 
+  mutate(proporcao_doacoes_agro = if_else(is.na(proporcao_doacoes_agro), 0, proporcao_doacoes_agro)) %>% 
+  mutate(proporcao_campanhas_medias_receita = if_else(is.na(proporcao_campanhas_medias_receita), 
+                                                      0, proporcao_campanhas_medias_receita)) %>% 
+  mutate(n_frentes = if_else(is.na(n_frentes), 0, as.numeric(n_frentes))) %>% 
+  mutate(total_documentos = if_else(is.na(total_documentos), 0, total_documentos)) %>% 
+  mutate(aderencia = if_else(is.na(aderencia), 0, as.numeric(aderencia))) %>% 
+  select(-c(nome_eleitoral, uf, sg_partido))
+```
+
+A seguir iremos analisar essas variáveis e como se correlacionam.
+
+```{r fig.height = 6}
+ggpairs(dados_pre_pca %>% select(-id)) +
+  theme(panel.grid.major = element_blank())
+```
+
+Não existe uma correlação forte entre as variáveis, contudo pela distribuição das mesmas é possível perceber o quanto são enviesadas à direita, observada uma cauda bem longa. Isso evidencia a presença de poucos valores bastante altos na escala de cada variável, enquanto que a maior parte dos dados se concentra numa faixa menor em relação a esses valores mais raros.
+
+Para remediar esse problema podemos usar a escala de log nos dados que irá considerar a magnitude de grandeza dos valores e não os valores absolutos em si.
+
+```{r}
+dados_pre_pca_com_log <- dados_pre_pca %>% 
+  mutate_each(funs(log2(. + 1)), -c(id, aderencia))
+```
+
+```{r fig.height = 6}
+ggpairs(dados_pre_pca_com_log %>% select(-id)) +
+  theme(panel.grid.major = element_blank())
+```
+
+É possível perceber para a variável do total declarado em bens rurais que houve um mudança na distribuição. Como esperado a escala de log espalha as observações de forma que é possível observar os pontos de forma mais clara e com o objetivo de entender as grandes diferenças entre as variáveis mas também as pequenas diferenças. Nota-se ainda a presença de muitos valores iguais a 0 nessa variável.
+
+```{r}
+dados_pre_pca_com_log_scaled <- dados_pre_pca_com_log %>% 
+  mutate_each(funs(scale(.) %>% c), -c(id))
+```
+
+Com o objetivo de normalizar as variáveis de forma que cada uma tenha o mesmo "poder" de influência no cálculo das dimensões via PCA todas elas foram colocadas numa mesma escala.
+
+```{r}
+dados_pca <- dados_pre_pca_com_log_scaled %>% 
+    select(-id) %>%
+    prcomp(scale = FALSE) 
+```
+
+Aplicamos o PCA aos dados e obtivemos dimensões que são resultado da combinação linear das variáveis escolhidas.
+
+```{r fig.height = 6}
+fviz_eig(dados_pca, addlabels = TRUE) +
+  labs(title = "Porcentagem de variância explicada pelas dimensões",
+       x = "Dimensões",
+       y = "Porcentagem de varîância explicada") +
+  theme_ipsum_rc()
+```
+
+Cada dimensão obtida consegue representar uma porcentagem da variância nos dados, em outras palavras, cada dimensão consegue explicar parte dos dados. 
+
+Cada dimensão pode ser influenciada por um grupo de variáveis distintas e essas dimensões podem ser usadas para explicar a variância nos dados dessas variáveis.
+
+A seguir apresentamos quais variáveis mais influenciaram as dimensões geradas via PCA.
+
+```{r}
+info_pca <- get_pca_var(dados_pca)
+
+(info_pca$contrib) %>%
+  as.data.frame() %>%
+  rownames_to_column(var = "variavel") %>% 
+
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE,
+            options = list(pageLength = 5,
+                           dom = 't',
+                           scrollX = TRUE),
+            colnames = c("Variável", "Dim1", "Dim2", "Dim3", "Dim4", "Dim5", "Dim6", "Dim7"))
+```
+
+A seguir apresentamos como os deputados estão distribuídos considerando essas as duas dimensões que melhor explicam os dados.
+
+```{r}
+fviz_pca_ind(dados_pca,
+             col.ind = "cos2", # Color by the quality of representation
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             geom = c("point"),
+             repel = FALSE     # Avoid text overlapping
+             ) +
+  labs(title = "PCA aplicado aos dados de deputados",
+       color = "Qualidade de representação") +
+  theme_ipsum_rc() +
+  theme(legend.position = "bottom")
+```
+
+Deputados que estão próximos no gráfico são parecidos em relação as variáveis iniciais escolhidas.
+A cor do deputado indica a qualidade de representação das dimensões com relação as variáveis originais.
+
+As variáveis originais tiveram suas dimensões reduzidas a duas, no entanto podemos observar como essas variáveis influenciam as dimensões obtidas via PCA.
+
+```{r}
+fviz_pca_biplot(dados_pca, repel = FALSE,
+                geom = c("point"),
+                col.var = "#2E9FDF", # Variables color
+                col.ind = "#696969"  # Individuals color
+                ) +
+  labs(title = "Variáveis explicadas via PCA") +
+  theme_ipsum_rc()
+```
+
+É possível perceber que vetores ligados ao vínculo com o Agronegócio possuem direções parecidas.
+
+A direção dos vetores indica o sentido de crescimento das variáveis quando explicadas pelas dimensões obtidas via PCA.
+
+Abaixo iremos identificar quais os deputados representados na visualização anterior:
+```{r}
+dados_pca_augment <- augment(dados_pca, dados_pre_pca) %>% 
+  left_join(dados_parlamentares %>% 
+              mutate(nome = paste0(nome_eleitoral, " - ", sg_partido, "/", uf)) %>% 
+              select(id, nome),
+            by = "id")
+```
+
+```{r fig.width = 5, fig.height = 4}
+g <- dados_pca_augment %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2)) +
+  geom_point(aes(text = sprintf("%s \nDeclarado: %.2f \nNº de empresas: %.2f \nDoações Agro: %s",
+                               nome,
+                               round(total_declarado, 2),
+                               round(numero_empresas_associadas, 2),
+                               scales::percent(proporcao_doacoes_agro)
+                               )
+                 ),
+            height = 0.2, col="steelblue") +
+  labs(x = "Dim1",
+       y = "Dim2",
+       title = "Deputados distribuídos nas dimensões obtidas via PCA") +
+  theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+ config(displayModeBar = F) %>%
+ layout(autosize = F)
+```
+
+## Agrupamento
+
+Nosso objetivo a seguir é identificar grupos de deputados que são parecidos entre si, a partir das 4 dimensões principais obtidas via PCA. A técnica utilizada para o agrupamento será o k-means. O k-means é um dos algoritmos mais usados para agrupamento e para usá-lo é necessário definir a quantidade de grupos que devem ser formados e os critérios (variáveis) para que elementos sejam agrupados.
+
+### Dimensões escolhidas
+
+- **Dim1:** indica o vínculo com o agro no domínio do negócio e é inflluenciada pelas variáveis originais: **numero_empresas_associadas**	e **proporcao_doacoes_agro**.
+- **Dim2:** indica a atuação na câmara dos deputados com relação a proposições e votações de Meio Ambiente. É influenciada pelas variáveis **aderencia** e **total_documentos**.
+- **Dim3:** indica relaciomento com o agro com relação a posse de propriedades rurais e o recebido em doações vindas desse setor. É influenciada pelas variáveis: **total_declarado** e **proporcao_doacoes_agro**.
+- **Dim4:** indica a atuação dos parlamentares em frentes relacionadas ao Meio Ambiente. É influenciada pela variável **n_frentes**.
+
+```{r}
+set.seed(12346)
+
+km <- dados_pca_augment %>% 
+    select(.fittedPC1, .fittedPC2, .fittedPC3, .fittedPC4) %>% 
+    kmeans(centers = 4, nstart = 20)
+
+dists <- dist(dados_pca_augment %>% 
+                select(.fittedPC1, .fittedPC2, .fittedPC3, .fittedPC4), 
+              method = 'euclidean')
+
+colors <- brewer.pal(4, 'Set2')
+
+plot(silhouette(km$cluster, dists), col = colors, border = NA, main = 'Silhueta dos grupos usando o K-means')
+```
+
+Quanto maior é a medida da silhouette maior é a homogeneidade em um grupo, ou seja, os deputados de um grupo parecem mais com deputados do próprio grupo do que com deputados de outro grupo. A divisão em 4, é o máximo que podemos obter em termos da medida da silhouette e que faça sentido.
+
+```{r}
+dados_pca_augment_km <- dados_pca_augment %>%
+  mutate(cluster = km$cluster %>% as.factor)
+
+dados_pca_augment_km_long <- dados_pca_augment_km %>%
+  select(id, Dim1 = .fittedPC1, Dim2 = .fittedPC2, Dim3 = .fittedPC3, Dim4 = .fittedPC4, cluster) %>% 
+  gather('variable', 'value', -id, -cluster, factor_key=T)
+```
+
+```{r}
+ggplot(dados_pca_augment_km_long, aes(x = variable, y = value, colour = variable)) +
+  geom_boxplot() +
+  geom_jitter(alpha = 0.2, width = 0.2) +
+  geom_hline(alpha = 0.3, yintercept = 0) + 
+  facet_wrap(~ cluster, ncol = 2) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  labs(title = 'Agrupamento de deputados', x = '', y = '', color = "Variável") +
+  scale_color_brewer(palette='Dark2')
+```
+
+Tanto pelo gráfico da Silhoeutte quanto pela visualização acima é possível perceber que existem deputados que não se encaixam muito bem no grupo no qual foi classificado pelo algoritmo. Isto pode ocorrer devido a proximidade desses deputados de dois ou mais grupos sem que o mesmo se encaixe perfeitamente em nenhum deles. Portanto, pode existir casos isolados de deputados que pertecem a um grupo embora não seja tão parecido com ele.
+
+#### Grupos
+
+- **Grupo 1 (Agro é pop):** estão presentes aqueles que possuem um alto vínculo com o agronegócio, seja em sociedades de empresas agrícolas ou ainda em doações recebidas do setor, variáveis que influenciam a Dim1. Também são deputados estão ligados ao agro como proprietários Rurais. São deputados que, em sua maioria, participam de frentes ligadas ao Meio Ambiente.
+
+- **Grupo 2 (Zona cinza):** a maioria deste grupo não está ligado ao agro através das variáveis de doações e sociedade em empresas, embora existam casos que sim. Também não se destacam pela atuação na Câmara em proposições de Meio Ambiente ou ainda aderência alta ao Governo em votações de Meio Ambiente. Ou seja, nesse grupo podem existir deputados que são contra ao Governo em votações de Meio Ambiente em 2019.
+
+- **Grupo 3 (Atuantes):** a maioria dos deputados deste grupo destaca-se ou pela atuação em proposições de Meio Ambiente (na autoria de documentos) ou por ser bem aderente ao Governo. É possível que apenas uma dessas variáveis seja a causa deste deputado está presente neste grupo.
+
+- **Grupo 4 (Agro é super pop):** este grupo é o menor em número e concentra aqueles deputados que possuem altos valores na primeira dimensão (Dim1). Ou seja, valores altos na dimensão influenciada pelas variáveis de número de sociedades em empresas e a porcentagem de doação do Agro com relação a sua campanha.
+
+##### Integrantes dos grupos
+
+```{r}
+dados_pca_augment %>% 
+    mutate(cluster = km$cluster %>% as.factor) %>% 
+    datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE,
+            options = list(pageLength = 5,
+                           dom = 't',
+                           scrollX = TRUE))
+```
