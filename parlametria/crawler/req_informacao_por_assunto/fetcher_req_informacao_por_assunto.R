@@ -1,69 +1,123 @@
-#' @title Retorna os autores de requerimentos de informação sobre um determinado assunto (em formato regex)
-#' @description Recebe uma URL para um arquivo csv de proposições e um termo do assunto a ser filtrado 
-#' (em formato de expressão regular) e retorna os autores que fizeram os requerimentos de informação sobre o assunto.
-#' @param url_proposicoes URL do arquivo csv das proposições
-#' @param term Termo da busca (regex)
-#' @return Dataframe dos autores que fizeram os requerimentos de informação sobre o assunto.
-#' @examples
-#' fetch_req_informacao_autores(term = 'agricultura|meio ambiente')
-fetch_req_informacao_autores <- function(
-  url_proposicoes = "https://dadosabertos.camara.leg.br/arquivos/proposicoes/csv/proposicoes-2019.csv",
-  term) {
+#' @title Retorna os autores de proposições sobre determinados assuntos, ano e tipo de proposição
+#' @description Recebe o tipo da proposição (SIGLA), o ano e os termos de busca do filtro e retorna 
+#' os autores das proposições encontradas.
+#' @param tipo_proposicao Sigla do tipo da proposição
+#' @param ano Ano de apresentação das proposições
+#' @param terms Termos da buca
+#' @return Dataframe dos autores das proposições encontradas.
+fetch_req_informacao_autores <- function(tipo_proposicao = "RIC",
+                                         ano = 2019,
+                                         terms = c('agricultura', 'meio ambiente')) {
   library(tidyverse)
   
   source(here::here("crawler/parlamentares/coautorias/fetcher_authors.R"))
   
-  proposicoes_ric <- read_delim(url_proposicoes, ";") %>% 
-    filter(siglaTipo == "RIC") %>% 
-    select(id, ementa, urlInteiroTeor)
+  proposicoes <-
+    purrr::map_df(terms, ~ filter_proposicoes_by_term(tipo_proposicao, ano, .x))
   
-  proposicoes <- 
-    filter_proposicoes_inteiro_teor_and_ementa_by_term(proposicoes_ric,
-                                                       term)
-  parlamentares <- read_csv(here::here("crawler/raw_data/parlamentares.csv"))
+  autores <- fetch_all_autores(proposicoes)
   
-  autores <- fetch_all_autores(proposicoes) %>% 
-    select(-peso_arestas)
-  
-  autores <- autores %>% 
-    group_by(id) %>% 
+  autores_summarised <- autores %>%
+    distinct() %>% 
+    group_by(id_deputado) %>%
     summarise(num_req_informacao = n())
   
-  return(autores)
+  return(autores_summarised)
+}
+#' @title Retrona as proposições da busca
+#' @description Recebe um tipo de proposição, o ano e o termo de busca e monta a requisição à API da Câmara e 
+#' retorna os ids das proposições filtradas.
+#' @param tipo_proposicao Sigla do tipo da proposição
+#' @param ano Ano de apresentação das proposições
+#' @param terms Termos da buca
+#' @return Conjunto de ID das proposições filtradas
+filter_proposicoes_by_term <- function(tipo_proposicao, ano, terms) {
+  library(tidyverse)
+  library(httr)
+  
+  proposicoes <- tryCatch({
+    body_args <-
+      list(
+        order = "relevancia",
+        pagina = 1,
+        q = terms,
+        ano = ano,
+        tiposDeProposicao = tipo_proposicao
+      )
+    
+    data <-
+      POST(
+        url = "https://www.camara.leg.br/api/v1/busca/proposicoes/_search",
+        body = jsonlite::toJSON(body_args, auto_unbox = TRUE),
+        add_headers("Content-Type" = "application/json")
+      ) %>%
+      content()
+    
+    # Descobre o número de páginas
+    itens_por_pagina <- length(data$hits$hits)
+    num_paginas <- data$hits$total / itens_por_pagina 
+    
+    if (num_paginas %% 1 != 0) {
+      num_paginas = as.integer(num_paginas) + 1
+    }
+    
+    proposicoes <-
+      purrr::map_df(
+        seq(1, num_paginas),
+        ~ filter_proposicoes_by_term_and_page(tipo_proposicao, ano, terms, .x)
+      )
+    
+    proposicoes
+  }, error = function(e) {
+    tribble(~ id)
+  })
+  
+  return(proposicoes)
 }
 
-#' @title Filtra as proposições por termo
-#' @description Recebe um conjunto de proposições e filtra a ementa e inteiro teor pelo termo parametrizado
-#' @param proposicoes Dataframe com as proposições, contendo pelo menos id, ementa e urlInteiroTeor
-#' @param term Termo do filtro (regex)
-#' @return Id das proposições filtradas
-filter_proposicoes_inteiro_teor_and_ementa_by_term <- function(proposicoes, term) {
+#' @title Retrona as proposições da busca
+#' @description Recebe um tipo de proposição, o ano, o termo de busca e a página e monta a requisição à API da Câmara e 
+#' retorna os ids das proposições filtradas.
+#' @param tipo_proposicao Sigla do tipo da proposição
+#' @param ano Ano de apresentação das proposições
+#' @param terms Termos da buca
+#' @param pag Página da requisição
+#' @return Conjunto de ID das proposições filtradas por página
+filter_proposicoes_by_term_and_page <- function(tipo_proposicao, ano, terms, pag) {
   library(tidyverse)
-
-  proposicoes_com_inteiro_teor <-
-    map2_df(
-      proposicoes$id,
-      proposicoes$urlInteiroTeor,
-      function(x, y) {
-        source(here::here("crawler/utils/utils.R"))
-        
-        text <- extract_text_from_pdf_url(y)
-        df <- tryCatch({
-          return(data.frame(id = x, texto_inteiro_teor = text))
-          
-        }, error = function(e) {
-          return(tribble(~ id, ~ texto_inteiro_teor))
-        })
-        return(df)
+  library(httr)
+  
+  id_proposicoes <- tryCatch({
+    body_args <-
+      list(
+        order = "relevancia",
+        pagina = pag,
+        q = terms,
+        ano = ano,
+        tiposDeProposicao = tipo_proposicao
+      )
+    
+    data <-
+      POST(
+        url = "https://www.camara.leg.br/api/v1/busca/proposicoes/_search",
+        body = jsonlite::toJSON(body_args, auto_unbox = TRUE),
+        add_headers("Content-Type" = "application/json")
+      ) %>%
+      content()
+    
+    id_proposicoes <-
+      purrr::map_df(data$hits$hits, function(x) {
+        id = x %>%
+          as.data.frame() %>%
+          pull(X_id)
+        return(tibble(id = id) %>% 
+                 mutate(id = as.character(id)))
       })
-  
-  id_proposicoes_filtered <- proposicoes %>%
-    filter(str_detect(tolower(ementa), term)) %>%
-    select(id) %>%
-    rbind(proposicoes_com_inteiro_teor %>%
-            filter(str_detect(tolower(texto_inteiro_teor), term)) %>%
-            select(id)) %>% 
-    distinct()
-  
-  return(id_proposicoes_filtered)
+    
+    id_proposicoes
+  }, error = function(e) {
+    return(tribble(~ id))
+  })
+
+  return(id_proposicoes)
 }

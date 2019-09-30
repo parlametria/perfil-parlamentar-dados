@@ -37,6 +37,7 @@ fetch_autores <- function(id) {
       select(id, id_deputado)
     
   }, error = function(e) {
+    print(e)
     return(tribble( ~ id, ~ id_deputado))
   })
   
@@ -50,12 +51,6 @@ fetch_autores <- function(id) {
 #' @return Dataframe contendo informações sobre os autores da proposição
 fetch_all_autores <- function(proposicoes) {
   autores <- purrr::map_df(proposicoes$id, ~ fetch_autores(.x))
-  
-  autores <- autores %>%
-    rename(id_req = id, id = deputado) %>%
-    distinct() %>% 
-    group_by(id_req) %>%
-    mutate(peso_arestas = 1 / n())
   
   return(autores)
 }

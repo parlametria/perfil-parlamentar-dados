@@ -1,84 +1,8 @@
-process_indice_ativismo_ambiental <- function() {
-  library(tidyverse)
-  library(here)
-  
-  parlamentares <-
-    read_csv(here("crawler/raw_data/parlamentares.csv")) %>%
-    filter(casa == "camara", em_exercicio == 1) %>%
-    select(id, nome_eleitoral)
-  
-  # Discursos analisados pela RAC
-  discursos_rac <-
-    read_csv(here::here(
-      "parlametria/raw_data/discursos_rac/discursos_parlamentares.csv"
-    ))
-  
-  # Aderência ao meio ambiente
-  aderencia <-
-    read_csv(here("crawler/raw_data/parlamentares_aderencia.csv")) %>%
-    select(id, aderencia) %>%
-    mutate(aderencia = if_else(aderencia == -1 |
-                                 is.na(aderencia), 0, 1 - aderencia))
-  
-  # Proposições do Meio Ambiente
-  autores_meio_ambiente <- read_csv(here("parlametria/raw_data/autorias/atores_meio_ambiente.csv")) %>% 
-    group_by(id_autor) %>% 
-    summarise(qtd_total_de_documentos = sum(qtd_de_documentos)) %>% 
-    rename(id = id_autor, proposicoes_meio_ambiente = qtd_total_de_documentos) %>% 
-    mutate(proposicoes_meio_ambiente_indice = case_when(proposicoes_meio_ambiente > 10 ~ 1,
-                                                        proposicoes_meio_ambiente >= 2 ~ 0.5,
-                                                        proposicoes_meio_ambiente == 1 ~ 0.25,
-                                                        TRUE ~ 0))
-  
-  # Requerimentos de informação sobre MMA e agricultura
-  autores_req_info_mma_agricultura <- 
-    read_csv(here("parlametria/raw_data/autorias/req_info_meio_ambiente_agricultura.csv")) %>% 
-    mutate(requerimentos_informacao_agro_mma_indice = 
-             case_when(num_req_informacao > 10 ~ 1,
-                       num_req_informacao > 1 ~ 0.5,
-                       num_req_informacao == 1 ~ 0.25,
-                       TRUE ~ 0)) %>% 
-    rename(requerimentos_informacao_agro_mma = num_req_informacao)
-  
- 
-  # 5 frentes mais ambientalistas
-  membros_frentes_ambientalistas <- frentes_mais_ambientalistas()
-  
-  # Combo frentes agropecuária, mineração e livre mercado
-  membros_agro_mineracao_lm <- frentes_ruralistas()
-  
-  indice_ativismo_ambiental <- parlamentares %>%
-    left_join(membros_agro_mineracao_lm, by = "id") %>%
-    left_join(membros_frentes_ambientalistas, by = "id") %>%
-    left_join(discursos_rac, by = "id") %>%
-    left_join(aderencia, by = "id") %>%
-    left_join(autores_meio_ambiente, by = "id") %>%
-    left_join(autores_req_info_mma_agricultura, by = "id") %>%
-    mutate_at(
-      .funs = list(~ replace_na(., 0)),
-      .vars = vars(
-        combo_5_frentes_progressistas,
-        combo_agro_mineracao_lm,
-        proposicoes_meio_ambiente_indice,
-        discurso_normalizado,
-        aderencia
-      )
-    ) %>%
-    mutate(
-      indice_ativismo_ambiental =
-        ((combo_5_frentes_progressistas - combo_agro_mineracao_lm) +
-           proposicoes_meio_ambiente_indice +
-           discurso_normalizado +
-           aderencia
-        ) / 5
-    )
-  
-  return(indice_ativismo_ambiental)
-}
-
-
-frentes_mais_ambientalistas <- function() {
-  
+#' @title Retorna os parlamentares que são membros das frentes "mais progressistas"
+#' @description Retorna os parlamentares que são membros das frentes mais progressistas e
+#' calcula a média dessas 5 frentes.
+#' @return Dataframe dos parlamentares com o combo das frentes "progressistas"
+frentes_mais_progressistas <- function() {
   library(tidyverse)
   
   titulos_frentes_mais_ambientalistas <- c(
@@ -110,6 +34,10 @@ frentes_mais_ambientalistas <- function() {
   return(membros)
 }
 
+#' @title Retorna os parlamentares que são membros das frentes "mais ruralistas"
+#' @description Retorna os parlamentares que são membros das frentes: agropecuária, mineração e 
+#' livre mercado e calcula a média do combo das três frentes.
+#' @return Dataframe dos parlamentares membros de frentes "ruralistas"
 frentes_ruralistas <- function() {
   
   library(tidyverse)
@@ -144,4 +72,95 @@ frentes_ruralistas <- function() {
     inner_join(parlamentares, by = "id")
   
   return(membros)
+}
+
+#' @title Retorna as informações sobre o índice de ativismo ambiental dos parlamentares
+#' @description Calcula e retorna o índice de ativismo para cada parlamentar, baseado em 
+#' ((combo_5_frentes_progressistas - combo_agro_mineracao_lm) + proposicoes_meio_ambiente_indice +
+#'  discurso_normalizado + requerimentos_informacao_agro_mma_indice + aderencia) / 5
+#' @return Dataframe com o índice de ativismo ambiental e as demais colunas necessárias para seu
+#' cálculo.
+process_indice_ativismo_ambiental <- function() {
+  library(tidyverse)
+  library(here)
+  
+  parlamentares <-
+    read_csv(here("crawler/raw_data/parlamentares.csv")) %>%
+    filter(casa == "camara", em_exercicio == 1) %>%
+    select(id)
+  
+  # Discursos analisados pela RAC
+  discursos_rac <-
+    read_csv(here::here(
+      "parlametria/raw_data/discursos_rac/discursos_parlamentares.csv"
+    ))
+  
+  # Aderência ao meio ambiente
+  aderencia <-
+    read_csv(here("crawler/raw_data/parlamentares_aderencia.csv")) %>%
+    select(id, aderencia) %>%
+    mutate(aderencia = if_else(aderencia == -1 |
+                                 is.na(aderencia), 0, 1 - aderencia))
+  
+  # Proposições do Meio Ambiente
+  autores_meio_ambiente <- read_csv(here("parlametria/raw_data/autorias/atores_meio_ambiente.csv")) %>% 
+    group_by(id_autor) %>% 
+    summarise(qtd_total_de_documentos = sum(qtd_de_documentos)) %>% 
+    rename(id = id_autor, proposicoes_meio_ambiente = qtd_total_de_documentos) %>% 
+    mutate(proposicoes_meio_ambiente_indice = case_when(proposicoes_meio_ambiente > 10 ~ 1,
+                                                        proposicoes_meio_ambiente >= 2 ~ 0.5,
+                                                        proposicoes_meio_ambiente == 1 ~ 0.25,
+                                                        TRUE ~ 0)) %>% 
+    select(id, proposicoes_meio_ambiente_indice)
+  
+  # Requerimentos de informação sobre MMA e agricultura
+  autores_req_info_mma_agricultura <- 
+    read_csv(here("parlametria/raw_data/autorias/req_info_meio_ambiente_agricultura.csv")) %>% 
+    mutate(requerimentos_informacao_agro_mma_indice = 
+             case_when(num_req_informacao > 10 ~ 1,
+                       num_req_informacao > 1 ~ 0.5,
+                       num_req_informacao == 1 ~ 0.25,
+                       TRUE ~ 0)) %>% 
+    select(id = id_deputado,
+           requerimentos_informacao_agro_mma_indice)
+  
+ 
+  # 5 frentes mais ambientalistas
+  membros_frentes_ambientalistas <- frentes_mais_progressistas()
+  
+  # Combo frentes agropecuária, mineração e livre mercado
+  membros_agro_mineracao_lm <- frentes_ruralistas()
+  
+  indice_ativismo_ambiental <- parlamentares %>%
+    left_join(membros_agro_mineracao_lm, by = "id") %>%
+    left_join(membros_frentes_ambientalistas, by = "id") %>%
+    left_join(discursos_rac, by = "id") %>%
+    left_join(aderencia, by = "id") %>%
+    left_join(autores_meio_ambiente, by = "id") %>%
+    left_join(autores_req_info_mma_agricultura, by = "id") %>%
+    mutate_at(
+      .funs = list(~ replace_na(., 0)),
+      .vars = vars(
+        frente_agropecuaria,
+        frente_mineracao,
+        frente_livre_mercado,
+        combo_5_frentes_progressistas,
+        combo_agro_mineracao_lm,
+        proposicoes_meio_ambiente_indice,
+        discurso_normalizado,
+        aderencia,
+        requerimentos_informacao_agro_mma_indice
+      )
+    ) %>%
+    mutate(
+      indice_ativismo_ambiental =
+        ((combo_5_frentes_progressistas - combo_agro_mineracao_lm) +
+           proposicoes_meio_ambiente_indice +
+           discurso_normalizado +
+           requerimentos_informacao_agro_mma_indice +
+           aderencia
+        ) / 5
+    )
+  
+  return(indice_ativismo_ambiental)
 }

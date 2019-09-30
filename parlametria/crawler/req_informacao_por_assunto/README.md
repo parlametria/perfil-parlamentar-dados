@@ -3,7 +3,7 @@ Este módulo é responsável por baixar e processar os autores de requerimentos 
 
 ### Os dados
 
-Os dados foram obtidos a partir da obtenção de um conjunto de proposições (todas as de [2019](https://dadosabertos.camara.leg.br/arquivos/proposicoes/csv/proposicoes-2019.csv), por exemplo). Depois, são filtrados os requerimentos de informação (RIC) que possuem em sua ementa ou inteiro teor (com pdf "raspável") palavras que encaixem com a expressão regular `"agricultura|meio ambiente"`. A seguir são recuperados os autores destes requerimentos e, por últimos, sumarizados com a quantidade total de RIC por autor.
+Os dados foram obtidos a partir de uma requisição à API que gera os dados da Câmara, mais especificadamente a [ferramenta](https://www.camara.leg.br/busca-portal?contextoBusca=BuscaProposicoes&pagina=1&order=relevancia&abaEspecifica=true&filtros=%5B%7B%22ano%22%3A2019%7D%5D&q=meio%20ambiente&tipos=RIC) de busca. A chamada retorna as proposições que se encaixam em vários critérios de filtro, como ano, tipo da proposição e paravras-chaves, neste caso são requerimentos de informação (RIC) no ano de 2019 e com os termos "meio ambiente" e "agricultura". A seguir são recuperados os autores destes requerimentos e, por último, sumarizados com a quantidade total de RIC por autor.
 
 ### Uso
 
