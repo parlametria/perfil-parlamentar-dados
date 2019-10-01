@@ -15,22 +15,30 @@ fetch_autores <- function(id) {
            id)
   
   autores <- tryCatch({
-    data <-
+    data <- 
       httr::GET(url,
                 httr::accept_json()) %>%
-      httr::content('text', encoding = 'utf-8') %>%
+      httr::content('text',
+                    encoding = 'utf-8') %>%
       xml2::read_html()  %>%
       rvest::html_nodes('#content') %>%
-      rvest::html_nodes('span') %>%
-      rvest::html_text()
+      rvest::html_nodes('a') %>%
+      rvest::html_attr("href") %>%
+      as.data.frame() %>%
+      filter(!is.na(.)) %>%
+      mutate(id_deputado = stringr::str_extract(., "[\\d]+"),
+             id = as.character(id))
     
-    res <-
-      purrr::map_df(data[3:length(data)], function(x) {
-        return(tribble( ~ id, ~ deputado, id, x))
-      })
+    if (nrow(data) == 0) {
+      return(tribble( ~ id, ~ id_deputado))
+    }
+    
+    data <- data %>% 
+      select(id, id_deputado)
     
   }, error = function(e) {
-    return(tribble(~ id, ~ deputado))
+    print(e)
+    return(tribble( ~ id, ~ id_deputado))
   })
   
   return(autores)
@@ -40,20 +48,9 @@ fetch_autores <- function(id) {
 #' @description Recupera dados de autores de proposições a partir do conjunto de ids das proposições 
 #' e que estão no dataframe de parlamentares
 #' @param proposicoes Dataframe das proposições contendo uma coluna "id"
-#' @param proposicoes Dataframe dos parlamentares
 #' @return Dataframe contendo informações sobre os autores da proposição
-fetch_all_autores <- function(proposicoes, parlamentares) {
+fetch_all_autores <- function(proposicoes) {
   autores <- purrr::map_df(proposicoes$id, ~ fetch_autores(.x))
-  
-  autores <- autores %>%
-    rename(id_req = id, nome_eleitoral = deputado)
-  
-  autores <- autores %>%
-    mapeia_nome_para_id(parlamentares) %>%
-    distinct() %>%
-    group_by(id_req) %>%
-    mutate(peso_arestas = 1 / n()) %>%
-    select(id_req, id, peso_arestas)
   
   return(autores)
 }
