@@ -6,18 +6,19 @@
 #' @param autores_coautorias_datapath Dataframe dos autores de proposições
 #' @return Dataframe contendo informações sobre as coautorias
 process_coautorias <- function(
-  autores_coautorias_datapath = here::here("crawler/raw_data/deputados_autores_proposicoes_2019.csv"),
+  url_proposicoes = "https://dadosabertos.camara.leg.br/arquivos/proposicoes/csv/proposicoes-2019.csv",
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
   
   library(tidyverse)
   
-  source(here::here("crawler/parlamentares/coautorias/fetcher_authors.R"))
+  source(here::here("parlametria/crawler/articulacoes/analyzer_coautorias.R"))
   
-  autores <- read_csv(autores_coautorias_datapath, col_types = cols(id = "c"))
+  proposicoes <- read_delim(url_proposicoes, ";") %>% 
+    select(id)
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     select(id, nome_eleitoral, sg_partido, uf)
   
-  coautorias <- get_coautorias(parlamentares, autores)
+  coautorias <- get_lista_articulacoes(proposicoes, parlamentares)
   
   return(coautorias)
 }
