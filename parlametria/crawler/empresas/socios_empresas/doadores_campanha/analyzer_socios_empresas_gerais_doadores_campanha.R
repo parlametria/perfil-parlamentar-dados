@@ -7,13 +7,13 @@
 #' @return Dataframe com informações processadas e se a empresa é exportadora ou não.
 #' @example processa_socios_empresas_doadores()
 processa_socios_empresas_doadores <- function(
-  empresas_doadores_datapath = here::here("crawler/raw_data/empresas_doadores.csv"),
+  empresas_doadores_datapath = here::here("parlametria/raw_data/empresas/empresas_doadores.csv"),
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv"),
   empresas_info_datapath = NULL) {
   
   library(tidyverse)
   
-  source(here::here("crawler/parlamentares/empresas/process_empresas_exportadoras.R"))
+  source(here::here("parlametria/crawler/empresas/process_empresas_exportadoras.R"))
   
   empresas_doadores <- read_csv(empresas_doadores_datapath) %>% 
     select(id_deputado = id,
@@ -47,7 +47,7 @@ processa_socios_empresas_doadores <- function(
   
   if (is.null(empresas_info_datapath)) {
     cnpjs <- empresas_doadores %>% distinct(cnpj) 
-    source(here::here("crawler/parlamentares/empresas/fetcher_empresas.R"))
+    source(here::here("parlametria/crawler/empresas/fetcher_empresas.R"))
     
     empresas_info <- purrr::map_df(cnpjs$cnpj, ~ fetch_dados_empresa_por_cnpj(.x))
   } else {
@@ -71,13 +71,13 @@ processa_socios_empresas_doadores <- function(
 #' @return Dataframe com informações processadas e se a empresa é exportadora ou não.
 #' @example processa_empresas_doadores()
 processa_empresas_doadores <- function(
-  empresas_doadores_datapath = here::here("crawler/raw_data/somente_empresas_gerais_2014.csv"),
+  empresas_doadores_datapath = here::here("parlametria/raw_data/empresas/somente_empresas_gerais_2014.csv"),
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv"),
   empresas_info_datapath = NULL) {
   
   library(tidyverse)
   
-  source(here::here("crawler/parlamentares/empresas/process_empresas_exportadoras.R"))
+  source(here::here("parlametria/crawler/empresas/process_empresas_exportadoras.R"))
   
   empresas_doadores <- read_csv(empresas_doadores_datapath) %>% 
     select(cnpj = cnpj_empresa,
@@ -98,7 +98,7 @@ processa_empresas_doadores <- function(
   
   if (is.null(empresas_info_datapath)) {
     cnpjs <- empresas_doadores %>% distinct(cnpj) 
-    source(here::here("crawler/parlamentares/empresas/fetcher_empresas.R"))
+    source(here::here("parlametria/crawler/empresas/fetcher_empresas.R"))
     
     empresas_info <- purrr::map_df(cnpjs$cnpj, ~ fetch_dados_empresa_por_cnpj(.x))
   } else {

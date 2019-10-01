@@ -62,7 +62,7 @@ fetch_dados_empresa_por_cnpj <- function(cnpj) {
 #' @param empresas_socios Dataframe com as informações dos sócios em empresas
 #' @return Dataframe com informações dos sócios e das empresas agrícolas
 fetch_empresas_agricolas <- function(
-  empresas_socios = readr::read_csv(here::here("crawler/raw_data/empresas_doadores.csv"))) {
+  empresas_socios = readr::read_csv(here::here("parlametria/raw_data/empresas/empresas_doadores.csv"))) {
   library(tidyverse)
   library(here)
   
