@@ -13,7 +13,8 @@ fetch_relacionadas <- function(id_prop) {
     (RCurl::getURI(url) %>%
        jsonlite::fromJSON())$dados %>%
     as.data.frame() %>% 
-      rbind(id_prop)
+      rbind(id_prop) %>% 
+    mutate(id_ext = id_prop)
   
   return(ids_relacionadas)
 }

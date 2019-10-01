@@ -23,6 +23,7 @@ knitr::opts_chunk$set(
 library(networkD3)
 library(tidyverse)
 library(hrbrthemes)
+library(shiny)
 theme_set(theme_minimal())
 
 env <- "dev"
@@ -53,10 +54,77 @@ parlamentares <- read_csv(PATH_PARLAMENTARES, col_types = "ccc")
 
 autores <- get_dataset_autores(PATH_AUTORES)
 
-coautorias <- read_csv(PATH_COAUTORIAS, col_types = "dccicc") %>% 
-  # filter(num_coautorias > 1) %>% 
-  mutate(partido.x = str_extract(nome_eleitoral.x, "- .*(?=/)") %>% str_remove("- "),
-         partido.y = str_extract(nome_eleitoral.y, "- .*(?=/)") %>% str_remove("- "))
+
+URL <- "https://dadosabertos.camara.leg.br/api/v2/proposicoes/"
+
+fetch_relacionadas <- function(id_prop) {
+  print(paste0("Baixando proposições relacionadas a ", id_prop, "..."))
+  url <-
+    paste0(URL,
+           id_prop,
+           '/relacionadas')
+  
+  ids_relacionadas <-
+    (RCurl::getURI(url) %>%
+       jsonlite::fromJSON())$dados %>%
+    as.data.frame() %>% 
+      rbind(id_prop) %>% 
+    mutate(id_ext = id_prop)
+  
+  return(ids_relacionadas)
+}
+
+get_coautorias <- function(id, autores, parlamentares) {
+  if (typeof(id) == 'double') {
+    relacionadas <- fetch_relacionadas(id)
+    
+  } else {
+    relacionadas <-
+      purrr::map_df(id$id, ~ fetch_relacionadas(.x))
+  }
+  
+  autores <- autores %>% 
+    filter(id_req %in% relacionadas$id) %>% 
+    distinct() %>% 
+    mutate(id_req = as.character(id_req),
+           id = as.character(id)) %>% 
+    filter(peso_arestas < 1) %>% 
+    left_join(relacionadas, by = c("id_req" = "id"))
+  
+  coautorias <- autores %>%
+    full_join(autores, by = c("id_req", "peso_arestas")) %>%
+    filter(id.x != id.y)
+  
+  coautorias <- coautorias %>%
+    remove_duplicated_edges() %>%
+    mutate(peso_arestas = sum(peso_arestas),
+           num_coautorias = n()) %>%
+    ungroup() %>%
+    mutate(id_req = as.character(id_req))
+  
+  coautorias <- coautorias %>% 
+    inner_join(parlamentares, by = c("id.x" = "id")) %>% 
+    inner_join(parlamentares, by = c("id.y" = "id")) %>% 
+    select(-c(sg_partido.x, sg_partido.y, id_req)) %>% 
+    distinct()
+  
+  return(coautorias)
+}
+
+coautorias <- get_coautorias(proposicoes %>% sample_n(100), autores, parlamentares)
+
+coautorias <-
+  coautorias %>% 
+    mutate(partido.x = str_extract(nome_eleitoral.x, "- .*(?=/)") %>% str_remove("- "),
+         partido.y = str_extract(nome_eleitoral.y, "- .*(?=/)") %>% str_remove("- ")) %>% 
+  select(-id_ext.y) %>% 
+  rename(id_ext = id_ext.x)
+
+# coautorias <- read_csv(PATH_COAUTORIAS, col_types = "dccicc") %>% 
+#   mutate(partido.x = str_extract(nome_eleitoral.x, "- .*(?=/)") %>% str_remove("- "),
+#          partido.y = str_extract(nome_eleitoral.y, "- .*(?=/)") %>% str_remove("- ")) %>% 
+#   select(-id_ext.y) %>% 
+#   rename(id_ext = id_ext.x)
 ```
 
 ### As proposições
@@ -133,6 +201,17 @@ Transformamos este peso de relações em um parâmetro, entre 0.3 e 2.3, que é 
 selectInput("min_peso", "Valor mínimo dos pesos:",
              choices,
             selected = choices[2])
+
+choices_ids <- 
+  coautorias %>% 
+  select(id_ext) %>%
+  distinct() %>% 
+  as.list()
+
+selectInput("prop_id", "Id da proposição",
+             choices_ids,
+            selected = choices_ids[2])
+
 br()
 
 plotOutput("hist")
@@ -357,6 +436,7 @@ output$hist <- renderPlot({
   if(nrow(coautorias) > 0) {
     coautorias %>%
     filter(peso_arestas >= input$min_peso) %>% 
+    filter(id_ext == input$prop_id) %>% 
     ggplot(aes(x = peso_arestas)) +
     geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#10726B") +
     scale_x_continuous(limits = c(0, max(coautorias$peso_arestas) + 0.5), 
@@ -435,7 +515,8 @@ getCoautorias <- reactive({
       autores,
       parlamentares,
       coautorias %>% 
-        filter(peso_arestas >= input$min_peso))
+        filter(peso_arestas >= input$min_peso)) %>% 
+        filter(id_ext == input$prop_id)
   return(nodes_edges)
 })
 
@@ -446,6 +527,7 @@ output$dt <-
       select(nome_eleitoral.x, nome_eleitoral.y, peso_arestas, num_coautorias) %>% 
       distinct() %>% 
       filter(peso_arestas >= input$min_peso) %>% 
+      filter(id_ext == input$prop_id) %>% 
       rename(peso_relacao = peso_arestas, 
              nome_deputado_a = nome_eleitoral.x,
              nome_deputado_b = nome_eleitoral.y,

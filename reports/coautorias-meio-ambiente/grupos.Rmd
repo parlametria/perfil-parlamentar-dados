@@ -37,6 +37,64 @@ source(here::here(paste0(path, "scripts/analyzer_autorias.R")))
 source(here::here(paste0(path, "scripts/fetcher_autorias.R")))
 source(here::here(paste0(path, "scripts/generate-graph.R")))
 
+URL <- "https://dadosabertos.camara.leg.br/api/v2/proposicoes/"
+
+fetch_relacionadas <- function(id_prop) {
+  print(paste0("Baixando proposições relacionadas a ", id_prop, "..."))
+  url <-
+    paste0(URL,
+           id_prop,
+           '/relacionadas')
+  
+  ids_relacionadas <-
+    (RCurl::getURI(url) %>%
+       jsonlite::fromJSON())$dados %>%
+    as.data.frame() %>% 
+      rbind(id_prop) %>% 
+    mutate(id_ext = id_prop)
+  
+  return(ids_relacionadas)
+}
+
+get_coautorias <- function(id, autores, parlamentares) {
+  if (typeof(id) == 'double') {
+    relacionadas <- fetch_relacionadas(id)
+    
+  } else {
+    relacionadas <-
+      purrr::map_df(id$id, ~ fetch_relacionadas(.x))
+  }
+  
+  autores <- autores %>% 
+    filter(id_req %in% relacionadas$id) %>% 
+    distinct() %>% 
+    mutate(id_req = as.character(id_req),
+           id = as.character(id)) %>% 
+    filter(peso_arestas < 1) %>% 
+    left_join(relacionadas, by = c("id_req" = "id"))
+  
+  coautorias <- autores %>%
+    full_join(autores, by = c("id_req", "peso_arestas")) %>%
+    filter(id.x != id.y)
+  
+  coautorias <- coautorias %>%
+    remove_duplicated_edges() %>%
+    mutate(peso_arestas = sum(peso_arestas),
+           num_coautorias = n()) %>%
+    ungroup() %>%
+    mutate(id_req = as.character(id_req))
+  
+  coautorias <- coautorias %>% 
+    inner_join(parlamentares, by = c("id.x" = "id")) %>% 
+    inner_join(parlamentares, by = c("id.y" = "id")) %>% 
+    select(-c(sg_partido.x, sg_partido.y, id_req)) %>% 
+    distinct() %>% 
+    select(-id_ext.y) %>% 
+    rename(id_ext = id_ext.x)
+  
+  return(coautorias)
+}
+
 autores <- get_dataset_autores(here::here(paste0(path, "data/autores.csv")))
 
 parlamentares <- get_dataset_parlamentares(here::here(paste0(path, "data/parlamentares.csv")))
@@ -95,10 +153,6 @@ Transformamos este peso de relações em um parâmetro, entre 0.1 e 1, que é us
 ```{r echo=FALSE, warning=FALSE, fig.width = 8, fig.height = 6}
 choices <- proposicoes$choice
 
-#selectInput("proposition", label = "Selecione a proposição:",
-#              choices = choices, selected = choices[30])
-#br()
-
 selectInput("min_peso", "Valor mínimo dos pesos:",
               choices = seq(
                 min(coautorias$peso_arestas) %>% 
@@ -106,6 +160,17 @@ selectInput("min_peso", "Valor mínimo dos pesos:",
                 max(coautorias$peso_arestas) %>% 
                   round(2),
                 0.1), selected = choices[1])
+
+choices_ids <- 
+  coautorias %>% 
+  select(id_ext) %>%
+  distinct() %>% 
+  as.list()
+
+selectInput("prop_id", "Id da proposição",
+             choices_ids,
+            selected = choices_ids[2])
+
 br()
 
 plotOutput("hist")
@@ -125,13 +190,13 @@ Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando um
 Este é o maior agrupamento encontrado e corresponde aos deputados que coautoram juntos em requerimentos mais populares, e geralmente como uma estratégia de aproximação com seus eleitores ou porque "tá todo mundo participando".
 
 ```{r echo=FALSE, fig.width = 2, fig.height = 2}
-  forceNetworkOutput("grafo_grupo1")
+  forceNetworkOutput("grafo")
 ```
 
 Observando a rede acima, não dá pra saber quais são os partidos predominantes, então veremos a distribuição partidária deste grupo no histograma abaixo:
 
 ```{r echo=FALSE, fig.width = 4, fig.height = 3}
-plotOutput("hist_grupo1")
+plotOutput("hist_grafo")
 
 ```
 
@@ -140,72 +205,6 @@ Os partidos cujos deputados mais coautoram em requerimentos com muitos coautores
 As coautorias deste grupo se tratam de proposições que foram apensadas à PEC das demarcações, que passam a ser competência exclusiva do Congresso.
 
 <br>
-
-##### Grupo 2: A panelinha do PT
-
-A rede abaixo é totalmente composta pelo partido do PT. É possível notar dois subgrupos onde os deputados só coautoram entre si, apesar de dois deputados estarem conectados com todos da rede: Nilto Tatto e Patrus Ananias. Outra coisa também que se nota é o trio de deputados Bohn Gass, Padre João e João Daniel, que apesar de estarem conectados em uma dos subgrupos, geralmente coautoram mais entre si.
-
-```{r echo=FALSE, fig.width = 4, fig.height = 4}
-  forceNetworkOutput("grafo_grupo2")
-```
-
-Todas as coautoras estão relacionadas à PL do Veneno. Os dois grandes subgrupos coautoram na criação de voto em separado; o trio do PT coautora também na criação de requerimentos de audiências públicas.
-
-<br>
-
-##### Grupo 3: PSOL e o centrão
-
-Aqui podemos ver o trio do PSOL, Ivan Valente, Chico Alencar e Edmilson Rodrigues. Chico inclusive coautorou uma proposição com outros partidos considerados de centro, como PV e SOLIDARIEDADE; Apesar de ser do PRB atualmente, Lindomar Garçon fazia parte do PV quando a proposição foi criada.
-
-```{r echo=FALSE, fig.width = 4, fig.height = 4}
-  forceNetworkOutput("grafo_grupo3")
-```
-
-Pesquisamos a proposição assinada pelo grupo misto de partidos de esquerda e centro, disponível neste [link](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=352792), se tratando de uma proposição atualmente apensada à Lei do Licenciamento Ambiental. 
-
-<br>
-
-##### Grupo 4: Juntos na urgência
-
-O grupo abaixo foi gerado a partir da coautoria de um [requerimento](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2055513) de audiência pública relacionada à Lei do Licenciamento Ambiental.
-
-```{r echo=FALSE, fig.width = 4, fig.height = 4}
-  forceNetworkOutput("grafo_grupo4")
-```
-
-<br>
-
-##### Grupo 5: A panelinha do (P)MDB
-
-Vitor Valim, o deputado com a cor diferente, está atualmente no PROS mas era do MDB na 55ª legislatura, então existe mais um grupo onde todos os seus componentes fazem parte do mesmo partido.
-
-```{r echo=FALSE, fig.width = 4, fig.height = 4}
-  forceNetworkOutput("grafo_grupo5")
-```
-
-O grupo acima se uniu para a criação de um [requerimento](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=1513916) de desapensação da proposição PL 1546/2015, apensada à Lei do Licenciamento Ambiental. 
-
-<br>
-
-##### Grupo 6: Centrão meio direita
-
-Este grupo, composto de partidos de centro ou centro-direita, se uniu para a criação de um [requerimento](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=608448) de audiência pública para a proposição que decreta que as demarcações de terras indígenas passam a ser competência exclusiva do Congresso.
-
-```{r echo=FALSE, fig.width = 4, fig.height = 4}
-  forceNetworkOutput("grafo_grupo6")
-```
-
-Além do grupo autor do requerimento acima, há um deputado neste grupo que coautorou com apenas um deputado: Edio Lopes, com a criação de uma [proposição](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=359502), atualmente apensada à proposição de demarcações de terras indígenas.
-
-<br>
-
-##### Grupo 7: O último par
-
-Paulo Abi-Ackel e Julio Lopes se uniram na criação de uma [proposição](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=491763), atualmente apensada à Lei do Licenciamento Ambiental.
-
-```{r echo=FALSE, fig.width = 4, fig.height = 4}
-  forceNetworkOutput("grafo_grupo7")
-```
 
 
 ```{r echo=FALSE}
@@ -245,16 +244,18 @@ getCoautorias <- reactive({
       as.double(input$min_peso),
       autores,
       parlamentares,
-      coautorias)
+      coautorias %>% 
+        filter(id_ext == input$prop_id))
   return(nodes_edges)
 })
 
 output$dt <- 
   DT::renderDataTable(
     coautorias %>% 
-      select(nome_eleitoral.x, nome_eleitoral.y, peso_arestas, num_coautorias) %>% 
+      select(id_ext, nome_eleitoral.x, nome_eleitoral.y, peso_arestas, num_coautorias) %>% 
       distinct() %>% 
       filter(peso_arestas >=  input$min_peso) %>% 
+      filter(id_ext == input$prop_id) %>% 
       rename(peso_relacao = peso_arestas, 
              nome_deputado_a = nome_eleitoral.x,
              nome_deputado_b = nome_eleitoral.y,
@@ -263,14 +264,16 @@ output$dt <-
     options = list(pageLength = 10,
                    scrollX = TRUE))
   
-output$grafo_grupo1 <- 
+output$grafo <- 
   networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 1)
-    generate_graph(graph[[1]], graph[[2]])
+      graph <- getCoautorias()
+    if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+      generate_graph(graph[[1]], graph[[2]])
+    }
   })
 
-output$hist_grupo1 <- renderPlot({
-  nodes <- generate_graph_by_group(getCoautorias(), 1)[[1]]
+output$hist_grafo <- renderPlot({
+  nodes <-getCoautorias()[[1]]
   if(nrow(nodes) > 0) {
     nodes <- nodes %>%
       group_by(partido) %>% 
@@ -287,39 +290,10 @@ output$hist_grupo1 <- renderPlot({
 })
   
 
-output$grafo_grupo2 <- 
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 2)
-    generate_graph(graph[[1]], graph[[2]])
-  })
+# output$grafo_grupo2 <- 
+#   networkD3::renderForceNetwork({
+#     graph <- generate_graph_by_group(getCoautorias(), 2)
+#     generate_graph(graph[[1]], graph[[2]])
+#   })
 
-output$grafo_grupo3 <- 
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 3)
-    generate_graph(graph[[1]], graph[[2]])
-  })
-
-output$grafo_grupo4 <- 
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 4)
-    generate_graph(graph[[1]], graph[[2]])
-  })
-
-output$grafo_grupo5 <- 
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 5)
-    generate_graph(graph[[1]], graph[[2]])
-  })
-
-output$grafo_grupo6 <- 
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 6)
-    generate_graph(graph[[1]], graph[[2]])
-  })
-
-output$grafo_grupo7 <- 
-  networkD3::renderForceNetwork({
-    graph <- generate_graph_by_group(getCoautorias(), 7)
-    generate_graph(graph[[1]], graph[[2]])
-  })
 ```

@@ -14,7 +14,8 @@ get_coautorias <- function(id, autores, parlamentares) {
     distinct() %>% 
     mutate(id_req = as.character(id_req),
            id = as.character(id)) %>% 
-    filter(peso_arestas < 1)
+    filter(peso_arestas < 1) %>% 
+    left_join(relacionadas, by = c("id_req" = "id"))
   
   coautorias <- autores %>%
     full_join(autores, by = c("id_req", "peso_arestas")) %>%

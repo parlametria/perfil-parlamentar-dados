@@ -22,7 +22,8 @@ fetch_relacionadas <- function(id_prop) {
   
   return (ids_relacionadas %>% 
             select(id) %>% 
-            rbind(id_prop))
+            rbind(id_prop) %>% 
+            dplyr::mutate(id_ext = id_prop))
   
   return(ids_relacionadas)
 }
