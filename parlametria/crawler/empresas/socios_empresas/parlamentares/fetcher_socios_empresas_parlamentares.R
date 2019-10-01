@@ -4,10 +4,10 @@
 #' @param empresas_deputados Dataframe com as informações dos parlamentares sócios em empresas
 #' @return Dataframe com informações dos sócios e das empresas agrícolas
 fetch_socios_empresas_agricolas_parlamentares <- function(
-  empresas_deputados = here::here("crawler/raw_data/empresas_parlamentares.csv")) {
+  empresas_deputados = here::here("parlametria/raw_data/empresas/empresas_parlamentares.csv")) {
   library(tidyverse)
   
-  source(here::here("crawler/parlamentares/empresas/fetcher_empresas.R"))
+  source(here::here("parlametria/crawler/empresas/fetcher_empresas.R"))
   
   empresas_socios_agricolas <- 
     fetch_empresas_agricolas(empresas_deputados)

@@ -36,7 +36,7 @@ options(scipen = 999)
 ```
 
 ```{r}
-receita <- read_csv(here("crawler/raw_data/receitas_tse_2018.csv")) %>% 
+receita <- read_csv(here("parlametria/raw_data/receitas/receitas_tse_2018.csv")) %>% 
   group_by(uf, cargo) %>% 
   mutate(media_uf = mean(total_receita)) %>% 
   ungroup() %>% 
@@ -574,7 +574,7 @@ ggplotly(g, tooltip = "text") %>%
 ## Senadores
 
 ```{r}
-receita_raw <- read_csv(here("crawler/raw_data/receitas_tse_2018.csv"))
+receita_raw <- read_csv(here("parlametria/raw_data/receitas/receitas_tse_2018.csv"))
   
 receita_media_uf <- receita_raw %>% 
   filter(cargo == "Deputado Federal") %>% 

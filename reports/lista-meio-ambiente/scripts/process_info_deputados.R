@@ -13,7 +13,7 @@ process_info_deputados <- function() {
     select(id, nome_eleitoral, sg_partido, uf)
   
   ## Vínculo com o Agro
-  vinculo_agro <- read_csv(here("crawler/raw_data/indice_vinculo_economico_agro.csv"), col_types = cols(id = "c")) %>% 
+  vinculo_agro <- read_csv(here("parlametria/raw_data/score_ruralistas/indice_vinculo_economico_agro.csv"), col_types = cols(id = "c")) %>% 
     mutate(proporcao_doacoes_agro = if_else(is.na(proporcao_doacoes_agro), 0, proporcao_doacoes_agro)) %>% 
     select(id, total_declarado, numero_empresas_associadas, proporcao_doacoes_agro)
 

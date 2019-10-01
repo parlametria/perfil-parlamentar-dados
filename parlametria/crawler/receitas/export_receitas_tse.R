@@ -1,6 +1,6 @@
 library(tidyverse)
 
-source(here::here("crawler/parlamentares/receitas/analyzer_receitas_tse.R"))
+source(here::here("parlametria/crawler/receitas/analyzer_receitas_tse.R"))
 
 if(!require(optparse)){
   install.packages("optparse")
@@ -14,7 +14,7 @@ message("Use --help para mais informações\n")
 
 option_list = list(
   
-  make_option(c("-o", "--out"), type="character", default=here::here("crawler/raw_data/receitas_tse_2018.csv"),
+  make_option(c("-o", "--out"), type="character", default=here::here("parlametria/raw_data/receitas/receitas_tse_2018.csv"),
               help="nome do arquivo de saída para as informações de receitas dos parlamentares [default= %default]", 
               metavar="character")
 );

@@ -8,7 +8,7 @@
 #' @return Dataframe contendo informações dos parlamentares (cpf e id) e total declarado no TSE
 #' em propriedades rurais
 calcula_score_propriedades_rurais <- function(
-  propriedades_rurais_datapath = here::here("crawler/raw_data/propriedades_rurais.csv"),
+  propriedades_rurais_datapath = here::here("parlametria/raw_data/patrimonio/propriedades_rurais.csv"),
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
   
   library(tidyverse)
@@ -37,7 +37,7 @@ calcula_score_propriedades_rurais <- function(
 #' @param parlamentares_datapath Caminho para o dataframe de parlamentares
 #' @return Dataframe contendo informações dos parlamentares (cpf e id) e a quantidade de empresas.
 calcula_score_socios_empresas_rurais <- function(
-  socios_empresas_rurais_datapath = here::here("crawler/raw_data/empresas_parlamentares_agricolas.csv"),
+  socios_empresas_rurais_datapath = here::here("parlametria/raw_data/empresas/empresas_parlamentares_agricolas.csv"),
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
   
   library(tidyverse)
@@ -70,13 +70,13 @@ calcula_score_socios_empresas_rurais <- function(
 #' @return Dataframe contendo informações dos parlamentares (cpf e id) e proporção de doações de 
 #' empresas rurais em relação ao total doado
 calcula_score_doacoes_empresas_rurais <- function(
-  doadores_gerais_2018_datapath = here::here("crawler/raw_data/deputados_doadores.csv"),
-  doadores_socios_empresas_rurais_2018_datapath = here::here("crawler/raw_data/empresas_doadores_agricolas.csv"),
+  doadores_gerais_2018_datapath = here::here("parlametria/raw_data/receitas/deputados_doadores.csv"),
+  doadores_socios_empresas_rurais_2018_datapath = here::here("parlametria/raw_data/empresas/empresas_doadores_agricolas.csv"),
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
   
   library(tidyverse)
   
-  doadores <- read_csv( doadores_gerais_2018_datapath, col_types = cols(id = "c"))
+  doadores <- read_csv(doadores_gerais_2018_datapath, col_types = cols(id = "c"))
   
   doadores_totais <- doadores %>%
     group_by(id) %>% 

@@ -1,0 +1,155 @@
+---
+title: "Visualizações para Análise Estratégica dos Deputados para a Campanha +100"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+```
+
+```{r}
+.URL_VINCULO_AGRO <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vRtD72wntBGbWewLB7SJjF4GC_WPBWfAVGRazycgU1H-wd5Yn6FBQlV_o4n26x5W6VNdmrb0Tnfio0n/pub?gid=1769575795&single=true&output=csv"
+
+dados_vinculo_agro <- read_csv(.URL_VINCULO_AGRO, col_types = cols(`Identificação Deputado` = "c")) %>% 
+  select(id = `Identificação Deputado`,
+         partido = Partido,
+         uf = UF,
+         indice_vinculo_agro = `Índice de Vínculo Econômico com o Agro`,
+         indice_ativismo_ambiental = `Índice de Ativismo Ambiental`,
+         indice_importancia_politica = `Índice de Importância Política`,
+         financiados_pelo_agro = `Financiados pelo agro e simpáticos ao MA`,
+         financiados_pelo_agro_exportacao = `Financiado pelo agro e ligado a exportação`
+         ) %>% 
+  mutate(subgrupo = case_when(
+    financiados_pelo_agro == "SIM" ~ "Financiados pelo Agro e Simpáticos ao MA",
+    financiados_pelo_agro_exportacao == "SIM" ~ "Financiados pelo Agro e ligado a Exportação",
+    financiados_pelo_agro == "--" && financiados_pelo_agro == "--" ~ "Nenhum"
+  )) %>% 
+  select(-c(financiados_pelo_agro, financiados_pelo_agro_exportacao)) %>% 
+  mutate(grupo = "Vínculo com o Agro")
+```
+
+```{r}
+.URL_ZONA_CINZA <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vRtD72wntBGbWewLB7SJjF4GC_WPBWfAVGRazycgU1H-wd5Yn6FBQlV_o4n26x5W6VNdmrb0Tnfio0n/pub?gid=594068326&single=true&output=csv"
+
+dados_zona_cinza <- read_csv(.URL_ZONA_CINZA, col_types = cols(`Identificação Deputado` = "c")) %>% 
+  select(id = `Identificação Deputado`,
+         partido = Partido,
+         uf = UF,
+         indice_vinculo_agro = `Índice de Vínculo Econômico com o Agro`,
+         indice_ativismo_ambiental = `Índice de Ativismo Ambiental`,
+         indice_importancia_politica = `Índice de Importância Política`,
+         sem_vinculo_ativistas = `Sem vínculo econômico, mas ativistas ambientais`) %>% 
+  mutate(indice_importancia_politica = as.numeric(indice_importancia_politica)) %>% 
+  mutate(subgrupo = case_when(
+    sem_vinculo_ativistas == "SIM" ~ "Sem vínculo econômico, mas ativistas ambientais",
+    sem_vinculo_ativistas == "--" ~ "Nenhum"
+  )) %>% 
+  select(-c(sem_vinculo_ativistas)) %>% 
+  mutate(grupo = "Zona Cinza")
+```
+
+```{r}
+.URL_OPOSICAO <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vRtD72wntBGbWewLB7SJjF4GC_WPBWfAVGRazycgU1H-wd5Yn6FBQlV_o4n26x5W6VNdmrb0Tnfio0n/pub?gid=1759696780&single=true&output=csv"
+
+dados_oposicao <- read_csv(.URL_OPOSICAO, col_types = cols(`Identificação Deputado` = "c")) %>% 
+  select(id = `Identificação Deputado`,
+         partido = Partido,
+         uf = UF,
+         indice_vinculo_agro = `Índice de Vínculo Econômico com o Agro`,
+         indice_ativismo_ambiental = `Índice de Ativismo Ambiental`,
+         indice_importancia_politica = `Índice de Importância Política`,
+         oposicao_ativismo_ambiental = `Oposição e alto ativismo ambiental`) %>% 
+  mutate(indice_importancia_politica = as.numeric(indice_importancia_politica)) %>% 
+  mutate(subgrupo = case_when(
+    oposicao_ativismo_ambiental == "SIM" ~ "Oposição e alto ativismo ambiental",
+    oposicao_ativismo_ambiental == "--" ~ "Nenhum"
+  )) %>% 
+  select(-c(oposicao_ativismo_ambiental)) %>% 
+  mutate(grupo = "Oposição")
+```
+
+```{r}
+dados_geral <- dados_vinculo_agro %>% 
+  rbind(dados_zona_cinza) %>% 
+  rbind(dados_oposicao)
+```
+
+## Sobre os dados
+
+Os dados utilizados nessa análise são resultado de um relatório feito em parceria com a RAC, IDS, Open Knowledge Brasil, Pulso Público, Bruno Carazza e Dado Capital. Foram coletados de dados referentes a atuação dos deputados em votações e proposições de Meio Ambiente na Câmara, participação em frentes e comissões, propriedades rurais declaradas ao TSE nas eleições de 2018, valores recebidos por doadores que são sócios de empresas agrícolas, dentre outras. Foram calculados índices que usam essas informações para traçar um perfil para os deputados.
+
+- **Índice de vínculo econômico com o agronegócio:** considera a declaração ao TSE da posse de propriedades rurais (além de terras, gado, tratores etc), as empresas agrícolas das quais são sócios, segundo a Receita Federal, e as doações de campanhas recebidas de pessoas físicas que eram sócias de empresas agrícolas (incluindo exportadoras).
+- **Índice de ativismo ambiental:** considera a associação a frentes parlamentares progressistas (ambiental, indígenas, ODS, OSC e prestação de serviços ambientais) e a frentes mais conservadoras (agropecuária, mineração e livre mercado), as proposições apresentadas com conteúdo de meio ambiente, os requerimentos de informações apresentados aos ministérios de Meio-ambiente e Agricultura, a aderência à orientação do governo em votações nominais sobre meio-ambiente e a pontuação qualitativa do discurso sobre Meio-ambiente levantado pela Pulso Público.
+- **Índice de importância política:** considera o número de mandatos prévios, as posições de liderança na Câmara (Mesa Diretora, presidência ou vice-presidência de partido/bloco e comissões) e o número de comissões das quais é titular.
+
+A seguir iremos explorar alguns desses índices.
+
+```{r}
+dados_geral %>% 
+  ggplot(aes(x = indice_vinculo_agro, y = indice_ativismo_ambiental, color = grupo)) +
+  geom_jitter(width = 0.01) +
+  scale_color_manual(values = c("#00AFBB", "#FC4E07", "#C4961A")) +
+  labs(x = "Índice de Vínculo Econômico com o Agro",
+       y = "Índice de Ativismo Ambiental",
+       title = "Deputados por Grupo",
+       color = "Grupo") +
+  theme_ipsum_rc() +
+    theme(
+    legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right",
+    legend.margin = margin(6, 6, 6, 6)
+    )
+```
+
+3 grupos puderam ser formados com os índices de Ativismo Ambiental e de Vínculo Econômico com o Agro. Temos o grupos dos que possuem vínculo com o Agro, os que estão na zona Cinza e os que estão na Oposição (partidos de oposição).
+
+Dentre esses grupos podem existir subgrupos que agrupam deputados com características parecidas.
+
+```{r}
+cbp1 <- c("#0072B2", "#E69F00", "#999999", "#009E73",
+          "#D55E00", "#56B4E9", "#F0E442", "#CC79A7")
+
+dados_geral %>% 
+  ggplot(aes(x = indice_vinculo_agro, y = indice_ativismo_ambiental, color = subgrupo)) +
+  geom_jitter(width = 0.01) +
+  scale_color_manual(values = cbp1) +
+  labs(x = "Índice de Vínculo Econômico com o Agro",
+       y = "Índice de Ativismo Ambiental",
+       title = "Deputados por Subgrupo",
+       color = "Subgrupo") +
+  theme_ipsum_rc() +
+  theme(
+    legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right",
+    legend.margin = margin(6, 6, 6, 6)
+    )
+```
+
+Os subgrupos formados foram:
+
+- **Financiados pelo Agro e ligado a Exportação:** aqueles que tem relação com o Agro e com empresas ligadas a exportação.
+- **Financiados pelo Agro e Simpáticos ao Meio Ambiente:** aqueles que tem relação com o Agro e são ativos no tema de Meio Ambiente.
+- **Oposição e alto ativismo ambiental:** aqueles que são de partidos de oposição e que são ativos no tema de Meio Ambiente.
+- **Sem Vínculo econômico, mas ativistas ambientais:** aqueles do grupo da zona cinza que não possuem vínculo com o Agro e são ativos no tema de Meio Ambiente.
+- **Nenhum:** formado por deputados dos 3 grupos principais que não se encaixam em nenhum subgrupo.
+
+Deputados dos 3 grupos principais podem participar do subgrupo Nenhum.

@@ -26,11 +26,11 @@ import_empresas_exportadoras <- function(datapath = NULL) {
 #' @examples
 #' empresas_transportadoras <- process_empresas_exportadoras()
 process_empresas_exportadoras <- 
-  function(zip_data_path = here::here("crawler/parlamentares/empresas/exportadoras.zip")) {
+  function(zip_data_path = here::here("parlametria/crawler/empresas/exportadoras.zip")) {
   
   library(tidyverse)
     
-  output_path = here::here("crawler/parlamentares/empresas/exportadoras/")
+  output_path = here::here("parlametria/crawler/empresas/exportadoras/")
   
   # Descompactando o arquivo .zip
   unzip(zip_data_path, exdir = output_path)

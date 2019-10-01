@@ -34,7 +34,7 @@ source(here("reports/lista-meio-ambiente/scripts/process_info_deputados.R"))
 ```
 
 ```{r}
-# dados_parlamentares <- read_csv(here("crawler/raw_data/indice_vinculo_economico_agro.csv"), col_types = cols(id = "c"))
+# dados_parlamentares <- read_csv(here("parlametria/raw_data/score_ruralistas/indice_vinculo_economico_agro.csv"), col_types = cols(id = "c"))
 dados_parlamentares <- process_info_deputados()
 ```
 

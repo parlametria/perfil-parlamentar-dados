@@ -1,5 +1,5 @@
 library(tidyverse)
-source(here::here("crawler/parlamentares/score_ruralistas/analyzer_score_ambientalista.R"))
+source(here::here("parlametria/crawler/score_ruralistas/analyzer_score_ambientalista.R"))
 
 if(!require(optparse)){
   install.packages("optparse")
@@ -12,7 +12,7 @@ message("LEIA O README deste diretório")
 message("Use --help para mais informações\n")
 
 option_list = list(
-  make_option(c("-o", "--output"), type="character", default=here::here("crawler/raw_data/indice_vinculo_economico_agro.csv"),
+  make_option(c("-o", "--output"), type="character", default=here::here("parlametria/raw_data/score_ruralistas/indice_vinculo_economico_agro.csv"),
               help="nome do arquivo de saída com o índice de vínculo econômico [default= %default]", metavar="character")
 );
 
