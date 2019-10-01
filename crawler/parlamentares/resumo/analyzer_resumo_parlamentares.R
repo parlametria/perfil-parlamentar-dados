@@ -10,7 +10,7 @@ process_resumo_deputados_investimento <- function() {
   
   source(here("crawler/votacoes/utils_votacoes.R"))
 
-  receita <- read_csv(here("crawler/raw_data/receitas_tse_2018.csv")) %>% 
+  receita <- read_csv(here("parlametria/raw_data/receitas/receitas_tse_2018.csv")) %>% 
     group_by(uf, cargo) %>% 
     mutate(media_uf = mean(total_receita)) %>% 
     ungroup() %>% 

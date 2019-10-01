@@ -12,8 +12,8 @@
 #' Atribuímos 0 se não existirem receitas mas o candidato ainda participou da eleição
 #' 3. Consideramos apenas as doações do mesmo partido do candidato na eleição.
 processa_doacoes_partidarias_tse <- 
-  function(receitas_datapath = here::here("crawler/parlamentares/receitas/receitas_candidatos_2018_BRASIL.csv"),
-           candidatos_datapath = here::here("crawler/parlamentares/receitas/consulta_cand_2018_BRASIL.csv")) {
+  function(receitas_datapath = here::here("parlametria/crawler/receitas/receitas_candidatos_2018_BRASIL.csv"),
+           candidatos_datapath = here::here("parlametria/crawler/receitas/consulta_cand_2018_BRASIL.csv")) {
     
   library(tidyverse)
     
@@ -56,7 +56,7 @@ processa_doacoes_partidarias_tse <-
 #' @return Dataframe contendo receitas dos candidatos com colunas específicas
 #' @examples
 #' receitas <- import_receita_tse_modelo_antigo()
-import_receita_tse_modelo_antigo <- function(datapath = here::here("crawler/parlamentares/receitas/receitas_candidatos_2014_brasil.txt")) {
+import_receita_tse_modelo_antigo <- function(datapath = here::here("parlametria/crawler/receitas/receitas_candidatos_2014_brasil.txt")) {
   library(tidyverse)
   library(here)
   
@@ -83,8 +83,8 @@ import_receita_tse_modelo_antigo <- function(datapath = here::here("crawler/parl
 #' Obs: Assume que os dados de receitas e  candidatos estão disponíveis. Esses dados pode ser baixados 
 #' através do script ./fetcher_receitas_tse.sh
 processa_doacoes_tse <- function(
-  receitas_datapath = here::here("crawler/parlamentares/receitas/receitas_candidatos_2018_BRASIL.csv"),
-  candidatos_datapath = here::here("crawler/parlamentares/receitas/consulta_cand_2018_BRASIL.csv"),
+  receitas_datapath = here::here("parlametria/crawler/receitas/receitas_candidatos_2018_BRASIL.csv"),
+  candidatos_datapath = here::here("parlametria/crawler/receitas/consulta_cand_2018_BRASIL.csv"),
   ano = 2018) {
   
   library(tidyverse)
@@ -131,7 +131,7 @@ processa_doacoes_tse <- function(
 processa_doacoes_deputados_tse <- function(ano = 2018) {
   library(tidyverse)
   library(here)
-  source(here("crawler/parlamentares/receitas/utils_receitas.R"))
+  source(here("parlametria/crawler/receitas/utils_receitas.R"))
   
   if(ano == 2018) {
     receitas_datapath <- .DATAPATH_RECEITA_TSE_2018
