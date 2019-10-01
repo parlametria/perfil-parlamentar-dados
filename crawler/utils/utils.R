@@ -9,7 +9,8 @@ padroniza_nome <- function(nome) {
   
   return(nome %>% 
            iconv(to="ASCII//TRANSLIT") %>% 
-           toupper())
+           toupper() %>% 
+           trimws(which = c("both")))
 }
 
 #' @title Padroniza texto, retirando links, menções, pontuações, retirando acentos, números,
