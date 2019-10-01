@@ -77,6 +77,18 @@ process_indice_influencia_parlamentar <- function() {
     mutate(indice_liderancas = score_liderancas / 8) %>%  ## 8 é a soma dos pesos 3 + 2 + 3
     select(id, indice_liderancas)
   
+  source(here("parlametria/crawler/cargos_mesa/fetcher_cargos_mesa.R"))
+  
+  cargos_mesa <- fetch_cargos_mesa_camara(legislatura = 56, atual_cargo = TRUE) %>% 
+    mutate(id = as.character(id)) %>% 
+    mutate(indice_cargo_mesa = case_when(
+      str_detect(cargo, "Suplente de Secretário") ~ 0.2,
+      str_detect(cargo, "Secretário") ~ 0.6,
+      str_detect(cargo, "Vice-Presidente") ~ 0.8,
+      str_detect(cargo, "Presidente") ~ 1,
+      TRUE ~ 0)) %>% 
+    select(id, indice_cargo_mesa)
+  
   ## TODO: porcentagem dos votos recebidos em 2018 com relação a UF e ao partido
   
   deputados_processed <- deputados_id %>% 
@@ -85,15 +97,17 @@ process_indice_influencia_parlamentar <- function() {
     left_join(mandatos_cargos, by = c("id" = "id_parlamentar")) %>% 
     left_join(indice_comissoes_cargos, by = "id") %>% 
     left_join(lideranca_partido, by = "id") %>% 
+    left_join(cargos_mesa, by = "id") %>% 
     ## Substituindo NA por 0
     mutate_at(.funs = list(~replace_na(., 0)), .vars = vars(participou_movimento_renovacao,
                                                            investimento_partidario,
                                                            indice_comissoes,
-                                                           indice_liderancas)
+                                                           indice_liderancas,
+                                                           indice_cargo_mesa)
               ) %>% 
     
     mutate(indice_influencia_parlamentar = 
-             (indice_liderancas + indice_comissoes + (numero_de_mandatos / 6)) / 3)
+             (indice_liderancas + indice_comissoes + indice_cargo_mesa + (numero_de_mandatos / 6)) / 4)
 
   return(deputados_processed)
 }
