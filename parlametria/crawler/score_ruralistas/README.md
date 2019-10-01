@@ -10,6 +10,6 @@ Para isso execute:
 Rscript export_ambientalista.R -o <output_path>
 ```
 Com os seguintes argumentos:
-     * `-o <output_path>`: Caminho para o arquivo de saída do csv. O caminho default é "../raw_data/indice_vinculo_economico_agro.csv"
+     * `-o <output_path>`: Caminho para o arquivo de saída do csv. O caminho default é "parlametria/raw_data/score_ruralistas/indice_vinculo_economico_agro.csv"
      
 Após a execução do script o csv será gerado no caminho especificado.

@@ -4,10 +4,10 @@
 #' @param empresas_doadores Dataframe com as informações dos doadores que são sócios em empresas
 #' @return Dataframe com informações dos sócios de empresas agrícolas
 fetch_socios_empresas_agricolas_doadores <- function(
-  empresas_doadores = readr::read_csv(here::here("crawler/raw_data/empresas_doadores.csv"))) {
+  empresas_doadores = readr::read_csv(here::here("parlametria/raw_data/empresas/empresas_doadores.csv"))) {
   library(tidyverse)
   
-  source(here::here("crawler/parlamentares/empresas/fetcher_empresas.R"))
+  source(here::here("parlametria/crawler/empresas/fetcher_empresas.R"))
   
   empresas_socios_agricolas <- 
     fetch_empresas_agricolas(empresas_doadores)
@@ -29,10 +29,10 @@ fetch_socios_empresas_agricolas_doadores <- function(
 #' @param empresas_doadores Dataframe com as informações dos doadores 
 #' @return Dataframe com informações das empresas agrícolas
 fetch_empresas_rurais_doadores <- function(
-  empresas_doadores = readr::read_csv(here::here("crawler/raw_data/empresas_doadores.csv"))) {
+  empresas_doadores = readr::read_csv(here::here("parlametria/raw_data/empresas/empresas_doadores.csv"))) {
   library(tidyverse)
   
-  source(here::here("crawler/parlamentares/empresas/fetcher_empresas.R"))
+  source(here::here("parlametria/crawler/empresas/fetcher_empresas.R"))
   
   empresas_socios_agricolas <- 
     fetch_empresas_agricolas(empresas_doadores)

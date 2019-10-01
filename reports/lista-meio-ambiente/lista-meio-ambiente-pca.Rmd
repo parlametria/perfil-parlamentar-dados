@@ -29,7 +29,7 @@ theme_set(theme_minimal())
 ```
 
 ```{r}
-dados_parlamentares <- read_csv(here("crawler/raw_data/indice_vinculo_economico_agro.csv"), col_types = cols(id = "c"))
+dados_parlamentares <- read_csv(here("parlametria/raw_data/score_ruralistas/indice_vinculo_economico_agro.csv"), col_types = cols(id = "c"))
 ```
 
 ### Contexto

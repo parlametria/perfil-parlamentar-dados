@@ -1,0 +1,7 @@
+## Dados do módulo de receitas
+
+- **deputados_doadores.csv**: lista de todas as doações recebidas pelos deputados atualmente em exercício (até a data de modificação do arquivo) durante as eleições de **2018** e declaradas ao TSE. Cada observação do conjunto de dados é uma doação de um CPF ou CNPJ (no caso de doações do partido e de outros candidatos) para um deputado. Existem informações do total da doação na coluna valor_receita. Gerado pela função `processa_doacoes_deputados_tse` do arquivo `parlametria/crawler/receitas/analyzer_receitas_tse.R`.
+
+- **deputados_doadores_2014.csv**: lista de todas as doações recebidas pelos deputados atualmente em exercício (até a data de modificação do arquivo) durante as eleições de **2014** e declaradas ao TSE. Cada observação do conjunto de dados é uma doação de um CPF ou CNPJ (nesta eleição a doação de empresas foi permitida) para um deputado. Existem informações do total da doação na coluna valor_receita. Gerado pela função `processa_doacoes_deputados_tse` do arquivo `parlametria/crawler/receitas/analyzer_receitas_tse.R`.
+
+- **receitas_tse_2018.csv**: lista de parlamentares (deputados e senadores) atualmente em exercício (até a data de modificação do arquivo) com informação do total doado pelo partido durante as eleições de 2018. Gerado pelo script `parlametria/crawler/receitas/export_receitas_tse.R`. 

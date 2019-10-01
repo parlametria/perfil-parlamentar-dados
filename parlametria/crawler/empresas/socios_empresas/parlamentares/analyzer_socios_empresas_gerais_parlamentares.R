@@ -5,12 +5,12 @@
 #' @return Dataframe com informações processadas e se a empresa é exportadora ou não.
 #' @example process_empresas_parlamentares()
 processa_empresas_parlamentares <- function(
-  empresas_parlamentares_datapath = here::here("crawler/raw_data/empresas_parlamentares.csv")) {
+  empresas_parlamentares_datapath = here::here("parlametria/raw_data/empresas/empresas_parlamentares.csv")) {
   
   library(tidyverse)
   
-  source(here::here("crawler/parlamentares/empresas/process_empresas_exportadoras.R"))
-  source(here::here("crawler/parlamentares/empresas/fetcher_empresas.R"))
+  source(here::here("parlametria/crawler/empresas/process_empresas_exportadoras.R"))
+  source(here::here("parlametria/crawler/empresas/fetcher_empresas.R"))
   
   empresas_parlamentares <- read_csv(empresas_parlamentares_datapath) 
   
