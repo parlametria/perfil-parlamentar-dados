@@ -14,7 +14,8 @@ process_indice_vinculo_agro <- function() {
     select(id)
   
   propriedades_rurais <- read_csv(here("parlametria/raw_data/patrimonio/propriedades_rurais.csv"),
-                                  col_types = cols(id_camara = "c"))
+                                  col_types = cols(id_casa = "c")) %>% 
+    filter(casa == "camara")
   
   empresas_rurais <- read_csv(here("parlametria/raw_data/empresas/empresas_parlamentares_agricolas.csv"),
                               col_type = cols(id_deputado = "c")) %>% 

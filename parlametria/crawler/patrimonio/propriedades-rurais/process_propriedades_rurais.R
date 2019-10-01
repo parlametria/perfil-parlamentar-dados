@@ -49,7 +49,7 @@ process_propriedades_rurais <- function(
                            locale = locale(encoding = 'latin1')) %>% 
     mutate(DS_CARGO = str_to_title(DS_CARGO)) %>% 
     filter(DS_CARGO %in% c("Deputado Federal", "Senador")) %>% 
-    select(SQ_CANDIDATO, NR_CPF_CANDIDATO, DS_CARGO, SG_UE, SG_PARTIDO)
+    select(SQ_CANDIDATO, NM_CANDIDATO, NR_CPF_CANDIDATO, DS_CARGO, SG_UE, SG_PARTIDO)
   
   candidatos_bens_rurais <- candidatos %>% 
     inner_join(bens_rurais, by = "SQ_CANDIDATO")

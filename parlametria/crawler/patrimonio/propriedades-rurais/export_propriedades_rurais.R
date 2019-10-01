@@ -24,7 +24,7 @@ saida <- opt$out
 
 message("Iniciando processamento...")
 message("Processando dados de propriedades rurais dos deputados...")
-propriedades_rurais <- process_deputados_propriedades_rurais()
+propriedades_rurais <- process_parlamentares_propriedades_rurais()
 
 message(paste0("Salvando o resultado em ", saida))
 readr::write_csv(propriedades_rurais, saida)

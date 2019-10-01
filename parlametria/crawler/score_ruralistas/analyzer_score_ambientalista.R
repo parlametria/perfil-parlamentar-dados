@@ -13,8 +13,9 @@ calcula_score_propriedades_rurais <- function(
   
   library(tidyverse)
   
-  propriedades_rurais <- read_csv(propriedades_rurais_datapath, col_types = cols(id_camara = "c")) %>% 
-    select(id_camara, cpf, total_declarado)
+  propriedades_rurais <- read_csv(propriedades_rurais_datapath, col_types = cols(id_casa = "c")) %>% 
+    filter(casa == "camara") %>% 
+    select(id_casa, cpf, total_declarado)
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(casa == "camara", em_exercicio == 1) %>% 
