@@ -1,6 +1,6 @@
 #' @title Gera dataframe com os coautores de proposições
 #' @description A partir de um conjunto de proposições, retorna um dataframe de coautores dessas proposições.
-#' @param proposicoes Dataframe dos parlamentares
+#' @param proposicoes Dataframe das proposições contendo coluna id
 #' @return Dataframe contendo informações sobre as coautores
 get_coautores <- function(proposicoes) {
   library(tidyverse)
@@ -52,13 +52,13 @@ get_coautorias <- function(proposicoes,
   return(coautorias)
 }
 
-#' @title Gera dataframe de coautorias
-#' @description A partir de um conjunto de parlamentares e autores de proposições,
-#' retorna um dataframe de coautorias, onde cada linha representa um par de deputados
-#' que coautoraram em proposições
-#' @return Dataframe contendo informações sobre as coautorias
+#' @title Gera dataframe de coautorias com pares de parlamentares repetidos mas em diferentes ordens (x e y, y e x)
+#' @description A partir de um conjunto de proposições e parlamentares,
+#' retorna um dataframe de coautorias, onde há uma linha representa para o par de parlamentares x e y e
+#' outra para y e x (mesmos dados, ordens diferentes).
+#' @param proposicoes Dataframe das proposições com coluna id
 #' @param parlamentares Dataframe dos parlamentares
-#' @param autores Dataframe dos autores de proposições
+#' @return Dataframe contendo informações sobre as coautorias
 get_lista_articulacoes <- function(proposicoes,
                                    parlamentares = readr::read_csv(here::here("crawler/raw_data/parlamentares.csv"),
                                                                    col_types = readr::cols(id = "c"))) {
