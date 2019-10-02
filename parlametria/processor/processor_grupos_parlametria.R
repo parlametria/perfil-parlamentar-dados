@@ -6,7 +6,6 @@
 process_indices_parlametria <- function() {
   library(tidyverse)
   library(here)
-  here <- here::here
   
   source(here("parlametria/processor/processor_indice_vinculo_agro.R"))
   source(here("parlametria/processor/processor_indice_ativismo_ambiental.R"))
@@ -60,11 +59,11 @@ agrupa_parlamentares_parlametria <- function() {
         indice_vinculo_economico_agro > 0 &
         indice_ativismo_ambiental >= 0.05 ~ "Financiados pelo Agro e simpáticos ao Meio Ambiente",
       
-      # grupo == grupo_agro & ## TODO colunas porcentagem_doacoes_empresas_agro_exportadoras e tem_empresa_exportadora
-      #   ( porcentagem_doacoes_empresas_agro_exportadoras > 0.1 | 
-      #     tem_empresa_exportadora == 1
-      #   ) &
-      #   indice_ativismo_ambiental < 0.05 ~ "Financiado pelo agro e ligado a exportação",
+      grupo == grupo_agro &
+        ( proporcao_doacoes_agroexportadoras > 0.1 |
+          tem_empresa_agroexportadora == 1
+        ) &
+        indice_ativismo_ambiental < 0.05 ~ "Financiado pelo agro e ligado a exportação",
       
       grupo == grupo_zona_cinza &
         indice_ativismo_ambiental > 0.01 ~ "Sem vínculo econômico, mas ativistas ambientais",

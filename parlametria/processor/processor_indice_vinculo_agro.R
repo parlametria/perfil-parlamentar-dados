@@ -23,7 +23,7 @@ process_indice_vinculo_agro <- function() {
   
   doacoes_agro <- read_csv(here("parlametria/raw_data/score_ruralistas/indice_vinculo_economico_agro.csv"),
                            col_types = cols(id = "c")) %>% 
-    select(id, proporcao_doacoes_agro)
+    select(id, proporcao_doacoes_agro, tem_empresa_agroexportadora, proporcao_doacoes_agroexportadoras)
   
   deputados_processed <- deputados_id %>% 
     
@@ -36,7 +36,8 @@ process_indice_vinculo_agro <- function() {
     select(id, tem_propriedade_rural, total_declarado_propriedade_rural, tem_empresa_agricola) %>% 
     
     left_join(doacoes_agro, by = "id") %>% 
-    select(id, tem_propriedade_rural, total_declarado_propriedade_rural, tem_empresa_agricola, proporcao_doacoes_agro) %>%
+    select(id, tem_propriedade_rural, total_declarado_propriedade_rural, tem_empresa_agricola, proporcao_doacoes_agro,
+           tem_empresa_agroexportadora, proporcao_doacoes_agroexportadoras) %>%
     
     ## Substituindo NA por 0
     mutate_at(.funs = list(~replace_na(., 0)), .vars = vars(tem_propriedade_rural,
