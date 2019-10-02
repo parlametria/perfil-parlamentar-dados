@@ -4,7 +4,7 @@
 #' @example analyzer_cargos_politicos()
 analyzer_cargos_politicos <- function() {
   library(tidyverse)
-  source(here::here("crawler/parlamentares/cargos_politicos/fetch_cargos_politicos.R"))
+  source(here::here("parlametria/crawler/cargos_politicos/fetch_cargos_politicos.R"))
   
   cargos_parlamentares <- fetch_all_cargos_politicos()
     
@@ -44,7 +44,7 @@ analyzer_cargos_politicos <- function() {
 #' @return Dataframe contendo o histórico de cargos públicos contendo os suplentes que assumiram algum
 #' momento.
 filter_suplentes_com_exercicio <- function(
-  cargos_parlamentares = readr::read_csv(here::here("crawler/raw_data/historico_parlamentares_cargos_politicos.csv")),
+  cargos_parlamentares = readr::read_csv(here::here("parlametria/raw_data/cargos_politicos/historico_parlamentares_cargos_politicos.csv")),
   mandatos_datapath = here::here("crawler/raw_data/mandatos.csv")) {
   
   library(tidyverse)

@@ -15,4 +15,4 @@ Para exportar os dados de cargos políticos dos parlamentares em exercício, abr
 Rscript export_cargos_politicos.R -o <output_datapath>
 ```
 
-O argumento -o <output_datapath> corresponde ao caminho e nome do arquivo de saída dos cargos políticos. O valor default é `crawler/raw_data/historico_parlamentares_cargos_politicos.csv`.
+O argumento -o <output_datapath> corresponde ao caminho e nome do arquivo de saída dos cargos políticos. O valor default é `parlametria/raw_data/cargos_politicos/historico_parlamentares_cargos_politicos.csv`.

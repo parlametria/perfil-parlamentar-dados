@@ -1,6 +1,6 @@
 library(tidyverse)
 library(here)
-source(here::here("crawler/parlamentares/resumo/analyzer_resumo_parlamentares.R"))
+source(here::here("parlametria/crawler/resumo/analyzer_resumo_parlamentares.R"))
 
 if(!require(optparse)){
   install.packages("optparse")
@@ -12,11 +12,11 @@ args = commandArgs(trailingOnly=TRUE)
 message("LEIA O README deste diretório")
 
 option_list = list(
-  make_option(c("-o", "--out"), type="character", default=here::here("crawler/raw_data/parlamentares_investimento.csv"), 
+  make_option(c("-o", "--out"), type="character", default=here::here("parlametria/raw_data/resumo/parlamentares_investimento.csv"), 
               help="nome do arquivo de saída [default= %default]", metavar="character"),
-  make_option(c("-oa", "--outaderencia"), type="character", default=here::here("crawler/raw_data/parlamentares_aderencia.csv"), 
+  make_option(c("-oa", "--outaderencia"), type="character", default=here::here("parlametria/raw_data/resumo/parlamentares_aderencia.csv"), 
               help="nome do arquivo de saída [default= %default]", metavar="character"),
-  make_option(c("-oa", "--outcargos"), type="character", default=here::here("crawler/raw_data/parlamentares_cargos.csv"), 
+  make_option(c("-oa", "--outcargos"), type="character", default=here::here("parlametria/raw_data/resumo/parlamentares_cargos.csv"), 
               help="nome do arquivo de saída [default= %default]", metavar="character")
 ) 
 
