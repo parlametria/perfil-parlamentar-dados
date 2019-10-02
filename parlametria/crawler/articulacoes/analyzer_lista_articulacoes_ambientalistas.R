@@ -1,9 +1,9 @@
 #' @title Gera dataframe de coautorias
-#' @description A partir de um conjunto de parlamentares e autores de proposições,
+#' @description A partir de um link para um csv contendo um conjunto de proposições e de parlamentares,
 #' retorna um dataframe de coautorias, onde cada linha representa um par de deputados
 #' que coautoraram em proposições
+#' @param url_proposicoes URL para o conjunto de dados de proposições
 #' @param parlamentares_datapath Dataframe dos parlamentares
-#' @param autores_coautorias_datapath Dataframe dos autores de proposições
 #' @return Dataframe contendo informações sobre as coautorias
 process_coautorias <- function(
   url_proposicoes = "https://dadosabertos.camara.leg.br/arquivos/proposicoes/csv/proposicoes-2019.csv",
