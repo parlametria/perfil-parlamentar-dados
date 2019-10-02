@@ -56,19 +56,7 @@ coautorias <- get_coautorias(peso_autorias_docs_camara, autorias_camara, parlame
 
 ### As proposições
 
-Para geração deste relatório foram utilizadas as proposições do Meio Ambiente disponíveis na plataforma [Leggo](https://leggo.org.br) listadas abaixo. Para cada uma delas, existe uma série de outras proposições relacionadas, como emendas, pareceres, requerimentos, etc., que também foram consideradas para a criação dos grupos parlamentares. 
-
-  - [Lei do Licenciamento Ambiental]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=257161")
-  - [PL do Veneno]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=46249")
-  - [Estatuto do Índio]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=345311")
-  - [Lei para Acabar Zona de Amortecimento]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2085536")
-  - [Política Governo de Redução de Agrotóxico]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2120775")
-  - [Indenização Propriedades Privadas em Unidades de Conservação]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2056568")
-  - [Criação da Área de Proteção Ambiental de Canavieiras]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=1738598")
-  - [Demarcações passam a ser competência exclusiva do Congresso]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=14562")
-  - [Lei do Pantanal - Molon]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2170839")
-  - [Lei do Cerrado]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=944279")
-  - [PNCMar]("https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=604557")
+Para geração deste relatório foram utilizadas as proposições da plataforma [Leggo](https://leggo.org.br) listadas abaixo. Para cada uma das proposições, existe uma série de outras proposições relacionadas, como emendas, pareceres, requerimentos, etc., que também foram consideradas para a criação dos grupos parlamentares. 
 
 <br>
 
@@ -80,8 +68,7 @@ A detecção de grupos é feita da seguinte forma: inicialmente se combinam em p
 
 #### Tabela de pares
 
-A tabela abaixo lista todos os pares e respectivas relações, calculadas de acordo com o peso explicado abaixo. A partir dela podemos observar os parlamentares que mais coautoraram as proposições do Meio Ambiente entre as legislaturas 55 e 56: o trio de deputados do PT, Bohn Gass, João Daniel e Padre João é o conjunto que deputados com relação mais forte. Abaixo deles, estão os deputados do PSOL Ivan Valente, Chico Alencar e Edmilson Rodrigues. Uma coisa interessante a observar é que, apesar de Chico e Edmilson estarem fortemente relacionados com Ivan, estes dois possuem uma relação mais fraca, significando que coautoraram poucas proposições juntos ou proposições que possuem muitos outros autores.
-
+A tabela abaixo lista todos os pares e respectivas relações, calculadas de acordo com o peso explicado abaixo. 
 ```{r echo=FALSE}
 DT::DTOutput("dt")
 ```
@@ -111,24 +98,18 @@ selectInput("prop_id", "Id da proposição",
              choices_ids,
             selected = choices_ids[1])
 
-choices = seq(
-                min(coautorias$peso_arestas) %>% 
-                  round(2), 
-                max(coautorias$peso_arestas) %>% 
-                  round(2),
-                0.1)
-
-selectInput("min_peso", "Valor mínimo dos pesos:",
-              choices, selected = choices[1])
+# choices = seq(min(coautorias$peso_arestas) %>% 
+#                   round(2), 
+#                 max(coautorias$peso_arestas) %>% 
+#                   round(2),
+#                 0.1)
+# selectInput("min_peso", "Valor mínimo dos pesos:",
+#               choices, selected = choices[1])
 
 br()
 
 plotOutput("hist")
 ```
-
-Acima se encontra a distribuição das relações de acordo com o peso fornecido como entrada. Colocando o menor valor possível como entrada, 0.1, se pode visualizar os pares que possuem no mínimo uma relação igual a esse peso. Percebemos que a maior parte das relações entre os deputados se encontra entre 0.1 e 0.2. Isto indica que os autores das proposições do MA escolhidas e suas relacionadas geralmente participam de coautorias quando há muitos outros deputados coautorando ou preferem criar proposições sozinhos.
-
-<br>
 
 #### Rede de grupos
 
@@ -140,7 +121,7 @@ Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando um
 Este é o maior agrupamento encontrado e corresponde aos deputados que coautoram juntos em requerimentos mais populares, e geralmente como uma estratégia de aproximação com seus eleitores ou porque "tá todo mundo participando".
 
 ```{r echo=FALSE, fig.width = 2, fig.height = 2}
-  forceNetworkOutput("grafo")
+forceNetworkOutput("grafo")
 ```
 
 Observando a rede acima, não dá pra saber quais são os partidos predominantes, então veremos a distribuição partidária deste grupo no histograma abaixo:
@@ -149,12 +130,6 @@ Observando a rede acima, não dá pra saber quais são os partidos predominantes
 plotOutput("hist_grafo")
 
 ```
-
-Os partidos cujos deputados mais coautoram em requerimentos com muitos coautores são PTB e MDB, partidos do "centrão" que juntos compõem quase 29% da rede acima; em segundo lugar estão PP, PR e DEM, partidos de centro-direita que juntos totalizam 27% dos deputados desse grupo; em terceiro lugar, estão os partidos de orientação esquerda e centro-esquerda: PT, PSBD, PSB e PDT, com quase 23% do grupo.
-
-As coautorias deste grupo se tratam de proposições que foram apensadas à PEC das demarcações, que passam a ser competência exclusiva do Congresso.
-
-<br>
 
 
 ```{r echo=FALSE}
@@ -193,23 +168,36 @@ getCoautorias <- reactive({
   nodes_edges <- 
     generate_nodes_and_edges(
       coautorias %>% 
-        filter(peso_arestas >= input$min_peso) %>% 
         filter(id_principal == input$prop_id))
+        # filter(peso_arestas >= input$min_peso) %>% 
   return(nodes_edges)
 })
 
 ```
 
 ```{r echo=FALSE, context="server"}
+getPesosProp <- function(prop_id) {
+  coautorias %>% 
+    filter(id_principal == prop_id) %>% 
+    select(peso_arestas) %>% 
+    as.list() %>% 
+    purrr::pluck("peso_arestas")
+}
+
+# observeEvent(input$prop_id,{
+#    updateSelectInput(session,'min_peso',
+#            choices=getPesosProp(input$Select1))
+# })
 
 output$hist <- renderPlot({
   if(nrow(coautorias) > 0) {
     coautorias %>%
-    filter(peso_arestas >= input$min_peso) %>% 
+    filter(id_principal == input$prop_id) %>%
+    # filter(peso_arestas >= input$min_peso) %>% 
     ggplot(aes(x = peso_arestas)) +
     geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#10726B") +
     scale_x_continuous(limits = c(0, max(coautorias$peso_arestas) + 0.1), 
-                       breaks = seq(0, max(coautorias$peso_arestas) + 0.1, 0.1)) +
+                       breaks = seq(0, max(coautorias$peso_arestas) + 0.1, 1)) +
     labs(x = "Peso das relações", y = "Número de relações") +
     theme_ipsum_rc()
   }
@@ -220,7 +208,7 @@ output$dt <-
     coautorias %>% 
       select(id_principal, nome.x, nome.y, peso_arestas, num_coautorias) %>% 
       distinct() %>% 
-      filter(peso_arestas >=  input$min_peso) %>% 
+      # filter(peso_arestas >=  input$min_peso) %>% 
       filter(id_principal == input$prop_id) %>%
       rename(peso_relacao = peso_arestas, 
              nome_deputado_a = nome.x,
