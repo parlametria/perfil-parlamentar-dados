@@ -42,9 +42,8 @@ fetch_autores <- function(id_prop) {
 #' @description Recupera dados de autores de proposições a partir do conjunto de ids das proposições 
 #' e que estão no dataframe de parlamentares
 #' @param proposicoes Dataframe das proposições contendo uma coluna "id"
-#' @param proposicoes Dataframe dos parlamentares
 #' @return Dataframe contendo informações sobre os autores da proposição
-fetch_all_autores <- function(proposicoes, parlamentares) {
+fetch_all_autores <- function(proposicoes) {
   library(tidyverse)
   
   autores <- 

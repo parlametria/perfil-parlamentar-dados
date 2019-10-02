@@ -2,7 +2,8 @@ library(tidyverse)
 library(here)
 
 source(here("crawler/proposicoes/fetcher_propoposicoes_camara.R"))
-source(here("parlametria/crawler/articulacoes/process_coautorias.R"))
+source(here("parlametria/crawler/articulacoes/analyzer_coautorias.R"))
+source(here("parlametria/crawler/articulacoes/fetcher_authors.R"))
 
 parlamentares <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(.default = "c")) %>% 
   filter(casa == "camara", em_exercicio == 1) %>% 
@@ -14,14 +15,7 @@ proposicoes <- fetch_proposicoes_por_autor(178901)
 
 relacionadas <- fetch_all_relacionadas(proposicoes$id)
 
-autores <- fetch_all_autores(relacionadas) %>%
-  rename(id_req = id, id = id_deputado) %>%
-  distinct() %>%
-  group_by(id_req) %>%
-  mutate(peso_arestas = 1 / n()) %>% 
-  ungroup()
-
-coautorias <- get_coautorias(parlamentares, autores)
+coautorias <- get_coautorias(relacionadas, parlamentares)
 
 coautorias <- coautorias %>% 
   filter(id.x == id_parlamentar | id.y == id_parlamentar) %>% 
@@ -30,4 +24,4 @@ coautorias <- coautorias %>%
          nome_eleitoral.y = paste0(nome_eleitoral.y, " - ", sg_partido.y, "/", uf.y)) %>% 
   select(-c(sg_partido.x, sg_partido.y, uf.x, uf.y))
 
-write_csv(coautorias, here("crawler/raw_data/coautorias_tereza_cristina.csv"))
+write_csv(coautorias, here("parlametria/raw_data/articulacoes/coautorias_tereza_cristina.csv"))
