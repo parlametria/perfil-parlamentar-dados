@@ -98,14 +98,6 @@ selectInput("prop_id", "Id da proposição",
              choices_ids,
             selected = choices_ids[1])
 
-# choices = seq(min(coautorias$peso_arestas) %>% 
-#                   round(2), 
-#                 max(coautorias$peso_arestas) %>% 
-#                   round(2),
-#                 0.1)
-# selectInput("min_peso", "Valor mínimo dos pesos:",
-#               choices, selected = choices[1])
-
 br()
 
 plotOutput("hist")
@@ -169,7 +161,6 @@ getCoautorias <- reactive({
     generate_nodes_and_edges(
       coautorias %>% 
         filter(id_principal == input$prop_id))
-        # filter(peso_arestas >= input$min_peso) %>% 
   return(nodes_edges)
 })
 
@@ -184,16 +175,10 @@ getPesosProp <- function(prop_id) {
     purrr::pluck("peso_arestas")
 }
 
-# observeEvent(input$prop_id,{
-#    updateSelectInput(session,'min_peso',
-#            choices=getPesosProp(input$Select1))
-# })
-
 output$hist <- renderPlot({
   if(nrow(coautorias) > 0) {
     coautorias %>%
     filter(id_principal == input$prop_id) %>%
-    # filter(peso_arestas >= input$min_peso) %>% 
     ggplot(aes(x = peso_arestas)) +
     geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#10726B") +
     scale_x_continuous(limits = c(0, max(coautorias$peso_arestas) + 0.1), 
@@ -208,7 +193,6 @@ output$dt <-
     coautorias %>% 
       select(id_principal, nome.x, nome.y, peso_arestas, num_coautorias) %>% 
       distinct() %>% 
-      # filter(peso_arestas >=  input$min_peso) %>% 
       filter(id_principal == input$prop_id) %>%
       rename(peso_relacao = peso_arestas, 
              nome_deputado_a = nome.x,
@@ -243,12 +227,5 @@ output$hist_grafo <- renderPlot({
       theme_ipsum_rc()
   }
 })
-  
-
-# output$grafo_grupo2 <- 
-#   networkD3::renderForceNetwork({
-#     graph <- generate_graph_by_group(getCoautorias(), 2)
-#     generate_graph(graph[[1]], graph[[2]])
-#   })
 
 ```
