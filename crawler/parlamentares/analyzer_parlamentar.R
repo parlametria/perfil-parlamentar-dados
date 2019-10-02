@@ -23,7 +23,7 @@ processa_dados_deputados <- function() {
     dplyr::mutate(sg_partido = padroniza_sigla(sg_partido)) %>% 
     dplyr::mutate(em_exercicio = dplyr::if_else(situacao == 'Exercício', 1, 0)) %>%
     dplyr::select(id, casa, cpf, nome_civil, nome_eleitoral, genero, uf, sg_partido, situacao, 
-                  condicao_eleitoral, ultima_legislatura, em_exercicio)
+                  condicao_eleitoral, ultima_legislatura, em_exercicio, data_nascimento)
   
   return(deputados)
 }
@@ -58,7 +58,7 @@ processa_dados_senadores <- function() {
     
     dplyr::filter(legislatura == ultima_legislatura) %>%
     select(id, casa, cpf, nome_civil, nome_eleitoral = nome_eleitoral.x, genero, uf, sg_partido, 
-           situacao, condicao_eleitoral, ultima_legislatura, em_exercicio)
+           situacao, condicao_eleitoral, ultima_legislatura, em_exercicio, data_nascimento)
   
   return(senadores_merge)
 }
