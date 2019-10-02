@@ -132,18 +132,25 @@ get_empresas_agroexportadoras_parlamentares <- function(
 #' @param parlamentares_datapath Caminho para o dataframe de parlamentares
 #' @return Dataframe com deputados e coluna que define a participação ou não como sócio de empresas agroexportadoras
 #' @example parlamentares_socios_agro_exportadoras <- calcula_sociedade_empresas_agroexportadoras()
-calcula_sociedade_empresas_agroexportadoras <- function(parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
+calcula_sociedade_empresas_agroexportadoras <- function(
+  parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
   library(here)
   
-  empresas_socios <- get_empresas_agroexportadoras_parlamentares()
+  empresas_socios <- get_empresas_agroexportadoras_parlamentares() %>% 
+    select(id = id_deputado, exportadora) %>% 
+    mutate(exportadora = if_else(exportadora == "sim", 1, 0)) %>% 
+    filter(exportadora == 1) %>% 
+    distinct(id, .keep_all = TRUE)
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(casa == "camara", em_exercicio == 1) %>% 
     select(id, cpf)
   
   parlamentares_socios <- parlamentares %>% 
-    left_join(indice_doadores, by = c("id"))
+    left_join(empresas_socios, by = c("id")) %>% 
+    mutate(tem_empresa_agroexportadora = if_else(is.na(exportadora), 0, exportadora)) %>% 
+    select(id, cpf, tem_empresa_agroexportadora)
   
   return(parlamentares_socios)
 }
@@ -160,6 +167,7 @@ processa_indice_vinculo_economico <- function(
   propriedades_rurais <- calcula_score_propriedades_rurais()
   socios <- calcula_score_socios_empresas_rurais()
   doacoes <- calcula_score_doacoes_empresas_rurais()
+  tem_empresa_exportadora <- calcula_sociedade_empresas_agroexportadoras()
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(casa == "camara", em_exercicio == 1) %>% 
@@ -169,7 +177,9 @@ processa_indice_vinculo_economico <- function(
     left_join(propriedades_rurais, by = c("id", "cpf")) %>% 
     left_join(socios, by = c("id", "cpf")) %>% 
     left_join(doacoes, by = c("id", "cpf")) %>% 
-    select(id, cpf, nome_eleitoral, uf, sg_partido, total_declarado, numero_empresas_associadas, proporcao_doacoes_agro)
+    left_join(tem_empresa_exportadora, by = c("id", "cpf")) %>% 
+    select(id, cpf, nome_eleitoral, uf, sg_partido, total_declarado, numero_empresas_associadas, 
+           proporcao_doacoes_agro, tem_empresa_agroexportadora)
   
   return(indice_vinculo_economico)
 }
