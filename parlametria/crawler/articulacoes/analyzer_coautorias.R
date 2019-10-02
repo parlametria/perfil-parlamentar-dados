@@ -106,3 +106,36 @@ remove_duplicated_edges <- function(df) {
     group_by(id.x, id.y) %>%
     distinct()
 }
+
+#' @title Gera dataframe de coautorias de um parlamentar específico
+#' @description A partir de um id de parlamentar,
+#' retorna um dataframe de coautorias, onde cada linha representa coautorias em
+#' proposições do parlamentar.
+#' @param id_parlamentar ID do parlamentar
+#' @return Dataframe contendo informações sobre as coautorias
+coautorias_by_parlamentar <- function(id_parlamentar) {
+  library(tidyverse)
+  library(here)
+  
+  source(here("crawler/proposicoes/fetcher_propoposicoes_camara.R"))
+  source(here("parlametria/crawler/articulacoes/fetcher_authors.R"))
+  
+  parlamentares <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(.default = "c")) %>% 
+    filter(casa == "camara", em_exercicio == 1) %>% 
+    select(id, nome_eleitoral, sg_partido, uf)
+  
+  proposicoes <- fetch_proposicoes_por_autor(id_parlamentar)
+  
+  relacionadas <- fetch_all_relacionadas(proposicoes$id)
+  
+  coautorias <- get_coautorias(relacionadas, parlamentares)
+  
+  coautorias <- coautorias %>% 
+    filter(id.x == id_parlamentar | id.y == id_parlamentar) %>% 
+    mutate(peso_arestas = round(peso_arestas, 2),
+           nome_eleitoral.x = paste0(nome_eleitoral.x, " - ", sg_partido.x, "/", uf.x),
+           nome_eleitoral.y = paste0(nome_eleitoral.y, " - ", sg_partido.y, "/", uf.y)) %>% 
+    select(-c(sg_partido.x, sg_partido.y, uf.x, uf.y))
+  
+  return(coautorias)
+}
