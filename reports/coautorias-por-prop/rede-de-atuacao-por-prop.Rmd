@@ -1,5 +1,5 @@
 ---
-title: "Encontrando grupos de deputados por coautorias em proposições"
+title: "Relatório de coautoria"
 runtime: shiny
 output:
   html_document:
@@ -56,7 +56,7 @@ coautorias <- get_coautorias(peso_autorias_docs_camara, autorias_camara, parlame
 
 ### As proposições
 
-Para geração deste relatório foram utilizadas as proposições da plataforma [Leggo](https://leggo.org.br) listadas abaixo. Para cada uma das proposições, existe uma série de outras proposições relacionadas, como emendas, pareceres, requerimentos, etc., que também foram consideradas para a criação dos grupos parlamentares. 
+Para geração deste relatório foram utilizadas as proposições da plataforma [Leggo](https://leggo.org.br), considerando só a Câmara. Para cada uma das proposições, existe uma série de outras proposições relacionadas, como emendas, pareceres, requerimentos, etc., que também foram consideradas para a criação dos grupos parlamentares. 
 
 <br>
 
@@ -76,8 +76,6 @@ DT::DTOutput("dt")
 <br>
 
 #### Peso das relações 
-
-Processando os dados, observamos que há requerimentos que são coautorados por muitos deputados. Um exemplo disso é um [requerimento de audiência](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2194402) sobre aposentadoria para produtores rurais familiares, um requerimento popular que normalmente é visto pelo deputados como oportunidade de aproximação com eleitores, e por isso o número de assinaturas de coautoria são tão altos.
 
 A fim de deixar os grupos mais refinados e precisamos, optamos por adicionar uma penalidade que varia de acordo com o número de pessoas envolvidas: quanto mais coautores em uma proposição, menos precisas estarão as relações entre os deputados e por isso terão pesos menores; de forma análoga, uma proposição que possua apenas dois coautores, terá o peso da relação máximo e estarão muito mais próximos.
 
@@ -109,10 +107,10 @@ Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando um
 
 <br>
 
-##### Grupo 1: Tudo junto e misturado
-Este é o maior agrupamento encontrado e corresponde aos deputados que coautoram juntos em requerimentos mais populares, e geralmente como uma estratégia de aproximação com seus eleitores ou porque "tá todo mundo participando".
+##### Grafo Geral:
+Este são todos os agrupamentos da proposição.
 
-```{r echo=FALSE, fig.width = 2, fig.height = 2}
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
 forceNetworkOutput("grafo")
 ```
 
@@ -126,17 +124,12 @@ plotOutput("hist_grafo")
 
 ```{r echo=FALSE}
 
-generate_graph_by_group <- function(df, id_group) {
-  nodes <- df[[1]] %>%
-  filter(group == id_group) %>% 
-    select(-index) %>% 
-    rowid_to_column("index") %>% 
-    mutate(index = index - 1)
-  
-  edges <- generate_edges(coautorias, nodes)
-  
-  return(list(nodes, edges))
-}
+# generate_graph_by_group <- function(df, id_group) {
+#   nodes <- df[[1]] %>%
+#   filter(group == id_group)
+#   
+#   return(list(nodes, df[[2]]))
+# }
 
 generate_graph <- function(nodes, edges) {
 
@@ -211,7 +204,7 @@ output$grafo <-
     }
   })
 
-output$hist_grafo <- renderPlot({
+output$hist_grafo <- renderPlot({ 
   nodes <-getCoautorias()[[1]]
   if(nrow(nodes) > 0) {
     nodes <- nodes %>%
@@ -228,4 +221,11 @@ output$hist_grafo <- renderPlot({
   }
 })
 
+# output$grafo_grupo2 <-
+#     networkD3::renderForceNetwork({
+#     graph <- generate_graph_by_group(getCoautorias(), 1)
+#     if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
+#       generate_graph(graph[[1]], graph[[2]])
+#     }
+# })
 ```
