@@ -22,6 +22,7 @@ knitr::opts_chunk$set(
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
 library(networkD3)
 library(tidyverse)
+library(shiny)
 library(hrbrthemes)
 theme_set(theme_minimal())
 source(here::here('reports/scripts/prepare_coautorias_data.R'))
@@ -46,11 +47,9 @@ autorias_senado <- prepare_autorias_df_senado(documentos_senado, autores_senado)
 peso_autorias_docs_camara <- compute_peso_autoria_doc(autorias_camara)
 peso_autorias_docs_senado <- compute_peso_autoria_doc(autorias_senado)
 
-# parlamentares <- get_dataset_parlamentares(here::here(paste0(path, "data/parlamentares.csv")))
-# 
-# proposicoes <- get_dataset_proposicoes(here::here(paste0(path, "data/tabela_leggo.csv")))
-# 
-# coautorias <- get_coautorias(proposicoes, autores, parlamentares)
+parlamentares_camara <- autores_camara %>% dplyr::select(id_autor, nome, partido, uf)
+
+coautorias <- get_coautorias(peso_autorias_docs_camara, autorias_camara, parlamentares_camara)
 
 ```
 
@@ -100,25 +99,27 @@ Transformamos este peso de relações em um parâmetro, entre 0.1 e 1, que é us
 <br>
 
 ```{r echo=FALSE, warning=FALSE, fig.width = 8, fig.height = 6}
-choices <- proposicoes$choice
+choices_ids <- 
+  coautorias %>% 
+  select(id_principal) %>%
+  distinct() %>% 
+  as.list()
 
-selectInput("min_peso", "Valor mínimo dos pesos:",
-              choices = seq(
+choices_ids <- choices_ids$id_principal
+
+selectInput("prop_id", "Id da proposição",
+             choices_ids,
+            selected = choices_ids[1])
+
+choices = seq(
                 min(coautorias$peso_arestas) %>% 
                   round(2), 
                 max(coautorias$peso_arestas) %>% 
                   round(2),
-                0.1), selected = choices[1])
+                0.1)
 
-choices_ids <- 
-  coautorias %>% 
-  select(id_ext) %>%
-  distinct() %>% 
-  as.list()
-
-selectInput("prop_id", "Id da proposição",
-             choices_ids,
-            selected = choices_ids[2])
+selectInput("min_peso", "Valor mínimo dos pesos:",
+              choices, selected = choices[1])
 
 br()
 
@@ -170,6 +171,33 @@ generate_graph_by_group <- function(df, id_group) {
   return(list(nodes, edges))
 }
 
+generate_graph <- function(nodes, edges) {
+
+  fn <- forceNetwork(
+    Links = edges, 
+    Nodes = nodes,
+    Source = "source", 
+    Target = "target",
+    Value = "value", 
+    NodeID = "nome_eleitoral",
+    Group ="partido", 
+    zoom = T,
+    linkColour = "#bfbdbd",
+    fontFamily = "roboto",
+    fontSize = 16,
+    opacity = 0.8)
+  return(fn)
+}
+
+getCoautorias <- reactive({
+  nodes_edges <- 
+    generate_nodes_and_edges(
+      coautorias %>% 
+        filter(peso_arestas >= input$min_peso) %>% 
+        filter(id_principal == input$prop_id))
+  return(nodes_edges)
+})
+
 ```
 
 ```{r echo=FALSE, context="server"}
@@ -187,31 +215,21 @@ output$hist <- renderPlot({
   }
 })
 
-getCoautorias <- reactive({
-  nodes_edges <- 
-    generate_nodes_and_edges(
-      as.double(input$min_peso),
-      autores,
-      parlamentares,
-      coautorias %>% 
-        filter(id_ext == input$prop_id))
-  return(nodes_edges)
-})
-
 output$dt <- 
   DT::renderDataTable(
     coautorias %>% 
-      select(id_ext, nome_eleitoral.x, nome_eleitoral.y, peso_arestas, num_coautorias) %>% 
+      select(id_principal, nome.x, nome.y, peso_arestas, num_coautorias) %>% 
       distinct() %>% 
       filter(peso_arestas >=  input$min_peso) %>% 
-      filter(id_ext == input$prop_id) %>% 
+      filter(id_principal == input$prop_id) %>%
       rename(peso_relacao = peso_arestas, 
-             nome_deputado_a = nome_eleitoral.x,
-             nome_deputado_b = nome_eleitoral.y,
+             nome_deputado_a = nome.x,
+             nome_deputado_b = nome.y,
              coautorias_conjuntas = num_coautorias) %>% 
       arrange(desc(peso_relacao)), 
     options = list(pageLength = 10,
-                   scrollX = TRUE))
+                   scrollX = TRUE)
+    )
   
 output$grafo <- 
   networkD3::renderForceNetwork({
