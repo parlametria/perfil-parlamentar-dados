@@ -80,7 +80,7 @@ fetch_proposicoes_por_autor_e_pagina <- function(id_deputado, pagina, itens=100)
 #' @param id_deputado id do deputado
 #' @param itens número de itens que se deseja dividir em páginas (sendo 100 o máximo)
 #' @return Dataframe com lista de proposições criadas pelo deputado.
-fetch_proposicoes_por_autor <- function(id_deputado, itens=100) {
+fetch_proposicoes_por_autor <- function(id_deputado, itens = 100) {
   library(tidyverse)
   
   url <- paste0("https://dadosabertos.camara.leg.br/api/v2/proposicoes?idDeputadoAutor=", 
