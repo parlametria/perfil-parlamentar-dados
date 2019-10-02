@@ -48,8 +48,23 @@ peso_autorias_docs_camara <- compute_peso_autoria_doc(autorias_camara)
 peso_autorias_docs_senado <- compute_peso_autoria_doc(autorias_senado)
 
 parlamentares_camara <- autores_camara %>% dplyr::select(id_autor, nome, partido, uf)
+parlamentares_senado <- autores_senado %>% dplyr::select(id_autor, nome = nome_autor, partido, uf)
 
-coautorias <- get_coautorias(peso_autorias_docs_camara, autorias_camara, parlamentares_camara)
+senadores <- agoradigital::read_senadores('/home/jair/Documents/leggoR/data/senado/parlamentares.csv')
+props <- 
+  read_csv('/home/jair/Documents/leggoR/data/proposicoes.csv') %>% 
+  mutate(nome_formal = paste0(apelido, "- ", sigla_tipo, " ", numero, "/", format(data_apresentacao, "%Y"), " - ", casa)) %>% 
+  select(id_principal = id_ext, nome_formal) %>% 
+  mutate(id_principal = as.character(id_principal))
+
+coautorias_camara <- get_coautorias(peso_autorias_docs_camara, autorias_camara, parlamentares_camara)
+coautorias_senado <- get_coautorias(peso_autorias_docs_senado, autorias_senado, parlamentares_senado)
+
+coautorias <- rbind(coautorias_camara, coautorias_senado) %>% left_join(props, by = "id_principal") %>% 
+  filter(nome.x != nome.y)
+
+props <- props %>% 
+  filter(id_principal %in% coautorias$id_principal)
 
 ```
 
@@ -85,14 +100,13 @@ Transformamos este peso de relações em um parâmetro, entre 0.1 e 1, que é us
 
 ```{r echo=FALSE, warning=FALSE, fig.width = 8, fig.height = 6}
 choices_ids <- 
-  coautorias %>% 
-  select(id_principal) %>%
-  distinct() %>% 
-  as.list()
+  props %>% 
+  select(nome_formal) %>%
+  as.list() 
 
-choices_ids <- choices_ids$id_principal
+choices_ids <- choices_ids$nome_formal
 
-selectInput("prop_id", "Id da proposição",
+selectInput("nome_formal", "Nome Formal",
              choices_ids,
             selected = choices_ids[1])
 
@@ -153,16 +167,16 @@ getCoautorias <- reactive({
   nodes_edges <- 
     generate_nodes_and_edges(
       coautorias %>% 
-        filter(id_principal == input$prop_id))
+        filter(nome_formal == input$nome_formal))
   return(nodes_edges)
 })
 
 ```
 
 ```{r echo=FALSE, context="server"}
-getPesosProp <- function(prop_id) {
+getPesosProp <- function(nome_formal) {
   coautorias %>% 
-    filter(id_principal == prop_id) %>% 
+    filter(nome_formal == nome_formal) %>% 
     select(peso_arestas) %>% 
     as.list() %>% 
     purrr::pluck("peso_arestas")
@@ -171,7 +185,7 @@ getPesosProp <- function(prop_id) {
 output$hist <- renderPlot({
   if(nrow(coautorias) > 0) {
     coautorias %>%
-    filter(id_principal == input$prop_id) %>%
+    filter(nome_formal == input$nome_formal) %>%
     ggplot(aes(x = peso_arestas)) +
     geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#10726B") +
     scale_x_continuous(limits = c(0, max(coautorias$peso_arestas) + 0.1), 
@@ -184,9 +198,9 @@ output$hist <- renderPlot({
 output$dt <- 
   DT::renderDataTable(
     coautorias %>% 
-      select(id_principal, nome.x, nome.y, peso_arestas, num_coautorias) %>% 
+      select(id_principal, nome.x, nome.y, peso_arestas, num_coautorias, nome_formal) %>% 
       distinct() %>% 
-      filter(id_principal == input$prop_id) %>%
+      filter(nome_formal == input$nome_formal) %>%
       rename(peso_relacao = peso_arestas, 
              nome_deputado_a = nome.x,
              nome_deputado_b = nome.y,
