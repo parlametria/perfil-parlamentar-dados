@@ -1,7 +1,7 @@
 #' @title Recupera dados de autores de uma proposição 
 #' @description Recupera dados de autores de proposições a partir do id da proposição, 
 #' raspando da página web da câmara
-#' @param id ID da proposição
+#' @param id_prop ID da proposição
 #' @return Dataframe contendo informações sobre os autores da proposição
 #' @examples
 #' fetch_autores(2121442)
@@ -38,9 +38,8 @@ fetch_autores <- function(id_prop) {
   return(autores)
 }
 
-#' @title Recupera todos os autores de um conjunto de proposições que estão no conjunto de parlamentares
+#' @title Recupera todos os autores de um conjunto de proposições
 #' @description Recupera dados de autores de proposições a partir do conjunto de ids das proposições 
-#' e que estão no dataframe de parlamentares
 #' @param proposicoes Dataframe das proposições contendo uma coluna "id"
 #' @return Dataframe contendo informações sobre os autores da proposição
 fetch_all_autores <- function(proposicoes) {
