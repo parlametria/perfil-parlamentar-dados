@@ -14,7 +14,12 @@ proposicoes <- fetch_proposicoes_por_autor(178901)
 
 relacionadas <- fetch_all_relacionadas(proposicoes$id)
 
-autores <- fetch_all_autores(relacionadas, parlamentares)
+autores <- fetch_all_autores(relacionadas) %>%
+  rename(id_req = id, id = id_deputado) %>%
+  distinct() %>%
+  group_by(id_req) %>%
+  mutate(peso_arestas = 1 / n()) %>% 
+  ungroup()
 
 coautorias <- get_coautorias(parlamentares, autores)
 
