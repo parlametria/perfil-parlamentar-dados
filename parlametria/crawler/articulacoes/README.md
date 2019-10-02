@@ -8,7 +8,7 @@ As articulações dizem respeito às autorias em proposições que foram feitas 
 
 Os dados de autoria são obtidos a partir da raspagem da [página](https://www.camara.leg.br/proposicoesWeb/prop_autores?idProposicao=257161) no site da Câmara. A seguir são agrupados, por par de parlamentares, quantas proposições foram feitas e qual o peso total da relação, calculado de acordo com o número de autores: quanto mais autores teve uma proposição, menor será a relação entre seus autores (definida por 1/(número de autores)).
 
-Para os dados de ambientalistas, foram filtrados os parlamentares que articulavam na autoria de proposições que ambientalistas, isto é, os parlamentares que possuem alta aderência ao meio ambiente nas votações nominais de plenário.
+Para os dados de ambientalistas, foram filtrados os parlamentares que articulavam na autoria de proposições que ambientalistas, isto é, os 100 parlamentares que possuem maior índice de ativismo ambiental, explicado em `parlametria/processor`
 
 Já para os dados de articulações com Tereza Cristina, filtramos apenas os parlamentares que autoraram em conjunto com a ministra em alguma proposição. 
 
