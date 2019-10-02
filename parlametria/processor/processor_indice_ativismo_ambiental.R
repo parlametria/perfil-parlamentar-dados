@@ -97,7 +97,7 @@ process_indice_ativismo_ambiental <- function() {
   
   # Aderência ao meio ambiente
   aderencia <-
-    read_csv(here("crawler/raw_data/parlamentares_aderencia.csv")) %>%
+    read_csv(here("parlametria/raw_data/resumo/parlamentares_aderencia.csv")) %>%
     select(id, aderencia) %>%
     mutate(aderencia = if_else(aderencia == -1 |
                                  is.na(aderencia), 0, 1 - aderencia))
