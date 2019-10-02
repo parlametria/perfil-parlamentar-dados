@@ -52,7 +52,7 @@ process_indice_influencia_parlamentar <- function() {
       str_detect(cargo, "Primeiro Vice-presidente") ~ 3,
       str_detect(cargo, "Segundo Vice-presidente") ~ 2,
       str_detect(cargo, "Terceiro Vice-presidente") ~ 1,
-      str_detect(cargo, "Titular") ~ 1 / n_max_comissoes,
+      str_detect(cargo, "Titular") ~ 1 / n_max_comissoes
     )) %>% 
     group_by(id) %>% 
     summarise(score_comissoes = sum(peso)) %>% 
