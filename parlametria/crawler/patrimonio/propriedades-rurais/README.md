@@ -1,6 +1,6 @@
 ## Propriedades rurais de Parlamentares
 
-Este módulo recupera e processa dados de propriedades rurais declaradas pelos deputados federais ao TSE nas eleições de 2018.
+Este módulo recupera e processa dados de propriedades rurais declaradas pelos parlamentares (deputados e senadores) ao TSE nas eleições de 2018.
 
 O módulo é composto por rotinas descritas abaixo:
 
@@ -24,7 +24,7 @@ Classificamos as propriedades rurais e retornamos o dataframe através da funç�
 analyzer_propriedades_rurais.R
 ```
 
-Processa os dados de propriedades rurais dos deputados atualmente em exercício.
+Processa os dados de propriedades rurais dos parlamentares atualmente em exercício.
 
 4. Exportação dos dados
 
@@ -32,7 +32,7 @@ Processa os dados de propriedades rurais dos deputados atualmente em exercício.
 Rscript export_propriedades_rurais.R
 ```
 
-Rotina responsável pode exportar os dados das propriedades rurais dos deputados atualmente em exercício.
+Rotina responsável pode exportar os dados das propriedades rurais dos parlamentares atualmente em exercício.
 
 
 Obs: Para atualizar os dados é necessário executar as rotinas descritas no passo 1 e 4 apenas.
