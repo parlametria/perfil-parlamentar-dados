@@ -6,14 +6,14 @@
 get_info_parlamentares_em_exercicio <- function() {
   library(tidyverse)
   library(here)
-  library(lubridate)
   
   parlamentares <- read_csv(here::here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c"))
   
   parlamentares_exercicio <- parlamentares %>% 
     filter(em_exercicio == 1) %>% 
-    mutate(data = ymd(data_nascimento)) %>% 
-    mutate(idade_completa = interval(start = data_nascimento, end = Sys.Date()) / duration(num = 1, units = "years")) %>% 
+    mutate(data = lubridate::ymd(data_nascimento)) %>% 
+    mutate(idade_completa = lubridate::interval(start = data_nascimento, 
+                                                end = Sys.Date()) / lubridate::duration(num = 1, units = "years")) %>% 
     mutate(idade = floor(idade_completa)) %>% 
     select(id, casa, nome_eleitoral, sg_partido, uf, genero, idade)
     

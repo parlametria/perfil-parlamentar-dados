@@ -23,7 +23,7 @@ calcula_score_propriedades_rurais <- function(
   
   parlamentares_propriedades_rurais <- parlamentares %>% 
     left_join(propriedades_rurais,
-              by = c("cpf", "id" = "id_camara")) %>% 
+              by = c("cpf", "id" = "id_casa")) %>% 
     mutate(total_declarado = if_else(is.na(total_declarado), 0, total_declarado))
   
   return(parlamentares_propriedades_rurais)
@@ -108,6 +108,107 @@ calcula_score_doacoes_empresas_rurais <- function(
   return(parlamentares_doacoes)
 }
 
+#' @title Recupera informações dos parlamentares que receberam doações de empresas agrícolas exportadoras
+#' @description A partir do dataframe de doações a parlamentares durante as eleições de 2018 recupera informações sobre
+#' essas doações considerando sócios de empresas agroexportadoras e parlamentares em exercício
+#' @param doadores_gerais_2018_datapath Caminho para o dataframe com todos os doadores de campanha
+#' @param doadores_socios_empresas_rurais_2018_datapath Caminho para o dataframe de doações de campanha 
+#' de sócios de empresas rurais em 2018
+#' @param parlamentares_datapath Caminho para o dataframe de parlamentares
+#' @return Dataframe contendo informações dos parlamentares (cpf e id) e proporção de doações de 
+#' empresas agrícolas agroexportadoras em relação ao total doado
+calcula_score_doacoes_empresas_agroexportadoras <- function(
+  doadores_gerais_2018_datapath = here::here("parlametria/raw_data/receitas/deputados_doadores.csv"),
+  doadores_socios_empresas_rurais_2018_datapath = here::here("parlametria/raw_data/empresas/empresas_doadores_agricolas.csv"),
+  parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")
+) {
+  library(tidyverse)
+  library(here)
+
+  doadores <- read_csv(doadores_gerais_2018_datapath, col_types = cols(id = "c")) %>% 
+    filter(casa == "camara")
+  
+  lista_doado_por_parlamentar <- doadores %>%
+    group_by(id) %>% 
+    summarise(total_doacao = sum(valor_receita)) %>% 
+    select(id, total_doacao)
+  
+  lista_doadores_agroexportadoras <- read_csv(doadores_socios_empresas_rurais_2018_datapath, col_types = cols(id_deputado = "c")) %>% 
+    filter(exportadora == "sim") %>% 
+    group_by(cpf_cnpj_socio) %>% 
+    summarise(n = n())
+  
+  doadores_agroexportadoras <- doadores %>% 
+    left_join(lista_doadores_agroexportadoras, by = c("cpf_cnpj_doador" = "cpf_cnpj_socio")) %>% 
+    filter(!is.na(n)) %>% 
+    group_by(id) %>% 
+    summarise(total_doacao_agro_exportadora = sum(valor_receita))
+  
+  indice_doadores <- lista_doado_por_parlamentar %>% 
+    inner_join(doadores_agroexportadoras, by = c("id")) %>% 
+    mutate(proporcao_doacoes_agroexportadoras = total_doacao_agro_exportadora/total_doacao)
+  
+  parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
+    filter(casa == "camara", em_exercicio == 1) %>% 
+    select(id, cpf)
+  
+  parlamentares_doacoes <- parlamentares %>% 
+    left_join(indice_doadores, by = c("id")) %>% 
+    mutate(proporcao_doacoes_agroexportadoras = if_else(is.na(proporcao_doacoes_agroexportadoras), 
+                                                        0, 
+                                                        proporcao_doacoes_agroexportadoras))
+  
+  return(parlamentares_doacoes)
+}
+
+#' @title Recupera lista de empresas agrícolas exportadoras com parlamentares como sócios
+#' @description A partir da lista de empresas agrícolas dos parlamentares filtra para obter apenas as empresas exportadoras.
+#' Dados de exportação segundo o Ministério da Economia.
+#' @param empresas_parlamentares Caminho para o csv com dados de empresas agrícolas com parlamentares como sócios
+#' @return Dataframe com empresas agroexportadoras com parlamentares como sócio
+#' @example parlamentares_socios_agro_exportadoras <- get_empresas_agroexportadoras_parlamentares()
+get_empresas_agroexportadoras_parlamentares <- function(
+  empresas_parlamentares = here::here("parlametria/raw_data/empresas/empresas_parlamentares_agricolas.csv")) {
+  library(tidyverse)
+  library(here)
+  source(here("parlametria/crawler/empresas/process_empresas_exportadoras.R"))
+  
+  dados_empresas_parlamentares <- read_csv(empresas_parlamentares, col_types = cols(id_deputado = "c"))
+  
+  dados_empresas_parlamentares_exportadoras <- dados_empresas_parlamentares %>% 
+    classifica_empresas_exportacao()
+  
+  return(dados_empresas_parlamentares_exportadoras)
+}
+
+#' @title Recupera informações dos deputados sócios de empresas agroexportadoras
+#' @description Recupera informações dos deputados sócios de empresas agroexportadoras segundo a Receita Federal e o Ministério da Economia
+#' @param parlamentares_datapath Caminho para o dataframe de parlamentares
+#' @return Dataframe com deputados e coluna que define a participação ou não como sócio de empresas agroexportadoras
+#' @example parlamentares_socios_agro_exportadoras <- calcula_sociedade_empresas_agroexportadoras()
+calcula_sociedade_empresas_agroexportadoras <- function(
+  parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
+  library(tidyverse)
+  library(here)
+  
+  empresas_socios <- get_empresas_agroexportadoras_parlamentares() %>% 
+    select(id = id_deputado, exportadora) %>% 
+    mutate(exportadora = if_else(exportadora == "sim", 1, 0)) %>% 
+    filter(exportadora == 1) %>% 
+    distinct(id, .keep_all = TRUE)
+  
+  parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
+    filter(casa == "camara", em_exercicio == 1) %>% 
+    select(id, cpf)
+  
+  parlamentares_socios <- parlamentares %>% 
+    left_join(empresas_socios, by = c("id")) %>% 
+    mutate(tem_empresa_agroexportadora = if_else(is.na(exportadora), 0, exportadora)) %>% 
+    select(id, cpf, tem_empresa_agroexportadora)
+  
+  return(parlamentares_socios)
+}
+
 #' @title Índice de Vínculo Econômico
 #' @description Unifica as informações de propriedades rurais, sociedades em empresas ruraris e doações de ruralistas
 #' para gerar um Índice de Vínculo Economico com o agronegócio
@@ -120,6 +221,8 @@ processa_indice_vinculo_economico <- function(
   propriedades_rurais <- calcula_score_propriedades_rurais()
   socios <- calcula_score_socios_empresas_rurais()
   doacoes <- calcula_score_doacoes_empresas_rurais()
+  tem_empresa_exportadora <- calcula_sociedade_empresas_agroexportadoras()
+  doacoes_parlamentares_agroexportadoras <- calcula_score_doacoes_empresas_agroexportadoras()
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(casa == "camara", em_exercicio == 1) %>% 
@@ -129,7 +232,10 @@ processa_indice_vinculo_economico <- function(
     left_join(propriedades_rurais, by = c("id", "cpf")) %>% 
     left_join(socios, by = c("id", "cpf")) %>% 
     left_join(doacoes, by = c("id", "cpf")) %>% 
-    select(id, cpf, nome_eleitoral, uf, sg_partido, total_declarado, numero_empresas_associadas, proporcao_doacoes_agro)
+    left_join(tem_empresa_exportadora, by = c("id", "cpf")) %>% 
+    left_join(doacoes_parlamentares_agroexportadoras, by = c("id", "cpf")) %>% 
+    select(id, cpf, nome_eleitoral, uf, sg_partido, total_declarado, numero_empresas_associadas, 
+           proporcao_doacoes_agro, tem_empresa_agroexportadora, proporcao_doacoes_agroexportadoras)
   
   return(indice_vinculo_economico)
 }
