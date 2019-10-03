@@ -23,7 +23,7 @@ calcula_score_propriedades_rurais <- function(
   
   parlamentares_propriedades_rurais <- parlamentares %>% 
     left_join(propriedades_rurais,
-              by = c("cpf", "id" = "id_camara")) %>% 
+              by = c("cpf", "id" = "id_casa")) %>% 
     mutate(total_declarado = if_else(is.na(total_declarado), 0, total_declarado))
   
   return(parlamentares_propriedades_rurais)
