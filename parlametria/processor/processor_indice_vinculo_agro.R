@@ -28,7 +28,7 @@ process_indice_vinculo_agro <- function() {
   
   deputados_processed <- deputados_id %>% 
     
-    left_join(propriedades_rurais, by = c("id" = "id_camara")) %>% 
+    left_join(propriedades_rurais, by = c("id" = "id_casa")) %>% 
     mutate(tem_propriedade_rural = if_else(n_propriedades >= 1, 1, 0)) %>% 
     select(id, tem_propriedade_rural, total_declarado_propriedade_rural = total_declarado) %>%
     
