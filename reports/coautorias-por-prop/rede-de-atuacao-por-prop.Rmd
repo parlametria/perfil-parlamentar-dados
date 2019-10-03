@@ -60,8 +60,11 @@ props <-
 coautorias_camara <- get_coautorias(peso_autorias_docs_camara, autorias_camara, parlamentares_camara)
 coautorias_senado <- get_coautorias(peso_autorias_docs_senado, autorias_senado, parlamentares_senado)
 
-coautorias <- rbind(coautorias_camara, coautorias_senado) %>% left_join(props, by = "id_principal") %>% 
-  filter(nome.x != nome.y)
+coautorias <- 
+  rbind(coautorias_camara, coautorias_senado) %>% left_join(props, by = "id_principal") %>% 
+  filter(nome.x != nome.y) %>% 
+  mutate(partido.x = if_else(is.na(partido.x), "", partido.x),
+         partido.y = if_else(is.na(partido.y), "", partido.y))
 
 props <- props %>% 
   filter(id_principal %in% coautorias$id_principal)
@@ -117,7 +120,7 @@ plotOutput("hist")
 
 #### Rede de grupos
 
-Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando uma técnica chamada `agrupamento`, que agrupa os dados de forma automática com base na similaridade entre eles. **Para o peso mínimo de 0.01 das relações**, considerando todas as coautorias, foram gerados 7 grupos no total, mas a quantidade de grupos pode ser menor conforme o peso aumentar. Os grupos encontrados são exibidos a seguir.
+Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando uma técnica chamada `agrupamento`, que agrupa os dados de forma automática com base na similaridade entre eles. **Para o peso mínimo de 0.01 das relações**.
 
 <br>
 
