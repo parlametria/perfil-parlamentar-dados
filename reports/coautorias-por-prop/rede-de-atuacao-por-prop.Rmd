@@ -35,7 +35,9 @@ if (env == "dev") {
 } 
 
 # Lendo documentos e autores de ambas as casas para processar as coautorias
-documentos_camara <- agoradigital::read_current_docs_camara("/home/jair/Documents/leggoR/data/camara/documentos.csv")
+documentos_camara <- 
+  agoradigital::read_current_docs_camara("/home/jair/Documents/leggoR/data/camara/documentos.csv") %>% 
+  mutate(data = as.Date(format(status_proposicao_data_hora, "%Y-%m-%d")))
 documentos_senado <- agoradigital::read_current_docs_senado("/home/jair/Documents/leggoR/data/senado/documentos.csv")
 autores_camara <- agoradigital::read_current_autores_camara("/home/jair/Documents/leggoR/data/camara/autores.csv")
 autores_senado <- agoradigital::read_current_autores_senado("/home/jair/Documents/leggoR/data/senado/autores.csv")
@@ -113,6 +115,8 @@ selectInput("nome_formal", "Nome Formal",
              choices_ids,
             selected = choices_ids[1])
 
+dateInput("min_date", "Data a partir da qual você quer os documentos:", value = "2012-02-29", format = "dd/mm/yy")
+
 br()
 
 plotOutput("hist")
@@ -139,14 +143,18 @@ plotOutput("hist_grafo")
 ```
 
 
+```{r echo=FALSE, fig.width = 4, fig.height = 4}
+# forceNetworkOutput("grafo_grupo2")
+```
+
 ```{r echo=FALSE}
 
-# generate_graph_by_group <- function(df, id_group) {
-#   nodes <- df[[1]] %>%
-#   filter(group == id_group)
-#   
-#   return(list(nodes, df[[2]]))
-# }
+generate_graph_by_group <- function(df, id_group) {
+  nodes <- df[[1]] %>%
+  filter(group == id_group)
+
+  return(list(nodes, df[[2]]))
+}
 
 generate_graph <- function(nodes, edges) {
 
@@ -170,7 +178,8 @@ getCoautorias <- reactive({
   nodes_edges <- 
     generate_nodes_and_edges(
       coautorias %>% 
-        filter(nome_formal == input$nome_formal))
+      filter(data.x > input$min_date) %>% 
+      filter(nome_formal == input$nome_formal)) 
   return(nodes_edges)
 })
 
@@ -188,7 +197,8 @@ getPesosProp <- function(nome_formal) {
 output$hist <- renderPlot({
   if(nrow(coautorias) > 0) {
     coautorias %>%
-    filter(nome_formal == input$nome_formal) %>%
+    filter(nome_formal == input$nome_formal) %>% 
+    filter(data.x > input$min_date) %>% 
     ggplot(aes(x = peso_arestas)) +
     geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#10726B") +
     scale_x_continuous(limits = c(0, max(coautorias$peso_arestas) + 0.1), 
@@ -201,9 +211,10 @@ output$hist <- renderPlot({
 output$dt <- 
   DT::renderDataTable(
     coautorias %>% 
-      select(id_principal, nome.x, nome.y, peso_arestas, num_coautorias, nome_formal) %>% 
+      select(id_principal, nome.x, nome.y, peso_arestas, num_coautorias, nome_formal, data.x) %>% 
       distinct() %>% 
-      filter(nome_formal == input$nome_formal) %>%
+      filter(nome_formal == input$nome_formal) %>% 
+      filter(data.x > input$min_date) %>% 
       rename(peso_relacao = peso_arestas, 
              nome_deputado_a = nome.x,
              nome_deputado_b = nome.y,
@@ -240,7 +251,11 @@ output$hist_grafo <- renderPlot({
 
 # output$grafo_grupo2 <-
 #     networkD3::renderForceNetwork({
-#     graph <- generate_graph_by_group(getCoautorias(), 1)
+#     graph <- getCoautorias()
+#     graph[[1]] <- 
+#       graph[[1]] %>%
+#       filter(group == 2)
+# 
 #     if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
 #       generate_graph(graph[[1]], graph[[2]])
 #     }

@@ -123,7 +123,7 @@ get_coautorias <- function(peso_autorias, autorias, parlamentares) {
   coautorias <- coautorias %>%
     remove_duplicated_edges() %>%
     inner_join(peso_autorias, by = c("id_principal", "id_documento")) %>% 
-    group_by(id_principal, casa, id_autor.x, id_autor.y) %>% 
+    group_by(id_principal, casa, id_autor.x, id_autor.y, data.x) %>% 
     summarise(peso_arestas = sum(peso_arestas),
            num_coautorias = n()) %>%
     ungroup() %>% 
@@ -143,7 +143,8 @@ prepare_autorias_df_camara <- function(docs_camara, autores_camara) {
         dplyr::select(id_principal,
                       casa,
                       id_documento,
-                      id_autor) %>% 
+                      id_autor,
+                      data) %>% 
     dplyr::distinct()
 }
 
@@ -153,7 +154,8 @@ prepare_autorias_df_senado <- function(docs_senado, autores_senado) {
     dplyr::select(id_principal,
                   casa,
                   id_documento,
-                  id_autor) %>% 
+                  id_autor,
+                  data = data_texto) %>% 
     dplyr::distinct()
 }
 
