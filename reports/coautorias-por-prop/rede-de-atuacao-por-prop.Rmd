@@ -104,22 +104,7 @@ Transformamos este peso de relações em um parâmetro, entre 0.1 e 1, que é us
 <br>
 
 ```{r echo=FALSE, warning=FALSE, fig.width = 8, fig.height = 6}
-choices_ids <- 
-  props %>% 
-  select(nome_formal) %>%
-  as.list() 
-
-choices_ids <- choices_ids$nome_formal
-
-selectInput("nome_formal", "Nome Formal",
-             choices_ids,
-            selected = choices_ids[1])
-
-dateInput("min_date", "Data a partir da qual você quer os documentos:", value = "2012-02-29", format = "dd/mm/yy")
-
-br()
-
-plotOutput("hist")
+#plotOutput("hist")
 ```
 
 #### Rede de grupos
@@ -132,14 +117,64 @@ Tendo os pares e o peso de suas relações, os grupos foram feitos utilizando um
 Este são todos os agrupamentos da proposição.
 
 ```{r echo=FALSE, fig.width = 4, fig.height = 4}
+choices_ids <- 
+  props %>% 
+  select(nome_formal) %>%
+  as.list() 
+
+choices_ids <- choices_ids$nome_formal
+
+selectInput("nome_formal", "Nome Formal",
+             choices_ids,
+            selected = choices_ids[1])
+
+sliderInput("date",
+                  "Dates:",
+                  min = as.Date("2016-01-01","%Y-%m-%d"),
+                  max = as.Date(Sys.Date(),"%Y-%m-%d"),
+                  value = c(as.Date("1999-01-01","%Y-%m-%d"), as.Date(Sys.Date(),"%Y-%m-%d")),
+                  timeFormat="%Y-%m-%d")
+
+observe({
+  if (!is.null(input$nome_formal)) {
+    coautorias_filtrado <-
+      coautorias %>%
+      filter(!is.na(data.x)) %>% 
+      filter(nome_formal == input$nome_formal) %>%
+      arrange(data.x)
+
+    min_date <-
+      coautorias_filtrado %>%
+      head(1) %>%
+      purrr::pluck("data.x")
+
+    max_date <-
+      coautorias_filtrado %>%
+      tail(1) %>%
+      purrr::pluck("data.x")
+    
+    if (min_date == max_date) {
+      max_date = max_date + 1
+    }
+    
+    updateSliderInput(
+      session, "date",
+      min= as.Date(min_date, "%Y-%m-%d"),
+      max=as.Date(max_date,"%Y-%m-%d"), 
+      value=c(as.Date("2017-01-16", "%Y-%m-%d"), as.Date(max_date,"%Y-%m-%d")))
+
+  }
+})
+
+br()
+
 forceNetworkOutput("grafo")
 ```
 
 Observando a rede acima, não dá pra saber quais são os partidos predominantes, então veremos a distribuição partidária deste grupo no histograma abaixo:
 
 ```{r echo=FALSE, fig.width = 4, fig.height = 3}
-plotOutput("hist_grafo")
-
+#plotOutput("hist_grafo")
 ```
 
 
@@ -157,7 +192,8 @@ generate_graph_by_group <- function(df, id_group) {
 }
 
 generate_graph <- function(nodes, edges) {
-
+    print(nodes)
+  print(edges)
   fn <- forceNetwork(
     Links = edges, 
     Nodes = nodes,
@@ -171,14 +207,17 @@ generate_graph <- function(nodes, edges) {
     fontFamily = "roboto",
     fontSize = 16,
     opacity = 0.8)
+  
   return(fn)
+
+
 }
 
 getCoautorias <- reactive({
   nodes_edges <- 
     generate_nodes_and_edges(
       coautorias %>% 
-      filter(data.x > input$min_date) %>% 
+      filter(data.x >= input$date[[1]] & data.x < input$date[[2]]) %>% 
       filter(nome_formal == input$nome_formal)) 
   return(nodes_edges)
 })
@@ -196,15 +235,20 @@ getPesosProp <- function(nome_formal) {
 
 output$hist <- renderPlot({
   if(nrow(coautorias) > 0) {
-    coautorias %>%
-    filter(nome_formal == input$nome_formal) %>% 
-    filter(data.x > input$min_date) %>% 
-    ggplot(aes(x = peso_arestas)) +
-    geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#10726B") +
-    scale_x_continuous(limits = c(0, max(coautorias$peso_arestas) + 0.1), 
-                       breaks = seq(0, max(coautorias$peso_arestas) + 0.1, 1)) +
-    labs(x = "Peso das relações", y = "Número de relações") +
-    theme_ipsum_rc()
+    coautorias_hist <- 
+      coautorias %>%
+      filter(nome_formal == input$nome_formal) %>% 
+      filter(data.x >= input$date[[1]] & data.x < input$date[[2]])
+    
+    if(nrow(coautorias_hist) != 0) {
+      coautorias_hist %>% 
+        ggplot(aes(x = peso_arestas)) +
+        geom_histogram(boundary = 0, fill = "#1BB5A9", color = "#10726B") +
+        scale_x_continuous(limits = c(0, max(coautorias$peso_arestas) + 0.1), 
+                           breaks = seq(0, max(coautorias$peso_arestas) + 0.1, 1)) +
+        labs(x = "Peso das relações", y = "Número de relações") +
+        theme_ipsum_rc()
+    }
   }
 })
 
@@ -214,7 +258,7 @@ output$dt <-
       select(id_principal, nome.x, nome.y, peso_arestas, num_coautorias, nome_formal, data.x) %>% 
       distinct() %>% 
       filter(nome_formal == input$nome_formal) %>% 
-      filter(data.x > input$min_date) %>% 
+      filter(data.x >= input$date[[1]] & data.x < input$date[[2]]) %>% 
       rename(peso_relacao = peso_arestas, 
              nome_deputado_a = nome.x,
              nome_deputado_b = nome.y,
@@ -226,9 +270,13 @@ output$dt <-
   
 output$grafo <- 
   networkD3::renderForceNetwork({
+      Sys.sleep(2)
       graph <- getCoautorias()
+      print(length(graph))
     if(nrow(graph[[1]]) > 0 & nrow(graph[[2]]) > 0) {
       generate_graph(graph[[1]], graph[[2]])
+    } else {
+      NA
     }
   })
 
