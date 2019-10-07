@@ -2,7 +2,7 @@
 
 .DATAPATH_RECEITA_TSE_2014 <- "parlametria/crawler/receitas/receitas_candidatos_2014_brasil.txt" 
 
-.DATAPATH_RECEITA_TSE_2018 <- "parlametria/crawler/receitas/receitas_candidatos_2014_BRASIL.csv"
+.DATAPATH_RECEITA_TSE_2018 <- "parlametria/crawler/receitas/receitas_candidatos_2018_BRASIL.csv"
 
 .DATAPATH_CANDIDATOS_TSE_2014 <- "parlametria/crawler/receitas/consulta_cand_2014_BRASIL.csv"
 
