@@ -54,7 +54,7 @@ filter_socios_empresas_parlamentares_casa <- function(
 #' @param doadores_folderpath Caminho para o dataframe com dados de doadores de campanhas
 #' @return Dataframe das empresas que possuem sócios com os mesmos nomes dos doadores
 filter_empresas_agricolas_doadoras <- function(
-  doadores_folderpath = here::here("parlametria/raw_data/receitas/deputados_doadores.csv")) {
+  doadores_folderpath = here::here("parlametria/raw_data/receitas/parlamentares_doadores.csv")) {
   library(tidyverse)
   
   empresas_doadoras <- read_csv(doadores_folderpath) %>% 
@@ -64,24 +64,29 @@ filter_empresas_agricolas_doadoras <- function(
   return(empresas_doadoras)
 }
 
-#' @title Processa os dados das empresas e sócios que são parlamentares
-#' @description A partir do dataframe de parlamentares e do arquivo com todos os sócios existentes nos cnpjs cadastrados
+#' @title Processa os dados das empresas e sócios que são parlamentares por casa de origem
+#' @description A partir do dataframe de parlamentares, da casa de origem e do arquivo com todos os sócios existentes nos cnpjs cadastrados
 #' na Receita Federal, retorna um dataframe com as informações das empresas agrícolas dos sócios.
 #' @param ano Ano da eleição de interesse
 #' @param parlamentares_folderpath Caminho para o dataframe dos parlamentares
 #' @param socios_folderpath Caminho para o dataframe dos sócios cadastrados na Receita Federal
-#' @return Dataframe com mais dados sobre os sócios, as empresas, e os deputados
-process_socios_empresas_agricolas_parlamentares <- function(
+#' @param casa Casa de origem do parlamentar
+#' @return Dataframe com mais dados sobre os sócios, as empresas, e os parlamentares
+process_socios_empresas_agricolas_parlamentares_casa <- function(
   parlamentares_folderpath = here::here("crawler/raw_data/parlamentares.csv"),
-  socios_folderpath = here::here("parlametria/raw_data/empresas/socio.csv.gz")) {
+  socios_folderpath = here::here("parlametria/raw_data/empresas/socio.csv.gz"),
+  casa_origem = "camara") {
   library(tidyverse)
   library(here)
   
   source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/fetcher_socios_empresas_parlamentares.R"))
   
-  socios_empresas_parlamentares <- filter_socios_empresas_parlamentares(socios_folderpath, parlamentares_folderpath)
+  socios_empresas_parlamentares <- 
+    filter_socios_empresas_parlamentares_casa(socios_folderpath, parlamentares_folderpath,
+                                         casa_origem)
   
-  socios_empresas_agricolas <- fetch_socios_empresas_agricolas_parlamentares(socios_empresas_parlamentares)
+  socios_empresas_agricolas <- 
+    fetch_socios_empresas_agricolas_parlamentares(socios_empresas_parlamentares)
   
   return(list(socios_empresas_agricolas))
   
@@ -122,28 +127,33 @@ process_cpf_parlamentares_senado <- function(
   return(senadores_com_cpf)
 }
 
-#' @title Filtra as empresas que possuem sócios com os mesmos nomes e 6 dígitos do 
-#' cpf/cnpj dos parlamentares em exercício
-#' @description Recebe um conjunto de dados de sócios de empresas e dos parlamentares e filtra as empresas
-#' que possuem sócios com os mesmos nomes e 6 dígitos do cpf/cnpj dos parlamentares em exercício.
-#' @param socios_folderpath Caminho para a pasta que contém o csv sobre as empresas e 
-#' seus sócios, cadastrados na Receita Federal
-#' @param doadores_folderpath Caminho para o dataframe com dados de parlamentares
-#' @return Dataframe das empresas que possuem sócios com os mesmos nomes e 6 dígitos do cpg/cnpj dos parlamentares.
-filter_socios_empresas_parlamentares <- function(
+#' @title Processa os dados das empresas e sócios que são parlamentares
+#' @description A partir do dataframe de parlamentares e do arquivo com todos os sócios existentes nos cnpjs cadastrados
+#' na Receita Federal, retorna um dataframe com as informações das empresas agrícolas dos sócios.
+#' @param ano Ano da eleição de interesse
+#' @param parlamentares_folderpath Caminho para o dataframe dos parlamentares
+#' @param socios_folderpath Caminho para o dataframe dos sócios cadastrados na Receita Federal
+#' @return Dataframe com mais dados sobre os sócios, as empresas, e os parlamentares
+process_socios_empresas_agricolas_parlamentares <- function(
   socios_folderpath = here::here("parlametria/raw_data/empresas/socio.csv.gz"),
   parlamentares_folderpath = here::here("crawler/raw_data/parlamentares.csv")) {
   
   library(tidyverse)
   
   socios_deputados <- 
-    filter_socios_empresas_parlamentares_casa(socios_folderpath, parlamentares_folderpath, "camara")
+    process_socios_empresas_agricolas_parlamentares_casa(parlamentares_folderpath, 
+                                                         socios_folderpath, 
+                                                         "camara")
   
   socios_senadores <- 
-    filter_socios_empresas_parlamentares_casa(socios_folderpath, parlamentares_folderpath, "senado")
+    process_socios_empresas_agricolas_parlamentares_casa(parlamentares_folderpath,
+                                                         socios_folderpath, 
+                                                         "senado")
   
   socios_parlamentares <-
-    socios_deputados %>% rbind(socios_senadores)
+    socios_deputados[[1]] %>% rbind(socios_senadores[[1]]) %>% 
+    list()
+  
   
   return(socios_parlamentares)
 }
