@@ -24,7 +24,7 @@ saida <- opt$out
 
 message("Iniciando processamento...")
 message("Baixando dados...")
-req_info_por_assunto <- fetch_req_informacao_autores()
+req_info_por_assunto <- fetch_req_informacao_ambiente_agricultura()
 
 message(paste0("Salvando o resultado em ", saida))
 write_csv(req_info_por_assunto, saida)
