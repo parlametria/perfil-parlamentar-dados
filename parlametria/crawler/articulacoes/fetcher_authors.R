@@ -6,6 +6,8 @@
 #' @examples
 #' fetch_autores(2121442)
 fetch_autores <- function(id_prop) {
+  Sys.sleep(3)
+  
   library(tidyverse)
   
   print(paste0("Extraindo autores da proposição cujo id é ", id_prop))
@@ -32,6 +34,7 @@ fetch_autores <- function(id_prop) {
       select(id_req, id = id_deputado)
     
   }, error = function(e) {
+    print(e)
     return(tribble(~ id_req, ~ id))
   })
   

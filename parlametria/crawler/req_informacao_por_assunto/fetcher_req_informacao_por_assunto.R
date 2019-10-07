@@ -18,9 +18,9 @@ fetch_req_informacao_autores_camara <- function(tipo_proposicao = "RIC",
   autores <- fetch_all_autores(proposicoes)
   
   autores_summarised <- autores %>%
-    distinct() %>% 
-    group_by(id) %>%
-    summarise(num_req_informacao = n())
+    distinct() %>%
+    count(id) %>%
+    rename(num_req_informacao = n)
   
   return(autores_summarised)
 }
