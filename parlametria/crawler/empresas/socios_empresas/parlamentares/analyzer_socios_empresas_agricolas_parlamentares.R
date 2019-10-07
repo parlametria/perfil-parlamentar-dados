@@ -1,14 +1,16 @@
 #' @title Filtra as empresas que possuem sócios com os mesmos nomes e 6 dígitos do 
-#' cpf/cnpj dos parlamentares em exercício
+#' cpf/cnpj dos parlamentares em exercício por casa
 #' @description Recebe um conjunto de dados de sócios de empresas e dos parlamentares e filtra as empresas
-#' que possuem sócios com os mesmos nomes e 6 dígitos do cpf/cnpj dos parlamentares em exercício
+#' que possuem sócios com os mesmos nomes e 6 dígitos do cpf/cnpj dos parlamentares em exercício (por casa de origem).
 #' @param socios_folderpath Caminho para a pasta que contém o csv sobre as empresas e 
 #' seus sócios, cadastrados na Receita Federal
 #' @param doadores_folderpath Caminho para o dataframe com dados de parlamentares
-#' @return Dataframe das empresas que possuem sócios com os mesmos nomes e 6 dígitos do cpg/cnpj dos parlamentares
-filter_socios_empresas_parlamentares <- function(
+#' @param casa_origem Casa de origem 
+#' @return Dataframe das empresas que possuem sócios com os mesmos nomes e 6 dígitos do cpg/cnpj dos parlamentares por casa.
+filter_socios_empresas_parlamentares_casa <- function(
   socios_folderpath = here::here("parlametria/raw_data/empresas/socio.csv.gz"),
-  parlamentares_folderpath = here::here("crawler/raw_data/parlamentares.csv")) {
+  parlamentares_folderpath = here::here("crawler/raw_data/parlamentares.csv"),
+  casa_origem = "camara") {
   
   library(tidyverse)
   library(here)
@@ -23,18 +25,27 @@ filter_socios_empresas_parlamentares <- function(
            nome_socio = padroniza_nome(nome_socio))
   
   parlamentares <- read_csv(parlamentares_folderpath) %>% 
-    filter(casa == 'camara', em_exercicio == 1) %>% 
-    select(id, nome_civil, cpf) %>% 
+    filter(em_exercicio == 1) %>% 
+    select(id, casa, nome_civil, cpf)
+  
+  if (casa_origem == "senado") {
+    parlamentares <-
+      process_cpf_parlamentares_senado(parlamentares)
+  } else if (casa_origem != "camara") {
+    stop("O parâmetro casa_origem deve ser 'camara' ou 'senado'")
+  }
+  
+  parlamentares <- parlamentares %>% 
     mutate(nome_civil = padroniza_nome(nome_civil),
            cpf = substring(cpf, 4, 9))
   
-  
-  empresas_deputados <- socio %>% 
+  empresas_parlamentares <- socio %>% 
     inner_join(parlamentares, 
                by=c("nome_socio"="nome_civil",
-                    "cnpj_cpf_do_socio" = "cpf"))
+                    "cnpj_cpf_do_socio" = "cpf")) %>% 
+    mutate(casa = casa_origem)
   
-  return(empresas_deputados)
+  return(empresas_parlamentares)
 }
 
 #' @title Filtra as empresas que possuem sócios com os mesmos nomes dos doadores
@@ -74,4 +85,65 @@ process_socios_empresas_agricolas_parlamentares <- function(
   
   return(list(socios_empresas_agricolas))
   
+}
+
+#' @title Recupera os cpfs dos senadores
+#' @description Recebe um caminho para o dataset de candidatos e o dataset de parlamentares, e une os parlamentares com os
+#' dados da eleição a fim de extrair o CPF para os senadores.
+#' @param candidatos_data_path Caminho para o dataframe com dados de candidatos
+#' @param parlamentares Dataframe com dados de parlamentares
+#' @return Dataframe contendo id e CPF dos senadores
+process_cpf_parlamentares_senado <- function(
+  parlamentares = readr::read_csv(here::here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")),
+  candidatos_data_path = here::here("parlametria/raw_data/dados_tse/consulta_cand_2018_BRASIL.csv.zip")) {
+  library(tidyverse)
+  library(here)
+  
+  source(here("crawler/utils/utils.R"))
+  
+  candidatos <- read_delim(candidatos_data_path, delim = ";", col_types = cols(SQ_CANDIDATO = "c"),
+                           locale = locale(encoding = 'latin1')) %>% 
+    mutate(DS_CARGO = str_to_title(DS_CARGO)) %>% 
+    filter(DS_CARGO %in% c("Senador")) %>% 
+    select(NM_CANDIDATO, NR_CPF_CANDIDATO)
+  
+  parlamentares <- parlamentares %>% 
+    select(id, nome_civil)
+  
+  senadores_com_cpf <- parlamentares %>% 
+    mutate(nome_padronizado = padroniza_nome(nome_civil)) %>% 
+    inner_join(candidatos %>% 
+                 mutate(nome_padronizado = padroniza_nome(NM_CANDIDATO)), 
+               by = c("nome_padronizado")) %>% 
+    select(id, 
+           cpf = NR_CPF_CANDIDATO,
+           nome_civil)
+  
+  return(senadores_com_cpf)
+}
+
+#' @title Filtra as empresas que possuem sócios com os mesmos nomes e 6 dígitos do 
+#' cpf/cnpj dos parlamentares em exercício
+#' @description Recebe um conjunto de dados de sócios de empresas e dos parlamentares e filtra as empresas
+#' que possuem sócios com os mesmos nomes e 6 dígitos do cpf/cnpj dos parlamentares em exercício.
+#' @param socios_folderpath Caminho para a pasta que contém o csv sobre as empresas e 
+#' seus sócios, cadastrados na Receita Federal
+#' @param doadores_folderpath Caminho para o dataframe com dados de parlamentares
+#' @return Dataframe das empresas que possuem sócios com os mesmos nomes e 6 dígitos do cpg/cnpj dos parlamentares.
+filter_socios_empresas_parlamentares <- function(
+  socios_folderpath = here::here("parlametria/raw_data/empresas/socio.csv.gz"),
+  parlamentares_folderpath = here::here("crawler/raw_data/parlamentares.csv")) {
+  
+  library(tidyverse)
+  
+  socios_deputados <- 
+    filter_socios_empresas_parlamentares_casa(socios_folderpath, parlamentares_folderpath, "camara")
+  
+  socios_senadores <- 
+    filter_socios_empresas_parlamentares_casa(socios_folderpath, parlamentares_folderpath, "senado")
+  
+  socios_parlamentares <-
+    socios_deputados %>% rbind(socios_senadores)
+  
+  return(socios_parlamentares)
 }

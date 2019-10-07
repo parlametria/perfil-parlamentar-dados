@@ -12,8 +12,8 @@
 #' Atribuímos 0 se não existirem receitas mas o candidato ainda participou da eleição
 #' 3. Consideramos apenas as doações do mesmo partido do candidato na eleição.
 processa_doacoes_partidarias_tse <- 
-  function(receitas_datapath = here::here("parlametria/crawler/receitas/receitas_candidatos_2018_BRASIL.csv"),
-           candidatos_datapath = here::here("parlametria/crawler/receitas/consulta_cand_2018_BRASIL.csv")) {
+  function(receitas_datapath = here::here("parlametria/raw_data/dados_tse/receitas_candidatos_2018_BRASIL.csv.zip"),
+           candidatos_datapath = here::here("parlametria/raw_data/dados_tse/consulta_cand_2018_BRASIL.csv.zip")) {
     
   library(tidyverse)
     
@@ -56,7 +56,7 @@ processa_doacoes_partidarias_tse <-
 #' @return Dataframe contendo receitas dos candidatos com colunas específicas
 #' @examples
 #' receitas <- import_receita_tse_modelo_antigo()
-import_receita_tse_modelo_antigo <- function(datapath = here::here("parlametria/crawler/receitas/receitas_candidatos_2014_brasil.txt")) {
+import_receita_tse_modelo_antigo <- function(datapath = here::here("parlametria/raw_data/dados_tse/receitas_candidatos_2014_brasil.txt.zip")) {
   library(tidyverse)
   library(here)
   
@@ -83,8 +83,8 @@ import_receita_tse_modelo_antigo <- function(datapath = here::here("parlametria/
 #' Obs: Assume que os dados de receitas e  candidatos estão disponíveis. Esses dados pode ser baixados 
 #' através do script ./fetcher_receitas_tse.sh
 processa_doacoes_tse <- function(
-  receitas_datapath = here::here("parlametria/crawler/receitas/receitas_candidatos_2018_BRASIL.csv"),
-  candidatos_datapath = here::here("parlametria/crawler/receitas/consulta_cand_2018_BRASIL.csv"),
+  receitas_datapath = here::here("parlametria/raw_data/dados_tse/receitas_candidatos_2018_BRASIL.csv.zip"),
+  candidatos_datapath = here::here("parlametria/raw_data/dados_tse/consulta_cand_2018_BRASIL.csv.zip"),
   ano = 2018) {
   
   library(tidyverse)
@@ -108,12 +108,13 @@ processa_doacoes_tse <- function(
   
   receitas <- receitas %>% 
     mutate(VR_RECEITA = as.numeric(gsub(",", ".", VR_RECEITA))) %>% 
-    
     group_by(SQ_CANDIDATO, NR_CPF_CNPJ_DOADOR) %>% 
-    summarise(NM_DOADOR = first(NM_DOADOR),
-              NM_DOADOR_RFB = first(NM_DOADOR_RFB),
-              DS_ORIGEM_RECEITA = first(DS_ORIGEM_RECEITA),
-              VR_RECEITA = sum(VR_RECEITA))
+    summarise(
+      NM_DOADOR = first(NM_DOADOR),
+      NM_DOADOR_RFB = first(NM_DOADOR_RFB),
+      DS_ORIGEM_RECEITA = first(DS_ORIGEM_RECEITA),
+      VR_RECEITA = sum(VR_RECEITA)
+      )
   
   candidatos_doacoes <- candidatos %>% 
     left_join(receitas, by = c("SQ_CANDIDATO")) %>% 
@@ -122,13 +123,14 @@ processa_doacoes_tse <- function(
   return(candidatos_doacoes)
 }
 
-#' @title Processa dados de receitas dos deputados em exercício
-#' @description Recupera informações dos doadores para a campanha dos deputados nas eleições de 2018
-#' @param ano Ano da eleição
-#' @return Dataframe contendo doações feitas por partidos, candidatos e pessoas físicas para os deputados
+#' @title Processa dados de receitas de parlamentares (deputados ou senadores) em exercício
+#' @description Recupera informações dos doadores para a campanha dos parlamentares nas eleições de 2018
+#' @param ano Ano da eleição. Pode ser 2018 ou 2014.
+#' @param casa_origem Casa de origem do parlamentar. Pode ser camara ou senado.
+#' @return Dataframe contendo doações feitas por partidos, candidatos e pessoas físicas e/ou jurídicas para os parlamentares
 #' @examples
-#' deputados_doadores <- processa_doacoes_deputados_tse()
-processa_doacoes_deputados_tse <- function(ano = 2018) {
+#' parlamentares_doadores <- filtra_doacoes_parlamentares_exercicio(2018, "camara")
+filtra_doacoes_parlamentares_exercicio <- function(ano = 2018, casa_origem = "camara") {
   library(tidyverse)
   library(here)
   source(here("parlametria/crawler/receitas/utils_receitas.R"))
@@ -147,14 +149,52 @@ processa_doacoes_deputados_tse <- function(ano = 2018) {
   candidatos_datapath <- here(candidatos_datapath)
   
   doacoes <- processa_doacoes_tse(receitas_datapath, candidatos_datapath, ano = ano) %>% 
-    select(cpf = NR_CPF_CANDIDATO, cpf_cnpj_doador = NR_CPF_CNPJ_DOADOR, nome_doador = NM_DOADOR_RFB, 
+    select(cpf = NR_CPF_CANDIDATO, nome_candidato = NM_CANDIDATO, cpf_cnpj_doador = NR_CPF_CNPJ_DOADOR, nome_doador = NM_DOADOR_RFB, 
            origem_receita = DS_ORIGEM_RECEITA, valor_receita = VR_RECEITA)
   
-  deputados <- read_csv(here("crawler/raw_data/parlamentares.csv")) %>% 
-    filter(casa == "camara", em_exercicio == 1)
+  parlamentares <- read_csv(here("crawler/raw_data/parlamentares.csv")) %>% 
+    filter(casa == casa_origem, em_exercicio == 1)
   
-  deputados_doacoes <- deputados %>% 
-    left_join(doacoes, by = "cpf")
+  if (casa_origem == "camara") {
+    parlamentares_doacoes <- parlamentares %>% 
+      left_join(doacoes, by = "cpf")
+    
+  } else if (casa_origem == "senado") {
+    source(here("crawler/utils/utils.R"))
+    
+    parlamentares_doacoes <- parlamentares %>% 
+      mutate(nome_padronizado = padroniza_nome(nome_civil)) %>% 
+      left_join(doacoes %>% 
+                  mutate(nome_padronizado = padroniza_nome(nome_candidato)),
+                by = c("nome_padronizado")) %>% 
+      mutate(cpf = cpf.y)
+    
+  } else {
+    stop("O parâmetro casa_origem deve ser 'camara' ou 'senado'")
+  }
+  
+  parlamentares_doacoes <- parlamentares_doacoes %>% 
+    select(id, casa, cpf, nome_civil, nome_eleitoral, genero, uf, sg_partido, situacao, condicao_eleitoral, 
+           ultima_legislatura, em_exercicio, cpf_cnpj_doador, nome_doador, origem_receita, valor_receita)
+  
+  return(parlamentares_doacoes)  
+}
 
-  return(deputados_doacoes)  
+#' @title Executa processador de dados para recuperar doadores para campanhas de parlamentares (Deputados e Senadores)
+#' @description Executa processador de dados para recuperar doadores para campanhas de parlamentares (Deputados e Senadores)
+#' @param ano Ano da eleição. Pode ser 2018 ou 2014.
+#' @return Dataframe contendo doações feitas por partidos, candidatos e pessoas físicas e/ou jurídicas para os parlamentares
+#' @examples
+#' parlamentares_doadores <- processa_doacoes_parlamentares_tse(2018)
+processa_doacoes_parlamentares_tse <- function(ano = 2018) {
+  library(tidyverse)
+  
+  deputados_doacoes <- filtra_doacoes_parlamentares_exercicio(ano, casa_origem = "camara")
+  
+  senadores_doacoes <- filtra_doacoes_parlamentares_exercicio(ano, casa_origem = "senado")
+  
+  parlamentares_doacoes <- deputados_doacoes %>% 
+    rbind(senadores_doacoes)
+  
+  return(parlamentares_doacoes)
 }

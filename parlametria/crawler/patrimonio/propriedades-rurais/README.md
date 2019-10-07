@@ -9,7 +9,7 @@ O módulo é composto por rotinas descritas abaixo:
 ./fetcher_patrimonio_tse.sh
 ```
 
-Dois arquivos serão baixados. O primeiro "bem_candidato_2018_BRASIL.csv" é a lista de todos os bens declarados pelos candidatos nas eleições de 2018. O segundo "consulta_cand_2018_BRASIL.csv" contém informações de todos os candidatos das eleições de 2018.
+Dois arquivos serão baixados. O primeiro "bem_candidato_2018_BRASIL.csv.zip" é a lista de todos os bens declarados pelos candidatos nas eleições de 2018. O segundo "consulta_cand_2018_BRASIL.csv" contém informações de todos os candidatos das eleições de 2018.
 
 2. Processar dados de propriedades Rurais
 ```
