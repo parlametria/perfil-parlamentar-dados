@@ -25,7 +25,6 @@ filter_socios_empresas_parlamentares_casa <- function(
            nome_socio = padroniza_nome(nome_socio))
   
   parlamentares <- read_csv(parlamentares_folderpath) %>% 
-    filter(em_exercicio == 1) %>% 
     select(id, casa, nome_civil, cpf)
   
   if (casa_origem == "senado") {
@@ -86,7 +85,8 @@ process_socios_empresas_agricolas_parlamentares_casa <- function(
                                          casa_origem)
   
   socios_empresas_agricolas <- 
-    fetch_socios_empresas_agricolas_parlamentares(socios_empresas_parlamentares)
+    fetch_socios_empresas_agricolas_parlamentares(socios_empresas_parlamentares) %>% 
+    mutate(casa = casa_origem)
   
   return(list(socios_empresas_agricolas))
   
