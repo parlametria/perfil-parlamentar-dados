@@ -12,8 +12,8 @@
 #' Atribuímos 0 se não existirem receitas mas o candidato ainda participou da eleição
 #' 3. Consideramos apenas as doações do mesmo partido do candidato na eleição.
 processa_doacoes_partidarias_tse <- 
-  function(receitas_datapath = here::here("parlametria/crawler/receitas/receitas_candidatos_2018_BRASIL.csv"),
-           candidatos_datapath = here::here("parlametria/crawler/receitas/consulta_cand_2018_BRASIL.csv")) {
+  function(receitas_datapath = here::here("parlametria/raw_data/dados_tse/receitas_candidatos_2018_BRASIL.csv.zip"),
+           candidatos_datapath = here::here("parlametria/raw_data/dados_tse/consulta_cand_2018_BRASIL.csv.zip")) {
     
   library(tidyverse)
     
@@ -56,7 +56,7 @@ processa_doacoes_partidarias_tse <-
 #' @return Dataframe contendo receitas dos candidatos com colunas específicas
 #' @examples
 #' receitas <- import_receita_tse_modelo_antigo()
-import_receita_tse_modelo_antigo <- function(datapath = here::here("parlametria/crawler/receitas/receitas_candidatos_2014_brasil.txt")) {
+import_receita_tse_modelo_antigo <- function(datapath = here::here("parlametria/raw_data/dados_tse/receitas_candidatos_2014_brasil.txt.zip")) {
   library(tidyverse)
   library(here)
   
@@ -83,8 +83,8 @@ import_receita_tse_modelo_antigo <- function(datapath = here::here("parlametria/
 #' Obs: Assume que os dados de receitas e  candidatos estão disponíveis. Esses dados pode ser baixados 
 #' através do script ./fetcher_receitas_tse.sh
 processa_doacoes_tse <- function(
-  receitas_datapath = here::here("parlametria/crawler/receitas/receitas_candidatos_2018_BRASIL.csv"),
-  candidatos_datapath = here::here("parlametria/crawler/receitas/consulta_cand_2018_BRASIL.csv"),
+  receitas_datapath = here::here("parlametria/raw_data/dados_tse/receitas_candidatos_2018_BRASIL.csv.zip"),
+  candidatos_datapath = here::here("parlametria/raw_data/dados_tse/consulta_cand_2018_BRASIL.csv.zip"),
   ano = 2018) {
   
   library(tidyverse)
