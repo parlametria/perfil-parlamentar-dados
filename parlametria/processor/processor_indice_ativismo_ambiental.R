@@ -121,7 +121,7 @@ process_indice_ativismo_ambiental <- function() {
                        num_req_informacao > 1 ~ 0.5,
                        num_req_informacao == 1 ~ 0.25,
                        TRUE ~ 0)) %>% 
-    select(id = id_deputado,
+    select(id,
            requerimentos_informacao_agro_mma_indice)
   
  
@@ -155,11 +155,11 @@ process_indice_ativismo_ambiental <- function() {
     mutate(
       indice_ativismo_ambiental =
         ((combo_5_frentes_progressistas - combo_agro_mineracao_lm) +
-           proposicoes_meio_ambiente_indice +
-           discurso_normalizado +
-           requerimentos_informacao_agro_mma_indice +
-           aderencia
-        ) / 5
+           proposicoes_meio_ambiente_indice * 4 +
+           discurso_normalizado * 1.5 +
+           requerimentos_informacao_agro_mma_indice * 2 +
+           aderencia * 3
+        ) / 11.5
     )
   
   return(indice_ativismo_ambiental)
