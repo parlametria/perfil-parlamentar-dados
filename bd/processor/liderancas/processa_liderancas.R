@@ -1,7 +1,7 @@
-#' @title Processa dados dos mandatos
-#' @description Processa os dados dos mandatos e retorna no formato  a ser utilizado pelo banco de dados
-#' @param mandatos_path Caminho para o arquivo de dados de mandatos sem tratamento
-#' @return Dataframe com informações dos mandatos
+#' @title Processa dados de lideranças
+#' @description Processa os dados de lideranças e retorna no formato  a ser utilizado pelo banco de dados
+#' @param liderancas_path Caminho para o arquivo de dados de lideranças sem tratamento
+#' @return Dataframe com informações dos lideranças
 processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/liderancas.csv")) {
   library(tidyverse)
   source(here::here("crawler/parlamentares/partidos/utils_partidos.R"))
