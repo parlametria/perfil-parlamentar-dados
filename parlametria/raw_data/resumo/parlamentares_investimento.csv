@@ -512,11 +512,11 @@ id,casa,cpf,nome_civil,nome_eleitoral,genero,uf,sg_partido,situacao,condicao_ele
 204463,camara,10855834730,WLADIMIR BARROS ASSED MATHEUS DE OLIVEIRA,WLADIMIR GAROTINHO,M,RJ,PSD,Exercício,Titular,56,1,1985-01-13,NA,NA
 204559,camara,38247186500,JOSÉ CERQUEIRA DE SANTANA NETO,ZÉ NETO,M,BA,PT,Exercício,Titular,56,1,1964-03-30,471000,0.0050008879386351955
 204517,camara,07284044608,JOSE VITOR DE RESENDE AGUIAR,ZÉ VITOR,M,MG,PL,Exercício,Titular,56,1,1984-11-01,NA,NA
-4981,senado,NA,Acir Marcos Gurgacz,Acir Gurgacz,M,RO,PDT,NA,Titular,56,1,1962-02-25,NA,NA
+4981,senado,44435630915,Acir Marcos Gurgacz,Acir Gurgacz,M,RO,PDT,NA,Titular,56,1,1962-02-25,NA,NA
 5982,senado,71943790582,Alessandro Vieira,Alessandro Vieira,M,SE,CIDADANIA,NA,Titular,56,1,1975-04-03,NA,NA
-945,senado,NA,Alvaro Fernandes Dias,Alvaro Dias,M,PR,PODEMOS,NA,Titular,56,1,1944-12-07,NA,NA
+945,senado,00274003953,Alvaro Fernandes Dias,Alvaro Dias,M,PR,PODEMOS,NA,Titular,56,1,1944-12-07,NA,NA
 5967,senado,77865111568,Angelo Mario Coronel de Azevedo Martins,Angelo Coronel,M,BA,PSD,NA,Titular,56,1,1958-05-03,1400000,0.005408337176406415
-5529,senado,NA,Antonio Augusto Junho Anastasia,Antonio Anastasia,M,MG,PSDB,NA,Titular,56,1,1961-05-09,NA,NA
+5529,senado,47555882604,Antonio Augusto Junho Anastasia,Antonio Anastasia,M,MG,PSDB,NA,Titular,56,1,1961-05-09,NA,NA
 751,senado,01616706287,Arolde de Oliveira,Arolde de Oliveira,M,RJ,PSD,NA,Titular,56,1,1937-03-11,950000,0.0023575315494479216
 5990,senado,40890708649,Carlos Alberto Dias Viana,Carlos Viana,M,MG,PSD,NA,Titular,56,1,1963-03-22,NA,NA
 470,senado,07654871449,Francisco de Assis Rodrigues,Chico Rodrigues,M,RR,DEM,NA,Titular,56,1,1951-04-23,850000,0.002289283456145925
@@ -524,16 +524,17 @@ id,casa,cpf,nome_civil,nome_eleitoral,genero,uf,sg_partido,situacao,condicao_ele
 739,senado,34190392391,Ciro Nogueira Lima Filho,Ciro Nogueira,M,PI,PP,NA,Titular,56,1,1968-11-21,2476652,0.008014727843662495
 475,senado,03733831187,Confúcio Aires Moura,Confúcio Moura,M,RO,MDB,NA,Titular,56,1,1948-05-16,1500000,0.002191776105525503
 5998,senado,82671400420,Daniella Velloso Borges Ribeiro,Daniella Ribeiro,F,PB,PP,NA,Titular,56,1,1972-03-26,2818310.18,0.0033828331693793305
-3830,senado,NA,David Samuel Alcolumbre Tobelem,Davi Alcolumbre,M,AP,DEM,NA,Titular,56,1,1977-06-19,NA,NA
-5537,senado,NA,Dário Elias Berger,Dário Berger,M,SC,MDB,NA,Titular,56,1,1956-12-07,NA,NA
+3830,senado,50900226234,David Samuel Alcolumbre Tobelem,Davi Alcolumbre,M,AP,DEM,NA,Titular,56,1,1977-06-19,NA,NA
+5537,senado,34195491991,Dário Elias Berger,Dário Berger,M,SC,MDB,NA,Titular,56,1,1956-12-07,NA,NA
 4994,senado,07810423215,Carlos Eduardo de Souza Braga,Eduardo Braga,M,AM,MDB,NA,Titular,56,1,1960-12-06,2088400,0.0023634593155962232
 5976,senado,31966810334,Luis Eduardo Grangeiro Girão,Eduardo Girão,M,CE,PODEMOS,NA,Titular,56,1,1972-09-25,NA,NA
 5718,senado,75242788372,Eliziane Pereira Gama Melo,Eliziane Gama,F,MA,CIDADANIA,NA,Titular,56,1,1977-02-27,1268879.1600000001,0.009440104784943233
-5531,senado,NA,Elmano Férrer de Almeida,Elmano Férrer,M,PI,PODEMOS,NA,Titular,56,1,1942-08-01,NA,NA
+5531,senado,00135968372,Elmano Férrer de Almeida,Elmano Férrer,M,PI,PODEMOS,NA,Titular,56,1,1942-08-01,NA,NA
 22,senado,11268786934,Esperidião Amin Helou Filho,Esperidião Amin,M,SC,PP,NA,Titular,56,1,1947-12-21,2383962.2,0.003441544291332032
 5953,senado,86364561772,Fabiano Contarato,Fabiano Contarato,M,ES,REDE,NA,Titular,56,1,1966-06-20,200266.66,0.01948539692269178
-5540,senado,NA,Fernando Bezerra de Souza Coelho,Fernando Bezerra Coelho,M,PE,MDB,NA,Titular,56,1,1957-12-07,NA,NA
-4525,senado,NA,Fernando Affonso Collor de Mello,Fernando Collor,M,AL,PROS,NA,Titular,56,1,1949-08-12,NA,NA
+5953,senado,86364561772,Fabiano Contarato,Fabiano Contarato,M,ES,REDE,NA,Titular,56,1,1966-06-20,200266.66,0.01948539692269178
+5540,senado,01077887809,Fernando Bezerra de Souza Coelho,Fernando Bezerra Coelho,M,PE,MDB,NA,Titular,56,1,1957-12-07,NA,NA
+4525,senado,02906287172,Fernando Affonso Collor de Mello,Fernando Collor,M,AL,PROS,NA,Titular,56,1,1949-08-12,NA,NA
 345,senado,18516440915,Flávio José Arns,Flávio Arns,M,PR,REDE,NA,Titular,56,1,1950-11-09,141875,0.011448788497262106
 5894,senado,08701122797,Flávio Nantes Bolsonaro,Flávio Bolsonaro,M,RJ,PSL,NA,Titular,56,1,1981-04-30,209812,0.00519901938910032
 5008,senado,15288455449,Humberto Sérgio Costa Lima,Humberto Costa,M,PE,PT,NA,Titular,56,1,1957-07-07,1850000,0.0034179806517066714
@@ -543,53 +544,56 @@ id,casa,cpf,nome_civil,nome_eleitoral,genero,uf,sg_partido,situacao,condicao_ele
 581,senado,26471620772,Jaques Wagner,Jaques Wagner,M,BA,PT,NA,Titular,56,1,1951-03-16,1356156.56,0.0034880016056509046
 4545,senado,00105457434,Jarbas de Andrade Vasconcelos,Jarbas Vasconcelos,M,PE,MDB,NA,Titular,56,1,1942-08-23,2143178.64,0.003054020129219397
 4531,senado,04881044168,Jayme Veríssimo de Campos,Jayme Campos,M,MT,DEM,NA,Titular,56,1,1951-09-13,1150000,0.004997075570972574
-5627,senado,NA,Jean Paul Terra Prates,Jean Paul Prates,M,RN,PT,NA,1º Suplente,56,1,1968-06-19,NA,NA
+4531,senado,04881044168,Jayme Veríssimo de Campos,Jayme Campos,M,MT,DEM,NA,Titular,56,1,1951-09-13,1150000,0.004997075570972574
+5627,senado,86721283700,Jean Paul Terra Prates,Jean Paul Prates,M,RN,PT,NA,1º Suplente,56,1,1968-06-19,NA,NA
 5895,senado,21840571187,Jorge Kajuru Reis da Costa Nasser,Jorge Kajuru,M,GO,PSB,NA,Titular,56,1,1961-01-20,NA,NA
 5350,senado,25084119904,Jorginho dos Santos Mello,Jorginho Mello,M,SC,PL,NA,Titular,56,1,1956-07-15,3000000,0.004422689425657289
-3361,senado,NA,José Targino Maranhão,José Maranhão,M,PB,MDB,NA,Titular,56,1,1933-09-06,NA,NA
-90,senado,NA,José Serra,José Serra,M,SP,PSDB,NA,Titular,56,1,1942-03-19,NA,NA
+3361,senado,00471739472,José Targino Maranhão,José Maranhão,M,PB,MDB,NA,Titular,56,1,1933-09-06,NA,NA
+90,senado,93565968834,José Serra,José Serra,M,SP,PSDB,NA,Titular,56,1,1942-03-19,NA,NA
 5929,senado,44901100068,Selma Rosane Santos Arruda,Juíza Selma,F,MT,PSL,NA,Titular,56,1,1963-01-20,6000,2.218551860380213e-4
-1249,senado,NA,Kátia Regina de Abreu,Kátia Abreu,F,TO,PDT,NA,Titular,56,1,1962-02-02,NA,NA
-5533,senado,NA,Lasier Costa Martins,Lasier Martins,M,RS,PODEMOS,NA,Titular,56,1,1942-04-14,NA,NA
+1249,senado,61330345134,Kátia Regina de Abreu,Kátia Abreu,F,TO,PDT,NA,Titular,56,1,1962-02-02,NA,NA
+5533,senado,01124552049,Lasier Costa Martins,Lasier Martins,M,RS,PODEMOS,NA,Titular,56,1,1942-04-14,NA,NA
 5979,senado,85632406687,Leila Gomes de Barros Rêgo,Leila Barros,F,DF,PSB,NA,Titular,56,1,1971-09-30,3000000,0.015986506584494006
 5926,senado,20912340282,Luiz Cantuária Barreto,Lucas Barreto,M,AP,PSD,NA,Titular,56,1,1964-11-10,NA,NA
 1186,senado,14272954091,Luis Carlos Heinze,Luis Carlos Heinze,M,RS,PP,NA,Titular,56,1,1950-09-14,2143395,0.0037466182165275053
-5585,senado,NA,Luiz Carlos do Carmo,Luiz do Carmo,M,GO,MDB,NA,1º Suplente,56,1,1958-04-02,NA,NA
-5557,senado,NA,Mailza Assis da Silva,Mailza Gomes,F,AC,PP,NA,1º Suplente,56,1,1976-12-10,NA,NA
+5585,senado,19864159100,Luiz Carlos do Carmo,Luiz do Carmo,M,GO,MDB,NA,1º Suplente,56,1,1958-04-02,NA,NA
+5557,senado,61280178272,Mailza Assis da Silva,Mailza Gomes,F,AC,PP,NA,1º Suplente,56,1,1976-12-10,NA,NA
 5666,senado,00502302801,Sergio Olimpio Gomes,Major Olimpio,M,SP,PSL,NA,Titular,56,1,1962-03-20,136500,0.003662656009733851
 5376,senado,24731270855,Mara Cristina Gabrilli,Mara Gabrilli,F,SP,PSDB,NA,Titular,56,1,1967-09-28,3500000,0.007269019942197331
 742,senado,02382091304,Marcelo Costa e Castro,Marcelo Castro,M,PI,MDB,NA,Titular,56,1,1950-06-09,1570650,0.005079814064532473
 285,senado,23796332153,Márcio Miguel Bittar,Marcio Bittar,M,AC,MDB,NA,Titular,56,1,1963-06-28,1500100,0.002589604014309457
 5422,senado,60232064253,Marcos Rogério da Silva Brito,Marcos Rogério,M,RO,DEM,NA,Titular,56,1,1978-07-07,1145130,0.003823577472048163
 5942,senado,01720486727,Marcos Ribeiro do Val,Marcos do Val,M,ES,CIDADANIA,NA,Titular,56,1,1971-06-15,0,0
-1023,senado,NA,Maria do Carmo do Nascimento Alves,Maria do Carmo Alves,F,SE,DEM,NA,Titular,56,1,1941-08-23,NA,NA
+1023,senado,15523870544,Maria do Carmo do Nascimento Alves,Maria do Carmo Alves,F,SE,DEM,NA,Titular,56,1,1941-08-23,NA,NA
 6027,senado,11218789204,Antônio Mecias Pereira de Jesus,Mecias de Jesus,M,RR,PRB,NA,Titular,56,1,1962-02-08,2331960,0.004071964422208341
 5985,senado,40448118149,Nelson Trad Filho,Nelsinho Trad,M,MS,PSD,NA,Titular,56,1,1961-09-05,NA,NA
-5525,senado,NA,Omar José Abdel Aziz,Omar Aziz,M,AM,PSD,NA,Titular,56,1,1958-08-13,NA,NA
+5525,senado,07588615249,Omar José Abdel Aziz,Omar Aziz,M,AM,PSD,NA,Titular,56,1,1958-08-13,NA,NA
 5924,senado,31662625987,Oriovisto Guimaraes,Oriovisto Guimarães,M,PR,PODEMOS,NA,Titular,56,1,1945-08-12,0,0
-5523,senado,NA,Otto Roberto Mendonça de Alencar,Otto Alencar,M,BA,PSD,NA,Titular,56,1,1947-08-28,NA,NA
+5523,senado,05985234568,Otto Roberto Mendonça de Alencar,Otto Alencar,M,BA,PSD,NA,Titular,56,1,1947-08-28,NA,NA
 825,senado,11062975049,Paulo Renato Paim,Paulo Paim,M,RS,PT,NA,Titular,56,1,1950-03-15,1339329.5,0.0030335671689761716
-374,senado,NA,Paulo Roberto Galvão da Rocha,Paulo Rocha,M,PA,PT,NA,Titular,56,1,1951-04-01,NA,NA
+374,senado,02366010249,Paulo Roberto Galvão da Rocha,Paulo Rocha,M,PA,PT,NA,Titular,56,1,1951-04-01,NA,NA
 5502,senado,03537250215,Francisco Plínio Valério Tomaz,Plínio Valério,M,AM,PSDB,NA,Titular,56,1,1955-01-31,650000,0.001107140067984245
 5012,senado,43187943268,Randolph Frederich Rodrigues Alves,Randolfe Rodrigues,M,AP,REDE,NA,Titular,56,1,1972-11-06,725000,0.04944701887501285
-5236,senado,NA,José Antônio Machado Reguffe,Reguffe,M,DF,SPARTIDO,NA,Titular,56,1,1972-09-05,NA,NA
+5236,senado,78229766134,José Antônio Machado Reguffe,Reguffe,M,DF,SPARTIDO,NA,Titular,56,1,1972-09-05,NA,NA
 70,senado,11078685487,José Renan Vasconcelos Calheiros,Renan Calheiros,M,AL,MDB,NA,Titular,56,1,1955-09-16,2015600,0.0021303207678876656
-677,senado,NA,Roberto Coelho Rocha,Roberto Rocha,M,MA,PSDB,NA,Titular,56,1,1965-08-04,NA,NA
+677,senado,25056956368,Roberto Coelho Rocha,Roberto Rocha,M,MA,PSDB,NA,Titular,56,1,1965-08-04,NA,NA
 5905,senado,00987752430,Rodrigo Santos Cunha,Rodrigo Cunha,M,AL,PSDB,NA,Titular,56,1,1981-05-11,1186773,0.0018878308300292407
 5732,senado,00445689676,Rodrigo Otavio Soares Pacheco,Rodrigo Pacheco,M,MG,DEM,NA,Titular,56,1,1976-11-03,1450250.44,0.0064956101448354385
 5352,senado,41168720591,Rogério Carvalho Santos,Rogério Carvalho,M,SE,PT,NA,Titular,56,1,1968-08-02,1008770,0.0022926611047440395
-5322,senado,NA,Romario de Souza Faria,Romário,M,RJ,PODEMOS,NA,Titular,56,1,1966-01-29,NA,NA
-2331,senado,NA,Rosilda de Freitas,Rose de Freitas,F,ES,PODEMOS,NA,Titular,56,1,1949-01-23,NA,NA
-5527,senado,NA,Simone Nassar Tebet,Simone Tebet,F,MS,MDB,NA,Titular,56,1,1970-02-22,NA,NA
+5352,senado,41168720591,Rogério Carvalho Santos,Rogério Carvalho,M,SE,PT,NA,Titular,56,1,1968-08-02,1008770,0.0022926611047440395
+5322,senado,90671953753,Romario de Souza Faria,Romário,M,RJ,PODEMOS,NA,Titular,56,1,1966-01-29,NA,NA
+2331,senado,37967517768,Rosilda de Freitas,Rose de Freitas,F,ES,PODEMOS,NA,Titular,56,1,1949-01-23,NA,NA
+5527,senado,01099561760,Simone Nassar Tebet,Simone Tebet,F,MS,MDB,NA,Titular,56,1,1970-02-22,NA,NA
+6005,senado,22361847191,Jose Wilson Siqueira Campos,Siqueira Campos,M,TO,DEM,NA,1º Suplente,56,1,1928-08-01,NA,NA
 6005,senado,22361847191,Jose Wilson Siqueira Campos,Siqueira Campos,M,TO,DEM,NA,1º Suplente,56,1,1928-08-01,NA,NA
 5988,senado,60838965172,Soraya Vieira Thronicke,Soraya Thronicke,F,MS,PSL,NA,Titular,56,1,1973-06-01,0,0
 5959,senado,01195796420,Eann Styvenson Valentim Mendes,Styvenson Valentim,M,RN,PODEMOS,NA,Titular,56,1,1977-02-07,NA,NA
 4560,senado,09604332287,Sérgio de Oliveira Cunha,Sérgio Petecão,M,AC,PSD,NA,Titular,56,1,1960-04-20,995869,0.0033478700125547088
-3396,senado,NA,Tasso Ribeiro Jereissati,Tasso Jereissati,M,CE,PSDB,NA,Titular,56,1,1948-12-15,NA,NA
-5535,senado,NA,Telmário Mota de Oliveira,Telmário Mota,M,RR,PROS,NA,Titular,56,1,1958-02-15,NA,NA
+3396,senado,01032852372,Tasso Ribeiro Jereissati,Tasso Jereissati,M,CE,PSDB,NA,Titular,56,1,1948-12-15,NA,NA
+5535,senado,04273230291,Telmário Mota de Oliveira,Telmário Mota,M,RR,PROS,NA,Titular,56,1,1958-02-15,NA,NA
 5899,senado,14464969291,Vanderlan Vieira Cardoso,Vanderlan Cardoso,M,GO,PP,NA,Titular,56,1,1962-11-15,1922040,0.00281630468439361
 5748,senado,71346376468,Veneziano Vital do Rêgo Segundo Neto,Veneziano Vital do Rêgo,M,PB,PSB,NA,Titular,56,1,1970-07-17,1216660,0.002784390932638052
-1173,senado,NA,Wellington Antonio Fagundes,Wellington Fagundes,M,MT,PL,NA,Titular,56,1,1957-06-01,NA,NA
+1173,senado,23019093104,Wellington Antonio Fagundes,Wellington Fagundes,M,MT,PL,NA,Titular,56,1,1957-06-01,NA,NA
 5411,senado,62929399368,Weverton Rocha Marques de Sousa,Weverton,M,MA,PDT,NA,Titular,56,1,1979-10-08,2045500,0.018354688959069557
 5783,senado,12352993415,Zenaide Maia Calado Pereira dos Santos,Zenaide Maia,F,RN,PROS,NA,Titular,56,1,1954-11-27,NA,NA
 3806,senado,06651127268,José da Cruz Marinho,Zequinha Marinho,M,PA,PSC,NA,Titular,56,1,1959-09-18,459800,0.004928808732930645
