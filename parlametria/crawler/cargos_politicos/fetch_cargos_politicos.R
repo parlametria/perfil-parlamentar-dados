@@ -57,6 +57,8 @@ fetch_eleicoes <- function(
 fetch_all_cargos_politicos <- function(parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
   library(purrr)
+  library(here)
+  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_agricolas_parlamentares.R"))
   
   cargos_nacionais <- list(cargos = c("Presidente", "Governador", "Senador", "Deputado Federal", "Deputado Estadual"),
                            elected = c(TRUE, TRUE, FALSE, FALSE, TRUE))
@@ -76,9 +78,17 @@ fetch_all_cargos_politicos <- function(parlamentares_datapath = here::here("craw
   todos_cargos <- rbind(cargos_eleicoes_nacionais, 
                         cargos_eleicoes_municipais)
   
-  parlamentares <- read_csv(parlamentares_datapath, col_types = cols(cpf = "c")) %>% 
-    filter(casa == "camara", em_exercicio == 1)
+  parlamentares <- read_csv(parlamentares_datapath, col_types = cols(cpf = "c", id = "c")) %>% 
+    filter(em_exercicio == 1)
   
+  ids_senadores <- process_cpf_parlamentares_senado() %>% 
+    select(id_senador = id, cpf_senador = cpf)
+  
+  parlamentares <- parlamentares %>% 
+    left_join(ids_senadores, by = c("id" = "id_senador")) %>% 
+    mutate(cpf = if_else(casa == "senado", cpf_senador, cpf)) %>% 
+    select(-cpf_senador)
+    
   cargos_parlamentares <- left_join(parlamentares, todos_cargos, by = c("cpf" =  "CPF_CANDIDATO"))
   
   return(cargos_parlamentares)
