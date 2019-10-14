@@ -100,16 +100,24 @@ process_socios_empresas_agricolas_parlamentares_casa <- function(
 #' @return Dataframe contendo id e CPF dos senadores
 process_cpf_parlamentares_senado <- function(
   parlamentares = readr::read_csv(here::here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")),
-  candidatos_data_path = here::here("parlametria/raw_data/dados_tse/consulta_cand_2018_BRASIL.csv.zip")) {
+  candidatos_2018_data_path = here::here("parlametria/raw_data/dados_tse/consulta_cand_2018_BRASIL.csv.zip"),
+  candidatos_2014_data_path = here::here("parlametria/raw_data/dados_tse/consulta_cand_2014_BRASIL.csv.zip")) {
   library(tidyverse)
   library(here)
   
   source(here("crawler/utils/utils.R"))
   
-  candidatos <- read_delim(candidatos_data_path, delim = ";", col_types = cols(SQ_CANDIDATO = "c"),
-                           locale = locale(encoding = 'latin1')) %>% 
+  candidatos_2018 <- read_delim(candidatos_2018_data_path, delim = ";", col_types = cols(SQ_CANDIDATO = "c"),
+                                locale = locale(encoding = 'latin1'))
+  
+  candidatos_2014 <- read_delim(candidatos_2014_data_path, delim = ";", col_types = cols(SQ_CANDIDATO = "c"),
+                                locale = locale(encoding = 'latin1'))
+  
+  candidatos <- candidatos_2018 %>% 
+    rbind(candidatos_2014) %>% 
     mutate(DS_CARGO = str_to_title(DS_CARGO)) %>% 
-    filter(DS_CARGO %in% c("Senador")) %>% 
+    mutate(NM_CANDIDATO = gsub("-", " ", NM_CANDIDATO)) %>% 
+    filter(DS_CARGO %in% c("Senador", "1º Suplente", "2º Suplente")) %>% 
     select(NM_CANDIDATO, NR_CPF_CANDIDATO)
   
   parlamentares <- parlamentares %>% 
