@@ -13,7 +13,8 @@ fetch_socios_empresas_agricolas_doadores <- function(
     fetch_empresas_agricolas(empresas_doadores)
   
   empresas_socios_agricolas <- empresas_socios_agricolas %>% 
-    select(id_deputado = id, 
+    select(id_parlamentar = id, 
+           casa,
            cnpj, 
            nome_socio, 
            cnpj_cpf_do_socio, 
