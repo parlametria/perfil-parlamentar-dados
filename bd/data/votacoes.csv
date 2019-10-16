@@ -173,38 +173,38 @@ id_proposicao_voz,id_votacao,objeto_votacao,datetime,codigo_sessao
 12201529,1168431743,REQUERIMENTO DE RETIRADA DE PAUTA,2019-06-25T17:43:00Z,16843
 12201532,1168442013,SUBSTITUTIVO DA CCJ,2019-06-25T20:13:00Z,16844
 12201532,1168431941,REQUERIMENTO DE ADIAMENTO DA DISCUSSÃO POR 2 SESSÕES,2019-06-25T19:41:00Z,16843
-2129807,25946,NA,NA,NA
-2135603,25947,NA,NA,NA
-2129807,25948,NA,NA,NA
-2134910,25949,NA,NA,NA
-2123903,25951,NA,NA,NA
-2123903,25952,NA,NA,NA
-2135983,25954,NA,NA,NA
-2135983,25953,NA,NA,NA
-2121353,25955,NA,NA,NA
-2121353,25956,NA,NA,NA
-2136173,25957,NA,NA,NA
-2127414,25960,NA,NA,NA
-2117839,25961,NA,NA,NA
-2135064,25962,NA,NA,NA
-2135079,25964,NA,NA,NA
-2116081,25967,NA,NA,NA
-2132847,25968,NA,NA,NA
-2137178,25969,NA,NA,NA
-2137178,25970,NA,NA,NA
-2136635,25971,NA,NA,NA
-2128634,25980,NA,NA,NA
-2130029,25982,NA,NA,NA
-2135594,25984,NA,NA,NA
-2135594,25985,NA,NA,NA
-2134583,25995,NA,NA,NA
-2137438,26006,NA,NA,NA
-2137438,26007,NA,NA,NA
-2137999,26024,NA,NA,NA
-2137999,26025,NA,NA,NA
-2137999,26026,NA,NA,NA
-2137999,26028,NA,NA,NA
-2137999,26032,NA,NA,NA
-2137999,26033,NA,NA,NA
-2137999,26034,NA,NA,NA
+2129807,25946,"Altera os arts. 7º, 23, 24, 37, 40, 201, 203, 208, 227 e 244 da Constituição Federal para incorporar-lhes a nomenclatura “pessoa com deficiência”, utilizada pela Convenção Internacional sobre o Direito das Pessoas com Deficiência.",2019-03-12T14:00:00Z,5946
+2135603,25947,"Altera a Lei Complementar nº 105, de 10 de janeiro de 2001, e a Lei n° 12.414, de 9 de junho de 2011, para dispor sobre os cadastros positivos de crédito e regular a responsabilidade civil dos operadores.",2019-03-13T14:00:00Z,5947
+2129807,25948,"Proposta de Emenda à Constituição nº 25, de 2017 (2º turno)",2019-03-19T14:00:00Z,5948
+2134910,25949,"PLC nº 135, de 2018 - Complementar, com as Emendas nºs 1 a 3-CAE (de redação), nos termos do Parecer",2019-03-19T14:00:00Z,5949
+2123903,25951,"PEC nº 141, de 2015, com as Emendas nºs 1 e 2 - CCJ (redação), no termos do Parecer (1º Turno)",2019-04-02T14:00:00Z,5951
+2123903,25952,"Proposta de Emenda à Constituição nº 141, de 2015 (2º Turno)",2019-04-03T14:00:00Z,5952
+2135983,25954,"Emenda nº 10 - CCJ (Substitutivo) à PEC nº 34, de 2019, nos termos do Parecer (1º Turno)",2019-04-03T14:00:00Z,5954
+2135983,25953,"Proposta de Emenda à Constituição nº 34, de 2019 (2º Turno)",2019-04-03T14:00:00Z,5953
+2121353,25955,"Emenda nº 6-Plen (Substitutivo) à Proposta de Emenda à Constituição nº 61, de 2015 (1º Turno)",2019-04-09T14:00:00Z,5955
+2121353,25956,"Proposta de Emenda à Constituição nº 61, de 2015 (2º Turno)",2019-04-09T14:00:00Z,5956
+2136173,25957,"Emenda nº 13-Plen ao Projeto de Lei nº 1321, de 2019",2019-04-16T14:00:00Z,5957
+2127414,25960,"PEC nº 57, de 2016, com as Emendas nºs 1 a 6 - CCJ, nos termos do Parecer (1º Turno)",2019-05-07T14:00:00Z,5960
+2117839,25961,"Emenda nº 1 - CAE ao Projeto de Lei do Senado nº 188, de 2014 - Complementar",2019-05-21T14:00:00Z,5961
+2135064,25962,Estabelece a organização básica dos órgãos da Presidência da República e dos Ministérios.,2019-05-28T14:00:00Z,5962
+2135079,25964,"Institui o Programa Especial para Análise de Benefícios com Indícios de Irregularidade, o Programa de Revisão de Benefícios por Incapacidade, o Bônus de Desempenho Institucional por Análise de Benefícios com Indícios de Irregularidade do Monitoramento Operacional de Benefícios e o Bônus de Desempenho Institucional por Perícia Médica em Benefícios por Incapacidade, e dá outras providências.",2019-06-03T14:00:00Z,5964
+2116081,25967,"PLS nº 26, de 2014 - Complementar, com as Emendas nos termos dos Pareceres",2019-06-12T14:00:00Z,5967
+2132847,25968,"Emenda nº 3 - CAE (Substitutivo) ao Projeto de Lei do Senado nº 163, de 2018 - Complementar",2019-06-12T14:00:00Z,5968
+2137178,25969,"Proposta de Emenda à Constituição nº 91, de 2019, nos termos do Parecer de Plenário (1º Turno)",2019-06-12T14:00:00Z,5969
+2137178,25970,"Proposta de Emenda à Constituição nº 91, de 2019 (2º Turno)",2019-06-12T14:00:00Z,5970
+2136635,25971,"Projeto de Decreto Legislativo nº 233, de 2019",2019-06-18T14:00:00Z,5971
+2128634,25980,"Projeto de Lei da Câmara nº 27, de 2017 e Emendas nos termos dos Pareceres, ressalvados os destaques",2019-06-26T14:00:00Z,5980
+2130029,25982,"PLS nº 224, de 2017, com a Emenda nº 1 - CCJ, nos termos do Parecer, ressalvado o destaque",2019-06-26T14:00:00Z,5982
+2135594,25984,"PEC nº 17, de 2019, com a Emenda nº 1 - CCJ (Redação), nos termos do Parecer (1º Turno)",2019-07-02T14:00:00Z,5984
+2135594,25985,"Proposta de Emenda à Constituição nº 17, de 2019 (2º Turno)",2019-07-02T14:00:00Z,5985
+2134583,25995,"Projeto de Lei da Câmara nº 115, de 2018",2019-08-07T14:00:00Z,5995
+2137438,26006,"Proposta de Emenda à Constituição nº 98, de 2019 (2º Turno)",2019-09-03T14:00:00Z,6006
+2137438,26007,"PEC 98/2019 e Emendas e Subemendas, ressalvada a Emenda 9 - PLEN, nos termos dos Pareceres(1º Turno)",2019-09-03T14:00:00Z,6007
+2137999,26024,"Modifica o sistema de previdência social, estabelece regras de transição, disposições transitórias, e dá outras providências. (PEC da Previdência).",2019-10-01T14:00:00Z,6024
+2137999,26025,"Supressão da expressão ""no âmbito da União"" do § 1º - B do art. 149 da Constituição Federal, com a redação do art. 1º da Proposta.",2019-10-01T14:00:00Z,6025
+2137999,26026,"Aposentadoria especial para o trabalhador em atividades exercidas com efetiva exposição a agentes nocivos químicos, físicos e biológicos.",2019-10-01T14:00:00Z,6026
+2137999,26028,Abono salarial para empregados de baixa renda.,2019-10-01T14:00:00Z,6028
+2137999,26032,Idade mínima para mulheres.,2019-10-02T11:00:00Z,6032
+2137999,26033,Pensão por morte.,2019-10-02T11:00:00Z,6033
+2137999,26034,Idade mínima para fins de aposentadoria especial decorrente do exercício de atividade com efetiva exposição a agentes nocivos à saúde.,2019-10-02T11:00:00Z,6034
 146249,199999,NA,NA,NA
