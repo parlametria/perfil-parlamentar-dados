@@ -7,7 +7,7 @@
 #' @return Dataframe das empresas que possuem sócios com os mesmos nomes e 6 dígitos do cpg/cnpj dos doadores
 filter_socios_empresas_doadores <- function(
   socios_folderpath = here::here("parlametria/raw_data/empresas/socio.csv.gz"),
-  doadores_folderpath = here::here("parlametria/raw_data/receitas/deputados_doadores.csv")) {
+  doadores_folderpath = here::here("parlametria/raw_data/receitas/parlamentares_doadores.csv")) {
   
   library(tidyverse)
   
@@ -21,7 +21,7 @@ filter_socios_empresas_doadores <- function(
            nome_socio = padroniza_nome(nome_socio))
   
   doadores <- read_csv(doadores_folderpath) %>% 
-    select(id, cpf_cnpj_doador, nome_doador, origem_receita, valor_receita) %>% 
+    select(id, casa, cpf_cnpj_doador, nome_doador, origem_receita, valor_receita) %>% 
     mutate(nome_doador = padroniza_nome(nome_doador),
            cpf_cnpj_doador_processed = substring(cpf_cnpj_doador, 4, 9))
   
@@ -50,23 +50,23 @@ process_socios_empresas_doadores <- function(
   source(here("parlametria/crawler/receitas/analyzer_receitas_tse.R"))
   source(here("parlametria/crawler/empresas/process_empresas_exportadoras.R"))
   
-  parlamentares_doacoes <- processa_doacoes_deputados_tse(ano) %>% 
-    filter(casa == "camara") %>% 
+  parlamentares_doacoes <- processa_doacoes_parlamentares_tse(ano) %>% 
     select(id, 
-           nome_deputado = nome_eleitoral, 
-           partido_deputado = sg_partido, 
-           uf_deputado = uf, 
+           casa_parlamentar = casa,
+           nome_parlamentar = nome_eleitoral, 
+           partido_parlamentar = sg_partido, 
+           uf_parlamentar = uf, 
            valor_doado = valor_receita,
            cpf_cnpj_doador,
            nome_doador) %>% 
     mutate(id = as.character(id),
            cpf_cnpj_doador = as.character(cpf_cnpj_doador))
   
-  empresas_doadores_com_nome_deputado <- empresas_doadores %>% 
-    left_join(parlamentares_doacoes, by = c("id_deputado" = "id", "nome_socio" = "nome_doador")) %>% 
+  empresas_doadores_com_nome_parlamentar <- empresas_doadores %>% 
+    left_join(parlamentares_doacoes, by = c("id_parlamentar" = "id", "nome_socio" = "nome_doador")) %>% 
     rename(cpf_cnpj_socio = cpf_cnpj_doador)
   
-  res <- classifica_empresas_exportacao(empresas_doadores_com_nome_deputado)
+  res <- classifica_empresas_exportacao(empresas_doadores_com_nome_parlamentar)
   
   res <- res %>% 
     select(cnpj_empresa = cnpj,
@@ -74,10 +74,11 @@ process_socios_empresas_doadores <- function(
            cpf_cnpj_socio,
            nome_socio,
            data_entrada_sociedade, 
-           id_deputado,
-           nome_deputado,
-           partido_deputado,
-           uf_deputado,
+           id_parlamentar,
+           casa_parlamentar,
+           nome_parlamentar,
+           partido_parlamentar,
+           uf_parlamentar,
            valor_doado)
   
   return(res)
@@ -100,7 +101,7 @@ process_empresas_doadores <- function(
   source(here("parlametria/crawler/receitas/analyzer_receitas_tse.R"))
   source(here("parlametria/crawler/empresas/fetcher_empresas.R"))
   
-  parlamentares_doacoes <- processa_doacoes_deputados_tse(ano) %>% 
+  parlamentares_doacoes <- processa_doacoes_parlamentares_tse(ano) %>% 
     filter(casa == "camara") %>% 
     select(id, 
            nome_deputado = nome_eleitoral, 
@@ -154,13 +155,13 @@ filter_empresas_agricolas_doadoras <- function(
 #' na Receita Federal, retorna um dataframe com as informações das empresas agrícolas dos sócios, ou uma lista 
 #' adicionada do dataframe das próprias empresas doadoras, até as eleições de 2014.
 #' @param ano Ano da eleição de interesse
-#' @param doadores_folderpath Caminho para o dataframe das doações para a campanha dos deputados
+#' @param doadores_folderpath Caminho para o dataframe das doações para a campanha dos parlamentares
 #' @param socios_folderpath Caminho para o dataframe dos sócios cadastrados na Receita Federal
 #' @return Dataframe com mais dados sobre os sócios, as empresas, os deputados e as doações recebidas
 #' @example process_socios_empresas_agricolas_por_receita()
 process_socios_empresas_agricolas_doadores <- function(
   ano = 2018,
-  doadores_folderpath = here::here("parlametria/raw_data/receitas/deputados_doadores.csv"),
+  doadores_folderpath = here::here("parlametria/raw_data/receitas/parlamentares_doadores.csv"),
   socios_folderpath = here::here("parlametria/raw_data/empresas/socio.csv.gz")) {
   library(tidyverse)
   library(here)
@@ -172,7 +173,7 @@ process_socios_empresas_agricolas_doadores <- function(
   socios_empresas_agricolas <- fetch_socios_empresas_agricolas_doadores(socios_empresas_doadores)
   
   socios_empresas_agricolas <- socios_empresas_agricolas %>% 
-    mutate(id_deputado = as.character(id_deputado))
+    mutate(id_parlamentar = as.character(id_parlamentar))
   
   res_socios <- process_socios_empresas_doadores(socios_empresas_agricolas, ano)
   

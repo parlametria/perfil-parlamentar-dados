@@ -18,7 +18,7 @@
 
 - **empresas_info_2018.csv**: lista de empresas que possuem ligações com deputados em 2018 e seus repectivos CNAEs.
 
-- **empresas_parlamentares_agricolas.csv**: lista de empresas **agrícolas** que possuem como sócio algum parlamentar atualmente em exercício. A classificação de empresas agrícolas é feita através do CNAE da empresa na Receita Federal.
+- **empresas_parlamentares_agricolas.csv**: lista de empresas **agrícolas** que possuem como sócio algum deputado atualmente em exercício. A classificação de empresas agrícolas é feita através do CNAE da empresa na Receita Federal.
 
 - **empresas_parlamentares.csv**: lista de empresas que possuem como sócio algum parlamentar atualmente em exercício.
 
@@ -27,6 +27,8 @@
 - **somente_empresas_gerais_2014.csv**: Lista de empresas que doaram para campanha nas eleições de 2014 de parlamentres atualmente em exerício (eleitos em 2018).
 
 - **somente_empresas_gerais_doadoras_2014.csv**: Lista de empresas que doaram para campanha nas eleições de 2014 de parlamentres atualmente em exerício (eleitos em 2018) com informações de qual deputado recebeu a doação dessas empresas.
+
+- **empresas_doadores_agricolas_todos_parlamentares.csv**: Lista de empresas **agrícolas** que possuem como sócio algum parlamentar atualmente em exercício. A classificação de empresas agrícolas é feita através do CNAE da empresa na Receita Federal.
 
 
 Os dados brutos utilizados nesse módulo (foram usados para dar origem aos datasets suprecitados) foram processados pelo [Brasil.io](Brasil.io). Também utilizamos a api [Minha Receita](https://github.com/cuducos/minha-receita) feita por Cuducos.
