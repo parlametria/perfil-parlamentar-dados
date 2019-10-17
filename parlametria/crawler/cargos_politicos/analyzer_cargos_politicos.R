@@ -9,7 +9,8 @@ analyzer_cargos_politicos <- function() {
   cargos_parlamentares <- fetch_all_cargos_politicos()
     
   cargos_parlamentares <- cargos_parlamentares %>% 
-    select(id_parlamentar = id, 
+    select(id_parlamentar = id,
+           casa,
            cpf, 
            nome_eleitoral, 
            partido = sg_partido, 
@@ -49,7 +50,7 @@ filter_suplentes_com_exercicio <- function(
   
   library(tidyverse)
   
-  mandatos <- read_csv(mandatos_datapath)
+  mandatos <- read_csv(mandatos_datapath, col_types = cols(id_parlamentar = "c"))
   
   suplentes_que_tiveram_exercicio <- cargos_parlamentares %>%
     filter(situacao_totalizacao_turno == "SUPLENTE") %>%
@@ -66,8 +67,8 @@ filter_suplentes_com_exercicio <- function(
         )
     ) %>%
     inner_join(mandatos %>%
-                 select(id_parlamentar, id_legislatura),  
-               by = c("id_parlamentar", "id_legislatura")) %>% 
+                 select(id_parlamentar, casa, id_legislatura),  
+               by = c("id_parlamentar", "casa", "id_legislatura")) %>% 
     select(-id_legislatura)
   
   cargos_parlamentares <- cargos_parlamentares %>% 
