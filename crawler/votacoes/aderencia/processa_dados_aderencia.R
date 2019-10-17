@@ -201,7 +201,16 @@ processa_dados_aderencia_por_tema <- function(tema_id, proposicoes_temas,
 
   if (length(lista_proposicoes) == 0) {
     return(tribble(~ id, ~ nome, ~ partido, ~ faltou, ~ partido_liberou,
-                   ~ nao_seguiu, ~ seguiu, ~ total_votacoes, ~ freq))
+                   ~ nao_seguiu, ~ seguiu, ~ total_votacoes, ~ freq) %>% 
+             mutate(id = as.character(id),
+                    nome = as.character(nome),
+                    partido = as.character(partido),
+                    faltou = as.numeric(faltou),
+                    partido_liberou = as.numeric(partido_liberou),
+                    nao_seguiu = as.numeric(nao_seguiu),
+                    seguiu = as.numeric(seguiu),
+                    total_votacoes = as.numeric(total_votacoes),
+                    freq = as.numeric(freq)))
   }
   
   votos <- votos %>% 
