@@ -32,7 +32,11 @@ process_orientacao_por_ano_camara <- function(ano = 2019, url = NULL) {
   
   ## checa se existem proposições com dados de votações em plenário para aquele ano
   if (nrow(proposicoes_votadas) == 0) {
-    data <- tribble(~ id_proposicao, ~ id_votacao, ~ partido, ~ voto)
+    data <- tribble(~ id_proposicao, ~ id_votacao, ~ partido, ~ voto) %>% 
+      mutate(id_proposicao = as.character(id_proposicao),
+             id_votacao = as.character(id_votacao),
+             partido = as.character(partido),
+             voto = as.numeric(voto))
     return(data)
   }
   
@@ -141,9 +145,9 @@ get_voto_lider <- function(lideres, votos, id_votacao) {
   }
 
    if(length(voto) == 0) {
-     return(0)
+     return(as.numeric(0))
    } else{
-     return(voto)
+     return(as.numeric(voto))
    }
 }
 
@@ -182,7 +186,7 @@ calcula_voto_maioria_absoluta <- function(votos, sigla_partido) {
     orientacoes <- orientacoes %>% 
       mutate(voto = if_else(empate == 1,
                             get_voto_lider(lideres, votos, id_votacao),
-                            voto)) %>% 
+                            as.numeric(voto))) %>% 
       unique()
   }
   

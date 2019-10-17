@@ -26,6 +26,9 @@ help:
 	@echo "    "	
 	@echo "    sh"
 	@echo "        Open sh prompt inside container with name postgres.	"
+	@echo "    "	
+	@echo "    update"
+	@echo "        Atualiza banco de dados usando serviço r-updater (precisa estar executando)."
 .PHONY: help
 create:
 	docker-compose exec db psql -U postgres -d vozativa -1 -f scripts/create_table_bd_vozativa.sql
@@ -48,4 +51,7 @@ clean-all:
 .PHONY: clean-all
 sh:
 	docker exec -it postgres sh
-.PHONY: clean-all
+.PHONY: sh
+update:
+	docker exec -it r-updater sh -c "cd /app/bd && Rscript update_bd.R"
+.PHONY: update
