@@ -25,7 +25,8 @@ process_indice_influencia_parlamentar <- function() {
   
   investimento_partidario <- read_csv(here("parlametria/raw_data/resumo/parlamentares_investimento.csv"),
                                       col_types = cols(id = "c")) %>% 
-    select(id, casa, investimento_partidario = proporcao_campanhas_medias_receita)
+    select(id, casa, investimento_partidario = proporcao_campanhas_medias_receita) %>% 
+    distinct()
   
   mandatos_cargos <- read_csv(here("parlametria/raw_data/cargos_politicos/historico_parlamentares_cargos_politicos.csv"),
                               col_types = cols(id_parlamentar = "c")) %>% 
