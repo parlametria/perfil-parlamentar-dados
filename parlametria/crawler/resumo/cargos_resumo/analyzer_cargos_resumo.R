@@ -50,7 +50,7 @@ process_cargos_resumo_parlamentares <- function(filtrar_em_exercicio = TRUE, cas
   parlamentares <- parlamentares_raw %>% 
     left_join(cargos_comissoes, by = c("id" = "id_parlamentar", "casa" = "casa")) %>% 
     left_join(liderancas, by = c("id" = "id_parlamentar", "casa" = "casa")) %>% 
-    select(id, cpf, nome_eleitoral, uf, sg_partido, Presidente, `Primeiro Vice-presidente`, 
+    select(id, casa, cpf, nome_eleitoral, uf, sg_partido, Presidente, `Primeiro Vice-presidente`, 
            `Segundo Vice-presidente`, `Terceiro Vice-presidente`, Titular, Suplente, `Líder`, 
            `Vice-líder`, `Representante`) %>% 
     arrange(`Presidente`)
