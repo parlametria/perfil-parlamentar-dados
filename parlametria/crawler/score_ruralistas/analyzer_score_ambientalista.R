@@ -1,11 +1,11 @@
 #' @title Recupera informações dos parlamentares que possuem ou não propriedades rurais
 #' @description A partir do dataframe de parlamentares com propriedades rurais e do
-#' dataframe de parlamentares, retorna um dataframe que contém id, cpf e o total declarado
+#' dataframe de parlamentares, retorna um dataframe que contém id e o total declarado
 #' no TSE em propriedades rurais.
 #' @param propriedades_rurais_datapath Caminho para o dataframe de parlamentares com propriedades
 #' rurais
 #' @param parlamentares_datapath Caminho para o dataframe de parlamentares
-#' @return Dataframe contendo informações dos parlamentares (cpf e id) e total declarado no TSE
+#' @return Dataframe contendo informações dos parlamentares (id) e total declarado no TSE
 #' em propriedades rurais
 calcula_score_propriedades_rurais <- function(
   propriedades_rurais_datapath = here::here("parlametria/raw_data/patrimonio/propriedades_rurais.csv"),
@@ -13,27 +13,17 @@ calcula_score_propriedades_rurais <- function(
   
   library(tidyverse)
   library(here)
-  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_agricolas_parlamentares.R"))
-  
+
   propriedades_rurais <- read_csv(propriedades_rurais_datapath, col_types = cols(id_parlamentar = "c")) %>% 
-    select(id_parlamentar, casa, cpf, total_declarado)
+    select(id_parlamentar, casa, total_declarado)
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(em_exercicio == 1) %>% 
-    select(id, casa, cpf)
-  
-  ids_senadores <- process_cpf_parlamentares_senado() %>% 
-    select(id_senador = id, cpf_senador = cpf)
-  
-  parlamentares <- parlamentares %>% 
-    left_join(ids_senadores, by = c("id" = "id_senador")) %>% 
-    mutate(cpf = if_else(casa == "senado", cpf_senador, cpf)) %>% 
-    select(-cpf_senador) %>% 
-    distinct()
+    select(id, casa)
   
   parlamentares_propriedades_rurais <- parlamentares %>% 
     left_join(propriedades_rurais,
-              by = c("cpf", "id" = "id_parlamentar", "casa")) %>% 
+              by = c("id" = "id_parlamentar", "casa")) %>% 
     mutate(total_declarado = if_else(is.na(total_declarado), 0, total_declarado))
   
   return(parlamentares_propriedades_rurais)
@@ -41,18 +31,17 @@ calcula_score_propriedades_rurais <- function(
 
 #' @title Recupera informações dos parlamentares que possuem ou não empresas agrícolas
 #' @description A partir do dataframe de parlamentares com empresas agrícolas e do
-#' dataframe de parlamentares, retorna um dataframe que contém id, cpf e a quatidade de empresas
+#' dataframe de parlamentares, retorna um dataframe que contém id e a quatidade de empresas
 #' as quais os parlamentares são sócios.
 #' @param socios_empresas_rurais_datapath Caminho para o dataframe de parlamentares sócios de
 #' empresas rurais
 #' @param parlamentares_datapath Caminho para o dataframe de parlamentares
-#' @return Dataframe contendo informações dos parlamentares (cpf e id) e a quantidade de empresas.
+#' @return Dataframe contendo informações dos parlamentares (id) e a quantidade de empresas.
 calcula_score_socios_empresas_rurais <- function(
   socios_empresas_rurais_datapath = here::here("parlametria/raw_data/empresas/socios_empresas_agricolas_todos_parlamentares.csv"),
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
   
   library(tidyverse)
-  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_agricolas_parlamentares.R"))
   
   socios_empresas_rurais <- read_csv(socios_empresas_rurais_datapath, col_types = cols(id_parlamentar = "c")) %>% 
     distinct() %>% 
@@ -62,16 +51,7 @@ calcula_score_socios_empresas_rurais <- function(
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(em_exercicio == 1) %>% 
-    select(id, casa, cpf)
-  
-  ids_senadores <- process_cpf_parlamentares_senado() %>% 
-    select(id_senador = id, cpf_senador = cpf)
-  
-  parlamentares <- parlamentares %>% 
-    left_join(ids_senadores, by = c("id" = "id_senador")) %>% 
-    mutate(cpf = if_else(casa == "senado", cpf_senador, cpf)) %>% 
-    select(-cpf_senador) %>% 
-    distinct()
+    select(id, casa)
   
   parlamentares_socios_empresas_rurais <- parlamentares %>% 
     left_join(socios_empresas_rurais,
@@ -89,7 +69,7 @@ calcula_score_socios_empresas_rurais <- function(
 #' @param doadores_socios_empresas_rurais_2018_datapath Caminho para o dataframe de doações de campanha  para deputados e senadores
 #' de sócios de empresas rurais em 2018
 #' @param parlamentares_datapath Caminho para o dataframe de parlamentares
-#' @return Dataframe contendo informações dos parlamentares (cpf e id) e proporção de doações de 
+#' @return Dataframe contendo informações dos parlamentares (id) e proporção de doações de 
 #' empresas rurais em relação ao total doado
 calcula_score_doacoes_empresas_rurais <- function(
   doadores_gerais_2018_datapath = here::here("parlametria/raw_data/receitas/parlamentares_doadores.csv"),
@@ -97,7 +77,6 @@ calcula_score_doacoes_empresas_rurais <- function(
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
   
   library(tidyverse)
-  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_agricolas_parlamentares.R"))
   
   doadores <- read_csv(doadores_gerais_2018_datapath, col_types = cols(id = "c"))
   
@@ -122,16 +101,7 @@ calcula_score_doacoes_empresas_rurais <- function(
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(em_exercicio == 1) %>% 
-    select(id, casa, cpf)
-  
-  ids_senadores <- process_cpf_parlamentares_senado() %>% 
-    select(id_senador = id, cpf_senador = cpf)
-  
-  parlamentares <- parlamentares %>% 
-    left_join(ids_senadores, by = c("id" = "id_senador")) %>% 
-    mutate(cpf = if_else(casa == "senado", cpf_senador, cpf)) %>% 
-    select(-cpf_senador) %>% 
-    distinct()
+    select(id, casa)
   
   parlamentares_doacoes <- parlamentares %>% 
     left_join(indice_doadores, by = c("id", "casa"))
@@ -146,7 +116,7 @@ calcula_score_doacoes_empresas_rurais <- function(
 #' @param doadores_socios_empresas_rurais_2018_datapath Caminho para o dataframe de doações de campanha 
 #' de sócios de empresas rurais em 2018
 #' @param parlamentares_datapath Caminho para o dataframe de parlamentares
-#' @return Dataframe contendo informações dos parlamentares (cpf e id) e proporção de doações de 
+#' @return Dataframe contendo informações dos parlamentares (id) e proporção de doações de 
 #' empresas agrícolas agroexportadoras em relação ao total doado
 calcula_score_doacoes_empresas_agroexportadoras <- function(
   doadores_gerais_2018_datapath = here::here("parlametria/raw_data/receitas/parlamentares_doadores.csv"),
@@ -181,16 +151,7 @@ calcula_score_doacoes_empresas_agroexportadoras <- function(
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(em_exercicio == 1) %>% 
-    select(id, cpf)
-  
-  ids_senadores <- process_cpf_parlamentares_senado() %>% 
-    select(id_senador = id, cpf_senador = cpf)
-  
-  parlamentares <- parlamentares %>% 
-    left_join(ids_senadores, by = c("id" = "id_senador")) %>% 
-    mutate(cpf = if_else(casa == "senado", cpf_senador, cpf)) %>% 
-    select(-cpf_senador) %>% 
-    distinct()
+    select(id, casa)
   
   parlamentares_doacoes <- parlamentares %>% 
     left_join(indice_doadores, by = c("id", "casa")) %>% 
@@ -229,32 +190,21 @@ get_empresas_agroexportadoras_parlamentares <- function(
 calcula_sociedade_empresas_agroexportadoras <- function(
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
   library(tidyverse)
-  library(here)
-  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_agricolas_parlamentares.R"))
   
   empresas_socios <- get_empresas_agroexportadoras_parlamentares() %>% 
-    select(id = id_parlamentar, exportadora) %>% 
+    select(id = id_parlamentar, casa, exportadora) %>% 
     mutate(exportadora = if_else(exportadora == "sim", 1, 0)) %>% 
     filter(exportadora == 1) %>% 
     distinct(id, .keep_all = TRUE)
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
     filter(em_exercicio == 1) %>% 
-    select(id, casa, cpf)
-  
-  ids_senadores <- process_cpf_parlamentares_senado() %>% 
-    select(id_senador = id, cpf_senador = cpf)
-  
-  parlamentares <- parlamentares %>% 
-    left_join(ids_senadores, by = c("id" = "id_senador")) %>% 
-    mutate(cpf = if_else(casa == "senado", cpf_senador, cpf)) %>% 
-    select(-cpf_senador) %>% 
-    distinct()
+    select(id, casa)
   
   parlamentares_socios <- parlamentares %>% 
     left_join(empresas_socios, by = c("id", "casa")) %>% 
     mutate(tem_empresa_agroexportadora = if_else(is.na(exportadora), 0, exportadora)) %>% 
-    select(id, casa, cpf, tem_empresa_agroexportadora)
+    select(id, casa, tem_empresa_agroexportadora)
   
   return(parlamentares_socios)
 }
@@ -268,6 +218,12 @@ calcula_sociedade_empresas_agroexportadoras <- function(
 processa_indice_vinculo_economico <- function(
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")
 ) {
+  
+  library(tidyverse)
+  library(here)
+  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_agricolas_parlamentares.R"))
+  options(scipen = 999)
+  
   propriedades_rurais <- calcula_score_propriedades_rurais()
   socios <- calcula_score_socios_empresas_rurais()
   doacoes <- calcula_score_doacoes_empresas_rurais()
@@ -275,16 +231,25 @@ processa_indice_vinculo_economico <- function(
   doacoes_parlamentares_agroexportadoras <- calcula_score_doacoes_empresas_agroexportadoras()
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(id = "c")) %>% 
-    filter(casa == "camara", em_exercicio == 1) %>% 
-    select(id, cpf, nome_eleitoral, uf, sg_partido)
+    filter(em_exercicio == 1) %>% 
+    select(id, casa, cpf, nome_eleitoral, uf, sg_partido)
+  
+  ids_senadores <- process_cpf_parlamentares_senado() %>% 
+    select(id_senador = id, cpf_senador = cpf)
+  
+  parlamentares <- parlamentares %>% 
+    left_join(ids_senadores, by = c("id" = "id_senador")) %>% 
+    mutate(cpf = if_else(casa == "senado", cpf_senador, cpf)) %>% 
+    select(-cpf_senador) %>% 
+    distinct()
   
   indice_vinculo_economico <- parlamentares %>% 
-    left_join(propriedades_rurais, by = c("id", "cpf")) %>% 
-    left_join(socios, by = c("id", "cpf")) %>% 
-    left_join(doacoes, by = c("id", "cpf")) %>% 
-    left_join(tem_empresa_exportadora, by = c("id", "cpf")) %>% 
-    left_join(doacoes_parlamentares_agroexportadoras, by = c("id", "cpf")) %>% 
-    select(id, cpf, nome_eleitoral, uf, sg_partido, total_declarado, numero_empresas_associadas, 
+    left_join(propriedades_rurais, by = c("id", "casa")) %>% 
+    left_join(socios, by = c("id", "casa")) %>% 
+    left_join(doacoes, by = c("id", "casa")) %>% 
+    left_join(tem_empresa_exportadora, by = c("id", "casa")) %>% 
+    left_join(doacoes_parlamentares_agroexportadoras, by = c("id", "casa")) %>% 
+    select(id, casa, cpf, nome_eleitoral, uf, sg_partido, total_declarado, numero_empresas_associadas, 
            proporcao_doacoes_agro, tem_empresa_agroexportadora, proporcao_doacoes_agroexportadoras)
   
   return(indice_vinculo_economico)
