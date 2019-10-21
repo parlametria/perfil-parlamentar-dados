@@ -6,6 +6,7 @@
 process_indice_vinculo_agro <- function() {
   library(tidyverse)
   library(here)
+  options(scipen = 999)
   
   parlamentares <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")) %>% 
     filter(em_exercicio == 1)
@@ -28,25 +29,26 @@ process_indice_vinculo_agro <- function() {
                            col_types = cols(id = "c"))
   
   parlamentares_processed <- parlamentares_id %>% 
-    
     left_join(propriedades_rurais, by = c("id" = "id_parlamentar", "casa")) %>%
     left_join(empresas_rurais, by = c("id" = "id_parlamentar", "casa")) %>% 
-    
     left_join(doacoes_agro, by = c("id", "casa")) %>% 
+    
     select(id, casa, tem_propriedade_rural, total_declarado_propriedade_rural, tem_empresa_agricola, proporcao_doacoes_agro,
            tem_empresa_agroexportadora, proporcao_doacoes_agroexportadoras) %>%
     
     ## Substituindo NA por 0
     mutate_at(.funs = list(~replace_na(., 0)), .vars = vars(tem_propriedade_rural,
-                                                           total_declarado_propriedade_rural,
-                                                           tem_empresa_agricola,
-                                                           proporcao_doacoes_agro
-                                                           )
+                                                            total_declarado_propriedade_rural,
+                                                            tem_empresa_agricola,
+                                                            proporcao_doacoes_agro,
+                                                            tem_empresa_agroexportadora,
+                                                            proporcao_doacoes_agroexportadoras
+                                                            )
               ) %>% 
     
     ## Cálculo do vínculo econômico com o Agro
     mutate(indice_vinculo_economico_agro = 
              (tem_empresa_agricola*2 + proporcao_doacoes_agro*1.5 + tem_propriedade_rural) / 4.5)
   
-  return(deputados_processed)
+  return(parlamentares_processed)
 }
