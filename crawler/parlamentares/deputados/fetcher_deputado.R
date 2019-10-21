@@ -20,6 +20,11 @@ fetch_deputado <- function(id_deputado) {
     if (!"dados.escolaridade" %in% names(data)) {
       data$dados.escolaridade = NA
     }
+    
+    if (!"dados.ultimoStatus.gabinete.email" %in% names(data)) {
+      data$dados.ultimoStatus.gabinete.email = NA
+    }
+    
     data <- data %>% 
       dplyr::bind_cols(
         extract_partido_informations(data$dados.ultimoStatus.uriPartido)) %>% 
