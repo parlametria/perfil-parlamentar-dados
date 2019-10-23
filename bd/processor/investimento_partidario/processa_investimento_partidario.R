@@ -13,7 +13,7 @@ processa_investimento_partidario <- function(
     )
   
   investimento_alt <- investimento %>% 
-    select(id_parlamentar_voz, total_recebido = total_receita, indice_investimento = proporcao_campanhas_medias_receita) %>% 
+    select(id_parlamentar_voz, total_receita_partido, total_receita_candidato, indice_investimento_partido = proporcao_campanhas_medias_receita) %>% 
     distinct(id_parlamentar_voz, .keep_all = TRUE)
   
   return(investimento_alt)
