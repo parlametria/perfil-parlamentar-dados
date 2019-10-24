@@ -52,6 +52,7 @@ process_receita_candidato <- function(receita_candidato_datapath = here::here("p
 #' @param filtrar_em_exercicio Boolean com indicação se o filtro de parlamentares em exercício deve ser aplicado ou não.
 #' @param casa_parlamentar String com casa do parlamentar. Poder ser 'camara' ou 'senado'
 #' @return Dataframe contendo informações do nível de investimento do partido no parlamentar durante as eleições de 2018.
+#' Existe a sigla do partido (partido_eleicao) no qual o parlamentar concorreu ao cargo durante as eleições de 2018.
 #' @examples
 #' investimento_partidario <- process_investimento_partidario()
 process_investimento_partidario <- function(filtrar_em_exercicio = TRUE, casa_parlamentar = NULL) {
@@ -65,7 +66,8 @@ process_investimento_partidario <- function(filtrar_em_exercicio = TRUE, casa_pa
   source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_agricolas_parlamentares.R"))
   
   receita <- process_receita_partido() %>% 
-    select(cpf, partido, total_receita_partido = total_receita, proporcao_campanhas_medias_receita = proporcao_receita)
+    select(cpf, partido_eleicao = partido, total_receita_partido = total_receita, 
+           proporcao_campanhas_medias_receita = proporcao_receita)
   
   doacoes_por_candidato <- process_receita_candidato()
   
@@ -96,7 +98,7 @@ process_investimento_partidario <- function(filtrar_em_exercicio = TRUE, casa_pa
   
   parlamentares_receita <- parlamentares_raw %>% 
     left_join(receita, 
-              by = c("cpf" = "cpf", "sg_partido" = "partido")) %>% 
+              by = c("cpf")) %>% 
     left_join(doacoes_por_candidato, 
               by = c("cpf"))
   
