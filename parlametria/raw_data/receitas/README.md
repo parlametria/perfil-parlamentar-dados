@@ -11,4 +11,4 @@
 - **receitas_tse_2018.csv**: lista de parlamentares (deputados e senadores) atualmente em exercício (até a data de modificação do arquivo) com informação do total doado pelo partido durante as eleições de 2018. Gerado pelo script `parlametria/crawler/receitas/export_receitas_tse.R`. 
 
 - **candidatos_congresso_doadores_2018.csv**: lista de todas as doações recebidas por candidatos (eleitos e não eleitos) aos cargos de Deputado Federal e de Senador nas eleições federais de 2018. Contém doações de partidos, doações de pessoas físicas e de outros candidatos.
-Foi gerado a partir da execução da função 
+Foi gerado a partir da execução da função processa_doacoes_tse presente no script `parlametria/crawler/receitas/analyzer_receitas_tse.R` com os seguintes parâmetros processa_doacoes_tse(ano = 2018, summarized = FALSE)
