@@ -33,8 +33,8 @@ fetch_dados_empresa_por_cnpj <- function(cnpj) {
     cnaes_secundarios <- json$cnaes_secundarios %>% 
       map(function(x) {
         cnae_sec <- tibble(cnae_tipo = "cnae_secundario",
-                           cnae_codigo = x$cnae_codigo,
-                           cnae_descricao = x$cnae_descricao)
+                           cnae_codigo = x$codigo,
+                           cnae_descricao = x$descricao)
         return(cnae_sec)
       }) %>% 
       reduce(rbind) %>% 
