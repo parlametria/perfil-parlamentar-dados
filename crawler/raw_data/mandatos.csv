@@ -97,7 +97,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 74212,camara,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 74212,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 74212,camara,55,2015-02-01,2016-04-28,Titular,7,Licença para Tratamento de Saúde
-74212,camara,56,2019-05-28,NA,Suplente,NA,NA
+74212,camara,56,2019-05-28,2019-10-01,Suplente,53,Afastamento
 74213,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 74213,camara,55,2015-02-01,2015-08-06,Titular,12,Secretário de Estado
 160553,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
@@ -204,7 +204,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 141513,camara,53,2007-02-01,2011-01-03,Titular,12,Secretário de Estado
 141513,camara,54,2011-02-01,2011-02-03,Titular,12,Secretário de Estado
 141513,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
-141513,camara,56,2019-02-01,NA,Titular,NA,NA
+141513,camara,56,2019-02-01,2019-08-29,Titular,12,Secretário de Estado
 160538,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 160538,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
 160538,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1049,6 +1049,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 141509,camara,54,2011-02-01,2015-01-02,Titular,12,Secretário de Estado
 141509,camara,55,2015-02-01,2015-02-06,Titular,12,Secretário de Estado
 178984,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
+178984,camara,56,2019-08-20,NA,Suplente,NA,NA
 178985,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
 178985,camara,56,2019-02-01,NA,Titular,NA,NA
 74787,camara,52,2003-02-01,2007-01-31,Titular,99,Término da Legislatura
@@ -1068,7 +1069,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 74457,camara,52,2003-02-01,2007-01-31,Titular,99,Término da Legislatura
 74457,camara,55,2015-02-01,2016-12-31,Titular,16,Renúncia
 178997,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
-178997,camara,56,2019-02-01,NA,Titular,NA,NA
+178997,camara,56,2019-02-01,2019-10-09,Titular,20,Licença Conjunta Consecutiva
 160567,camara,52,NA,NA,NA,NA,NA
 160567,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 160567,camara,55,2015-02-01,2017-01-01,Titular,16,Renúncia
@@ -1144,7 +1145,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 74319,camara,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 74319,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 74319,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
-74319,camara,56,2019-06-11,NA,Suplente,NA,NA
+74319,camara,56,2019-06-11,2019-10-16,Suplente,53,Afastamento
 160642,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 160642,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
 160642,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1180,7 +1181,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 74574,camara,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 74574,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 74574,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
-74574,camara,56,2019-03-14,NA,Suplente,NA,NA
+74574,camara,56,2019-03-14,2019-10-02,Suplente,53,Afastamento
 132056,camara,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 132056,camara,54,2011-02-01,2015-01-31,Titular,99,Término da Legislatura
 132056,camara,55,2015-02-01,2018-02-19,Titular,36,Afastamento por Decisão
@@ -1343,6 +1344,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 160637,camara,55,2015-02-01,2018-05-28,Titular,11,Ministro de Estado
 178845,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
 122466,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
+122466,camara,56,2019-10-09,NA,Suplente,NA,NA
 163321,camara,54,2011-02-16,2013-11-26,Suplente,53,Afastamento
 163321,camara,55,2015-02-01,2016-05-12,Titular,11,Ministro de Estado
 178870,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
@@ -1611,7 +1613,6 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204561,camara,56,2019-02-01,NA,Titular,NA,NA
 204397,camara,56,2019-02-01,NA,Titular,NA,NA
 204551,camara,56,2019-02-01,NA,Titular,NA,NA
-204520,camara,56,2019-02-01,NA,Titular,NA,NA
 204352,camara,56,2019-02-01,NA,Titular,NA,NA
 204572,camara,56,2019-02-01,NA,Titular,NA,NA
 204487,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1667,6 +1668,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 207309,camara,56,2019-02-07,2019-07-09,Suplente,53,Afastamento
 204537,camara,56,2019-02-01,NA,Titular,NA,NA
 204482,camara,56,2019-02-01,NA,Titular,NA,NA
+211866,camara,56,2019-08-29,NA,Suplente,NA,NA
 68720,camara,56,2019-02-01,NA,Titular,NA,NA
 204368,camara,56,2019-02-01,NA,Titular,NA,NA
 204477,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1692,6 +1694,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204394,camara,56,2019-02-01,NA,Titular,NA,NA
 204575,camara,56,2019-02-01,NA,Titular,NA,NA
 204491,camara,56,2019-02-01,NA,Titular,NA,NA
+204570,camara,56,2019-02-01,NA,Titular,NA,NA
 204365,camara,56,2019-02-01,NA,Titular,NA,NA
 204419,camara,56,2019-02-01,NA,Titular,NA,NA
 107283,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1733,6 +1736,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204420,camara,56,2019-02-01,NA,Titular,NA,NA
 204372,camara,56,2019-02-01,NA,Titular,NA,NA
 204457,camara,56,2019-02-01,NA,Titular,NA,NA
+204520,camara,56,2019-02-01,NA,Titular,NA,NA
 204502,camara,56,2019-02-01,NA,Titular,NA,NA
 204497,camara,56,2019-02-01,NA,Titular,NA,NA
 204574,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1762,7 +1766,6 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204526,camara,56,2019-02-01,NA,Titular,NA,NA
 204418,camara,56,2019-02-01,NA,Titular,NA,NA
 204458,camara,56,2019-02-01,2019-08-07,Titular,12,Secretário de Estado
-179587,camara,56,2019-02-01,NA,Titular,NA,NA
 204469,camara,56,2019-02-01,NA,Titular,NA,NA
 204471,camara,56,2019-02-01,NA,Titular,NA,NA
 156190,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1805,7 +1808,6 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204475,camara,56,2019-02-01,NA,Titular,NA,NA
 204441,camara,56,2019-02-01,NA,Titular,NA,NA
 204573,camara,56,2019-02-01,NA,Titular,NA,NA
-204570,camara,56,2019-02-01,NA,Titular,NA,NA
 204553,camara,56,2019-02-01,NA,Titular,NA,NA
 204377,camara,56,2019-02-01,NA,Titular,NA,NA
 204538,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1874,6 +1876,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204483,camara,56,2019-02-01,NA,Titular,NA,NA
 204478,camara,56,2019-02-01,NA,Titular,NA,NA
 204532,camara,56,2019-02-01,NA,Titular,NA,NA
+179587,camara,56,2019-02-01,NA,Titular,NA,NA
 74044,camara,52,2003-02-01,2007-01-31,Titular,99,Término da Legislatura
 74044,camara,53,2007-02-01,2011-01-31,Titular,99,Término da Legislatura
 74044,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -2106,6 +2109,8 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 3811,senado,55,2015-02-01,NA,Titular,NA,NA
 5144,senado,54,2011-07-11,2019-01-31,1º Suplente,NA,Término do mandato
 5144,senado,55,2015-02-01,NA,1º Suplente,NA,NA
+5184,senado,55,2018-12-13,2019-01-31,2º Suplente,NA,Término do mandato
+5184,senado,54,2011-02-01,NA,2º Suplente,NA,NA
 4697,senado,54,2011-02-01,2019-01-31,Titular,NA,Término do mandato
 4697,senado,55,2015-02-01,NA,Titular,NA,NA
 4981,senado,55,2015-02-01,2016-09-08,Titular,NA,Licença Saúde-Particular
@@ -2149,7 +2154,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 5976,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
 5976,senado,57,2023-02-01,NA,Titular,NA,NA
 3777,senado,56,2019-02-01,2019-07-12,Titular,NA,Afastamento do exercício
-3777,senado,56,2019-08-14,2023-01-31,Titular,NA,NA
+3777,senado,56,2019-08-15,2023-01-31,Titular,NA,NA
 3777,senado,57,2023-02-01,NA,Titular,NA,NA
 5718,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
 5718,senado,57,2023-02-01,NA,Titular,NA,NA
@@ -2335,7 +2340,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 5621,senado,56,2019-02-01,NA,2º Suplente,NA,NA
 5527,senado,55,2015-02-01,2019-01-31,Titular,NA,NA
 5527,senado,56,2019-02-01,NA,Titular,NA,NA
-6005,senado,56,2019-07-16,2019-08-13,1º Suplente,NA,Retorno do titular
+6005,senado,56,2019-07-16,2019-08-14,1º Suplente,NA,Retorno do titular
 6005,senado,57,2023-02-01,NA,1º Suplente,NA,NA
 5988,senado,56,2019-02-01,2023-01-31,Titular,NA,NA
 5988,senado,57,2023-02-01,NA,Titular,NA,NA

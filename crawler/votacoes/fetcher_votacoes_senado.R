@@ -111,6 +111,8 @@ fetcher_votacoes_por_proposicao_senado <-
     library(tidyverse)
     library(xml2)
     
+    print(paste0("Capturando votações da proposição ", id_proposicao))
+    
     url <-
       paste0("http://legis.senado.leg.br/dadosabertos/materia/votacoes/",
              id_proposicao)
@@ -126,7 +128,7 @@ fetcher_votacoes_por_proposicao_senado <-
         map_df(function(x) {
           list(
             codigo_sessao =
-              xml_find_first(x, "./SessaoPlenaria/CodigoSessao") %>%
+              xml_find_first(x, "./CodigoSessaoVotacao") %>%
               xml_text(),
             objeto_votacao =
               xml_find_first(x, "./DescricaoVotacao") %>%
@@ -142,25 +144,24 @@ fetcher_votacoes_por_proposicao_senado <-
         mutate(datetime =
                  paste0(data,
                         " ",
-                        hora) %>%
-                 as.POSIXct(),
+                        hora),
                id_proposicao = id_proposicao) %>%
         select(id_proposicao,
                objeto_votacao,
                datetime,
                codigo_sessao)
-      
+
       if (!is.null(ano)) {
         data <- data %>%
           filter(lubridate::year(datetime) == ano)
-        return(data)
       }
-      
+      data
     }, error = function(e) {
-      return(tribble( ~ id_proposicao,
+      print(e)
+      data <- (tribble( ~ id_proposicao,
                       ~ objeto_votacao,
                       ~ datetime,
-                      codigo_sessao))
+                      ~ codigo_sessao))
     })
     
     return(votacoes)
