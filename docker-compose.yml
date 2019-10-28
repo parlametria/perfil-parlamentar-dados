@@ -16,6 +16,7 @@ services:
     volumes:
       - ./bd:/app/bd
       - ./crawler:/app/crawler      
+      - ./parlametria:/app/parlametria
     networks:
       - voz-network
 

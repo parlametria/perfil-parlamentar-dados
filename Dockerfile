@@ -20,6 +20,9 @@ RUN R -e "install.packages(c('here', 'optparse', 'RCurl', 'xml2'), repos='http:/
 RUN R -e "devtools::install_github('analytics-ufcg/rcongresso', force = T)"
 RUN R -e "devtools::install_github('analytics-ufcg/leggoR', force = T)"
 RUN R -e "install.packages('pdftools')"
+RUN R -e "devtools::install_github('Cepesp-Fgv/cepesp-r', force = T)"
+Run R -e "install.packages('data.table', repos='http://cran.us.r-project.org')"
+
 
 ## Configura cron para execução automática da atualização
 ENV TZ=America/Recife
