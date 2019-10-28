@@ -86,8 +86,8 @@ process_indice_ativismo_ambiental <- function() {
   
   parlamentares <-
     read_csv(here("crawler/raw_data/parlamentares.csv")) %>%
-    filter(casa == "camara", em_exercicio == 1) %>%
-    select(id)
+    filter(em_exercicio == 1) %>%
+    select(id, casa)
   
   # Discursos analisados pela RAC
   discursos_rac <-
@@ -98,20 +98,25 @@ process_indice_ativismo_ambiental <- function() {
   # Aderência ao meio ambiente
   aderencia <-
     read_csv(here("parlametria/raw_data/resumo/parlamentares_aderencia.csv")) %>%
-    select(id, aderencia) %>%
+    select(id, casa, aderencia) %>%
     mutate(aderencia = if_else(aderencia == -1 |
                                  is.na(aderencia), 0, 1 - aderencia))
   
   # Proposições do Meio Ambiente
   autores_meio_ambiente <- read_csv(here("parlametria/raw_data/autorias/atores_meio_ambiente.csv")) %>% 
     group_by(id_autor) %>% 
-    summarise(qtd_total_de_documentos = sum(qtd_de_documentos)) %>% 
+    summarise(
+      tipo_autor = first(tipo_autor),
+      qtd_total_de_documentos = sum(qtd_de_documentos)
+    ) %>% 
     rename(id = id_autor, proposicoes_meio_ambiente = qtd_total_de_documentos) %>% 
     mutate(proposicoes_meio_ambiente_indice = case_when(proposicoes_meio_ambiente > 10 ~ 1,
                                                         proposicoes_meio_ambiente >= 2 ~ 0.5,
                                                         proposicoes_meio_ambiente == 1 ~ 0.25,
                                                         TRUE ~ 0)) %>% 
-    select(id, proposicoes_meio_ambiente_indice)
+    mutate(casa_parlamentar = if_else(tipo_autor == "deputado", "camara", "senado")) %>% 
+    select(id, casa = casa_parlamentar, proposicoes_meio_ambiente_indice)
+    
   
   # Requerimentos de informação sobre MMA e agricultura
   autores_req_info_mma_agricultura <- 
@@ -121,23 +126,24 @@ process_indice_ativismo_ambiental <- function() {
                        num_req_informacao > 1 ~ 0.5,
                        num_req_informacao == 1 ~ 0.25,
                        TRUE ~ 0)) %>% 
-    select(id,
-           requerimentos_informacao_agro_mma_indice)
+    select(id, casa, requerimentos_informacao_agro_mma_indice)
   
  
   # 5 frentes mais ambientalistas
-  membros_frentes_ambientalistas <- frentes_mais_progressistas()
+  membros_frentes_ambientalistas <- frentes_mais_progressistas() %>% 
+    mutate(casa = "camara")
   
   # Combo frentes agropecuária, mineração e livre mercado
-  membros_agro_mineracao_lm <- frentes_ruralistas()
+  membros_agro_mineracao_lm <- frentes_ruralistas() %>% 
+    mutate(casa = "camara")
   
   indice_ativismo_ambiental <- parlamentares %>%
-    left_join(membros_agro_mineracao_lm, by = "id") %>%
-    left_join(membros_frentes_ambientalistas, by = "id") %>%
-    left_join(discursos_rac, by = "id") %>%
-    left_join(aderencia, by = "id") %>%
-    left_join(autores_meio_ambiente, by = "id") %>%
-    left_join(autores_req_info_mma_agricultura, by = "id") %>%
+    left_join(membros_agro_mineracao_lm, by = c("id", "casa")) %>%
+    left_join(membros_frentes_ambientalistas, by = c("id", "casa")) %>%
+    left_join(discursos_rac, by = c("id", "casa")) %>%
+    left_join(aderencia, by = c("id", "casa")) %>%
+    left_join(autores_meio_ambiente, by = c("id", "casa")) %>%
+    left_join(autores_req_info_mma_agricultura, by = c("id", "casa")) %>%
     mutate_at(
       .funs = list(~ replace_na(., 0)),
       .vars = vars(
