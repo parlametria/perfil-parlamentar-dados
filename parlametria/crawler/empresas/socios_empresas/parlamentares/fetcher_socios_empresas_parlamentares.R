@@ -10,7 +10,7 @@ fetch_socios_empresas_agricolas_parlamentares <- function(
   source(here::here("parlametria/crawler/empresas/fetcher_empresas.R"))
   
   empresas_socios_agricolas <- 
-    fetch_empresas_agricolas(empresas_deputados)
+    fetch_empresas(empresas_deputados, TRUE)
   
   empresas_socios_agricolas <- empresas_socios_agricolas %>% 
     select(id_parlamentar = id, 

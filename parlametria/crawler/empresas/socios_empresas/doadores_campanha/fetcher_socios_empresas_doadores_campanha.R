@@ -1,18 +1,19 @@
-#' @title Processa dados dos sócios de empresas agrícolas que doaram em campanhas eleitorais
+#' @title Processa dados dos sócios de empresas que doaram em campanhas eleitorais
 #' @description A partir de um um dataframe contendo cnpj das empresas e os doadores de campanha, 
-#' recupera os que são sócios de empresas agrícolas.
+#' recupera os que são sócios de empresas.
 #' @param empresas_doadores Dataframe com as informações dos doadores que são sócios em empresas
-#' @return Dataframe com informações dos sócios de empresas agrícolas
-fetch_socios_empresas_agricolas_doadores <- function(
-  empresas_doadores = readr::read_csv(here::here("parlametria/raw_data/empresas/empresas_doadores.csv"))) {
+#' @param somente_empresas Flag para indicar a filtragem de empresas agrícolas ou todas as empresas.
+#' @return Dataframe com informações dos sócios de empresas
+fetch_socios_empresas_doadores <- function(
+  empresas_doadores = readr::read_csv(here::here("parlametria/raw_data/empresas/empresas_doadores.csv")),
+  somente_agricolas = FALSE) {
   library(tidyverse)
   
   source(here::here("parlametria/crawler/empresas/fetcher_empresas.R"))
   
-  empresas_socios_agricolas <- 
-    fetch_empresas_agricolas(empresas_doadores)
-  
-  empresas_socios_agricolas <- empresas_socios_agricolas %>% 
+  empresas_socios <- fetch_empresas(empresas_doadores, somente_agricolas)
+
+  empresas_socios <- empresas_socios %>% 
     select(id_parlamentar = id, 
            casa,
            cnpj, 
@@ -21,7 +22,7 @@ fetch_socios_empresas_agricolas_doadores <- function(
            percentual_capital_social, 
            data_entrada_sociedade)
   
-  return(empresas_socios_agricolas)
+  return(empresas_socios)
 }
 
 #' @title Processa dados das empresas agrícolas que doaram em campanhas eleitorais
@@ -36,7 +37,7 @@ fetch_empresas_rurais_doadores <- function(
   source(here::here("parlametria/crawler/empresas/fetcher_empresas.R"))
   
   empresas_socios_agricolas <- 
-    fetch_empresas_agricolas(empresas_doadores)
+    fetch_empresas(empresas_doadores, TRUE)
   
   return(empresas_socios_agricolas)
 }
