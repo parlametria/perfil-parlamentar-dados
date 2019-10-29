@@ -85,7 +85,8 @@ import_receita_tse_modelo_antigo <- function(datapath = here::here("parlametria/
 processa_doacoes_tse <- function(
   receitas_datapath = here::here("parlametria/raw_data/dados_tse/receitas_candidatos_2018_BRASIL.csv.zip"),
   candidatos_datapath = here::here("parlametria/raw_data/dados_tse/consulta_cand_2018_BRASIL.csv.zip"),
-  ano = 2018) {
+  ano = 2018,
+  summarized = TRUE) {
   
   library(tidyverse)
   library(here)
@@ -101,24 +102,26 @@ processa_doacoes_tse <- function(
   if (ano == 2018) {
     receitas <- read_delim(receitas_datapath, delim = ";", col_types = cols(SQ_CANDIDATO = "c", VR_RECEITA = "c"),
                            locale = locale(encoding = 'latin1')) %>% 
-      select(SQ_CANDIDATO, NR_CPF_CNPJ_DOADOR, NM_DOADOR, NM_DOADOR_RFB, DS_ORIGEM_RECEITA, VR_RECEITA)  
+      select(SQ_CANDIDATO, NR_CPF_CNPJ_DOADOR, NM_DOADOR, NM_DOADOR_RFB, DS_ORIGEM_RECEITA, VR_RECEITA) %>% 
+      mutate(VR_RECEITA = as.numeric(gsub(",", ".", VR_RECEITA)))
   } else {
     receitas <- import_receita_tse_modelo_antigo(receitas_datapath)
   }
   
-  receitas <- receitas %>% 
-    mutate(VR_RECEITA = as.numeric(gsub(",", ".", VR_RECEITA))) %>% 
-    group_by(SQ_CANDIDATO, NR_CPF_CNPJ_DOADOR) %>% 
-    summarise(
-      NM_DOADOR = first(NM_DOADOR),
-      NM_DOADOR_RFB = first(NM_DOADOR_RFB),
-      DS_ORIGEM_RECEITA = first(DS_ORIGEM_RECEITA),
-      VR_RECEITA = sum(VR_RECEITA)
-      )
+  if (summarized) {
+    receitas <- receitas %>% 
+      group_by(SQ_CANDIDATO, NR_CPF_CNPJ_DOADOR) %>% 
+      summarise(
+        NM_DOADOR = first(NM_DOADOR),
+        NM_DOADOR_RFB = first(NM_DOADOR_RFB),
+        DS_ORIGEM_RECEITA = first(DS_ORIGEM_RECEITA),
+        VR_RECEITA = sum(VR_RECEITA)
+        )
+  }
   
   candidatos_doacoes <- candidatos %>% 
     left_join(receitas, by = c("SQ_CANDIDATO")) %>% 
-    mutate(total_receita = if_else(is.na(VR_RECEITA), 0, VR_RECEITA))
+    mutate(VR_RECEITA = if_else(is.na(VR_RECEITA), 0, VR_RECEITA))
   
   return(candidatos_doacoes)
 }
@@ -148,7 +151,7 @@ filtra_doacoes_parlamentares_exercicio <- function(ano = 2018, casa_origem = "ca
   receitas_datapath <- here(receitas_datapath)
   candidatos_datapath <- here(candidatos_datapath)
   
-  doacoes <- processa_doacoes_tse(receitas_datapath, candidatos_datapath, ano = ano) %>% 
+  doacoes <- processa_doacoes_tse(receitas_datapath, candidatos_datapath, ano = ano, summarized = TRUE) %>% 
     select(cpf = NR_CPF_CANDIDATO, nome_candidato = NM_CANDIDATO, cpf_cnpj_doador = NR_CPF_CNPJ_DOADOR, nome_doador = NM_DOADOR_RFB, 
            origem_receita = DS_ORIGEM_RECEITA, valor_receita = VR_RECEITA)
   
