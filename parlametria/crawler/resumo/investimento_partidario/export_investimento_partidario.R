@@ -22,9 +22,9 @@ opt = parse_args(opt_parser)
 saida <- opt$out
 
 message("Iniciando processamento...")
-investimento <- process_investimento_partidario()
+investimento <- process_investimento_partidario(filtrar_em_exercicio = FALSE)
 
 message(paste0("Salvando o resultado de investimento em ", saida))
-readr::write_csv(investimento, saida)
+write.csv(investimento, saida, row.names = FALSE, quote = FALSE)
 
 message("Concluído!")
