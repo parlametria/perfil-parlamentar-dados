@@ -47,7 +47,7 @@ fetch_analise_discursos_rac <- function(
   res <- analise_pulso %>% 
     right_join(parlamentares, by = c("nome" = "nome_eleitoral")) %>% 
     select(id, casa, discurso) %>% 
-    mutate(discurso = if_else(is.na(discurso), 0, discurso)) %>% 
+    mutate(discurso = if_else(is.na(discurso), 0, as.numeric(discurso))) %>% 
     mutate(discurso_normalizado = if_else(discurso / 3 > 1, 1, discurso / 3)) %>%
     select(id, casa, discurso_normalizado)
   
