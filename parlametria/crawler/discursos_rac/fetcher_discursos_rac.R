@@ -37,20 +37,19 @@ fetch_analise_discursos_rac <- function(
     select(nome, partido = `1`, uf = `2`, parlamentar, discurso)
   
   analise_pulso <- analise_pulso %>% 
-    mutate(nome = gsub("[ ]*[^ ]*$", "", padroniza_nome(nome)))
+    mutate(nome = padroniza_nome(nome))
     
-  
   parlamentares <- read_csv(parlamentares_datapath) %>% 
-    filter(casa == "camara", em_exercicio == 1) %>% 
-    select(nome_eleitoral, id, cpf) %>% 
+    filter(em_exercicio == 1) %>% 
+    select(nome_eleitoral, id, casa) %>% 
     mutate(nome_eleitoral = padroniza_nome(nome_eleitoral))
   
   res <- analise_pulso %>% 
     right_join(parlamentares, by = c("nome" = "nome_eleitoral")) %>% 
-    select(id, discurso) %>% 
+    select(id, casa, discurso) %>% 
     mutate(discurso = if_else(is.na(discurso), 0, discurso)) %>% 
-    mutate(discurso_normalizado = if_else(discurso / 3 > 1, 1, discurso / 3)) %>% 
-    select(-discurso)
+    mutate(discurso_normalizado = if_else(discurso / 3 > 1, 1, discurso / 3)) %>%
+    select(id, casa, discurso_normalizado)
   
   return(res)
 }

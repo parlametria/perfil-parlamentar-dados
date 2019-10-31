@@ -53,7 +53,7 @@ filtra_propriedades_rurais_parlamentares <- function(
   parlamentares_bens_rurais_alt <- parlamentares_bens_rurais %>% 
     filter(!is.na(n_propriedades)) %>% 
     mutate(total = round(total, 2)) %>% 
-    select(cpf, id_casa = id, casa, nome_eleitoral, uf, sg_partido, n_propriedades, total_declarado = total, 
+    select(cpf, id_parlamentar = id, casa, nome_eleitoral, uf, sg_partido, n_propriedades, total_declarado = total, 
            descricao, link)
   
   return(parlamentares_bens_rurais_alt)
