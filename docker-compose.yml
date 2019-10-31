@@ -15,7 +15,8 @@ services:
       - APP_SECRET=${APP_SECRET:-ops}      
     volumes:
       - ./bd:/app/bd
-      - ./crawler:/app/crawler      
+      - ./crawler:/app/crawler
+      - ./parlametria:/app/parlametria
     networks:
       - voz-network
 

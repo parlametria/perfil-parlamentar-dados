@@ -47,3 +47,19 @@ fetch_proposicoes_questionario <- function(url = NULL) {
   
   return(proposicoes_va)
 }
+
+#' @title Recupera e processa dados das proposições de uma url de arquivo da câmara
+#' @description A partir da url para o arquivo csv, processa as proposições
+#' @param url_arquivo_csv URL para o arquivo csv
+#' @return Dataframe com o as proposições provenientes da url
+fetch_proposicoes_por_link_arquivo <- function(
+  url_arquivo_csv = "https://dadosabertos.camara.leg.br/arquivos/proposicoes/csv/proposicoes-2019.csv") {
+  
+  library(tidyverse)
+  
+  proposicoes <- read_delim(url_arquivo_csv, delim = ";") %>% 
+    select(id, sigla = siglaTipo, numero, ano)
+  
+  return(proposicoes)
+}
+  

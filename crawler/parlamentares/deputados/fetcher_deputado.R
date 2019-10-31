@@ -42,12 +42,15 @@ fetch_deputado <- function(id_deputado) {
              condicao_eleitoral = dados.ultimoStatus.condicaoEleitoral,
              genero = dados.sexo,
              escolaridade = dados.escolaridade,
-             email = dados.ultimoStatus.gabinete.email)
+             email = dados.ultimoStatus.gabinete.email,
+             data_nascimento = dados.dataNascimento) ## yyyy-mm-dd
     
+    return(data)
   }, error = function(e) {
+    print(e)
     data <- tribble(~ id, ~ cpf, ~ nome_civil, ~ nome_eleitoral, ~ uf, ~ num_partido,
                     ~ sg_partido, ~ partido, ~ situacao, ~ condicao_eleitoral, ~ genero,
-                    ~ grau_instrucao, ~ email)
+                    ~ grau_instrucao, ~ email, ~ data_nascimento)
     return(data)
   })
   

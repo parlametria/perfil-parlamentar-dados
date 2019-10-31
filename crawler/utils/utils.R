@@ -9,7 +9,8 @@ padroniza_nome <- function(nome) {
   
   return(nome %>% 
            iconv(to="ASCII//TRANSLIT") %>% 
-           toupper())
+           toupper() %>% 
+           trimws(which = c("both")))
 }
 
 #' @title Padroniza texto, retirando links, menções, pontuações, retirando acentos, números,
@@ -32,4 +33,31 @@ padroniza_texto <- function(texto) {
   
   
   return(texto)
+} 
+
+#' @title Recebe uma URL para um pdf e retorna o texto raspado do conteúdo
+#' @description Recebe uma URL para um pdf e retorna o texto raspado do seu conteúdo
+#' @param url URL contendo o pdf
+#' @return Texto do conteúdo do pdf
+#' @examples
+#' extract_text_from_pdf_url("https://www.camara.leg.br/proposicoesWeb/prop_mostrarintegra?codteor=1709372")
+extract_text_from_pdf_url <- function(url) {
+  library(pdftools)
+  
+  print(paste0("Baixando o conteúdo do texto do pdf da url ", url))
+  
+  content <- tryCatch({
+    content <- pdf_text(url)
+    
+    if(length(content) > 1) {
+      content <- paste(content, collapse = '')
+    }
+    
+    content <- gsub('\n', '', content)
+  }, error = function(e) {
+    print(e)
+    return('')
+  })
+    
+  return(content)
 } 
