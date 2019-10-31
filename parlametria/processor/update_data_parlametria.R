@@ -67,7 +67,50 @@ tryCatch(
   }
 )
 
-## TODO: inserir exports para o módulo de empresas
+tryCatch(
+  {
+    log <- paste0(log, date(), " - Executando crawler de parlamentares sócios de empresas agrícolas...\n")
+    source(here::here("parlametria/crawler/empresas/socios_empresas/parlamentares/export_socios_empresas_agricolas_parlamentares.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de parlamentares sócios de empresas agrícolas")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
+tryCatch(
+  {
+    log <- paste0(log, date(), " - Executando crawler de doadores sócios de empresas agrícolas...\n")
+    source(here::here("parlametria/crawler/empresas/socios_empresas/doadoes_campanha/export_socios_empresas_agricolas_doadores_campanha.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de doadores sócios de empresas agrícolas")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
+tryCatch(
+  {
+    log <- paste0(log, date(), " - Executando crawler de doadores para parlamentares...\n")
+    source(here::here("parlametria/crawler/empresas/socios_empresas/doadoes_campanha/export_socios_empresas_doadores_campanha.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de doadores para parlamentares")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
 
 tryCatch(
   {
