@@ -32,10 +32,10 @@ id_parlamentar_voz,id_partido,casa,cargo
 1204428,36844,camara,Vice-líder
 1160604,36844,camara,Vice-líder
 1204503,36844,camara,Vice-líder
-1160535,36844,camara,Vice-líder
 1204495,36844,camara,Vice-líder
-1178873,36844,camara,Vice-líder
 1204480,36844,camara,Vice-líder
+1160535,36844,camara,Vice-líder
+1178873,36844,camara,Vice-líder
 192346,36837,camara,Líder
 1204411,36837,camara,Vice-líder
 1204507,36837,camara,Vice-líder
@@ -69,9 +69,9 @@ id_parlamentar_voz,id_partido,casa,cargo
 1204447,36834,camara,Vice-líder
 1204522,36834,camara,Vice-líder
 1141450,36834,camara,Vice-líder
-1204392,36834,camara,Vice-líder
 1204573,36834,camara,Vice-líder
 1178910,36834,camara,Vice-líder
+1204392,36834,camara,Vice-líder
 1178922,36832,camara,Líder
 1204389,36832,camara,Vice-líder
 1204352,36832,camara,Vice-líder
@@ -178,7 +178,7 @@ id_parlamentar_voz,id_partido,casa,cargo
 1178927,3,camara,Vice-líder
 1141439,3,camara,Vice-líder
 1160528,3,camara,Vice-líder
-1152605,3,camara,Vice-líder
+1204464,3,camara,Vice-líder
 174848,2,camara,Líder
 1157130,2,camara,Vice-líder
 1141470,2,camara,Vice-líder
