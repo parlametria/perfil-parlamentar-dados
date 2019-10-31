@@ -176,7 +176,6 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 2003,camara,204418,Titular,Titular
 2003,camara,160645,Suplente,Suplente
 2003,camara,204543,Titular,Titular
-2003,camara,204526,Suplente,Suplente
 2003,camara,146788,Titular,Titular
 2003,camara,76874,Suplente,Suplente
 2003,camara,204556,Titular,Titular
@@ -485,7 +484,6 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 2009,camara,204507,Suplente,Suplente
 2009,camara,204460,Suplente,Suplente
 2009,camara,204369,Suplente,Suplente
-2009,camara,204462,Titular,Titular
 2009,camara,204459,Suplente,Suplente
 2009,camara,160528,Suplente,Suplente
 2009,camara,160552,Suplente,Suplente
@@ -626,7 +624,6 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 2011,camara,74044,Suplente,Suplente
 2010,camara,74646,Suplente,Suplente
 2010,camara,160508,Titular,Titular
-2010,camara,204545,Titular,Titular
 2010,camara,204516,Suplente,Suplente
 2010,camara,178927,Suplente,Suplente
 2010,camara,178937,Suplente,Suplente
@@ -769,6 +766,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 2017,camara,204556,Titular,Titular
 2017,camara,204475,Suplente,Suplente
 2017,camara,204492,Titular,Titular
+2017,camara,178951,Titular,Titular
 2017,camara,204416,Suplente,Suplente
 2017,camara,204557,Terceiro Vice-presidente,Titular
 2017,camara,74356,Titular,Titular
@@ -781,6 +779,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 5438,camara,204454,Titular,Titular
 5438,camara,134812,Suplente,Suplente
 5438,camara,160575,Primeiro Vice-presidente,Titular
+5438,camara,204411,Suplente,Suplente
 5438,camara,152605,Titular,Titular
 5438,camara,74156,Presidente,Titular
 5438,camara,74784,Titular,Titular
@@ -809,6 +808,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 6174,camara,204434,Titular,Titular
 6174,camara,198783,Suplente,Suplente
 6174,camara,204407,Suplente,Suplente
+6174,camara,204411,Titular,Titular
 6174,camara,204494,Titular,Titular
 6174,camara,204393,Suplente,Suplente
 6174,camara,160673,Suplente,Suplente
@@ -1263,6 +1263,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 2015,camara,160575,Titular,Titular
 2015,camara,178871,Suplente,Suplente
 2015,camara,178969,Titular,Titular
+2015,camara,204411,Suplente,Suplente
 2015,camara,160598,Primeiro Vice-presidente,Titular
 2015,camara,204531,Titular,Titular
 2015,camara,204548,Titular,Titular
