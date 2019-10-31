@@ -127,7 +127,7 @@ process_indice_influencia_parlamentar <- function() {
               ) %>% 
     
     mutate(indice_influencia_parlamentar = 
-             (indice_liderancas + indice_comissoes + indice_cargo_mesa + (numero_de_mandatos / 6)) / 4)
+             (investimento_partidario + indice_liderancas + indice_comissoes + indice_cargo_mesa + (numero_de_mandatos / 6)) / 5)
 
   return(parlamentares_processed)
 }
