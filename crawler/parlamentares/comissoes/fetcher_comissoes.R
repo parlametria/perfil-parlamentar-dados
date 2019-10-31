@@ -58,11 +58,11 @@ fetch_comissoes_composicao_senado <- function() {
 #' fetch_comissao_info_camara("CCJC")
 fetch_comissao_info_camara <- function(sigla_comissao) {
   library(tidyverse)
-  library(rcongresso)
+  library(agoradigital)
   
-  comissao_info <- rcongresso::fetch_orgao_camara(sigla_comissao) %>% 
+  comissao_info <- agoradigital::fetch_orgaos_camara() %>% 
     dplyr::filter(sigla == sigla_comissao) %>% 
-    dplyr::select(comissao_id = id, nome_comissao = nome)
+    dplyr::select(comissao_id = orgao_id, nome_comissao = descricao)
   
   return(comissao_info)
 }
