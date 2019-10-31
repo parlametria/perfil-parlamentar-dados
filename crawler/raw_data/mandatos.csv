@@ -1730,7 +1730,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204472,camara,56,2019-02-01,NA,Titular,NA,NA
 204391,camara,56,2019-02-01,NA,Titular,NA,NA
 204555,camara,56,2019-02-01,NA,Titular,NA,NA
-209189,camara,56,2019-03-13,NA,Suplente,NA,NA
+209189,camara,56,2019-03-13,2019-10-22,Suplente,53,Afastamento
 204563,camara,56,2019-02-01,NA,Titular,NA,NA
 204474,camara,56,2019-02-01,NA,Titular,NA,NA
 204420,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1838,7 +1838,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 73801,camara,53,2007-02-01,2008-12-31,Titular,16,Renúncia
 73801,camara,56,2019-02-01,NA,Titular,NA,NA
 204362,camara,56,2019-02-01,NA,Titular,NA,NA
-211649,camara,56,2019-08-07,NA,Suplente,NA,NA
+211649,camara,56,2019-08-07,2019-10-24,Suplente,53,Afastamento
 204489,camara,56,2019-02-01,NA,Titular,NA,NA
 74305,camara,52,2003-02-01,2003-02-13,Titular,7,Licença para Tratamento de Saúde
 74305,camara,56,2019-02-01,NA,Titular,NA,NA
@@ -1852,7 +1852,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 160635,camara,56,2019-02-01,NA,Titular,NA,NA
 204535,camara,56,2019-02-01,NA,Titular,NA,NA
 204416,camara,56,2019-02-01,NA,Titular,NA,NA
-90842,camara,56,2019-02-12,NA,Suplente,NA,NA
+90842,camara,56,2019-02-12,2019-10-21,Suplente,53,Afastamento
 204387,camara,56,2019-02-01,NA,Titular,NA,NA
 204399,camara,56,2019-02-01,NA,Titular,NA,NA
 204438,camara,56,2019-02-01,NA,Titular,NA,NA
