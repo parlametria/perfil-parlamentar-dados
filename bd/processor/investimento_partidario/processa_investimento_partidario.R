@@ -1,7 +1,7 @@
-#' @title Processa dados de investimento partidário
-#' @description Processa os dados de investimento partidário e retorna no formato  a ser utilizado pelo banco de dados
-#' @param investimento_partidario_path Caminho para o arquivo de dados de investimento partidário sem tratamento
-#' @return Dataframe com informações de investimento partidário
+#' @title Processa dados de investimento partidário nos parlamentares
+#' @description Processa os dados de investimento partidário nos parlamentares e retorna no formato  a ser utilizado pelo banco de dados
+#' @param investimento_partidario_path Caminho para o arquivo de dados de investimento partidário nos parlamentares sem tratamento
+#' @return Dataframe com informações de investimento partidário nos parlamentares (deputados e senadores)
 processa_investimento_partidario <- function(
   investimento_partidario_path = here::here("parlametria/raw_data/resumo/parlamentares_investimento.csv")) {
   library(tidyverse)

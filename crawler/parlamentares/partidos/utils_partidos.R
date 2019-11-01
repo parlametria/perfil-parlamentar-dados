@@ -62,7 +62,7 @@ map_sigla_id <- function(sigla_partido) {
   id_partido <- partidos %>% 
     filter(tolower(sigla) == tolower(if_else(tolower(sigla_padronizada) == "podemos", 
                                              "PODE", 
-                                             sigla_partido))) %>%
+                                             sigla_padronizada))) %>%
     pull(id)
   
   if (length(id_partido) == 0) {
