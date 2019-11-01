@@ -15,7 +15,7 @@ DO
 
 DELETE FROM investimento_partidario
 WHERE (id_partido, uf, esfera) NOT IN
-  (SELECT id_parlamentar_voz, uf, esfera
+  (SELECT id_partido, uf, esfera
    FROM temp_investimento_partidario); 
 
 DROP TABLE temp_investimento_partidario;
