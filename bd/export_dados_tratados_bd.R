@@ -70,11 +70,11 @@ aderencia <- processa_aderencia()
 source(here("bd/processor/partidos/processa_partidos.R"))
 partidos <- processa_partidos()
 
+source(here("bd/processor/investimento_partidario/processa_investimento_partidario_parlamentar.R"))
+investimento_partidario_parlamentar = processa_investimento_partidario_parlamentar()
+
 source(here("bd/processor/investimento_partidario/processa_investimento_partidario.R"))
 investimento_partidario = processa_investimento_partidario()
-
-source(here("bd/processor/investimento_partidario/processa_doacoes_partido.R"))
-doacoes_partido = processa_doacoes_partido()
 
 message("Escrevendo dados em csv...")	
 write_csv(parlamentares, paste0(output, "parlamentares.csv"))
@@ -92,6 +92,6 @@ write_csv(mandatos, paste0(output, "mandatos.csv"))
 write_csv(liderancas, paste0(output, "liderancas.csv"))
 write_csv(aderencia, paste0(output, "aderencia.csv"))
 write_csv(partidos, paste0(output, "partidos.csv"))
+write_csv(investimento_partidario_parlamentar, paste0(output, "investimento_partidario_parlamentar.csv"))
 write_csv(investimento_partidario, paste0(output, "investimento_partidario.csv"))
-write_csv(doacoes_partido, paste0(output, "doacoes_partido.csv"))
 message("Concluído")
