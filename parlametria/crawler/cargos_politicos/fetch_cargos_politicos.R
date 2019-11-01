@@ -58,7 +58,7 @@ fetch_all_cargos_politicos <- function(parlamentares_datapath = here::here("craw
   library(tidyverse)
   library(purrr)
   library(here)
-  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_agricolas_parlamentares.R"))
+  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_parlamentares.R"))
   
   cargos_nacionais <- list(cargos = c("Presidente", "Governador", "Senador", "Deputado Federal", "Deputado Estadual"),
                            elected = c(TRUE, TRUE, FALSE, FALSE, TRUE))

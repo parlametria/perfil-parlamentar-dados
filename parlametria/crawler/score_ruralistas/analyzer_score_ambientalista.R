@@ -125,7 +125,7 @@ calcula_score_doacoes_empresas_agroexportadoras <- function(
 ) {
   library(tidyverse)
   library(here)
-  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_agricolas_parlamentares.R"))
+  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_parlamentares.R"))
 
   doadores <- read_csv(doadores_gerais_2018_datapath, col_types = cols(id = "c"))
   
@@ -221,7 +221,7 @@ processa_indice_vinculo_economico <- function(
   
   library(tidyverse)
   library(here)
-  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_agricolas_parlamentares.R"))
+  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_parlamentares.R"))
   options(scipen = 999)
   
   propriedades_rurais <- calcula_score_propriedades_rurais()
