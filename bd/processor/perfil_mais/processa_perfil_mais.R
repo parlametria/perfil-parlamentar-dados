@@ -15,7 +15,7 @@ processa_perfil_mais <-
       casa_enum = dplyr::if_else(casa == "camara", 1, 2),
       id_parlamentar_voz = paste0(casa_enum, as.character(id))
     ) %>% 
-    select(id_parlamentar_voz, indice_vinculo_economico_agro, indice_vinculo_economico_agro, 
+    select(id_parlamentar_voz, indice_vinculo_economico_agro,
            indice_ativismo_ambiental, peso_politico = indice_influencia_parlamentar)
 
   return(perfil_mais_alt)

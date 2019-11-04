@@ -1,4 +1,4 @@
--- MANDATOS
+-- ORIENTACOES
 BEGIN;
 CREATE TEMP TABLE temp_orientacoes AS SELECT * FROM orientacoes LIMIT 0;
 
