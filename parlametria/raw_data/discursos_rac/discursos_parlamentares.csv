@@ -17,7 +17,6 @@ id,casa,discurso_normalizado
 74471,camara,0
 133439,camara,0
 178882,camara,0
-74212,camara,0
 160553,camara,0
 73433,camara,0
 141391,camara,0
@@ -33,7 +32,6 @@ id,casa,discurso_normalizado
 73701,camara,0
 141335,camara,0
 178948,camara,0
-141513,camara,0
 160538,camara,0
 74052,camara,-0.3333333333333333
 160589,camara,0.3333333333333333
@@ -105,7 +103,6 @@ id,casa,discurso_normalizado
 178996,camara,0
 152605,camara,0
 74419,camara,0
-160667,camara,0
 178964,camara,0
 178873,camara,0
 178909,camara,0
@@ -165,9 +162,10 @@ id,casa,discurso_normalizado
 178858,camara,0
 178843,camara,-0.6666666666666666
 74749,camara,0
+188097,camara,0
+178984,camara,0
 178985,camara,0
 178895,camara,0
-178997,camara,0
 74571,camara,0
 178896,camara,0
 74352,camara,0
@@ -177,14 +175,12 @@ id,casa,discurso_normalizado
 74159,camara,0
 178987,camara,0
 160556,camara,0
-74319,camara,0
 160642,camara,0
 74160,camara,0
 171617,camara,0
 141516,camara,0
 178860,camara,0
 160558,camara,0
-74574,camara,0
 193726,camara,0
 141518,camara,0
 74400,camara,0
@@ -209,11 +205,13 @@ id,casa,discurso_normalizado
 74693,camara,0
 160651,camara,0
 178861,camara,0
+122466,camara,0
 178945,camara,0
 73466,camara,0
 74371,camara,0
 178990,camara,0
 178921,camara,0
+73808,camara,0
 178933,camara,0
 178874,camara,0
 178961,camara,0
@@ -223,7 +221,6 @@ id,casa,discurso_normalizado
 92776,camara,0
 177282,camara,0
 178922,camara,0
-178901,camara,0
 160976,camara,0
 178934,camara,0
 178863,camara,0
@@ -270,12 +267,12 @@ id,casa,discurso_normalizado
 204509,camara,0
 109429,camara,-0.3333333333333333
 204358,camara,-0.3333333333333333
+207176,camara,0
 204374,camara,0
 204388,camara,0
 204561,camara,0
 204397,camara,0
 204551,camara,0
-204520,camara,0
 204352,camara,0
 204572,camara,0
 204487,camara,0
@@ -331,6 +328,7 @@ id,casa,discurso_normalizado
 207309,camara,0
 204537,camara,-0.3333333333333333
 204482,camara,0
+211866,camara,0
 68720,camara,0
 204368,camara,0
 204477,camara,0
@@ -353,6 +351,7 @@ id,casa,discurso_normalizado
 204394,camara,0
 204575,camara,0
 204491,camara,0
+204570,camara,0
 204365,camara,0
 204419,camara,0
 107283,camara,0
@@ -390,6 +389,7 @@ id,casa,discurso_normalizado
 204420,camara,0
 204372,camara,0
 204457,camara,0
+204520,camara,0
 204502,camara,0
 204497,camara,0
 204574,camara,0
@@ -415,7 +415,7 @@ id,casa,discurso_normalizado
 204455,camara,0
 204526,camara,0
 204418,camara,0
-179587,camara,0
+204458,camara,0
 204469,camara,0
 204471,camara,0
 156190,camara,0
@@ -437,6 +437,7 @@ id,casa,discurso_normalizado
 204403,camara,0
 204566,camara,0
 75431,camara,0
+204486,camara,0
 141508,camara,0
 154178,camara,-0.3333333333333333
 204453,camara,0
@@ -450,7 +451,6 @@ id,casa,discurso_normalizado
 204475,camara,0
 204441,camara,0
 204573,camara,0
-204570,camara,0
 204553,camara,0
 204377,camara,0.3333333333333333
 204538,camara,0
@@ -474,7 +474,6 @@ id,casa,discurso_normalizado
 205865,camara,0
 73801,camara,0
 204362,camara,0
-211649,camara,0
 204489,camara,0
 74305,camara,0
 204530,camara,0
@@ -508,6 +507,7 @@ id,casa,discurso_normalizado
 204483,camara,0
 204478,camara,0.3333333333333333
 204532,camara,0
+179587,camara,0
 74044,camara,0
 204463,camara,0
 204559,camara,0
@@ -528,6 +528,7 @@ id,casa,discurso_normalizado
 5537,senado,0
 4994,senado,0
 5976,senado,0
+3777,senado,0
 5718,senado,0
 5531,senado,0
 22,senado,0
@@ -581,7 +582,6 @@ id,casa,discurso_normalizado
 5322,senado,0
 2331,senado,0
 5527,senado,0
-6005,senado,0
 5988,senado,0
 5959,senado,0
 4560,senado,0
