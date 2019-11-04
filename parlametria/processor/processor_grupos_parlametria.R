@@ -19,13 +19,12 @@ process_indices_parlametria <- function() {
   
   indice_influencia_parlamentar <- process_indice_influencia_parlamentar()
   
-  info_basicas_parlamentares <- get_info_parlamentares_em_exercicio() %>% 
-    filter(casa == "camara")
+  info_basicas_parlamentares <- get_info_parlamentares_em_exercicio()
 
   parlamentares <- info_basicas_parlamentares %>% 
-    left_join(indice_vinculo_economico, by = "id") %>% 
-    left_join(indice_ativismo_ambiental, by = "id") %>% 
-    left_join(indice_influencia_parlamentar, by = "id")
+    left_join(indice_vinculo_economico, by = c("id", "casa")) %>% 
+    left_join(indice_ativismo_ambiental, by = c("id", "casa")) %>% 
+    left_join(indice_influencia_parlamentar, by = c("id", "casa"))
   
   return(parlamentares)
 }
