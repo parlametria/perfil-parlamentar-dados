@@ -11,10 +11,10 @@ process_socios_empresas_agricolas <- function(ano_eleicao = 2018, tipo = "parlam
   socios_empresas_agricolas <- tribble()
   
   if(tolower(tipo) == "parlamentares") {
-    source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_agricolas_parlamentares.R"))
+    source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_parlamentares.R"))
     socios_empresas_agricolas <- process_socios_empresas_agricolas_parlamentares()
   } else {
-    source(here("parlametria/crawler/empresas/socios_empresas/doadores_campanha/analyzer_socios_empresas_agricolas_doadores_campanha.R"))
+    source(here("parlametria/crawler/empresas/socios_empresas/doadores_campanha/analyzer_socios_empresas_doadores_campanha.R"))
     socios_empresas_agricolas <- process_socios_empresas_agricolas_doadores(ano_eleicao)
   }
   

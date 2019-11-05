@@ -65,16 +65,18 @@ filter_empresas_agricolas_doadoras <- function(
 
 #' @title Processa os dados das empresas e sócios que são parlamentares por casa de origem
 #' @description A partir do dataframe de parlamentares, da casa de origem e do arquivo com todos os sócios existentes nos cnpjs cadastrados
-#' na Receita Federal, retorna um dataframe com as informações das empresas agrícolas dos sócios.
+#' na Receita Federal, retorna um dataframe com as informações das empresas dos sócios.
 #' @param ano Ano da eleição de interesse
 #' @param parlamentares_folderpath Caminho para o dataframe dos parlamentares
 #' @param socios_folderpath Caminho para o dataframe dos sócios cadastrados na Receita Federal
 #' @param casa Casa de origem do parlamentar
+#' @param somente_agricolas Flag para indicar se deve filtrar as empresas agrícolas ou não
 #' @return Dataframe com mais dados sobre os sócios, as empresas, e os parlamentares
-process_socios_empresas_agricolas_parlamentares_casa <- function(
+process_socios_empresas_parlamentares_casa <- function(
   parlamentares_folderpath = here::here("crawler/raw_data/parlamentares.csv"),
   socios_folderpath = here::here("parlametria/raw_data/empresas/socio.csv.gz"),
-  casa_origem = "camara") {
+  casa_origem = "camara",
+  somente_agricolas = F) {
   library(tidyverse)
   library(here)
   
@@ -85,7 +87,8 @@ process_socios_empresas_agricolas_parlamentares_casa <- function(
                                          casa_origem)
   
   socios_empresas_agricolas <- 
-    fetch_socios_empresas_agricolas_parlamentares(socios_empresas_parlamentares) %>% 
+    fetch_socios_empresas_parlamentares(socios_empresas_parlamentares,
+                                                  somente_agricolas) %>% 
     mutate(casa = casa_origem)
   
   return(list(socios_empresas_agricolas))
@@ -137,26 +140,31 @@ process_cpf_parlamentares_senado <- function(
 
 #' @title Processa os dados das empresas e sócios que são parlamentares
 #' @description A partir do dataframe de parlamentares e do arquivo com todos os sócios existentes nos cnpjs cadastrados
-#' na Receita Federal, retorna um dataframe com as informações das empresas agrícolas dos sócios.
+#' na Receita Federal, retorna um dataframe com as informações das empresas dos sócios.
 #' @param ano Ano da eleição de interesse
 #' @param parlamentares_folderpath Caminho para o dataframe dos parlamentares
 #' @param socios_folderpath Caminho para o dataframe dos sócios cadastrados na Receita Federal
+#' @param somente_agricolas Flag para indicar se deve filtrar as empresas agrícolas ou não
 #' @return Dataframe com mais dados sobre os sócios, as empresas, e os parlamentares
-process_socios_empresas_agricolas_parlamentares <- function(
+process_socios_empresas_parlamentares <- function(
   socios_folderpath = here::here("parlametria/raw_data/empresas/socio.csv.gz"),
-  parlamentares_folderpath = here::here("crawler/raw_data/parlamentares.csv")) {
+  parlamentares_folderpath = here::here("crawler/raw_data/parlamentares.csv"),
+  somente_agricolas = FALSE
+  ) {
   
   library(tidyverse)
   
   socios_deputados <- 
-    process_socios_empresas_agricolas_parlamentares_casa(parlamentares_folderpath, 
+    process_socios_empresas_parlamentares_casa(parlamentares_folderpath, 
                                                          socios_folderpath, 
-                                                         "camara")
+                                                         "camara",
+                                                         somente_agricolas)
   
   socios_senadores <- 
-    process_socios_empresas_agricolas_parlamentares_casa(parlamentares_folderpath,
+    process_socios_empresas_parlamentares_casa(parlamentares_folderpath,
                                                          socios_folderpath, 
-                                                         "senado")
+                                                         "senado",
+                                                         somente_agricolas)
   
   socios_parlamentares <-
     socios_deputados[[1]] %>% rbind(socios_senadores[[1]]) %>% 

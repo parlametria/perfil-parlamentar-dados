@@ -145,7 +145,7 @@ tryCatch(
 tryCatch(
   {
     log <- paste0(log, date(), " - Executando crawler de Receitas dos parlamentares nas eleições de 2018...\n")
-    source(here::here("parlametria/crawler/receitas/export_receitas_tse.R"))
+    source(here::here("parlametria/crawler/receitas/export_doacoes_campanha.R"))
   },
   error=function(cond) {
     log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Receitas dos parlamentares nas eleições de 2018")
