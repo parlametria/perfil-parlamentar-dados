@@ -15,7 +15,7 @@ fetch_dados_empresa_por_cnpj <- function(cnpj) {
   
   #' Para levantar a api, clonar repositório e seguir os passos do README.md: 
   #' https://github.com/cuducos/minha-receita
-  url_api <- "http://localhost:8000/"
+  url_api <- "http://172.17.0.1:8000/"
   
   json <- POST(url_api, body = data, encode = "form", verbose()) %>% 
     content(as = "parsed") 
@@ -49,8 +49,8 @@ fetch_dados_empresa_por_cnpj <- function(cnpj) {
     cnaes_secundarios <- json$cnaes_secundarios %>% 
       map(function(x) {
         cnae_sec <- tibble(cnae_tipo = "cnae_secundario",
-                           cnae_codigo = x$codigo,
-                           cnae_descricao = x$descricao)
+                           cnae_codigo = x$cnae_codigo,
+                           cnae_descricao = x$cnae_descricao)
         return(cnae_sec)
       }) %>% 
       reduce(rbind) %>% 
