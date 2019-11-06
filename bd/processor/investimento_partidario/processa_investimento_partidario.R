@@ -1,36 +1,43 @@
-#' @title Processa dados de investimento partidário
-#' @description Processa os dados de investimento partidário e retorna no formato  a ser utilizado pelo banco de dados
-#' @param investimento_partidario_path Caminho para o arquivo de dados de investimento partidário sem tratamento
-#' @return Dataframe com informações de investimento partidário
+#' @title Processa dados de investimento realizados por Partidos durante as eleições de 2018
+#' @description A partir dos dados do TSE recupera o somatório de todo o investimento realizado pelos partidos em 
+#' candidatos aos cargos de deputado federal e senador.
+#' @param doacoes_path caminho para o arquivo de todas as doações ocorridas nas eleições de 2018 
+#' para deputado federal e senador.
+#' @return Dataframe com informações de doações partidárias para cargos no congresso nacional.
 processa_investimento_partidario <- function(
-  investimento_partidario_path = here::here("parlametria/raw_data/resumo/parlamentares_investimento.csv")) {
+  doacoes_path = here::here("parlametria/raw_data/receitas/candidatos_congresso_doadores_2018.csv")) {
   library(tidyverse)
+  library(here)
   
   source(here("crawler/parlamentares/partidos/utils_partidos.R"))
   
-  investimento <- read_csv(investimento_partidario_path) %>% 
-    mutate(
-      casa_enum = dplyr::if_else(casa == "camara", 1, 2),
-      id_parlamentar_voz = paste0(casa_enum, as.character(id))
-    )
+  ## Filtra apenas doações de partidos
+  doacoes_partidos <- read_csv(doacoes_path, col_types = cols(NR_CPF_CANDIDATO = "c")) %>% 
+    filter(str_detect(DS_ORIGEM_RECEITA, "Recursos de partido político"))
   
-  investimento_partidos <- investimento %>% 
-    select(partido = sg_partido) %>% 
-    rbind(investimento %>% select(partido = partido_eleicao)) %>% 
-    distinct(partido) %>% 
-    group_by(partido) %>% 
-    summarise(n = n()) %>% 
+  ## Agrupa por partido e UF para obter total doado
+  doacoes_partidos_deputados <- doacoes_partidos %>% 
+    filter(DS_CARGO == "Deputado Federal") %>% 
+    group_by(SG_PARTIDO, SG_UE) %>% 
+    summarise(TOTAL = sum(VR_RECEITA)) %>% 
+    ungroup() %>% 
+    mutate(esfera = "camara") %>% 
+    select(sg_partido = SG_PARTIDO, uf = SG_UE, esfera, valor = TOTAL)
+    
+  doacoes_partidos_deputados_senadores <- doacoes_partidos %>% 
+    filter(DS_CARGO %in% c("Deputado Federal", "Senador")) %>% 
+    group_by(SG_PARTIDO, SG_UE) %>% 
+    summarise(TOTAL = sum(VR_RECEITA)) %>% 
+    ungroup() %>% 
+    mutate(esfera = "senado") %>% 
+    select(sg_partido = SG_PARTIDO, uf = SG_UE, esfera, valor = TOTAL)
+  
+  doacoes_partidos_alt <- doacoes_partidos_deputados %>% 
+    rbind(doacoes_partidos_deputados_senadores) %>% 
     rowwise() %>% 
-    mutate(id_partido = map_sigla_id(partido)) %>% 
-    ungroup()
+    mutate(id_partido = map_sigla_id(sg_partido)) %>% 
+    ungroup() %>% 
+    select(id_partido, uf, esfera, valor)
   
-  investimento_alt <- investimento %>% 
-    select(id_parlamentar_voz, partido_atual = sg_partido, partido_eleicao, total_receita_partido, total_receita_candidato, indice_investimento_partido = proporcao_campanhas_medias_receita) %>% 
-    left_join(investimento_partidos %>% select(id_partido_atual = id_partido, partido), by = c("partido_atual" = "partido")) %>% 
-    left_join(investimento_partidos %>% select(id_partido_eleicao = id_partido, partido), by = c("partido_eleicao" = "partido")) %>% 
-    distinct(id_parlamentar_voz, .keep_all = TRUE) %>% 
-    select(id_parlamentar_voz, id_partido_atual, id_partido_eleicao, total_receita_partido, total_receita_candidato,
-           indice_investimento_partido)
-  
-  return(investimento_alt)
+  return(doacoes_partidos_alt)
 }
