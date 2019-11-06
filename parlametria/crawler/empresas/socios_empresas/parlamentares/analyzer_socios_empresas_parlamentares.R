@@ -81,17 +81,25 @@ process_socios_empresas_parlamentares_casa <- function(
   library(here)
   
   source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/fetcher_socios_empresas_parlamentares.R"))
+  source(here::here("parlametria/crawler/empresas/fetcher_empresas.R"))
   
   socios_empresas_parlamentares <- 
     filter_socios_empresas_parlamentares_casa(socios_folderpath, parlamentares_folderpath,
                                          casa_origem)
   
-  socios_empresas_agricolas <- 
+  socios_empresas <- 
     fetch_socios_empresas_parlamentares(socios_empresas_parlamentares,
                                                   somente_agricolas) %>% 
     mutate(casa = casa_origem)
   
-  return(list(socios_empresas_agricolas))
+  cnpjs <- socios_empresas %>% distinct(cnpj) 
+  
+  empresas_info <- purrr::map_df(cnpjs$cnpj, ~ fetch_dados_empresa_por_cnpj(.x))
+  
+  empresas_info <- empresas_info %>% 
+    distinct()
+  
+  return(list(socios_empresas, empresas_info))
   
 }
 
@@ -167,9 +175,10 @@ process_socios_empresas_parlamentares <- function(
                                                          somente_agricolas)
   
   socios_parlamentares <-
-    socios_deputados[[1]] %>% rbind(socios_senadores[[1]]) %>% 
-    list()
+    socios_deputados[[1]] %>% rbind(socios_senadores[[1]])
   
+  empresas_info <-
+    socios_deputados[[2]] %>% rbind(socios_senadores[[2]])
   
-  return(socios_parlamentares)
+  return(list(socios_parlamentares, empresas_info))
 }

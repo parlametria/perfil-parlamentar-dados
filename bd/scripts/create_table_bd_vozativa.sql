@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS "liderancas" (
     PRIMARY KEY("id_parlamentar_voz", "id_partido")
 );
 
-CREATE TABLE IF NOT EXISTS "investimento_partidario" (    
+CREATE TABLE IF NOT EXISTS "investimento_partidario_parlamentar" (    
     "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
     "id_partido_atual" INTEGER REFERENCES "partidos" ("id_partido") ON DELETE SET NULL ON UPDATE CASCADE,
     "id_partido_eleicao" INTEGER REFERENCES "partidos" ("id_partido") ON DELETE SET NULL ON UPDATE CASCADE,
@@ -168,6 +168,14 @@ CREATE TABLE IF NOT EXISTS "investimento_partidario" (
     "total_receita_candidato" NUMERIC(15, 2),
     "indice_investimento_partido" REAL,        
     PRIMARY KEY("id_parlamentar_voz")
+);
+
+CREATE TABLE IF NOT EXISTS "investimento_partidario" (    
+    "id_partido" INTEGER REFERENCES "partidos" ("id_partido") ON DELETE SET NULL ON UPDATE CASCADE,
+    "uf" VARCHAR(20),
+    "esfera" VARCHAR(40),
+    "valor" NUMERIC(15, 2),
+    PRIMARY KEY("id_partido", "uf", "esfera")
 );
 
 CREATE TABLE IF NOT EXISTS "perfil_mais" (    

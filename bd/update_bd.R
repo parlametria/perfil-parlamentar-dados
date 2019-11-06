@@ -78,6 +78,10 @@ execute_migration(file, log_file)
 file = here::here("bd/scripts/migrations/migration_investimento_partidario.sql")
 execute_migration(file, log_file)
 
+## INVESTIMENTO PARTIDARIO PARLAMENTAR
+file = here::here("bd/scripts/migrations/migration_investimento_partidario_parlamentar.sql")
+execute_migration(file, log_file)
+
 ## PERFIL MAIS
 file = here::here("bd/scripts/migrations/migration_perfil_mais.sql")
 execute_migration(file, log_file)
