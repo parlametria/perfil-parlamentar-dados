@@ -1,0 +1,207 @@
+---
+title: "Interseção entre lista de André (IDS) e planilha 100+"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(hrbrthemes)
+library(plotly)
+theme_set(theme_minimal())
+```
+
+### Resumo
+
+Este relatório tem o objetivo de comparar as listas produzidas por André Lima (IDS) e pela equipe do Voz Ativa (Dado Capital).
+
+```{r}
+.URL_LISTA_ANDRE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDZimb70haa4x5EfRQ9StV0xdYTX4sAT664JYKd2xJyOroN7v9CZAcncDbHnRv0A/pub?gid=651740838&single=true&output=csv"
+
+.URL_VINCULO_AGRO <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vRtD72wntBGbWewLB7SJjF4GC_WPBWfAVGRazycgU1H-wd5Yn6FBQlV_o4n26x5W6VNdmrb0Tnfio0n/pub?gid=1769575795&single=true&output=csv"
+
+.URL_ZONA_CINZA <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vRtD72wntBGbWewLB7SJjF4GC_WPBWfAVGRazycgU1H-wd5Yn6FBQlV_o4n26x5W6VNdmrb0Tnfio0n/pub?gid=594068326&single=true&output=csv"
+
+.URL_OPOSICAO <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vRtD72wntBGbWewLB7SJjF4GC_WPBWfAVGRazycgU1H-wd5Yn6FBQlV_o4n26x5W6VNdmrb0Tnfio0n/pub?gid=1759696780&single=true&output=csv"
+```
+
+```{r}
+lista_andre <- read_csv(.URL_LISTA_ANDRE)
+
+planilha_vinculo_agro <- read_csv(.URL_VINCULO_AGRO)
+
+planilha_oposicao <- read_csv(.URL_OPOSICAO)
+
+planilha_zona_cinza <- read_csv(.URL_ZONA_CINZA)
+```
+
+## Critério 1
+
+O primeiro critério a ser analisado é o proposto por André: 
+**"Da lista Dado selecionei os "AgroAmb" com índice  ATIVISMO AMBIENTAL acima de 0,25"**
+
+```{r}
+criterio_1_andre <- planilha_vinculo_agro %>% 
+  select(Deputado, id = `Identificação Deputado`, Partido, UF, indice_agro = `Índice de Vínculo Econômico com o Agro`, 
+         indice_ativismo = `Índice de Ativismo Ambiental (revisado)`, 
+         grupo_financiados_simpaticos = `Financiados pelo agro e simpáticos ao MA`) %>% 
+  mutate(selecionado = if_else(id %in% (lista_andre %>% 
+                                          filter(Grupo == "AgroAmb") %>% 
+                                          pull(Id)), 
+                               "Sim",
+                               "Não")) %>% 
+  mutate(cluster = case_when(
+    selecionado == "Sim" & grupo_financiados_simpaticos == "SIM" ~ "Lista André e VA",
+    selecionado == "Sim" & grupo_financiados_simpaticos == "--" ~ "Lista André",
+    selecionado == "Não" & grupo_financiados_simpaticos == "SIM" ~ "Lista VA",
+    TRUE ~ "Nenhuma lista"
+  ))
+```
+
+Cruzamos o grupo de deputados financiados pelo Agro e simpáticos ao Meio Ambiente classificados pela lista do Voz Ativa com a lista separada por André. Com relação as informações do índice de ativismo ambiental e de vínculo com o Agro temos a seguinte visualização.
+
+```{r fig.width = 5, fig.height = 4}
+g <- criterio_1_andre %>% 
+  ggplot(aes(x = indice_agro, y = indice_ativismo, color = cluster)) +
+  geom_point(aes(text = sprintf("%s \n%s",
+                               Deputado, 
+                               paste0(Partido, "/", UF))),
+             size = 2.5, alpha = 0.8) +
+  scale_color_manual(values = c("#43ab92", "#f75f00", "#512c62", "#B7B7B7")) +
+  labs(x = "Índice de vínculo com o Agro",
+       y = "Índice de Ativismo Ambiental",
+       title = "Critério 1 \nLigados ao Agro e com ativismo ambiental",
+       color = "") +
+  theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+ config(displayModeBar = F) %>%
+ layout(autosize = F)
+```
+
+Existem 3 casos em que a lista selecionada pelo André não foi compatível com a lista do Voz Ativa. Para os parlamentares listados no topo da lista de André é possível encontrá-los também no topo da lista do Voz Ativa.
+
+## Critério 2
+
+O segundo critério a ser analisado foi:
+**"De OPOSIÇÃO selecionei somente dois que são moderados e tem alguma responsabilidade com comissões na área ambiental e que não tem tradição ambiental"**
+
+Comparamos a lista de deputados da oposição com alto ativismo ambiental feita pelo Voz Ativa com a seleção de deputados feita pelo André segundo o critério supracitado.
+
+```{r}
+criterio_2_andre <- planilha_oposicao %>% 
+  select(Deputado, id = `Identificação Deputado`, Partido, UF, indice_agro = `Índice de Vínculo Econômico com o Agro`, 
+         indice_ativismo = `Índice de Ativismo Ambiental (revisado)`, 
+         oposicao_alto_ativismo = `Oposição e alto ativismo ambiental`) %>% 
+  mutate(selecionado = if_else(id %in% (lista_andre %>% 
+                                          filter(Grupo == "Opos-Mod") %>% 
+                                          pull(Id)), 
+                               "Sim",
+                               "Não")) %>% 
+  mutate(cluster = case_when(
+    selecionado == "Sim" & oposicao_alto_ativismo == "SIM" ~ "Lista André e VA",
+    selecionado == "Sim" & oposicao_alto_ativismo == "--" ~ "Lista André",
+    selecionado == "Não" & oposicao_alto_ativismo == "SIM" ~ "Lista VA",
+    TRUE ~ "Nenhuma lista"
+  ))
+```
+
+```{r fig.width = 5, fig.height = 4}
+g <- criterio_2_andre %>% 
+  ggplot(aes(x = indice_agro, y = indice_ativismo, color = cluster)) +
+  geom_point(aes(text = sprintf("%s \n%s",
+                               Deputado, 
+                               paste0(Partido, "/", UF))),
+             size = 2.5, alpha = 0.8) +
+  scale_color_manual(values = c("#f75f00", "#512c62", "#B7B7B7")) +
+  labs(x = "Índice de vínculo com o Agro",
+       y = "Índice de Ativismo Ambiental",
+       title = "Critério 2 \nLista da Oposição",
+       color = "") +
+  theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+ config(displayModeBar = F) %>%
+ layout(autosize = F)
+```
+
+Todos os dois selecionados (Tabata Amaral PDT/SP e JHC PSB/AL) pela lista do André estão presentes na lista do Voz Ativa de deputados da oposição com ativismo ambiental. No entanto, esses deputados não são os deputados com maior ativismo ambiental, eles se encontram no meio do caminho na oposição com relação ao índice de ativismo ambiental.
+
+## Critérios 3 e 4
+
+O critério 3 apresenta a seguinte descrição:
+**"Dos considerados "Cinzas" no relatório que aqui chamei de "Neutro" somente selecionei os que tem indice de ativismo ambiental acima de 0,25 ou algum critério especifico"**
+
+Já o critério 4 apresenta a seguinte descrição:
+**"Dos parlamentares com Baixo indice ambiental selecionei alguns com alto indice de relevancia política"**
+
+Cruzamos os parlamentares escolhidos por esses critérios com os deputados do Grupo da Zona Neutra na lista do Voz Ativa
+
+```{r}
+criterio_3_andre <- planilha_zona_cinza %>% 
+  select(Deputado, id = `Identificação Deputado`, Partido, UF, indice_agro = `Índice de Vínculo Econômico com o Agro`, 
+         indice_ativismo = `Índice de Ativismo Ambiental (revisado)`, 
+         indice_peso_politico = `Índice de Importância Política`,
+         zona_cinza_ativismo = `Sem vínculo econômico, mas ativistas ambientais`) %>% 
+  mutate(indice_peso_politico = as.numeric(indice_peso_politico)) %>% 
+  mutate(selecionado = if_else(id %in% (lista_andre %>% 
+                                          filter(Grupo %in% c("NEUTRO", "<Amb+RP")) %>% 
+                                          pull(Id)), 
+                               "Sim",
+                               "Não")) %>% 
+  mutate(cluster = case_when(
+    selecionado == "Sim" & zona_cinza_ativismo == "SIM" ~ "Lista André e VA",
+    selecionado == "Sim" & zona_cinza_ativismo == "--" ~ "Lista André",
+    selecionado == "Não" & zona_cinza_ativismo == "SIM" ~ "Lista VA",
+    TRUE ~ "Nenhuma lista"
+  ))
+```
+
+```{r fig.width = 5, fig.height = 4}
+g <- criterio_3_andre %>% 
+  ggplot(aes(x = indice_peso_politico, y = indice_ativismo, color = cluster)) +
+  geom_point(aes(text = sprintf("%s \n%s",
+                               Deputado, 
+                               paste0(Partido, "/", UF))),
+             size = 2.5, alpha = 0.8) +
+  scale_color_manual(values = c("#43ab92", "#f75f00", "#512c62", "#B7B7B7")) +
+  labs(x = "Peso Político",
+       y = "Índice de Ativismo Ambiental",
+       title = "Critérios 3 e 4 \nZona Neutra",
+       color = "") +
+  theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+ config(displayModeBar = F) %>%
+ layout(autosize = F)
+```
+
+Existem algumas divergência nessa lista entre os escolhidos pela lista do André e pela lista do Voz Ativa.
+
+O grupo presente apenas na lista de André foi escolhido pelo critério 4 como parlamentares com baixo ativismo ambiental mas que são influentes no índice de peso político.
+
+## Critério 5
+
+No critério 5 os parlamentares foram escolhidos devido a presença no RAPS. 
+**"Selecionei Líders RAPS que não são de oposião declarada"**.
+São eles:
+
+- FRANCO CARTAFINA - PP/MG
+- EDUARDO COSTA - PTB/PA
+- FRANCISCO JUR - PSD/GO
+- PEDRO CUNHA LIMA - PSD/PB
+- TIAGO MITRAUD - NOVO/MG
+- VINICIUS POIT - NOVO/SP
