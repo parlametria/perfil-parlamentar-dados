@@ -90,7 +90,8 @@ process_socios_empresas_parlamentares_casa <- function(
   socios_empresas <- 
     fetch_socios_empresas_parlamentares(socios_empresas_parlamentares,
                                                   somente_agricolas) %>% 
-    mutate(casa = casa_origem)
+    mutate(casa = casa_origem) %>% 
+    distinct()
   
   cnpjs <- socios_empresas %>% distinct(cnpj) 
   
