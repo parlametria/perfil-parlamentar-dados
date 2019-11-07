@@ -19,25 +19,27 @@ processa_investimento_partidario <- function(
   doacoes_partidos_deputados <- doacoes_partidos %>% 
     filter(DS_CARGO == "Deputado Federal") %>% 
     group_by(SG_PARTIDO, SG_UE) %>% 
-    summarise(TOTAL = sum(VR_RECEITA)) %>% 
+    summarise(NUM_CANDIDATOS = n_distinct(NR_CPF_CANDIDATO),
+              TOTAL = sum(VR_RECEITA)) %>% 
     ungroup() %>% 
     mutate(esfera = "camara") %>% 
-    select(sg_partido = SG_PARTIDO, uf = SG_UE, esfera, valor = TOTAL)
+    select(sg_partido = SG_PARTIDO, uf = SG_UE, esfera, valor = TOTAL, numero_candidatos = NUM_CANDIDATOS)
     
   doacoes_partidos_deputados_senadores <- doacoes_partidos %>% 
     filter(DS_CARGO %in% c("Deputado Federal", "Senador")) %>% 
     group_by(SG_PARTIDO, SG_UE) %>% 
-    summarise(TOTAL = sum(VR_RECEITA)) %>% 
+    summarise(NUM_CANDIDATOS = n_distinct(NR_CPF_CANDIDATO),
+              TOTAL = sum(VR_RECEITA)) %>% 
     ungroup() %>% 
     mutate(esfera = "senado") %>% 
-    select(sg_partido = SG_PARTIDO, uf = SG_UE, esfera, valor = TOTAL)
+    select(sg_partido = SG_PARTIDO, uf = SG_UE, esfera, valor = TOTAL, numero_candidatos = NUM_CANDIDATOS)
   
   doacoes_partidos_alt <- doacoes_partidos_deputados %>% 
     rbind(doacoes_partidos_deputados_senadores) %>% 
     rowwise() %>% 
     mutate(id_partido = map_sigla_id(sg_partido)) %>% 
     ungroup() %>% 
-    select(id_partido, uf, esfera, valor)
+    select(id_partido, uf, esfera, valor, numero_candidatos)
   
   return(doacoes_partidos_alt)
 }

@@ -175,5 +175,6 @@ CREATE TABLE IF NOT EXISTS "investimento_partidario" (
     "uf" VARCHAR(20),
     "esfera" VARCHAR(40),
     "valor" NUMERIC(15, 2),
+    "numero_candidatos" INTEGER,
     PRIMARY KEY("id_partido", "uf", "esfera")
 );
