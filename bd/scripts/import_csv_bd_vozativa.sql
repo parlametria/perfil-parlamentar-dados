@@ -14,4 +14,5 @@
 \copy aderencias FROM '/data/aderencia.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER; 
 \copy liderancas FROM '/data/liderancas.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER; 
 \copy investimento_partidario FROM '/data/investimento_partidario.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
-\copy investimento_partidario FROM '/data/investimento_partidario_parlamentar.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
+\copy investimento_partidario_parlamentar FROM '/data/investimento_partidario_parlamentar.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
+\copy perfil_mais FROM '/data/perfil_mais.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;

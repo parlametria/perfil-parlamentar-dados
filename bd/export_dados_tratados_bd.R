@@ -76,6 +76,9 @@ investimento_partidario_parlamentar = processa_investimento_partidario_parlament
 source(here("bd/processor/investimento_partidario/processa_investimento_partidario.R"))
 investimento_partidario = processa_investimento_partidario()
 
+source(here("bd/processor/perfil_mais/processa_perfil_mais.R"))
+perfil_mais = processa_perfil_mais()
+
 message("Escrevendo dados em csv...")	
 write_csv(parlamentares, paste0(output, "parlamentares.csv"))
 write_csv(perguntas, paste0(output, "perguntas.csv"))
@@ -94,4 +97,5 @@ write_csv(aderencia, paste0(output, "aderencia.csv"))
 write_csv(partidos, paste0(output, "partidos.csv"))
 write_csv(investimento_partidario_parlamentar, paste0(output, "investimento_partidario_parlamentar.csv"))
 write_csv(investimento_partidario, paste0(output, "investimento_partidario.csv"))
+write_csv(perfil_mais, paste0(output, "perfil_mais.csv"))
 message("Concluído")
