@@ -225,7 +225,8 @@ process_socios_empresas_doadores <- function(
            nome_parlamentar,
            partido_parlamentar,
            uf_parlamentar,
-           valor_doado)
+           valor_doado) %>% 
+    distinct()
   
   return(res)
   

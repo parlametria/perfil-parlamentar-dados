@@ -1,0 +1,89 @@
+{
+  "grupos_cnaes":
+  [
+    {
+      "nome": "AGRICULTURA, PECUÁRIA, PRODUÇÃO FLORESTAL, PESCA E AQÜICULTURA", 
+      "codigos": ["01", "02", "03"]
+    },
+    {
+      "nome": "INDÚSTRIAS EXTRATIVAS", 
+      "codigos": ["05", "06", "07", "08", "09"]
+    },
+    {
+      "nome": "INDÚSTRIAS DE TRANSFORMAÇÃO", 
+      "codigos": ["10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33"]
+    },
+    {
+      "nome": "ELETRICIDADE E GÁS", 
+      "codigos": ["35"]
+    },
+    {
+      "nome": "ÁGUA, ESGOTO, ATIVIDADES DE GESTÃO DE RESÍDUOS E DESCONTAMINAÇÃO", 
+      "codigos": ["36", "37", "38", "39"]
+    },
+    {
+      "nome": "CONSTRUÇÃO", 
+      "codigos": ["41", "42", "43"]
+    },
+    {
+      "nome": "COMÉRCIO; REPARAÇÃO DE VEÍCULOS AUTOMOTORES E MOTOCICLETAS", 
+      "codigos": ["45", "46", "47"]
+    },
+    {
+      "nome": "TRANSPORTE, ARMAZENAGEM E CORREIO", 
+      "codigos": ["49", "50", "51", "52", "53"]
+    },
+    {
+      "nome": "ALOJAMENTO E ALIMENTAÇÃO",
+      "codigos": ["55", "56"]
+    },
+    {
+      "nome": "INFORMAÇÃO E COMUNICAÇÃO", 
+      "codigos": ["58", "59", "60", "61", "62", "63"]
+    },
+    {
+      "nome": "ATIVIDADES FINANCEIRAS, DE SEGUROS E SERVIÇOS RELACIONADOS", 
+      "codigos": ["64", "65", "66"]
+    },
+    {
+      "nome": "ATIVIDADES IMOBILIÁRIAS", 
+      "codigos": ["68"]
+    },
+    {
+      "nome": "ATIVIDADES PROFISSIONAIS, CIENTÍFICAS E TÉCNICAS", 
+      "codigos": ["69", "70", "71", "72", "73", "74", "75"]
+    },
+    {
+      "nome": "ATIVIDADES ADMINISTRATIVAS E SERVIÇOS COMPLEMENTARES", 
+      "codigos": ["77", "78", "79", "80", "81", "82"]
+    },
+    {
+      "nome": "ADMINISTRAÇÃO PÚBLICA, DEFESA E SEGURIDADE SOCIAL", 
+      "codigos": ["84"]
+    },
+    {
+      "nome": "EDUCAÇÃO", 
+      "codigos": ["85"]
+    },
+    {
+      "nome": "SAÚDE HUMANA E SERVIÇOS SOCIAIS", 
+      "codigos": ["86", "87", "88"]
+    },
+    {
+      "nome": "ARTES, CULTURA, ESPORTE E RECREAÇÃO", 
+      "codigos": ["90", "91", "92", "93"]
+    },
+    {
+      "nome": "OUTRAS ATIVIDADES DE SERVIÇOS", 
+      "codigos": ["94", "95", "96"]
+    },
+    {
+      "nome": "SERVIÇOS DOMÉSTICOS", 
+      "codigos": ["97"]
+    },
+    {
+      "nome": "ORGANISMOS INTERNACIONAIS E OUTRAS INSTITUIÇÕES EXTRATERRITORIAIS", 
+      "codigos": ["99"]
+    }
+  ]
+}
