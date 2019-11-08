@@ -92,7 +92,9 @@ processa_indices_ligacao_atividade_economica <- function() {
   library(here)
   options(scipen = 999)
   
+  ## Considera parlamentares em exercício ou não
   parlamentares <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c"))
+  # filter(em_exercicio == 1)
   
   parlamentares_id <- parlamentares %>% 
     select(id_parlamentar = id, casa)
@@ -105,6 +107,17 @@ processa_indices_ligacao_atividade_economica <- function() {
     full_join(parlamentares_prorporcao_doadores_atividades_economicas, 
               by = c("id_parlamentar", "casa", "grupo_atividade_economica")) %>% 
     inner_join(parlamentares_id, by = c("id_parlamentar", "casa")) %>% 
+    
+    mutate_at(
+      .funs = list( ~ replace_na(., 0)),
+      .vars = vars(
+        tem_empresa,
+        total_por_atividade,
+        total_recebido_geral,
+        proporcao_doacao
+      )
+    ) %>% 
+    
     mutate(indice_ligacao_atividade_economica =
              (2 * tem_empresa + 1.5 * proporcao_doacao) / 3.5)
   
