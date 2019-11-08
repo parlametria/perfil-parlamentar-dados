@@ -13,7 +13,6 @@ DO
   SET
     total_por_atividade = EXCLUDED.total_por_atividade,
     proporcao_doacao = EXCLUDED.proporcao_doacao,    
-    indice_ligacao_atividade_economica = EXCLUDED.indice_ligacao_atividade_economica,
     indice_ligacao_atividade_economica = EXCLUDED.indice_ligacao_atividade_economica;
 
 DELETE FROM ligacoes_economicas
