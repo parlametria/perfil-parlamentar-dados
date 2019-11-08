@@ -15,3 +15,4 @@
 \copy liderancas FROM '/data/liderancas.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER; 
 \copy investimento_partidario FROM '/data/investimento_partidario.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
 \copy atividades_economicas FROM './data/atividades_economicas.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
+\copy ligacoes_economicas FROM '/data/ligacoes_economicas.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;

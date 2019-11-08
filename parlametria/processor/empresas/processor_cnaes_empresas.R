@@ -16,7 +16,7 @@ process_cnaes_empresas <- function(
   
   grupos_cnaes <- grupos_cnaes %>% 
     as.data.frame() %>% 
-    unnest()
+    unnest(cols = c(codigos))
   
   empresas_grupos_cnae <- left_join(info_empresas,
                                     grupos_cnaes,

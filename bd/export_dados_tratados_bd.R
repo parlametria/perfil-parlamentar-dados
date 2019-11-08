@@ -71,13 +71,16 @@ source(here("bd/processor/partidos/processa_partidos.R"))
 partidos <- processa_partidos()
 
 source(here("bd/processor/investimento_partidario/processa_investimento_partidario_parlamentar.R"))
-investimento_partidario_parlamentar = processa_investimento_partidario_parlamentar()
+investimento_partidario_parlamentar <-  processa_investimento_partidario_parlamentar()
 
 source(here("bd/processor/investimento_partidario/processa_investimento_partidario.R"))
-investimento_partidario = processa_investimento_partidario()
+investimento_partidario <- processa_investimento_partidario()
 
 source(here("bd/processor/perfil_mais/processa_perfil_mais.R"))
-perfil_mais = processa_perfil_mais()
+perfil_mais <- processa_perfil_mais()
+
+source(here("bd/processor/ligacoes_economicas/processa_ligacoes_economicas.R"))
+ligacoes_economicas <- processa_ligacoes_atividades_economicas()
 
 source(here("bd/processor/empresas/processa_empresas.R"))
 grupos_atividade_economica <- processa_atividade_economica()
@@ -104,5 +107,6 @@ write_csv(investimento_partidario, paste0(output, "investimento_partidario.csv")
 write_csv(perfil_mais, paste0(output, "perfil_mais.csv"))
 write_csv(grupos_atividade_economica, paste0(output, "atividades_economicas.csv"))
 write_csv(empresas, paste0(output, "empresas.csv"))
+write_csv(ligacoes_economicas, paste0(output, "ligacoes_economicas.csv"))
 
 message("Concluído")
