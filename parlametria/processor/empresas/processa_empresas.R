@@ -40,7 +40,7 @@ process_empresas <- function(
     select(cnpj, razao_social, grupo_atividade_economica) %>% 
     distinct()
   
-  atividade_economica <- processa_atividade_economica()
+  atividade_economica <- process_atividade_economica()
   
   empresas_alt <- empresas %>% 
     left_join(atividade_economica,
