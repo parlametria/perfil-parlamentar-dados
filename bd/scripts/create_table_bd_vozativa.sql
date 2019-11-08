@@ -185,3 +185,9 @@ CREATE TABLE IF NOT EXISTS "perfil_mais" (
     "peso_politico" REAL,        
     PRIMARY KEY("id_parlamentar_voz")
 );
+
+CREATE TABLE IF NOT EXISTS "atividades_economicas" (    
+    "id_atividade_economica" INTEGER,
+    "nome" VARCHAR(255),
+    PRIMARY KEY("id_atividade_economica")
+);
