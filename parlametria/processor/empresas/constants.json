@@ -6,12 +6,116 @@
       "codigos": ["01", "02", "03"]
     },
     {
-      "nome": "INDÚSTRIAS EXTRATIVAS", 
-      "codigos": ["05", "06", "07", "08", "09"]
+      "nome": "EXTRAÇÃO DE CARVÃO MINERAL", 
+      "codigos": ["05"]
     },
     {
-      "nome": "INDÚSTRIAS DE TRANSFORMAÇÃO", 
-      "codigos": ["10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33"]
+      "nome": "EXTRAÇÃO DE PETRÓLEO E GÁS NATURAL", 
+      "codigos": ["06"]
+    },
+    {
+      "nome": "EEXTRAÇÃO DE MINERAIS METÁLICOS", 
+      "codigos": ["07"]
+    },
+    {
+      "nome": "EXTRAÇÃO DE MINERAIS NÃO-METÁLICOS", 
+      "codigos": ["08"]
+    },
+    {
+      "nome": "ATIVIDADES DE APOIO À EXTRAÇÃO DE MINERAIS", 
+      "codigos": ["09"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE PRODUTOS ALIMENTÍCIOS", 
+      "codigos": ["10"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE BEBIDAS", 
+      "codigos": ["11"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE PRODUTOS DO FUMO", 
+      "codigos": ["12"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE PRODUTOS TÊXTEIS", 
+      "codigos": ["13"]
+    },
+        {
+      "nome": "CONFECÇÃO DE ARTIGOS DO VESTUÁRIO E ACESSÓRIOS", 
+      "codigos": ["14"]
+    },
+        {
+      "nome": "PREPARAÇÃO DE COUROS E FABRICAÇÃO DE ARTEFATOS DE COURO, ARTIGOS PARA VIAGEM E CALÇADOS", 
+      "codigos": ["15"]
+    },
+        {
+      "nome": "FABRICAÇÃO DE PRODUTOS DE MADEIRA", 
+      "codigos": ["16"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE CELULOSE, PAPEL E PRODUTOS DE PAPEL", 
+      "codigos": ["17"]
+    },
+    {
+      "nome": "IMPRESSÃO E REPRODUÇÃO DE GRAVAÇÕES",
+      "codigos": ["18"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE COQUE, DE PRODUTOS DERIVADOS DO PETRÓLEO E DE BIOCOMBUSTÍVEIS", 
+      "codigos": ["19"]
+    },
+        {
+      "nome": "FABRICAÇÃO DE PRODUTOS QUÍMICOS", 
+      "codigos": ["20"]
+    },
+        {
+      "nome": "FABRICAÇÃO DE PRODUTOS FARMOQUÍMICOS E FARMACÊUTICOS", 
+      "codigos": ["21", "22"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE PRODUTOS DE MINERAIS NÃO-METÁLICOS", 
+      "codigos": ["23"]
+    },
+    {
+      "nome": "METALURGIA", 
+      "codigos": ["24"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE PRODUTOS DE METAL, EXCETO MÁQUINAS E EQUIPAMENTOS", 
+      "codigos": ["25"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE EQUIPAMENTOS DE INFORMÁTICA, PRODUTOS ELETRÔNICOS E ÓPTICOS", 
+      "codigos": ["26"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE MÁQUINAS, APARELHOS E MATERIAIS ELÉTRICOS", 
+      "codigos": ["27"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE MÁQUINAS E EQUIPAMENTOS", 
+      "codigos": ["28"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE VEÍCULOS AUTOMOTORES, REBOQUES E CARROCERIAS", 
+      "codigos": ["29"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE OUTROS EQUIPAMENTOS DE TRANSPORTE, EXCETO VEÍCULOS AUTOMOTORES", 
+      "codigos": ["30"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE MÓVEIS", 
+      "codigos": ["31"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE PRODUTOS DIVERSOS", 
+      "codigos": ["32"]
+    },
+    {
+      "nome": "MANUTENÇÃO, REPARAÇÃO E INSTALAÇÃO DE MÁQUINAS E EQUIPAMENTOS", 
+      "codigos": ["33"]
     },
     {
       "nome": "ELETRICIDADE E GÁS", 
