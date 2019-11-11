@@ -1,8 +1,8 @@
-#' @title Processa os dados sobre as empresas
-#' @description Retorna um dataframe contendo informações sobre empresas no formato do BD.
+#' @title Processa os dados sobre as sociedades dos parlamentares nas empresas
+#' @description Retorna um dataframe contendo informações sobre a sociedade de parlamentares em empresas no formato do BD.
 #' @param parlamentares_datapath Caminho para o dataframe contendo dados de parlamentares
 #' @return Dataframe com dados processados de empresas
-processa_empresas <- function(
+processa_parlamentares_empresas <- function(
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
   library(here)
   library(tidyverse)
@@ -19,9 +19,11 @@ processa_empresas <- function(
                by = c("id_parlamentar" = "id",
                       "casa"))
   
-  empresas_alt <- empresas_filtered %>% 
-    select(cnpj, razao_social) %>% 
+  empresas_parlamentares_alt <- empresas_filtered %>% 
+    mutate(casa_enum = if_else(casa == "camara", 1, 2),
+           id_parlamentar_voz = paste0(casa_enum, id_parlamentar)) %>% 
+    select(cnpj, id_parlamentar_voz, data_entrada_sociedade) %>% 
     distinct()
   
-  return(empresas_alt)
+  return(empresas_parlamentares_alt)
 }

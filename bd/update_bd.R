@@ -86,8 +86,24 @@ execute_migration(file, log_file)
 file = here::here("bd/scripts/migrations/migration_perfil_mais.sql")
 execute_migration(file, log_file)
 
+## ATIVIDADES ECONOMICAS
+file = here::here("bd/scripts/migrations/migration_atividades_economicas.sql")
+execute_migration(file, log_file)
+
 ## LIGACOES ECONOMICAS
 file = here::here("bd/scripts/migrations/migration_ligacoes_economicas.sql")
+execute_migration(file, log_file)
+
+## EMPRESAS
+file = here::here("bd/scripts/migrations/migration_empresas.sql")
+execute_migration(file, log_file)
+
+## ATIVIDADES ECONOMICAS EMPRESAS
+file = here::here("bd/scripts/migrations/migration_atividades_economicas_empresas.sql")
+execute_migration(file, log_file)
+
+## EMPRESAS DOS PARLAMENTARES
+file = here::here("bd/scripts/migrations/migration_empresas_parlamentares.sql")
 execute_migration(file, log_file)
 
 if (length(grep("ROLLBACK", readLines(log_file), value = TRUE)) > 0) {
