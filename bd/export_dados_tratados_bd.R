@@ -26,13 +26,13 @@ output <- opt$output
 message("Processando dados...")	
 
 source(here("bd/processor/parlamentares/processa_parlamentares.R"))
-parlamentares <- processa_parlamentares()	
+parlamentares <- processa_parlamentares()
 
 source(here("bd/processor/perguntas/processa_perguntas.R"))
-perguntas <- processa_perguntas()	
+perguntas <- processa_perguntas()
 
 source(here("bd/processor/proposicoes/processa_proposicoes.R"))
-proposicoes <- processa_proposicoes()	
+proposicoes <- processa_proposicoes()
 
 source(here("bd/processor/proposicoes/processa_proposicoes_temas.R"))
 proposicoes_temas <- processa_proposicoes_temas()
@@ -71,13 +71,28 @@ source(here("bd/processor/partidos/processa_partidos.R"))
 partidos <- processa_partidos()
 
 source(here("bd/processor/investimento_partidario/processa_investimento_partidario_parlamentar.R"))
-investimento_partidario_parlamentar = processa_investimento_partidario_parlamentar()
+investimento_partidario_parlamentar <-  processa_investimento_partidario_parlamentar()
 
 source(here("bd/processor/investimento_partidario/processa_investimento_partidario.R"))
-investimento_partidario = processa_investimento_partidario()
+investimento_partidario <- processa_investimento_partidario()
 
 source(here("bd/processor/perfil_mais/processa_perfil_mais.R"))
-perfil_mais = processa_perfil_mais()
+perfil_mais <- processa_perfil_mais()
+
+source(here("bd/processor/ligacoes_economicas/processa_ligacoes_economicas.R"))
+ligacoes_economicas <- processa_ligacoes_atividades_economicas()
+
+source(here("bd/processor/atividades_economicas/processa_atividades_economicas.R"))
+grupos_atividade_economica <- processa_atividade_economica()
+
+source(here("bd/processor/empresas/processa_empresas.R"))
+empresas <- processa_empresas()
+
+source(here("bd/processor/empresas/processa_atividades_economicas_empresas.R"))
+atividades_economicas_empresas <- processa_atividades_economicas_empresas()
+
+source(here("bd/processor/empresas/processa_parlamentares_empresas.R"))
+empresas_parlamentares <- processa_parlamentares_empresas()
 
 message("Escrevendo dados em csv...")	
 write_csv(parlamentares, paste0(output, "parlamentares.csv"))
@@ -98,4 +113,10 @@ write_csv(partidos, paste0(output, "partidos.csv"))
 write_csv(investimento_partidario_parlamentar, paste0(output, "investimento_partidario_parlamentar.csv"))
 write_csv(investimento_partidario, paste0(output, "investimento_partidario.csv"))
 write_csv(perfil_mais, paste0(output, "perfil_mais.csv"))
+write_csv(grupos_atividade_economica, paste0(output, "atividades_economicas.csv"))
+write_csv(ligacoes_economicas, paste0(output, "ligacoes_economicas.csv"))
+write_csv(empresas, paste0(output, "empresas.csv"))
+write_csv(atividades_economicas_empresas, paste0(output, "atividades_economicas_empresas.csv"))
+write_csv(empresas_parlamentares, paste0(output, "empresas_parlamentares.csv"))
+
 message("Concluído")
