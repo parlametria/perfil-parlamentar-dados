@@ -3,7 +3,8 @@
 #' @param parlamentares_datapath Caminho para o dataframe com as informações de parlamentares
 #' @return Dataframe com dados processados de atividades econômicas das empresas
 processa_atividades_economicas_empresas <- function(
-  parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv")) {
+  parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv"),
+  info_empresas_datapath = here::here("parlametria/raw_data/empresas/info_empresas_socios_todos_parlamentares.csv")) {
   library(tidyverse)
   library(here)
   source(here("parlametria/processor/empresas/processor_cnaes_empresas.R"))
@@ -16,10 +17,10 @@ processa_atividades_economicas_empresas <- function(
   
   cnaes_enum <- processa_atividade_economica()
   
-  empresas_cnaes <- process_cnaes_empresas() %>% 
+  empresas_cnaes <- process_cnaes_empresas(info_empresas_datapath) %>% 
     select(cnpj, cnae_tipo, cnae_codigo, grupo_atividade_economica)
   
-  empresas <- process_empresas() %>% 
+  empresas <- process_empresas(info_empresas_datapath) %>% 
     mutate(cnae_codigo = as.character(cnae_codigo)) %>% 
     left_join(empresas_cnaes, by = c("cnpj", "cnae_tipo", "cnae_codigo"))
   
@@ -41,4 +42,44 @@ processa_atividades_economicas_empresas <- function(
     distinct()
   
   return(empresas_alt)
+}
+
+#' @title Processa os dados sobre as atividades econômicas das empresas
+#' @description Retorna um dataframe contendo informações sobre as atividades econômicas das empresas no formato do BD.
+#' @return Dataframe com dados processados de atividades econômicas das empresas
+processa_atividades_economicas_empresas_doadores <- function() {
+  library(tidyverse)
+  library(here)
+  options(scipen = 999)
+  
+  source(here("parlametria/processor/empresas/processor_cnaes_empresas.R"))
+  
+  parlamentares_doacoes <- read_csv(here("parlametria/raw_data/receitas/parlamentares_doadores.csv"), 
+                                    col_types = cols(id = "c")) %>% 
+    rename(id_parlamentar = id)
+  
+  parlamentares_doadores_empresas <- read_csv(here("parlametria/raw_data/empresas/empresas_doadores_todos_parlamentares.csv"),
+                                              col_types = cols(id_parlamentar = "c", cnpj_empresa = "c", cpf_cnpj_socio = "c")) %>% 
+    mutate(cnpj = stringr::str_pad(cnpj_empresa, 14, pad = "0")) %>% 
+    select(id_parlamentar, casa = casa_parlamentar, cnpj, cpf_cnpj_socio) %>% 
+    distinct(id_parlamentar, casa, cnpj, cpf_cnpj_socio) 
+  
+  info_empresas <- process_cnaes_empresas(info_empresas_datapath = here::here("parlametria/raw_data/empresas/info_empresas_doadores_todos_parlamentares.csv")) %>% 
+    distinct(cnpj, razao_social, grupo_atividade_economica)
+  
+  parlamentares_socios_atividades <- parlamentares_doadores_empresas %>% 
+    left_join(info_empresas, by = "cnpj") %>% 
+    ## recuperando distintas atividades econômicas por parlamentar e doador (que também é sócio)
+    distinct(id_parlamentar, casa, cnpj, razao_social, cpf_cnpj_socio, grupo_atividade_economica)
+  
+  parlamentares_doacoes_merge <- parlamentares_doacoes %>% 
+    select(id_parlamentar, casa, nome_eleitoral, sg_partido, uf, cpf_cnpj_doador, nome_doador, valor_receita) %>% 
+    left_join(parlamentares_socios_atividades, by = c("id_parlamentar", "casa", "cpf_cnpj_doador" = "cpf_cnpj_socio"))
+  
+  parlamentares_doacoes_grouped <- parlamentares_doacoes_merge %>% 
+    filter(!is.na(grupo_atividade_economica)) %>% 
+    select(-valor_receita) %>% 
+    distinct()
+  
+  return(parlamentares_doacoes_grouped)
 }
