@@ -55,6 +55,8 @@ processa_indice_geral_ligacao_economica <- function() {
   library(here)
   options(scipen = 999)
   
+  source(here("parlametria/processor/empresas/processor_indice_atividades_economicas.R"))
+  
   ## Considera parlamentares em exercício ou não
   parlamentares <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")) %>% 
     filter(em_exercicio == 1)
@@ -74,6 +76,7 @@ processa_indice_geral_ligacao_economica <- function() {
     mutate_at(
       .funs = list( ~ replace_na(., 0)),
       .vars = vars(
+        n_empresas,
         tem_empresa,
         total_por_atividade,
         total_recebido_geral,

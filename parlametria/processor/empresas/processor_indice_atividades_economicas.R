@@ -23,7 +23,7 @@ processa_parlamentares_socios_atividades_economicas <- function() {
     summarise(n_empresas = n_distinct(cnpj)) %>% 
     ungroup() %>% 
     mutate(tem_empresa = if_else(n_empresas >= 1, 1, 0)) %>% 
-    select(id_parlamentar, casa, grupo_atividade_economica, tem_empresa)
+    select(id_parlamentar, casa, grupo_atividade_economica, tem_empresa, n_empresas)
   
   return(parlamentares_empresas_cnaes)
 }
@@ -99,7 +99,8 @@ processa_indices_ligacao_atividade_economica <- function() {
   parlamentares_id <- parlamentares %>% 
     select(id_parlamentar = id, casa)
   
-  parlamentares_socios_atividades_economicas <- processa_parlamentares_socios_atividades_economicas()
+  parlamentares_socios_atividades_economicas <- processa_parlamentares_socios_atividades_economicas() %>% 
+    select(-n_empresas)
   
   parlamentares_prorporcao_doadores_atividades_economicas <- processa_proporcao_doadores_atividades_economicas()
   
