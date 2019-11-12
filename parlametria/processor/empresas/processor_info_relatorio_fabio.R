@@ -48,7 +48,7 @@ processa_atividades_economicas_empresas <- function(
 #' processa os índices de ligação por atividade econômica dos parlamentares
 #' @return Dataframe contendo informações dos índices dos parlamentares por atividade econômica
 #' @examples
-#' indices_atividades_economicas <- processa_indices_ligacao_atividade_economica()
+#' indices_atividades_economicas <- processa_indice_geral_ligacao_economica()
 #' ARQUIVO 1 - Índice Geral de Ligação Econômica
 processa_indice_geral_ligacao_economica <- function() {
   library(tidyverse)
