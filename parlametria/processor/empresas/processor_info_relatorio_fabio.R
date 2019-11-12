@@ -42,3 +42,50 @@ processa_atividades_economicas_empresas <- function(
   
   return(empresas_alt)
 }
+
+#' @title Processa índices de ligação com atividades econômicas
+#' @description Com base nos dados de parlamentares sócios de empresas e dos sócios de empresas que doaram nas eleições de 2018
+#' processa os índices de ligação por atividade econômica dos parlamentares
+#' @return Dataframe contendo informações dos índices dos parlamentares por atividade econômica
+#' @examples
+#' indices_atividades_economicas <- processa_indices_ligacao_atividade_economica()
+#' ARQUIVO 1 - Índice Geral de Ligação Econômica
+processa_indice_geral_ligacao_economica <- function() {
+  library(tidyverse)
+  library(here)
+  options(scipen = 999)
+  
+  ## Considera parlamentares em exercício ou não
+  parlamentares <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")) %>% 
+    filter(em_exercicio == 1)
+  
+  parlamentares_id <- parlamentares %>% 
+    select(id_parlamentar = id, casa, nome_eleitoral, sg_partido, uf)
+  
+  parlamentares_socios_atividades_economicas <- processa_parlamentares_socios_atividades_economicas()
+  
+  parlamentares_prorporcao_doadores_atividades_economicas <- processa_proporcao_doadores_atividades_economicas()
+  
+  parlamentares_alt <- parlamentares_socios_atividades_economicas %>% 
+    full_join(parlamentares_prorporcao_doadores_atividades_economicas, 
+              by = c("id_parlamentar", "casa", "grupo_atividade_economica")) %>% 
+    inner_join(parlamentares_id, by = c("id_parlamentar", "casa")) %>% 
+    
+    mutate_at(
+      .funs = list( ~ replace_na(., 0)),
+      .vars = vars(
+        tem_empresa,
+        total_por_atividade,
+        total_recebido_geral,
+        proporcao_doacao
+      )
+    ) %>% 
+    
+    mutate(indice_ligacao_atividade_economica =
+             (2 * tem_empresa + 1.5 * proporcao_doacao) / 3.5) %>% 
+    select(id_parlamentar, casa, nome_eleitoral, sg_partido, uf, grupo_atividade_economica, 
+           n_empresas, total_por_atividade, total_recebido_geral, proporcao_doacao, 
+           indice_ligacao_atividade_economica)
+  
+  return(parlamentares_alt)
+}
