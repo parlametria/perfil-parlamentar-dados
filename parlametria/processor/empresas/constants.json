@@ -1,0 +1,193 @@
+{
+  "grupos_cnaes":
+  [
+    {
+      "nome": "AGRICULTURA, PECUÁRIA, PRODUÇÃO FLORESTAL, PESCA E AQÜICULTURA", 
+      "codigos": ["01", "02", "03"]
+    },
+    {
+      "nome": "EXTRAÇÃO DE CARVÃO MINERAL", 
+      "codigos": ["05"]
+    },
+    {
+      "nome": "EXTRAÇÃO DE PETRÓLEO E GÁS NATURAL", 
+      "codigos": ["06"]
+    },
+    {
+      "nome": "EEXTRAÇÃO DE MINERAIS METÁLICOS", 
+      "codigos": ["07"]
+    },
+    {
+      "nome": "EXTRAÇÃO DE MINERAIS NÃO-METÁLICOS", 
+      "codigos": ["08"]
+    },
+    {
+      "nome": "ATIVIDADES DE APOIO À EXTRAÇÃO DE MINERAIS", 
+      "codigos": ["09"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE PRODUTOS ALIMENTÍCIOS", 
+      "codigos": ["10"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE BEBIDAS", 
+      "codigos": ["11"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE PRODUTOS DO FUMO", 
+      "codigos": ["12"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE PRODUTOS TÊXTEIS", 
+      "codigos": ["13"]
+    },
+        {
+      "nome": "CONFECÇÃO DE ARTIGOS DO VESTUÁRIO E ACESSÓRIOS", 
+      "codigos": ["14"]
+    },
+        {
+      "nome": "PREPARAÇÃO DE COUROS E FABRICAÇÃO DE ARTEFATOS DE COURO, ARTIGOS PARA VIAGEM E CALÇADOS", 
+      "codigos": ["15"]
+    },
+        {
+      "nome": "FABRICAÇÃO DE PRODUTOS DE MADEIRA", 
+      "codigos": ["16"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE CELULOSE, PAPEL E PRODUTOS DE PAPEL", 
+      "codigos": ["17"]
+    },
+    {
+      "nome": "IMPRESSÃO E REPRODUÇÃO DE GRAVAÇÕES",
+      "codigos": ["18"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE COQUE, DE PRODUTOS DERIVADOS DO PETRÓLEO E DE BIOCOMBUSTÍVEIS", 
+      "codigos": ["19"]
+    },
+        {
+      "nome": "FABRICAÇÃO DE PRODUTOS QUÍMICOS", 
+      "codigos": ["20"]
+    },
+        {
+      "nome": "FABRICAÇÃO DE PRODUTOS FARMOQUÍMICOS E FARMACÊUTICOS", 
+      "codigos": ["21", "22"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE PRODUTOS DE MINERAIS NÃO-METÁLICOS", 
+      "codigos": ["23"]
+    },
+    {
+      "nome": "METALURGIA", 
+      "codigos": ["24"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE PRODUTOS DE METAL, EXCETO MÁQUINAS E EQUIPAMENTOS", 
+      "codigos": ["25"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE EQUIPAMENTOS DE INFORMÁTICA, PRODUTOS ELETRÔNICOS E ÓPTICOS", 
+      "codigos": ["26"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE MÁQUINAS, APARELHOS E MATERIAIS ELÉTRICOS", 
+      "codigos": ["27"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE MÁQUINAS E EQUIPAMENTOS", 
+      "codigos": ["28"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE VEÍCULOS AUTOMOTORES, REBOQUES E CARROCERIAS", 
+      "codigos": ["29"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE OUTROS EQUIPAMENTOS DE TRANSPORTE, EXCETO VEÍCULOS AUTOMOTORES", 
+      "codigos": ["30"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE MÓVEIS", 
+      "codigos": ["31"]
+    },
+    {
+      "nome": "FABRICAÇÃO DE PRODUTOS DIVERSOS", 
+      "codigos": ["32"]
+    },
+    {
+      "nome": "MANUTENÇÃO, REPARAÇÃO E INSTALAÇÃO DE MÁQUINAS E EQUIPAMENTOS", 
+      "codigos": ["33"]
+    },
+    {
+      "nome": "ELETRICIDADE E GÁS", 
+      "codigos": ["35"]
+    },
+    {
+      "nome": "ÁGUA, ESGOTO, ATIVIDADES DE GESTÃO DE RESÍDUOS E DESCONTAMINAÇÃO", 
+      "codigos": ["36", "37", "38", "39"]
+    },
+    {
+      "nome": "CONSTRUÇÃO", 
+      "codigos": ["41", "42", "43"]
+    },
+    {
+      "nome": "COMÉRCIO; REPARAÇÃO DE VEÍCULOS AUTOMOTORES E MOTOCICLETAS", 
+      "codigos": ["45", "46", "47"]
+    },
+    {
+      "nome": "TRANSPORTE, ARMAZENAGEM E CORREIO", 
+      "codigos": ["49", "50", "51", "52", "53"]
+    },
+    {
+      "nome": "ALOJAMENTO E ALIMENTAÇÃO",
+      "codigos": ["55", "56"]
+    },
+    {
+      "nome": "INFORMAÇÃO E COMUNICAÇÃO", 
+      "codigos": ["58", "59", "60", "61", "62", "63"]
+    },
+    {
+      "nome": "ATIVIDADES FINANCEIRAS, DE SEGUROS E SERVIÇOS RELACIONADOS", 
+      "codigos": ["64", "65", "66"]
+    },
+    {
+      "nome": "ATIVIDADES IMOBILIÁRIAS", 
+      "codigos": ["68"]
+    },
+    {
+      "nome": "ATIVIDADES PROFISSIONAIS, CIENTÍFICAS E TÉCNICAS", 
+      "codigos": ["69", "70", "71", "72", "73", "74", "75"]
+    },
+    {
+      "nome": "ATIVIDADES ADMINISTRATIVAS E SERVIÇOS COMPLEMENTARES", 
+      "codigos": ["77", "78", "79", "80", "81", "82"]
+    },
+    {
+      "nome": "ADMINISTRAÇÃO PÚBLICA, DEFESA E SEGURIDADE SOCIAL", 
+      "codigos": ["84"]
+    },
+    {
+      "nome": "EDUCAÇÃO", 
+      "codigos": ["85"]
+    },
+    {
+      "nome": "SAÚDE HUMANA E SERVIÇOS SOCIAIS", 
+      "codigos": ["86", "87", "88"]
+    },
+    {
+      "nome": "ARTES, CULTURA, ESPORTE E RECREAÇÃO", 
+      "codigos": ["90", "91", "92", "93"]
+    },
+    {
+      "nome": "OUTRAS ATIVIDADES DE SERVIÇOS", 
+      "codigos": ["94", "95", "96"]
+    },
+    {
+      "nome": "SERVIÇOS DOMÉSTICOS", 
+      "codigos": ["97"]
+    },
+    {
+      "nome": "ORGANISMOS INTERNACIONAIS E OUTRAS INSTITUIÇÕES EXTRATERRITORIAIS", 
+      "codigos": ["99"]
+    }
+  ]
+}

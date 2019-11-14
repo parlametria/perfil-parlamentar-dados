@@ -1,6 +1,6 @@
 library(tidyverse)
 library(here)
-source(here::here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_agricolas_parlamentares.R"))
+source(here::here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_parlamentares.R"))
 
 if(!require(optparse)){
   install.packages("optparse")
@@ -24,7 +24,7 @@ saida <- opt$out
 
 message("Iniciando processamento...")
 message("Baixando dados...")
-socios_empresas_agricolas_todos_parlamentares <- process_socios_empresas_agricolas_parlamentares()
+socios_empresas_agricolas_todos_parlamentares <- process_socios_empresas_parlamentares(somente_agricolas = TRUE)
 
 message(paste0("Salvando o resultado em ", saida))
 write_csv(socios_empresas_agricolas_todos_parlamentares[[1]], saida)
