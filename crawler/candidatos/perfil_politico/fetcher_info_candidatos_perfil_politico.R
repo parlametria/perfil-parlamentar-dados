@@ -52,4 +52,28 @@ fetch_ids_perfil_politico_por_uf_cargo <- function(ano = 2018, uf = "pb", cargo 
   return(candidatos_alt)
 }
 
+#' @title Recupera informações de candidatos da API do perfil político via ID
+#' @description A partir da API do perfil político recupera informações de um candidato
+#' @param id Id do candidato na API perfil político
+#' @return Dataframe com IDs (na api do perfil político) de todos os candidatos a deputado federal e senador nas eleições de 2018 
+#' @examples
+#' candidato <- fetch_info_perfil_politico_por_id("2314405")
+fetch_info_perfil_politico_por_id <- function(id) {
+  library(tidyverse)
+  library(jsonlite)
+  
+  print(paste0("Recuperando informações do candidato de id ", id))
+  
+  url <- paste0("https://api-perfilpolitico.serenata.ai/api/candidate/", id)
+  
+  candidato <- fromJSON(url)
+  
+  candidato_alt <- tibble(id = candidato$id, 
+                          nome = candidato$name,
+                          uf = candidato$state,
+                          partido = candidato$party_abbreviation,
+                          data_nascimento = candidato$date_of_birth,
+                          cargo = candidato$post)
 
+  return(candidato_alt)  
+}
