@@ -55,7 +55,7 @@ fetch_ids_perfil_politico_por_uf_cargo <- function(ano = 2018, uf = "pb", cargo 
 #' @title Recupera informações de candidatos da API do perfil político via ID
 #' @description A partir da API do perfil político recupera informações de um candidato
 #' @param id Id do candidato na API perfil político
-#' @return Dataframe com IDs (na api do perfil político) de todos os candidatos a deputado federal e senador nas eleições de 2018 
+#' @return Dataframe com informações específicas de um candidato
 #' @examples
 #' candidato <- fetch_info_perfil_politico_por_id("2314405")
 fetch_info_perfil_politico_por_id <- function(id) {
@@ -63,6 +63,7 @@ fetch_info_perfil_politico_por_id <- function(id) {
   library(jsonlite)
   
   print(paste0("Recuperando informações do candidato de id ", id))
+  Sys.sleep(3) ## API não suporta muitas requisições acumuladas. Remova se a carga de requisições for pequena.
   
   url <- paste0("https://api-perfilpolitico.serenata.ai/api/candidate/", id)
   
@@ -76,4 +77,25 @@ fetch_info_perfil_politico_por_id <- function(id) {
                           cargo = candidato$post)
 
   return(candidato_alt)  
+}
+
+#' @title Processa dados da api do perfil político para recuperar informações detalhadas dos candidatos à Câmara e ao
+#' Senado
+#' @description A partir da API do perfil político recupera informações dos candidatos à Câmara e ao Senado
+#' @return Dataframe com IDs (na api do perfil político) de todos os candidatos a deputado federal e senador nas eleições de 2018 
+#' @examples
+#' candidatos <- process_info_perfil_politico()
+process_info_perfil_politico <- function() {
+  library(tidyverse)
+  
+  candidatos_2018 <- fetch_ids_perfil_politico_camara_senado(2018)
+  
+  candidatos_2018_ids <- candidatos_2018 %>% 
+    distinct(id) %>% 
+    pull(id)
+  
+  candidatos_info_2018 <- purrr::pmap_dfr(list(candidatos_2018_ids), 
+                                          ~ fetch_info_perfil_politico_por_id(..1))
+    
+  return(candidatos_info_2018)
 }

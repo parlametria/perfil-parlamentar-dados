@@ -95,7 +95,7 @@ processa_doacoes_tse <- function(
                            locale = locale(encoding = 'latin1')) %>% 
     filter(DS_SITUACAO_CANDIDATURA == "APTO") %>% 
     filter(DS_DETALHE_SITUACAO_CAND %in% c("DEFERIDO", "DEFERIDO COM RECURSO")) %>% 
-    select(DS_CARGO, SG_UE, SQ_CANDIDATO, NM_CANDIDATO, NR_CPF_CANDIDATO, SG_PARTIDO) %>% 
+    select(DS_CARGO, SG_UE, SQ_CANDIDATO, NM_CANDIDATO, NM_URNA_CANDIDATO, NR_CPF_CANDIDATO, SG_PARTIDO) %>% 
     mutate(DS_CARGO = str_to_title(DS_CARGO)) %>% 
     filter(DS_CARGO %in% c("Deputado Federal", "Senador"))
   
@@ -117,6 +117,9 @@ processa_doacoes_tse <- function(
         DS_ORIGEM_RECEITA = first(DS_ORIGEM_RECEITA),
         VR_RECEITA = sum(VR_RECEITA)
         )
+    
+    candidatos <- candidatos %>% 
+      select(-NM_URNA_CANDIDATO)
   }
   
   candidatos_doacoes <- candidatos %>% 
