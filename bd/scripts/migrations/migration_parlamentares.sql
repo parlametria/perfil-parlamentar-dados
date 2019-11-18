@@ -6,9 +6,9 @@ CREATE TEMP TABLE temp_parlamentares AS SELECT * FROM parlamentares LIMIT 0;
 \copy temp_parlamentares FROM './data/parlamentares.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
 
 INSERT INTO parlamentares (id_parlamentar_voz, id_parlamentar, casa, cpf, nome_civil, 
-  nome_eleitoral, genero, uf, id_partido, situacao, condicao_eleitoral, ultima_legislatura, em_exercicio) 
+  nome_eleitoral, genero, uf, id_partido, situacao, condicao_eleitoral, ultima_legislatura, em_exercicio, id_perfil_politico) 
 SELECT id_parlamentar_voz, id_parlamentar, casa, cpf, nome_civil, 
-  nome_eleitoral, genero, uf, id_partido, situacao, condicao_eleitoral, ultima_legislatura, em_exercicio
+  nome_eleitoral, genero, uf, id_partido, situacao, condicao_eleitoral, ultima_legislatura, em_exercicio, id_perfil_politico
 FROM temp_parlamentares
 ON CONFLICT (id_parlamentar_voz)
 DO
@@ -22,7 +22,8 @@ DO
     situacao = EXCLUDED.situacao,
     condicao_eleitoral = EXCLUDED.condicao_eleitoral,
     ultima_legislatura = EXCLUDED.ultima_legislatura,
-    em_exercicio = EXCLUDED.em_exercicio;
+    em_exercicio = EXCLUDED.em_exercicio,
+    id_perfil_politico = EXCLUDED.id_perfil_politico;
 
 DELETE FROM parlamentares
  WHERE id_parlamentar_voz NOT IN 
