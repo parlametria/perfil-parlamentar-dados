@@ -23,7 +23,7 @@ opt = parse_args(opt_parser)
 saida <- opt$out
 
 message("Iniciando processamento...")
-candidatos <- fetch_ids_perfil_politico_camara_senado(ano = 2018)
+candidatos <- fetch_ids_perfil_politico()
 
 message(paste0("Salvando o resultado em ", saida))
 write.csv(candidatos, saida, row.names = FALSE)

@@ -42,7 +42,7 @@ processa_doacoes_partidarias_tse <-
   
   candidatos_receita <- candidatos %>% 
     left_join(receitas_group, by = c("SQ_CANDIDATO")) %>% 
-    mutate(total_receita = if_else(is.na(total_receita), 0, total_receita)) %>% 
+    mutate(total_receita = if_else(is.na(total_receita), 0, as.numeric(total_receita))) %>% 
     select(id_tse = SQ_CANDIDATO, cargo = DS_CARGO, uf = SG_UE, partido = SG_PARTIDO, nome = NM_CANDIDATO,
            cpf = NR_CPF_CANDIDATO, total_receita)
   
@@ -124,7 +124,7 @@ processa_doacoes_tse <- function(
   
   candidatos_doacoes <- candidatos %>% 
     left_join(receitas, by = c("SQ_CANDIDATO")) %>% 
-    mutate(VR_RECEITA = if_else(is.na(VR_RECEITA), 0, VR_RECEITA))
+    mutate(VR_RECEITA = if_else(is.na(VR_RECEITA), 0, as.numeric(VR_RECEITA)))
   
   return(candidatos_doacoes)
 }

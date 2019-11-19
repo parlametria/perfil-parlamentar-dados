@@ -12,3 +12,6 @@
 
 - **candidatos_congresso_doadores_2018.csv**: lista de todas as doações recebidas por candidatos (eleitos e não eleitos) aos cargos de Deputado Federal e de Senador nas eleições federais de 2018. Contém doações de partidos, doações de pessoas físicas e de outros candidatos.
 Foi gerado a partir da execução da função processa_doacoes_tse presente no script `parlametria/crawler/receitas/analyzer_receitas_tse.R` com os seguintes parâmetros processa_doacoes_tse(ano = 2018, summarized = FALSE)
+
+- **candidatos_congresso_doadores_2014.csv**: lista de todas as doações recebidas por candidatos (eleitos e não eleitos) aos cargos de Deputado Federal e de Senador nas eleições federais de 2014. Contém doações de partidos, doações de pessoas físicas e de outros candidatos.
+Foi gerado a partir da execução da função processa_doacoes_tse presente no script `parlametria/crawler/receitas/analyzer_receitas_tse.R` com os seguintes parâmetros: processa_doacoes_tse(receitas_datapath = here("parlametria/raw_data/dados_tse/receitas_candidatos_2014_brasil.txt.zip"), candidatos_datapath = here("parlametria/raw_data/dados_tse/consulta_cand_2014_BRASIL.csv.zip"), ano = 2014, summarized = FALSE)

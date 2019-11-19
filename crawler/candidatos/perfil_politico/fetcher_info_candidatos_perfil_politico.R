@@ -88,14 +88,40 @@ fetch_info_perfil_politico_por_id <- function(id) {
 process_info_perfil_politico <- function() {
   library(tidyverse)
   
+  candidatos_senadores_2014 <- fetch_ids_perfil_politico_camara_senado(2014) %>% 
+    filter(cargo == "SENADOR")
+  
   candidatos_2018 <- fetch_ids_perfil_politico_camara_senado(2018)
   
-  candidatos_2018_ids <- candidatos_2018 %>% 
+  candidatos_ids <- candidatos_2018 %>% 
+    rbind(candidatos_senadores_2014) %>% 
     distinct(id) %>% 
     pull(id)
   
-  candidatos_info_2018 <- purrr::pmap_dfr(list(candidatos_2018_ids), 
+  candidatos_info <- purrr::pmap_dfr(list(candidatos_ids), 
                                           ~ fetch_info_perfil_politico_por_id(..1))
     
-  return(candidatos_info_2018)
+  return(candidatos_info)
+}
+
+#' @title Recupera dados da api do perfil político para recuperar informações detalhadas dos candidatos à Câmara e ao
+#' Senado nas eleições de 2018 e de 2014 (para senadores)
+#' @description A partir da API do perfil político recupera informações dos candidatos à Câmara e ao Senado
+#' @return Dataframe com IDs (na api do perfil político) de todos os candidatos a deputado federal e senador nas eleições de 2018 e candidatos 
+#' a senadores em 2014.
+#' @examples
+#' candidatos <- fetch_ids_perfil_politico()
+fetch_ids_perfil_politico <- function() {
+  library(tidyverse)
+  
+  candidatos_senadores_2014 <- fetch_ids_perfil_politico_camara_senado(2014) %>% 
+    filter(cargo == "SENADOR")
+  
+  candidatos_2018 <- fetch_ids_perfil_politico_camara_senado(2018)
+  
+  candidatos <- candidatos_2018 %>% 
+    rbind(candidatos_senadores_2014) %>% 
+    distinct(id, .keep_all = TRUE)
+  
+  return(candidatos)
 }
