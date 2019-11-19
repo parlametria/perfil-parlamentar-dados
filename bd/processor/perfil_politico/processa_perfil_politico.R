@@ -21,6 +21,7 @@ processa_merge_parlamentares_api_perfil_politico <- function(parlamentares_merge
                                          " ",
                                          stringr::word(nome_urna_processed, -1))) %>% 
     left_join(perfil_politico %>% 
+                mutate(partido = if_else(partido == "SD", "SOLIDARIEDADE", partido)) %>% ## trata caso de abreviação usada e substitui pelo nome
                 mutate(nome_processed = padroniza_nome(nome),
                        partido_processed = padroniza_nome(partido),
                        nome_processed = paste0(stringr::word(nome_processed, 1), 
@@ -54,13 +55,16 @@ processa_merge_parlamentares_api_perfil_politico <- function(parlamentares_merge
 #' API do perfil político (https://github.com/okfn-brasil/perfil-politico)
 #' @param candidatos_perfil_politico_data_path Caminho para o arquivo de dados dos candidatos do perfil político
 #' @param parlamentares_data_path Caminho para o arquivo de dados de parlamentares da Câmara e do Senado
-#' @param doacoes_path Caminho para o arquivo de candidatos (Câmara e Senado) em 2018 e suas respectivas doações
+#' #' @param doacoes_path_2014 Caminho para o arquivo de candidatos (Câmara e Senado) em 2014 e suas respectivas doações
+#' recebidas
+#' @param doacoes_path_2018 Caminho para o arquivo de candidatos (Câmara e Senado) em 2018 e suas respectivas doações
 #' recebidas
 #' @return Dataframe com informações do perfil político
 processa_perfil_politico <- 
   function(candidatos_perfil_politico_data_path = here::here("crawler/raw_data/candidatos_perfil_politico.csv"),
            parlamentares_data_path = here::here("crawler/raw_data/parlamentares.csv"),
-           doacoes_path = here::here("parlametria/raw_data/receitas/candidatos_congresso_doadores_2018.csv")) {
+           doacoes_path_2014 = here::here("parlametria/raw_data/receitas/candidatos_congresso_doadores_2014.csv"),
+           doacoes_path_2018 = here::here("parlametria/raw_data/receitas/candidatos_congresso_doadores_2018.csv")) {
   
   library(tidyverse)
   library(here)
@@ -81,9 +85,20 @@ processa_perfil_politico <-
     mutate(cpf = if_else(casa == "senado", cpf_senador, cpf)) %>% 
     select(-cpf_senador)
   
-  candidatos_tse <- read_csv(doacoes_path, col_types = c(NR_CPF_CANDIDATO = "c")) %>% 
+  candidatos_tse_2018 <- read_csv(doacoes_path_2018, col_types = c(NR_CPF_CANDIDATO = "c")) %>% 
     distinct(NR_CPF_CANDIDATO, SG_PARTIDO, SG_UE, NM_URNA_CANDIDATO) %>% 
     select(cpf = NR_CPF_CANDIDATO, partido_eleicao = SG_PARTIDO, uf_eleicao = SG_UE, nome_urna = NM_URNA_CANDIDATO)
+  
+  candidatos_tse_2014 <- read_csv(doacoes_path_2014, col_types = c(NR_CPF_CANDIDATO = "c")) %>% 
+    distinct(NR_CPF_CANDIDATO, SG_PARTIDO, SG_UE, NM_URNA_CANDIDATO) %>% 
+    select(cpf = NR_CPF_CANDIDATO, partido_eleicao = SG_PARTIDO, uf_eleicao = SG_UE, nome_urna = NM_URNA_CANDIDATO)
+  
+  candidatos_tse_2014 <- candidatos_tse_2014 %>% 
+    anti_join(candidatos_tse_2018,
+              by = "cpf")
+  
+  candidatos_tse <- candidatos_tse_2018 %>% 
+    rbind(candidatos_tse_2014)
 
   parlamentares_merge <- parlamentares %>% 
     select(id, casa, cpf, nome_eleitoral, uf, sg_partido, data_nascimento, em_exercicio) %>% 
