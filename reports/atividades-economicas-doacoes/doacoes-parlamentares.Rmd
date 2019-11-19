@@ -1,0 +1,144 @@
+---
+title: "Financiamento de grandes grupos econômicos na Campanha de parlamentares em exercício"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+library(plotly)
+library(ggchicklet)
+theme_set(theme_minimal())
+options(scipen = 999)
+```
+
+```{r}
+doacoes_sumario <- read_csv(here("parlametria/raw_data/empresas/parlamentares_ligacao_atividade_economica.csv"),
+                            col_types = cols(id_parlamentar = "c"))
+```
+
+Em 2018, quando foram eleitos 513 Deputados Federais e 54 Senadores, a eleição não permitiu a doação direta de empresas (pessoas jurídicas) para os candidatos, apenas doações de pessoas físicas. Iremos explorar nessa análise a participação dessas pessoas físicas como sócias de empresas e quais os grupos de atividades econômicas que essas empresas pertencem.
+
+Quando for falado em doações de grupos econômicos para Parlamentares, deve ser intepretado como doações de sócios de empresas que atuam neste grupo econômico. Grupo econômico é o ramo de atividade que a empresa pode atuar. A classificação é obtida através da declaração dos CNAE's das empresas na Receita Federal. Uma empresa pode atuar em mais de um grupo econômico.
+
+A seguir iremos visualizar quais os grupos econômicos que mais doaram para parlamentares (deputados e senadores) em 2018.
+
+```{r}
+doacoes_sumario_por_atividade <- doacoes_sumario %>% 
+  group_by(grupo_atividade_economica) %>% 
+  summarise(total = sum(total_por_atividade))
+```
+
+```{r}
+levels <- doacoes_sumario_por_atividade %>%
+  arrange(desc(total)) %>% 
+  pull(grupo_atividade_economica)
+
+doacoes_sumario_por_atividade %>% 
+  arrange(desc(total)) %>% 
+  head(15) %>% 
+  ggplot(aes(x = fct_rev(factor(grupo_atividade_economica, levels = levels)), y = total / 1e6, fill = "a")) +
+  geom_chicklet(width = .7, radius = grid::unit(5, "pt")) +
+  geom_text(aes(label = paste0(round(total / 1e6, 2))),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+  coord_flip() +
+  scale_fill_manual(values = c("#806CCC")) +
+  scale_y_continuous(limits = c(0, 80)) +
+  guides(fill = FALSE) + 
+  labs(title = "Grupos econômicos \nque mais doaram",
+       y = "Total doado para parlamentares (milhões de reais)",
+       x = "") +
+  theme_ipsum_rc() +
+  theme(axis.text.y = element_text(size = 10))
+```
+
+Atividades administrativas, grupo relacionado a comércio e o grupo de Atividades profissionais foram os grandes doadores em 2018. Como uma doação vem de um sócio e não de uma empresa, e esta mesma empresa pode atuar em diferentes grupos econômicos, uma mesma doação pode contar como doação no montante de mais de um grupo econômico. Ou seja, estamos considerando no montante de todas os grupos econômicos de uma empresa a doação de seu sócio a um parlamentar.
+
+Olhando para os partidos destes parlamentares durante as eleições, podemos visualizar quais os 3 principais grupos econômicos que doaram para parlamentares destes partidos. Estão sendo mostrados apenas os partidos com mais de 10 parlamentares eleitos em 2018.
+
+```{r}
+parlamentares_investimento <- read_csv(here("parlametria/raw_data/resumo/parlamentares_investimento.csv"),
+                                       col_types = cols(id = "c")) %>% 
+  select(id_parlamentar = id, casa, partido_eleicao)
+
+doacoes_sumario_eleicao_2018 <- doacoes_sumario %>%
+  left_join(parlamentares_investimento, by = c("id_parlamentar", "casa"))
+```
+
+```{r}
+doacoes_partido <- doacoes_sumario_eleicao_2018 %>% 
+  filter(!is.na(partido_eleicao)) %>% 
+  group_by(partido_eleicao, grupo_atividade_economica) %>% 
+  summarise(total_partido_por_atividade = sum(total_por_atividade)) %>% 
+  ungroup() %>% 
+  
+  group_by(partido_eleicao) %>% 
+  mutate(total_partido = sum(total_partido_por_atividade)) %>% 
+  ungroup() %>% 
+  
+  mutate(proporcao_partido = total_partido_por_atividade / total_partido)
+```
+
+```{r}
+# doacoes_partido %>%
+#   ggplot(aes(x = partido_eleicao, y = proporcao_partido)) +
+#   geom_point() +
+#   coord_flip() +
+#   theme_ipsum_rc()
+```
+
+```{r fig.width = 5, fig.height = 3}
+n_minimo_parlamentares = 10
+n_top_atividades_por_partido = 3
+
+count_partidos <- doacoes_sumario_eleicao_2018 %>% 
+  group_by(partido_eleicao) %>% 
+  summarise(n_parlamentares = n_distinct(id_parlamentar, casa))
+
+g <- doacoes_partido %>%
+  filter(partido_eleicao %in% (
+    count_partidos %>% filter(n_parlamentares >= n_minimo_parlamentares) %>% pull(partido_eleicao)
+  )) %>%
+  group_by(partido_eleicao) %>%
+  top_n(n = n_top_atividades_por_partido, wt = proporcao_partido) %>%
+  mutate(proporcao_partido = round(proporcao_partido * 100, 2)) %>%
+  ggplot(aes(x = partido_eleicao, y = proporcao_partido, color = partido_eleicao)) +
+  geom_point(aes(
+    text = sprintf(
+      "%s - %s: %s",
+      partido_eleicao,
+      grupo_atividade_economica,
+      paste0(proporcao_partido, "%")
+    )
+  )) +
+  scale_color_manual(values = rep(c("#43ab92", "#806CCC"), 15)) +
+  coord_flip() +
+  # scale_y_continuous(breaks = seq(0, 100, 1)) +
+  labs(x = "",
+       y = "Proporção de doações recebidas pelo partido",
+       title = "Principais Grupos econômicos doadores \npor partido") +
+  theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+  config(displayModeBar = F) %>%
+  layout(autosize = F,
+         showlegend = F)
+```
+
