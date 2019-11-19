@@ -103,10 +103,10 @@ processa_indice_geral_ligacao_economica <- function() {
   
   parlamentares_socios_atividades_economicas <- processa_parlamentares_socios_atividades_economicas()
   
-  parlamentares_prorporcao_doadores_atividades_economicas <- processa_proporcao_doadores_atividades_economicas()
+  parlamentares_proporcao_doadores_atividades_economicas <- processa_proporcao_doadores_atividades_economicas()
   
   parlamentares_alt <- parlamentares_socios_atividades_economicas %>% 
-    full_join(parlamentares_prorporcao_doadores_atividades_economicas, 
+    full_join(parlamentares_proporcao_doadores_atividades_economicas, 
               by = c("id_parlamentar", "casa", "grupo_atividade_economica")) %>% 
     inner_join(parlamentares_id, by = c("id_parlamentar", "casa")) %>% 
     
@@ -128,4 +128,32 @@ processa_indice_geral_ligacao_economica <- function() {
            indice_ligacao_atividade_economica)
   
   return(parlamentares_alt)
+}
+
+#' @title Realiza merge entre a sugestão de novos nomes para os grupos econômicos e os códigos da coluna de
+#' divisão no CNAE - IBGE
+#' @description Realiza merge entre a sugestão de novos nomes para os grupos econômicos e os códigos da coluna de
+#' divisão no CNAE - IBGE
+#' @return Dataframe contendo informações dos nome sugeridos para os grupos econômicos e seus códigos de divisão no CNAE
+#' @examples
+#' merge_nomes_cnae <- merge_divisao_cnaes()
+merge_divisao_cnaes <- function() {
+  library(tidyverse)
+  
+  ## Link para planilha: https://docs.google.com/spreadsheets/d/1BcuFkAs1VxjwDmc26TRjKfT1dE71oy8cm2Oz0RjLEKE/edit#gid=188864972
+  .URL_SUGESTAO_GRUPOS_BRUNO = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQyWsXgv-OSdX79ykHLF8zvpviso2mh-yuxEQMUqjZXN3BRFTyDN_gCuec0mlKsB-vTKGyq6jWQs1Z/pub?gid=188864972&single=true&output=csv"
+  sugestao <- read_csv(.URL_SUGESTAO_GRUPOS_BRUNO)
+  
+  ## Link para planilha: https://docs.google.com/spreadsheets/d/1Sy-atPZd4VcIRWKFklo24TLg-PQ93YPosfi8Aj9Jwi8/edit#gid=319930246
+  .URL_CNAE_IBGE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnCe3_z0B3OYzBWe-1Q-a7FugenhsARmxcbKBn6vGSkRkAbp4EzQSQWTSvWRpQRgEkdNxAZYY2wzPz/pub?gid=319930246&single=true&output=csv"
+  
+  cnaes <- read_csv(.URL_CNAE_IBGE) %>% 
+    select(codigo = `Divisão`, nome = X6) %>% 
+    filter(!is.na(codigo))
+  
+  cnaes_merge <- sugestao %>% 
+    left_join(cnaes, by = c("Divisão CNAE" = "nome")) %>% 
+    mutate(`Proposta de Agregação` = toupper(`Proposta de Agregação`))
+  
+  return(cnaes_merge)
 }
