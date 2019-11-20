@@ -23,6 +23,8 @@ library(here)
 library(hrbrthemes)
 library(plotly)
 library(ggchicklet)
+library(ggridges)
+
 theme_set(theme_minimal())
 options(scipen = 999)
 ```
@@ -69,76 +71,57 @@ doacoes_sumario_por_atividade %>%
   theme(axis.text.y = element_text(size = 10))
 ```
 
-Atividades administrativas, grupo relacionado a comércio e o grupo de Atividades profissionais foram os grandes doadores em 2018. Como uma doação vem de um sócio e não de uma empresa, e esta mesma empresa pode atuar em diferentes grupos econômicos, uma mesma doação pode contar como doação no montante de mais de um grupo econômico. Ou seja, estamos considerando no montante de todas os grupos econômicos de uma empresa a doação de seu sócio a um parlamentar.
-
-Olhando para os partidos destes parlamentares durante as eleições, podemos visualizar quais os 3 principais grupos econômicos que doaram para parlamentares destes partidos. Estão sendo mostrados apenas os partidos com mais de 10 parlamentares eleitos em 2018.
+Atividades imobiliárias, atividades financeiras e o grupo de atividades profissionais foram os grandes doadores em 2018. Como uma doação vem de um sócio e não de uma empresa, e esta mesma empresa pode atuar em diferentes grupos econômicos, uma mesma doação pode contar como doação no montante de mais de um grupo econômico. Ou seja, estamos considerando no montante de todas os grupos econômicos de uma empresa a doação de seu sócio a um parlamentar.
 
 ```{r}
 parlamentares_investimento <- read_csv(here("parlametria/raw_data/resumo/parlamentares_investimento.csv"),
-                                       col_types = cols(id = "c")) %>% 
+                                       col_types = cols(id = "c")) %>%
   select(id_parlamentar = id, casa, partido_eleicao)
 
-doacoes_sumario_eleicao_2018 <- doacoes_sumario %>%
+doacoes_sumario_alt <- doacoes_sumario %>%
   left_join(parlamentares_investimento, by = c("id_parlamentar", "casa"))
 ```
 
-```{r}
-doacoes_partido <- doacoes_sumario_eleicao_2018 %>% 
-  filter(!is.na(partido_eleicao)) %>% 
-  group_by(partido_eleicao, grupo_atividade_economica) %>% 
-  summarise(total_partido_por_atividade = sum(total_por_atividade)) %>% 
-  ungroup() %>% 
-  
-  group_by(partido_eleicao) %>% 
-  mutate(total_partido = sum(total_partido_por_atividade)) %>% 
-  ungroup() %>% 
-  
-  mutate(proporcao_partido = total_partido_por_atividade / total_partido)
-```
+## Distribuição dos parlamentares por Grupo
 
 ```{r}
-# doacoes_partido %>%
-#   ggplot(aes(x = partido_eleicao, y = proporcao_partido)) +
-#   geom_point() +
-#   coord_flip() +
-#   theme_ipsum_rc()
-```
+levels <- doacoes_sumario_alt %>% 
+  filter(!is.na(proporcao_doacao)) %>% 
+  group_by(grupo_atividade_economica) %>% 
+  summarise(median = median(proporcao_doacao)) %>% 
+  ungroup() %>% 
+  arrange(desc(median)) %>% 
+  pull(grupo_atividade_economica)
 
-```{r fig.width = 5, fig.height = 3}
-n_minimo_parlamentares = 10
-n_top_atividades_por_partido = 3
-
-count_partidos <- doacoes_sumario_eleicao_2018 %>% 
-  group_by(partido_eleicao) %>% 
-  summarise(n_parlamentares = n_distinct(id_parlamentar, casa))
-
-g <- doacoes_partido %>%
-  filter(partido_eleicao %in% (
-    count_partidos %>% filter(n_parlamentares >= n_minimo_parlamentares) %>% pull(partido_eleicao)
-  )) %>%
-  group_by(partido_eleicao) %>%
-  top_n(n = n_top_atividades_por_partido, wt = proporcao_partido) %>%
-  mutate(proporcao_partido = round(proporcao_partido * 100, 2)) %>%
-  ggplot(aes(x = partido_eleicao, y = proporcao_partido, color = partido_eleicao)) +
-  geom_point(aes(
-    text = sprintf(
-      "%s - %s: %s",
-      partido_eleicao,
-      grupo_atividade_economica,
-      paste0(proporcao_partido, "%")
-    )
-  )) +
-  scale_color_manual(values = rep(c("#43ab92", "#806CCC"), 15)) +
-  coord_flip() +
-  # scale_y_continuous(breaks = seq(0, 100, 1)) +
-  labs(x = "",
-       y = "Proporção de doações recebidas pelo partido",
-       title = "Principais Grupos econômicos doadores \npor partido") +
+top_grupos <- levels %>% 
+  head(15)
+  
+doacoes_sumario_alt %>% 
+  filter(!is.na(proporcao_doacao)) %>% 
+  mutate(proporcao_doacao = proporcao_doacao * 100) %>% 
+  group_by(grupo_atividade_economica) %>% 
+  mutate(median = median(proporcao_doacao)) %>% 
+  ungroup() %>%
+  ggplot(aes(x = proporcao_doacao, y = factor(grupo_atividade_economica, levels = levels))) +
+  # geom_density_ridges(
+  #   aes(height = ..density..),
+  #   stat = "density", trim = TRUE,
+  #   scale = 0.9
+  # ) +
+  geom_count(alpha = 0.5) +
+  scale_shape_identity() +
+  geom_point(aes(x = median), size = 3.5, color = "#dc267f", shape = 124) +
+  
+  geom_point(aes(x = 13.5, y = 7.5), size = 3.5, color = "#dc267f", shape = 124) +
+  annotate("text", label = "é a mediana", x = 15.2, y = 7.5, color = "#4b4545") +
+  
+  # scale_x_continuous(breaks = seq(0, 100, 2)) +
+  guides(size = FALSE) +
+  labs(title = "Distribuição do investimento por cargo \nna câmara",
+       x = "Proporção de campanhas médias (%)",
+       y = "Cargo") + 
   theme_ipsum_rc()
-
-ggplotly(g, tooltip = "text") %>%
-  config(displayModeBar = F) %>%
-  layout(autosize = F,
-         showlegend = F)
 ```
+
+
 
