@@ -287,6 +287,103 @@ Para o Senado, o cenário é um pouco diferente: a maioria dos senadores não co
 
 ## Distribuição dos parlamentares por Partido
 
+Para o cálculo da participação em campanha, somamos, para cada partido, todas as receitas que vieram de sócios de empresas para os deputados desses partidos. Depois dividimos pela soma do valor total que cada deputado desse partido recebeu, isto é, considerando doações de pessoas físicas (sócias de empresas ou não) e doações do partido ou de outros candidatos. Ou seja, para cada partido temos a proporção de receitas provenientes de sócios. 
+
+A barra amarela representa a média geral de financiamento de campanha vindos de sócios de empresas. A barra azul representa a média de quanto os parlamentares de um partido tiveram suas campanhas financiadas por sócios de empresas.
+
+Quando a barra amarela se sobressai significa que a média geral de financiamento de campanha vindos de sócios foi maior que a média do partido. Neste caso a barra cinza é a média do partido.
+
+Caso a barra azul se sobressaia significa que a média do partido é maior que a média geral. Neste caso a barra cinza é a média geral.
+
+```{r}
+plot_financiamento_partido_sumarizado <- function(data, titulo) {
+  levels <- data %>% 
+    filter(key == "proporcao_partido_socios") %>% 
+    arrange(desc(value)) %>% 
+    pull(sg_partido)
+  
+  ggplot(data = data %>% 
+         filter(key != "proporcao_partido_socios"),
+       aes(
+         x = forcats::fct_rev(factor(sg_partido, levels = levels)),
+         y = value,
+         fill = key
+       )) +
+    geom_col(fill = "#FFD046",
+             alpha = .5,
+             width = 0.5) +
+    geom_text(data = filter(data, key == "proporcao_partido_socios"), 
+              aes(label = paste0(round(value * 100, 1))),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+    geom_col(
+      data = filter(data, key == "proporcao_partido_socios"),
+      fill = "#6699CC",
+      alpha = .5,
+      width = 0.5
+    ) +
+    coord_flip() +
+    scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    labs(title = titulo,
+         x = "",
+         y = "Média da participação em campanha recebida de sócios de empresas (%)") +
+    theme_ipsum_rc()
+}
+```
+
+## Para Deputados
+
+```{r}
+media_geral <- doacoes_origem %>% 
+  filter(casa == "camara") %>% 
+  mutate(proporcao = total_receita_doadores_empresas / total_recebido_geral) %>% 
+  filter(!is.na(proporcao)) %>% 
+  pull(proporcao) %>% 
+  mean()
+
+doacoes_partidos_sumario_camara <- doacoes_origem %>% 
+  filter(casa == "camara") %>% 
+  group_by(sg_partido) %>% 
+  summarise(total_partido = sum(total_recebido_geral),
+            total_partido_socios = sum(total_receita_doadores_empresas)) %>% 
+  ungroup() %>% 
+  mutate(proporcao_partido_socios = total_partido_socios / total_partido) %>% 
+  mutate(media_geral = media_geral) %>% 
+  gather(key = "key", value = "value", proporcao_partido_socios:media_geral)
+```
+
+```{r fig.height=6}
+plot_financiamento_partido_sumarizado(doacoes_partidos_sumario_camara, "Participação de sócios em campanhas dos deputados \npor partido")
+```
+
+Proporcionalmente, NOVO e PSL foram os partidos que mais receberam doações de sócios de empresas quando comparados a média que um parlamentar recebe. Deputados do PSL, por exemplo, dentre todas suas receitas em campanha, mais de 42% vieram de sócios de empresas. A média geral considerando todos os deputados é próxima a 20%.
+
+## Para Senadores
+
+```{r}
+media_geral <- doacoes_origem %>% 
+  filter(casa == "senado") %>% 
+  mutate(proporcao = total_receita_doadores_empresas / total_recebido_geral) %>% 
+  filter(!is.na(proporcao)) %>% 
+  pull(proporcao) %>% 
+  mean()
+
+doacoes_partidos_sumario_senado <- doacoes_origem %>% 
+  filter(casa == "senado") %>% 
+  group_by(sg_partido) %>% 
+  summarise(total_partido = sum(total_recebido_geral),
+            total_partido_socios = sum(total_receita_doadores_empresas)) %>% 
+  ungroup() %>% 
+  mutate(proporcao_partido_socios = total_partido_socios / total_partido) %>% 
+  mutate(media_geral = media_geral) %>% 
+  gather(key = "key", value = "value", proporcao_partido_socios:media_geral)
+```
+
+```{r fig.height=6}
+plot_financiamento_partido_sumarizado(doacoes_partidos_sumario_senado, "Participação de sócios em campanhas dos senadores \npor partido")
+```
+
 ### Para Deputados
 
 A seguir iremos visualizar a distribuição dos deputados dos partidos com mais de 8 filiados. Para cada partido foi calculada a média de quanto cada setor econômico participou na campanha de seus deputados. Foram selecionados os seguintes setores econômicos:
@@ -303,8 +400,6 @@ A barra amarela representa a média geral de quanto o setor econômico participo
 Quando a barra amarela se sobressai significa que a média geral de participação em campanha para aquele setor econômico é maior que a média do partido. Neste caso, a barra cinza irá indicar qual é a média do partido.
 
 Caso a barra azul se sobressaia significa que a média do partido para o setor é maior que a geral. Neste caso a barra cinza irá indicar qual a média geral daquele setor.
-
-Cada gráfico do partido tem sua própria escala. A porcentagem no eixo x indica a média de participação na campanha.
 
 ```{r fig.height=30}
 plot_financiamento_por_partido <- function(data, lista_partidos, titulo) {
