@@ -14,7 +14,9 @@ processa_parlamentares_socios_atividades_economicas <- function() {
                                      col_types = cols(id_parlamentar = "c")) %>% 
     distinct(id_parlamentar, casa, cnpj)
   
-  info_empresas <- process_cnaes_empresas(info_empresas_datapath = here::here("parlametria/raw_data/empresas/info_empresas_socios_todos_parlamentares.csv")) %>% 
+  info_empresas <- process_cnaes_empresas(
+    info_empresas_datapath = here::here("parlametria/raw_data/empresas/info_empresas_socios_todos_parlamentares.csv"),
+    apenas_cnae_fiscal = TRUE) %>% 
     distinct(cnpj, grupo_atividade_economica)
   
   parlamentares_empresas_cnaes <- parlamentares_empresas %>% 
@@ -51,22 +53,28 @@ processa_proporcao_doadores_atividades_economicas <- function() {
     select(id_parlamentar, casa = casa_parlamentar, cnpj, cpf_cnpj_socio) %>% 
     distinct(id_parlamentar, casa, cnpj, cpf_cnpj_socio) 
   
-  info_empresas <- process_cnaes_empresas(info_empresas_datapath = here::here("parlametria/raw_data/empresas/info_empresas_doadores_todos_parlamentares.csv")) %>% 
+  info_empresas <- process_cnaes_empresas(
+    info_empresas_datapath = here::here("parlametria/raw_data/empresas/info_empresas_doadores_todos_parlamentares.csv"),
+    apenas_cnae_fiscal = TRUE) %>% 
     distinct(cnpj, grupo_atividade_economica)
   
   parlamentares_socios_atividades <- parlamentares_doadores_empresas %>% 
     left_join(info_empresas, by = "cnpj") %>% 
     ## recuperando distintas atividades econômicas por parlamentar e doador (que também é sócio)
-    distinct(id_parlamentar, casa, cpf_cnpj_socio, grupo_atividade_economica)
+    distinct(id_parlamentar, casa, cpf_cnpj_socio, grupo_atividade_economica) %>% 
+    group_by(id_parlamentar, casa, cpf_cnpj_socio) %>% 
+    mutate(n_grupos_atividades_economicas = n_distinct(grupo_atividade_economica)) %>% 
+    ungroup()
   
   parlamentares_doacoes_merge <- parlamentares_doacoes %>% 
     select(id_parlamentar, casa, nome_eleitoral, cpf_cnpj_doador, nome_doador, valor_receita) %>% 
-    left_join(parlamentares_socios_atividades, by = c("id_parlamentar", "casa", "cpf_cnpj_doador" = "cpf_cnpj_socio"))
+    left_join(parlamentares_socios_atividades, by = c("id_parlamentar", "casa", "cpf_cnpj_doador" = "cpf_cnpj_socio")) %>% 
+    filter(!is.na(grupo_atividade_economica)) %>%
+    mutate(valor_receita_por_atividade = valor_receita / n_grupos_atividades_economicas)
   
   parlamentares_doacoes_grouped <- parlamentares_doacoes_merge %>% 
-    filter(!is.na(grupo_atividade_economica)) %>% 
     group_by(id_parlamentar, casa, grupo_atividade_economica) %>% 
-    summarise(total_por_atividade = sum(valor_receita)) %>% 
+    summarise(total_por_atividade = sum(valor_receita_por_atividade)) %>% 
     ungroup()
   
   parlamentares_doacoes_geral <- parlamentares_doacoes %>% 
