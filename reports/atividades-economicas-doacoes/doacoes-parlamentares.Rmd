@@ -24,6 +24,8 @@ library(hrbrthemes)
 library(plotly)
 library(ggchicklet)
 library(ggridges)
+library(ggrepel)
+library(gridExtra)
 
 source(here("reports/atividades-economicas-doacoes/utils.R"))
 source(here("parlametria/processor/empresas/processa_parlamentares_info_eleicao.R"))
@@ -53,6 +55,155 @@ Quando for falado em doações de grupos econômicos para Parlamentares, deve se
 
 Se um doador possuir duas ou mais empresas com diferentes grupos econômicos então a doação será dividida pelo número de grupos econômicos. 
 
+## Versão 1
+```{r fig.height=4}
+set.seed(123)
+
+total_doacoes_socios_empresas <- doacoes_origem %>%
+  filter(casa == "camara") %>%
+  pull(total_receita_doadores_empresas) %>%
+  sum()
+
+total_doacoes_pessoa_fisica <- doacoes_origem %>%
+  filter(casa == "camara") %>%
+  pull(pessoa_fisica) %>%
+  sum()
+
+total_doacoes_partidos_candidatos <- doacoes_origem %>%
+  filter(casa == "camara") %>%
+  mutate(partidos_candidatos = origem_partido + outros_candidatos) %>%
+  pull(partidos_candidatos) %>%
+  sum()
+
+visao_geral <- data.frame(
+  origem = c("Sócios", "Outros", "Partidos+Candidatos"),
+  valor = c(total_doacoes_socios_empresas,
+            total_doacoes_pessoa_fisica - total_doacoes_socios_empresas,
+            total_doacoes_partidos_candidatos),
+  stringsAsFactors = FALSE
+)
+
+paleta <- c("#91bfda", "#E89D68", "#e06264", "#BA7E53")
+
+visao_geral %>%
+  mutate(proporcao = valor / sum(valor)) %>%
+  ggplot(aes(x = "origem", y = proporcao, fill = origem)) +
+  geom_chicklet(width = .7, position = "stack") +
+  geom_text_repel(aes(label = stringr::str_remove(string = format_currency(valor), pattern = " milhões")),
+          hjust = -0.05,
+          position = "stack"
+          ) +
+  coord_flip() +
+  scale_fill_manual(values = c("Sócios" = paleta[3],
+                             "Outros" = paleta[2],
+                             "Partidos+Candidatos" = paleta[1]),
+                    name = "") +
+  scale_y_continuous(breaks = seq(0, 1, 0.25), labels = scales::percent_format(accuracy = 1)) +
+  labs(x = "",
+       y = "Porcentagem do Valor total de financiamento para campanha de deputados",
+       title = "Origem do financiamento de campanha \ndos deputados",
+       subtitle = "Em milhões de reais") +
+  theme_ipsum_rc() +
+  theme(legend.position="bottom")
+```
+
+## Versão 2
+```{r}
+visao_geral %>%
+  mutate(proporcao = valor / sum(valor)) %>%
+  ggplot(aes(x = reorder(origem, proporcao), y = proporcao, fill = origem)) +
+  geom_chicklet(width = .7, position = "dodge") +
+  geom_text(aes(label = stringr::str_remove(string = format_currency(valor), pattern = " milhões")),
+            hjust = -0.05,
+            position = "dodge"
+            ) +
+  coord_flip() +
+  scale_fill_manual(values = c("Sócios" = paleta[3],
+                             "Outros" = paleta[2],
+                             "Partidos+Candidatos" = paleta[1]),
+                    name = "") +
+  scale_y_continuous(breaks = seq(0, 1, 0.25), limits = c(0, 1), labels = scales::percent_format(accuracy = 1)) +
+  guides(fill = F) +
+  labs(x = "",
+       y = "Porcentagem do Valor total de financiamento para campanha de deputados",
+       title = "Origem do financiamento de campanha \ndos deputados",
+       subtitle = "Em milhões de reais") +
+  theme_ipsum_rc()
+```
+
+
+## Versão 3
+```{r}
+total_doacoes_socios_empresas <- doacoes_origem %>%
+  filter(casa == "camara") %>%
+  pull(total_receita_doadores_empresas) %>%
+  sum()
+
+total_doacoes_pessoa_fisica <- doacoes_origem %>%
+  filter(casa == "camara") %>%
+  pull(pessoa_fisica) %>%
+  sum()
+
+total_doacoes_partidos_candidatos <- doacoes_origem %>%
+  filter(casa == "camara") %>%
+  mutate(partidos_candidatos = origem_partido + outros_candidatos) %>%
+  pull(partidos_candidatos) %>%
+  sum()
+
+visao_geral <- data.frame(
+  origem = c("Sócios", "Outros", "Partidos+Candidatos"),
+  valor = c(total_doacoes_socios_empresas,
+            total_doacoes_pessoa_fisica - total_doacoes_socios_empresas,
+            total_doacoes_partidos_candidatos),
+  stringsAsFactors = FALSE
+)
+
+paleta <- c("#91bfda", "#E89D68", "#e06264", "#BA7E53")
+
+a <- visao_geral %>%
+  mutate(proporcao = valor / sum(valor)) %>%
+  ggplot(aes(x = "origem", y = proporcao, fill = origem)) +
+  geom_chicklet(width = .7, position = "stack") +
+  coord_flip() +
+  scale_fill_manual(values = c("Sócios" = paleta[3],
+                             "Outros" = paleta[2],
+                             "Partidos+Candidatos" = paleta[1]),
+                    name = "") +
+  scale_y_continuous(breaks = seq(0, 1, 0.25), labels = scales::percent_format(accuracy = 1)) +
+  # guides(fill = F) +
+  labs(x = "",
+       y = "",
+       title = "Origem do financiamento de campanha \ndos deputados") +
+  theme_ipsum_rc() +
+  theme(axis.text.y = element_blank(),
+        legend.position="bottom",
+        plot.margin = unit(c(1,1,0,1), "cm"))
+
+b <- visao_geral %>%
+  mutate(proporcao = valor / sum(valor)) %>%
+  ggplot(aes(x = origem, y = proporcao, fill = origem)) +
+  geom_chicklet(width = .7, position = "dodge") +
+  geom_text(aes(label = format_currency(valor)),
+            hjust = -0.05,
+            position = "dodge"
+            ) +
+  coord_flip() +
+  scale_fill_manual(values = c("Sócios" = paleta[3],
+                             "Outros" = paleta[2],
+                             "Partidos+Candidatos" = paleta[1]),
+                    name = "") +
+  scale_y_continuous(breaks = seq(0, 1, 0.25), limits = c(0, 1), labels = scales::percent_format(accuracy = 1)) +
+  guides(fill = F) +
+  labs(x = "",
+       y = "Porcentagem do Valor total de financiamento para campanha de deputados",
+       title = "") +
+  theme_ipsum_rc() +
+  theme(axis.text.y = element_blank(),
+        plot.margin = unit(c(0,1,1,1), "cm"))
+
+grid.arrange(a, b)
+```
+
 A seguir iremos visualizar quais os grupos econômicos que mais doaram para deputados em 2018.
 
 ```{r}
@@ -74,7 +225,7 @@ doacoes_sumario_por_atividade %>%
             size = 3.3,
             color = "#333333") +
   coord_flip() +
-  scale_fill_manual(values = c("#806CCC")) +
+  scale_fill_manual(values = c("#43a467")) +
   scale_y_continuous(limits = c(0, 15)) +
   guides(fill = FALSE) + 
   labs(title = "Setores econômicos que mais \nfinanciaram campanha para deputados",
