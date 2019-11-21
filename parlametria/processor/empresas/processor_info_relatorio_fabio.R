@@ -2,6 +2,7 @@
 #' @description Retorna um dataframe contendo informações sobre as atividades econômicas das empresas no formato do BD.
 #' @param parlamentares_datapath Caminho para o dataframe com as informações de parlamentares
 #' @return Dataframe com dados processados de atividades econômicas das empresas
+#' ARQUIVO 2 - Parlamentares sócios de empresas
 processa_atividades_economicas_empresas <- function(
   parlamentares_datapath = here::here("crawler/raw_data/parlamentares.csv"),
   info_empresas_datapath = here::here("parlametria/raw_data/empresas/info_empresas_socios_todos_parlamentares.csv")) {
@@ -15,14 +16,14 @@ processa_atividades_economicas_empresas <- function(
     filter(em_exercicio == 1) %>% 
     select(id, casa, nome_eleitoral, sg_partido, uf)
   
-  cnaes_enum <- processa_atividade_economica()
-  
   empresas_cnaes <- process_cnaes_empresas(info_empresas_datapath) %>% 
     select(cnpj, cnae_tipo, cnae_codigo, grupo_atividade_economica)
   
   empresas <- process_empresas(info_empresas_datapath) %>% 
     mutate(cnae_codigo = as.character(cnae_codigo)) %>% 
-    left_join(empresas_cnaes, by = c("cnpj", "cnae_tipo", "cnae_codigo"))
+    left_join(empresas_cnaes, by = c("cnpj", "cnae_tipo", "cnae_codigo")) %>% 
+    filter(cnae_tipo == "cnae_fiscal") %>% 
+    distinct()
   
   empresas_filtered <- empresas %>% 
     inner_join(parlamentares, 
@@ -30,7 +31,6 @@ processa_atividades_economicas_empresas <- function(
                       "casa"))
   
   empresas_alt <- empresas_filtered %>% 
-    left_join(cnaes_enum, by = c("grupo_atividade_economica" = "nome")) %>% 
     select(grupo_atividade_economica,
            id_parlamentar,
            nome_eleitoral,
@@ -47,6 +47,7 @@ processa_atividades_economicas_empresas <- function(
 #' @title Processa os dados sobre as atividades econômicas das empresas
 #' @description Retorna um dataframe contendo informações sobre as atividades econômicas das empresas no formato do BD.
 #' @return Dataframe com dados processados de atividades econômicas das empresas
+#' ARQUIVO 3 - Doadores que são sócios de empresas
 processa_atividades_economicas_empresas_doadores <- function() {
   source(here("parlametria/processor/empresas/processor_cnaes_empresas.R"))
   
@@ -58,7 +59,7 @@ processa_atividades_economicas_empresas_doadores <- function() {
                                               col_types = cols(id_parlamentar = "c", cnpj_empresa = "c", cpf_cnpj_socio = "c")) %>% 
     mutate(cnpj = stringr::str_pad(cnpj_empresa, 14, pad = "0")) %>% 
     select(id_parlamentar, casa = casa_parlamentar, cnpj, cpf_cnpj_socio) %>% 
-    distinct(id_parlamentar, casa, cnpj, cpf_cnpj_socio) 
+    distinct(id_parlamentar, casa, cnpj, cpf_cnpj_socio)
   
   info_empresas <- process_cnaes_empresas(info_empresas_datapath = here::here("parlametria/raw_data/empresas/info_empresas_doadores_todos_parlamentares.csv")) %>% 
     distinct(cnpj, razao_social, grupo_atividade_economica)
