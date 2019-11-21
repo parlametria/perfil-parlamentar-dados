@@ -25,6 +25,8 @@ library(plotly)
 library(ggchicklet)
 library(ggridges)
 
+source(here("reports/atividades-economicas-doacoes/utils.R"))
+
 theme_set(theme_minimal())
 options(scipen = 999)
 ```
@@ -32,21 +34,25 @@ options(scipen = 999)
 ```{r}
 doacoes_sumario <- read_csv(here("parlametria/raw_data/empresas/parlamentares_ligacao_atividade_economica.csv"),
                             col_types = cols(id_parlamentar = "c"))
+
+doacoes_sumario_camara <- doacoes_sumario %>% 
+  filter(casa == "camara")
+
+doacoes_sumario_senado <- doacoes_sumario %>% 
+  filter(casa == "senado")
 ```
 
 Em 2018, quando foram eleitos 513 Deputados Federais e 54 Senadores, a eleição não permitiu a doação direta de empresas (pessoas jurídicas) para os candidatos, apenas doações de pessoas físicas. Iremos explorar nessa análise a participação dessas pessoas físicas como sócias de empresas e quais os grupos de atividades econômicas que essas empresas pertencem.
 
 Quando for falado em doações de grupos econômicos para Parlamentares, deve ser intepretado como doações de sócios de empresas que atuam neste grupo econômico. Grupo econômico é o ramo de atividade que a empresa pode atuar. A classificação é obtida através da declaração dos CNAE's das empresas na Receita Federal. Uma empresa pode atuar em mais de um grupo econômico.
 
-A seguir iremos visualizar quais os grupos econômicos que mais doaram para parlamentares (deputados e senadores) em 2018.
+A seguir iremos visualizar quais os grupos econômicos que mais doaram para deputados em 2018.
 
 ```{r}
-doacoes_sumario_por_atividade <- doacoes_sumario %>% 
+doacoes_sumario_por_atividade <- doacoes_sumario_camara %>%
   group_by(grupo_atividade_economica) %>% 
   summarise(total = sum(total_por_atividade))
-```
 
-```{r}
 levels <- doacoes_sumario_por_atividade %>%
   arrange(desc(total)) %>% 
   pull(grupo_atividade_economica)
@@ -62,65 +68,226 @@ doacoes_sumario_por_atividade %>%
             color = "#333333") +
   coord_flip() +
   scale_fill_manual(values = c("#806CCC")) +
-  scale_y_continuous(limits = c(0, 80)) +
+  scale_y_continuous(limits = c(0, 60)) +
   guides(fill = FALSE) + 
-  labs(title = "Grupos econômicos \nque mais doaram",
-       y = "Total doado para parlamentares (milhões de reais)",
+  labs(title = "Grupos econômicos \nque mais doaram para deputados",
+       y = "Total doado para deputados (milhões de reais)",
        x = "") +
   theme_ipsum_rc() +
   theme(axis.text.y = element_text(size = 10))
 ```
 
-Atividades imobiliárias, atividades financeiras e o grupo de atividades profissionais foram os grandes doadores em 2018. Como uma doação vem de um sócio e não de uma empresa, e esta mesma empresa pode atuar em diferentes grupos econômicos, uma mesma doação pode contar como doação no montante de mais de um grupo econômico. Ou seja, estamos considerando no montante de todas os grupos econômicos de uma empresa a doação de seu sócio a um parlamentar.
+A seguir a lista dos grupos que mais doaram para senadores
+
+```{r}
+doacoes_sumario_por_atividade <- doacoes_sumario_senado %>%
+  group_by(grupo_atividade_economica) %>% 
+  summarise(total = sum(total_por_atividade))
+
+levels <- doacoes_sumario_por_atividade %>%
+  arrange(desc(total)) %>% 
+  pull(grupo_atividade_economica)
+
+doacoes_sumario_por_atividade %>% 
+  arrange(desc(total)) %>% 
+  head(15) %>% 
+  ggplot(aes(x = fct_rev(factor(grupo_atividade_economica, levels = levels)), y = total / 1e6, fill = "a")) +
+  geom_chicklet(width = .7, radius = grid::unit(5, "pt")) +
+  geom_text(aes(label = paste0(round(total / 1e6, 2))),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+  coord_flip() +
+  scale_fill_manual(values = c("#806CCC")) +
+  scale_y_continuous(limits = c(0, 25)) +
+  guides(fill = FALSE) + 
+  labs(title = "Grupos econômicos \nque mais doaram para senadores",
+       y = "Total doado para senadores (milhões de reais)",
+       x = "") +
+  theme_ipsum_rc() +
+  theme(axis.text.y = element_text(size = 10))
+```
+
+## Distribuição dos parlamentares por Grupo Econômico
 
 ```{r}
 parlamentares_investimento <- read_csv(here("parlametria/raw_data/resumo/parlamentares_investimento.csv"),
                                        col_types = cols(id = "c")) %>%
   select(id_parlamentar = id, casa, partido_eleicao)
 
-doacoes_sumario_alt <- doacoes_sumario %>%
-  left_join(parlamentares_investimento, by = c("id_parlamentar", "casa"))
+doacoes_sumario_alt_camara <- doacoes_sumario_camara %>%
+  left_join(parlamentares_investimento, by = c("id_parlamentar", "casa")) %>% 
+  rowwise() %>% 
+  mutate(grupo_atividade_economica_raw = grupo_atividade_economica,
+         grupo_atividade_economica = str_to_sentence(grupo_atividade_economica),
+         grupo_atividade_economica = paste(stringi::stri_wrap(grupo_atividade_economica, 40), collapse = "\n")) %>% 
+  ungroup()
+  
+primeiro_quartil_camara <- doacoes_sumario_camara %>% pull(total_por_atividade) %>% quantile(0.25) %>% as.numeric()
+  
+doacoes_sumario_alt_camara <- doacoes_sumario_alt_camara %>%
+  filter(total_por_atividade > primeiro_quartil_camara)
+
+doacoes_sumario_alt_senado <- doacoes_sumario_senado %>%
+  left_join(parlamentares_investimento, by = c("id_parlamentar", "casa")) %>% 
+  rowwise() %>% 
+  mutate(grupo_atividade_economica_raw = grupo_atividade_economica,
+         grupo_atividade_economica = str_to_sentence(grupo_atividade_economica),
+         grupo_atividade_economica = paste(stringi::stri_wrap(grupo_atividade_economica, 40), collapse = "\n")) %>% 
+  ungroup()
+
+primeiro_quartil_senado <- doacoes_sumario_senado %>% pull(total_por_atividade) %>% quantile(0.25) %>% as.numeric()
+
+doacoes_sumario_alt_senado <- doacoes_sumario_alt_senado %>%
+  filter(total_por_atividade > primeiro_quartil_senado)
 ```
 
-## Distribuição dos parlamentares por Grupo
+A seguir iremos visualizar a distribuição da proporção do recebido pelos parlamentares por Grupo Econômico. 
+
+Cada grupo de círculos na visualização representa um conjunto de parlamentares posicionados de forma correspondente a proporção de doação recebida de um determinado grupo econômico. A curva de densidade também ajuda a identificar concentração de parlamentares em faixas de valores específicas. A marca "|" rosa na visualização representa a média da proporção dos parlamentares de cada grupo. A visualização mostra os 10 grupos econômicos com maiores médias de proporção da campanha de parlamentares.
 
 ```{r}
-levels <- doacoes_sumario_alt %>% 
-  filter(!is.na(proporcao_doacao)) %>% 
-  group_by(grupo_atividade_economica) %>% 
-  summarise(median = median(proporcao_doacao)) %>% 
-  ungroup() %>% 
-  arrange(desc(median)) %>% 
-  pull(grupo_atividade_economica)
+plot_geom_count_density <- function(data, title) {
+  levels <- data %>% 
+    filter(!is.na(proporcao_doacao)) %>% 
+    group_by(grupo_atividade_economica) %>% 
+    summarise(mean = mean(proporcao_doacao)) %>% 
+    ungroup() %>% 
+    arrange(desc(mean)) %>% 
+    pull(grupo_atividade_economica)
+  
+  top_grupos <- levels %>% 
+    head(10)
+    
+  data %>% 
+    filter(!is.na(proporcao_doacao)) %>% 
+    mutate(proporcao_doacao = proporcao_doacao * 100) %>% 
+    group_by(grupo_atividade_economica) %>% 
+    mutate(mean = mean(proporcao_doacao)) %>% 
+    ungroup() %>%
+    filter(grupo_atividade_economica %in% top_grupos) %>% 
+    ggplot(aes(x = proporcao_doacao, 
+               y = forcats::fct_rev(factor(grupo_atividade_economica, levels = levels)),
+               color = forcats::fct_rev(factor(grupo_atividade_economica, levels = levels)),
+               fill = forcats::fct_rev(factor(grupo_atividade_economica, levels = levels)))) +
+    geom_density_ridges(
+      aes(height = ..density..),
+      stat = "density", trim = TRUE,
+      scale = 0.9,
+      alpha = 0.2
+    ) +
+    geom_count(alpha = 0.5, size = 2) +
+    scale_shape_identity() +
+    scale_color_manual(values = rep(c("#af8dc3", "#FF816E"), 15)) +
+    scale_fill_manual(values = rep(c("#af8dc3", "#FF816E"), 15)) +
+    
+    geom_point(aes(x = mean), size = 3.5, color = "#dc267f", shape = 124) +
+    
+    geom_point(aes(x = 33.5, y = 10.3), size = 3.5, color = "#dc267f", shape = 124) +
+    annotate("text", label = "é a média", x = 41.5, y = 10.3, color = "#4b4545") +
+    
+    guides(size = F, color = F, fill = F) +
+    labs(title = title,
+         x = "Proporção da doação (%)",
+         y = "Grupos") +
+    theme_ipsum_rc() +
+    theme(axis.text.y = element_text(size = 12),
+          axis.title.x = element_text(size = 11),
+          axis.title.y = element_text(size = 11))
+}
+```
 
-top_grupos <- levels %>% 
-  head(15)
-  
-doacoes_sumario_alt %>% 
-  filter(!is.na(proporcao_doacao)) %>% 
-  mutate(proporcao_doacao = proporcao_doacao * 100) %>% 
-  group_by(grupo_atividade_economica) %>% 
-  mutate(median = median(proporcao_doacao)) %>% 
-  ungroup() %>%
-  ggplot(aes(x = proporcao_doacao, y = factor(grupo_atividade_economica, levels = levels))) +
-  # geom_density_ridges(
-  #   aes(height = ..density..),
-  #   stat = "density", trim = TRUE,
-  #   scale = 0.9
-  # ) +
-  geom_count(alpha = 0.5) +
-  scale_shape_identity() +
-  geom_point(aes(x = median), size = 3.5, color = "#dc267f", shape = 124) +
-  
-  geom_point(aes(x = 13.5, y = 7.5), size = 3.5, color = "#dc267f", shape = 124) +
-  annotate("text", label = "é a mediana", x = 15.2, y = 7.5, color = "#4b4545") +
-  
-  # scale_x_continuous(breaks = seq(0, 100, 2)) +
-  guides(size = FALSE) +
-  labs(title = "Distribuição do investimento por cargo \nna câmara",
-       x = "Proporção de campanhas médias (%)",
-       y = "Cargo") + 
-  theme_ipsum_rc()
+**Foram desconsideradas 25% das doações com os menores valores dentre o conjunto total de doações.** Com isto doações de grupos a deputados com valor inferior a R$ `r doacoes_sumario_camara %>% pull(total_por_atividade) %>% quantile(0.25)` foram desconsideradas na visualização a seguir.
+```{r}
+plot_geom_count_density(doacoes_sumario_alt_camara, "Distribuição da proporção \nde doação para deputados por Grupo")
+```
+
+**Foram desconsideradas 25% das doações com os menores valores dentre o conjunto total de doações.** Com isto doações de grupos a deputados com valor inferior a R$ `r doacoes_sumario_senado %>% pull(total_por_atividade) %>% quantile(0.25)` foram desconsideradas na visualização a seguir.
+```{r}
+plot_geom_count_density(doacoes_sumario_alt_senado, "Distribuição da proporção \nde doação para senadores por Grupo")
+```
+
+É possível perceber a ocorrência de vários casos de parlamentares com proporção de doação vinda do grupo econômico superior a 50%. Em alguns casos o valor se aproxima bastante de 100%. Ou seja toda a doação recebida pelo parlamentar veio de sócios ligados a empresas do Grupo econômico.
+
+### Parlamentares que receberam mais doações de um Grupo Econômico
+
+```{r fig.height=10}
+doacoes_sumario_alt_camara_nome <- doacoes_sumario_alt_camara %>% 
+  mutate(nome = paste0(nome_eleitoral, " ", sg_partido, "-", uf, "\n", grupo_atividade_economica))
+
+levels <- doacoes_sumario_alt_camara_nome %>%
+  arrange(desc(proporcao_doacao)) %>% 
+  pull(nome)
+
+doacoes_sumario_alt_camara_nome %>% 
+  arrange(desc(proporcao_doacao)) %>% 
+  head(15) %>% 
+  ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = total_por_atividade, fill = "a")) +
+  geom_chicklet(width = .7, radius = grid::unit(5, "pt")) +
+  geom_text(aes(label = paste0(format_currency(total_por_atividade),
+                               " (",
+                               round(proporcao_doacao * 100, 2),
+                               "%)")),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+  coord_flip() +
+  scale_fill_manual(values = c("#806CCC")) +
+  scale_y_continuous(limits = c(0, 2.7e6)) +
+  guides(fill = FALSE) + 
+  labs(title = "Deputados que mais receberam de um grupo econômico",
+       y = "Total doado para deputados (milhões de reais)",
+       x = "") +
+  theme_ipsum_rc() +
+  theme(axis.text.y = element_text(size = 10))
+```
+
+```{r fig.height=10}
+doacoes_sumario_alt_senado_nome <- doacoes_sumario_alt_senado %>% 
+  mutate(nome = paste0(nome_eleitoral, " ", sg_partido, "-", uf, "\n", grupo_atividade_economica))
+
+levels <- doacoes_sumario_alt_senado_nome %>%
+  arrange(desc(proporcao_doacao)) %>% 
+  pull(nome)
+
+doacoes_sumario_alt_senado_nome %>% 
+  arrange(desc(proporcao_doacao)) %>% 
+  head(15) %>% 
+  ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = total_por_atividade, fill = "a")) +
+  geom_chicklet(width = .7, radius = grid::unit(5, "pt")) +
+  geom_text(aes(label = paste0(format_currency(total_por_atividade),
+                               " (",
+                               round(proporcao_doacao * 100, 2),
+                               "%)")),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+  coord_flip() +
+  scale_fill_manual(values = c("#806CCC")) +
+  scale_y_continuous(limits = c(0, 5e6)) +
+  guides(fill = FALSE) + 
+  labs(title = "Senadores que mais receberam de um grupo econômico",
+       y = "Total doado para senadores (milhões de reais)",
+       x = "") +
+  theme_ipsum_rc() +
+  theme(axis.text.y = element_text(size = 10))
+```
+
+## Distribuição dos parlamentares por Partido
+
+```{r}
+categorias_economicas <- c("ATIVIDADES IMOBILIÁRIAS", "CONSTRUÇÃO", "ATIVIDADES FINANCEIRAS, DE SEGUROS E SERVIÇOS RELACIONADOS", "AGRICULTURA, PECUÁRIA, PRODUÇÃO FLORESTAL, PESCA E AQÜICULTURA", "COMÉRCIO VAREJISTA")
+
+doacoes_sumario_alt_deputados <- doacoes_sumario_alt_camara %>%
+  filter(grupo_atividade_economica_raw %in% categorias_economicas) %>% 
+  group_by(grupo_atividade_economica) %>%
+  mutate(media_geral = mean(proporcao_doacao)) %>%
+  ungroup() %>% 
+  group_by(sg_partido, grupo_atividade_economica) %>% 
+  mutate(media_partido = mean(proporcao_doacao)) %>% 
+  ungroup() %>% 
+  distinct(grupo_atividade_economica, sg_partido, media_geral, media_partido) %>% 
+  gather(key = "cat", value = "value", media_geral:media_partido)
 ```
 
 
