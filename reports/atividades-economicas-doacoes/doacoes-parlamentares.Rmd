@@ -21,11 +21,10 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(here)
 library(hrbrthemes)
-library(plotly)
 library(ggchicklet)
 library(ggridges)
-library(ggrepel)
 library(gridExtra)
+library(lemon)
 
 source(here("reports/atividades-economicas-doacoes/utils.R"))
 source(here("parlametria/processor/empresas/processa_parlamentares_info_eleicao.R"))
@@ -89,7 +88,9 @@ plot_visao_geral <- function(casa_parlamentar, titulo, titulo_x) {
     mutate(proporcao = valor / sum(valor)) %>%
     ggplot(aes(x = reorder(origem, proporcao), y = proporcao, fill = origem)) +
     geom_chicklet(width = .7, position = "dodge") +
-    geom_text(aes(label = stringr::str_remove(string = format_currency(valor), pattern = " milhões")),
+    geom_text(aes(label = paste0(round(proporcao * 100, 1), "% / ",
+                                 stringr::str_remove(string = format_currency_value(valor, 1), 
+                                                     pattern = " milhões"))),
               hjust = -0.05,
               position = "dodge"
               ) +
@@ -134,7 +135,7 @@ doacoes_sumario_por_atividade %>%
   head(15) %>% 
   ggplot(aes(x = fct_rev(factor(grupo_atividade_economica, levels = levels)), y = total / 1e6, fill = "a")) +
   geom_chicklet(width = .7, radius = grid::unit(5, "pt")) +
-  geom_text(aes(label = paste0(round(total / 1e6, 2))),
+  geom_text(aes(label = paste0(round(total / 1e6, 1))),
             hjust = -0.1,
             size = 3.3,
             color = "#333333") +
@@ -165,7 +166,7 @@ doacoes_sumario_por_atividade %>%
   head(15) %>% 
   ggplot(aes(x = fct_rev(factor(grupo_atividade_economica, levels = levels)), y = total / 1e6, fill = "a")) +
   geom_chicklet(width = .7, radius = grid::unit(5, "pt")) +
-  geom_text(aes(label = paste0(round(total / 1e6, 2))),
+  geom_text(aes(label = paste0(round(total / 1e6, 1))),
             hjust = -0.1,
             size = 3.3,
             color = "#333333") +
@@ -209,7 +210,7 @@ A seguir iremos visualizar a distribuição da proporção do recebido pelos par
 
 Cada aglomerado de pontos na visualização representa um conjunto de parlamentares posicionados de forma correspondente a proporção de doação recebida de um determinado grupo econômico. A curva de densidade também ajuda a identificar concentração de parlamentares em faixas de valores específicas. A marca "|" rosa na visualização representa a média da proporção dos parlamentares de cada grupo. A visualização mostra os 10 grupos econômicos com maiores médias de proporção da campanha de parlamentares.
 
-```{r}
+```{r fig.height=5}
 plot_geom_count_density <- function(data, title, numero_minimo_parlamentares_por_grupo_economico, casa) {
   levels <- data %>%
     filter(!is.na(proporcao_doacao)) %>%
@@ -223,8 +224,8 @@ plot_geom_count_density <- function(data, title, numero_minimo_parlamentares_por
   top_grupos <- levels %>%
     head(10)
   
-  x_barra = 33.5
-  x_texto = 41.5
+  x_barra = 37.5
+  x_texto = 46.5
   cores_grafico = c("#af8dc3", "#42a38f")
   
   if (casa == "senado") {
@@ -252,13 +253,13 @@ plot_geom_count_density <- function(data, title, numero_minimo_parlamentares_por
     #   alpha = 0.2
     # ) +
     # geom_count(alpha = 0.5, size = 2) +
-    geom_point(shape = 124, size = 4) +
+    geom_point(shape = 124, size = 5) +
     scale_shape_identity() +
     scale_color_manual(values = rep(cores_grafico, 15)) +
     scale_fill_manual(values = rep(cores_grafico, 15)) +
-    geom_point(aes(x = mean), size = 1.5, color = "#dc267f", shape = 16) +
+    geom_point(aes(x = mean), size = 6.5, color = "#111111", shape = 124) +
     
-    geom_point(aes(x = x_barra, y = 10.3), size = 1.5, color = "#dc267f", shape = 16) +
+    geom_point(aes(x = x_barra, y = 10.3), size = 6, color = "#111111", shape = 124) +
     annotate("text", label = "é a média", x = x_texto, y = 10.3, color = "#4b4545") +
     
     guides(size = F, color = F, fill = F) +
@@ -272,11 +273,11 @@ plot_geom_count_density <- function(data, title, numero_minimo_parlamentares_por
 }
 ```
 
-```{r}
+```{r fig.height=6}
 plot_geom_count_density(doacoes_sumario_alt_camara, "Distribuição da participação \nem campanha para deputados por Setor", 10, "camara")
 ```
 
-```{r}
+```{r fig.height=6}
 plot_geom_count_density(doacoes_sumario_alt_senado, "Distribuição da participação \nem campanha para senadores por Setor", 5, "senado")
 ```
 
@@ -301,7 +302,7 @@ A barra amarela representa a média geral de quanto o setor econômico participo
 
 Quando a barra amarela se sobressai significa que a média geral de participação em campanha para aquele setor econômico é maior que a média do partido. Neste caso, a barra cinza irá indicar qual é a média do partido.
 
-Caso a barra azul se sobressaia significa que a média do partido para o setor é maior que a geral. Neste caso a barra amarela irá indicar qual a média geral daquele setor.
+Caso a barra azul se sobressaia significa que a média do partido para o setor é maior que a geral. Neste caso a barra cinza irá indicar qual a média geral daquele setor.
 
 Cada gráfico do partido tem sua própria escala. A porcentagem no eixo x indica a média de participação na campanha.
 
@@ -323,7 +324,7 @@ plot_financiamento_por_partido <- function(data, lista_partidos, titulo) {
     alpha = .5,
     width = 0.5
   ) +
-  lemon::facet_rep_wrap(~ sg_partido,
+  facet_rep_wrap(~ sg_partido,
              ncol = 3,
              scales = "free_y",
              repeat.tick.labels = c("bottom", "right")) +
@@ -331,16 +332,16 @@ plot_financiamento_por_partido <- function(data, lista_partidos, titulo) {
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(title = titulo,
        x = "",
-       y = "Participação em campanha (%)") +
+       y = "Média da participação em campanha (%)") +
   theme_ipsum_rc()
 }
 ```
 
 ```{r}
-categorias_economicas <- c("ATIVIDADES IMOBILIÁRIAS", "CONSTRUÇÃO", "ATIVIDADES FINANCEIRAS, DE SEGUROS E SERVIÇOS RELACIONADOS", "AGRICULTURA, PECUÁRIA, PRODUÇÃO FLORESTAL, PESCA E AQÜICULTURA", "COMÉRCIO VAREJISTA", "EDUCAÇÃO")
+categorias_economicas_camara <- c("ATIVIDADES IMOBILIÁRIAS", "CONSTRUÇÃO", "ATIVIDADES FINANCEIRAS, DE SEGUROS E SERVIÇOS RELACIONADOS", "AGRICULTURA, PECUÁRIA, PRODUÇÃO FLORESTAL, PESCA E AQÜICULTURA", "COMÉRCIO VAREJISTA", "EDUCAÇÃO")
 
-doacoes_sumario_alt_deputados <- doacoes_sumario_alt_camara %>%
-  filter(grupo_atividade_economica_raw %in% categorias_economicas) %>%
+doacoes_sumario_partido_camara <- doacoes_sumario_alt_camara %>%
+  filter(grupo_atividade_economica_raw %in% categorias_economicas_camara) %>%
   group_by(grupo_atividade_economica) %>%
   mutate(media_geral = mean(proporcao_doacao)) %>%
   ungroup() %>%
@@ -348,7 +349,8 @@ doacoes_sumario_alt_deputados <- doacoes_sumario_alt_camara %>%
   mutate(media_partido = mean(proporcao_doacao)) %>%
   ungroup() %>%
   distinct(grupo_atividade_economica, sg_partido, media_geral, media_partido) %>%
-  gather(key = "cat", value = "value", media_geral:media_partido)
+  gather(key = "cat", value = "value", media_geral:media_partido) %>% 
+  complete(sg_partido, nesting(grupo_atividade_economica, cat), fill = list(value = 0))
 
 lista_partidos_camara <- doacoes_sumario_alt_camara %>% 
   group_by(sg_partido) %>% 
@@ -358,7 +360,7 @@ lista_partidos_camara <- doacoes_sumario_alt_camara %>%
 ```
 
 ```{r fig.height=25}
-plot_financiamento_por_partido(doacoes_sumario_alt_deputados, lista_partidos_camara, 
+plot_financiamento_por_partido(doacoes_sumario_partido_camara, lista_partidos_camara, 
                                "Participação na campanha de deputados \npor partido e grupo econômico")
 ```
 
@@ -374,10 +376,10 @@ Para o Senado, foram selecionados os seguintes setores econômicos:
 - CONSTRUÇÃO
 
 ```{r}
-categorias_economicas <- c("SAÚDE HUMANA E SERVIÇOS SOCIAIS", "INDÚSTRIA DE MÓVEIS E MADEIRAS", "INDÚSTRIA ALIMENTÍCIA E DE BEBIDAS", "EDUCAÇÃO", "ATIVIDADES FINANCEIRAS, DE SEGUROS E SERVIÇOS RELACIONADOS", "CONSTRUÇÃO")
+categorias_economicas_senado <- c("SAÚDE HUMANA E SERVIÇOS SOCIAIS", "INDÚSTRIA DE MÓVEIS E MADEIRAS", "INDÚSTRIA ALIMENTÍCIA E DE BEBIDAS", "EDUCAÇÃO", "ATIVIDADES FINANCEIRAS, DE SEGUROS E SERVIÇOS RELACIONADOS", "CONSTRUÇÃO")
 
-doacoes_sumario_alt_senadores <- doacoes_sumario_alt_senado %>%
-  filter(grupo_atividade_economica_raw %in% categorias_economicas) %>%
+doacoes_sumario_partido_senado <- doacoes_sumario_alt_senado %>%
+  filter(grupo_atividade_economica_raw %in% categorias_economicas_senado) %>%
   group_by(grupo_atividade_economica) %>%
   mutate(media_geral = mean(proporcao_doacao)) %>%
   ungroup() %>%
@@ -385,7 +387,8 @@ doacoes_sumario_alt_senadores <- doacoes_sumario_alt_senado %>%
   mutate(media_partido = mean(proporcao_doacao)) %>%
   ungroup() %>%
   distinct(grupo_atividade_economica, sg_partido, media_geral, media_partido) %>%
-  gather(key = "cat", value = "value", media_geral:media_partido)
+  gather(key = "cat", value = "value", media_geral:media_partido) %>% 
+  complete(sg_partido, nesting(grupo_atividade_economica, cat), fill = list(value = 0))
 
 lista_partidos_senado <- doacoes_sumario_alt_senado %>% 
   group_by(sg_partido) %>% 
@@ -394,16 +397,109 @@ lista_partidos_senado <- doacoes_sumario_alt_senado %>%
 ```
 
 ```{r fig.height=15}
-plot_financiamento_por_partido(doacoes_sumario_alt_senadores, lista_partidos_senado, 
+plot_financiamento_por_partido(doacoes_sumario_partido_senado, lista_partidos_senado, 
                                "Participação na campanha de senadores \npor partido e grupo econômico")
 ```
 
-<!-- ## Distribuição dos parlamentares por Comissão Permanente -->
+## Distribuição da média de participação em campanhas por comissão
 
-<!-- ```{r} -->
-<!-- comissoes <- read_csv(here("crawler/raw_data/comissoes.csv")) -->
-<!-- ``` -->
+A seguir visualizaremos a média de participação em campanhas dos principais setores econômicos por comissão permanente.
 
+```{r}
+comissoes <- read_csv(here("crawler/raw_data/comissoes.csv")) %>%
+  rename(comissao_id = id)
 
+composicao_comissoes <- read_csv(here("crawler/raw_data/composicao_comissoes.csv"),
+                                 col_types = cols(id_parlamentar = "c"))
 
+composicao_comissoes <- composicao_comissoes %>%
+  filter(situacao == "Titular") %>%
+  left_join(comissoes %>%
+              select(comissao_id, casa, sigla),
+            by = c("comissao_id", "casa"))
+```
+
+### Para deputados
+
+Foram selecionadas 8 comissões na Câmara para análise:
+
+ - CCJC: Comissão De Constituição E Justiça E De Cidadania
+ - CMADS: Comissão De Meio Ambiente E Desenvolvimento Sustentável
+ - CFT: Comissão De Finanças E Tributação
+ - CDHM: Comissão De Direitos Humanos E Minorias	
+ - CVT: Comissão De Viação E Transportes	
+ - CMULHER: Comissão De Defesa Dos Direitos Da Mulher	
+ - CINDRA: Comissão De Integração Nacional, Desenvolvimento Regional E Da Amazônia	
+ - CE: Comissão de Educação
+ - CTASP: Comissão De Trabalho, De Administração E Serviço Público	
+ - CME: Comissão De Minas E Energia	
+  
+
+```{r}
+comissoes_selecionadas <- c("CCJC", "CMADS", "CFT", "CDHM", "CVT", "CMULHER", "CINDRA", "CE", "CTASP", "CME")
+
+composicao_comissoes_camara <- composicao_comissoes %>% 
+  filter(sigla %in% comissoes_selecionadas)
+
+doacoes_sumario_comissoes_camara <- doacoes_sumario_alt_camara %>% 
+  filter(grupo_atividade_economica_raw %in% categorias_economicas_camara) %>%
+  left_join(composicao_comissoes_camara, by = c("id_parlamentar", "casa")) %>% 
+  filter(!is.na(sigla)) %>% 
+  group_by(sigla, grupo_atividade_economica) %>% 
+  summarise(mean = mean(proporcao_doacao)) %>% 
+  ungroup()
+```
+
+```{r fig.height=10}
+plot_financiamento_por_comissao <- function(data, title) {
+  ggplot(data, aes(x = reorder(grupo_atividade_economica, mean, sum), y = mean)) + 
+  facet_rep_wrap(~ sigla, ncol = 2,
+             repeat.tick.labels = c("bottom", "right")) +
+  geom_point(data = select(data, -sigla), color = "#987284", alpha = .5) + 
+  geom_point(data = data, color = "black", size = 2) +
+  coord_flip() + 
+  scale_y_continuous(labels = scales::percent_format(accuracy = 2)) +
+  labs(x = "", 
+       y = "Média da participação em campanha (%)", 
+       title = title) +
+  theme_ipsum_rc()
+}
+```
+
+```{r fig.height=12}
+plot_financiamento_por_comissao(doacoes_sumario_comissoes_camara, "Participação na campanha de deputados \npor comissão e grupo econômico")
+```
+
+### Para Senadores
+
+As Comissões permanentes escolhidas para o Senado para a análise:
+
+ - CCJ: Comissão De Constituição, Justiça E Cidadania	
+ - CDH: Comissão De Direitos Humanos E Legislação Participativa	
+ - CMA: Comissão De Meio Ambiente	
+ - CRA: Comissão De Agricultura E Reforma Agrária	
+ - CRE: Comissão De Relações Exteriores E Defesa Nacional	
+ - CTFC: Comissão De Transparência, Governança, Fiscalização E Controle E Defesa Do Consumidor	
+ - CI: Comissão De Serviços De Infraestrutura	
+ - CE: Comissão De Educação, Cultura E Esporte	
+
+```{r}
+comissoes_selecionadas_senado <- c("CCJ", "CDH", "CMA", "CRA", "CRE", "CTFC", "CI", "CE")
+
+composicao_comissoes_senado <- composicao_comissoes %>% 
+  filter(sigla %in% comissoes_selecionadas_senado)
+
+doacoes_sumario_comissoes_senado <- doacoes_sumario_alt_senado %>% 
+  filter(grupo_atividade_economica_raw %in% categorias_economicas_senado) %>%
+  left_join(composicao_comissoes_senado, by = c("id_parlamentar", "casa")) %>% 
+  filter(!is.na(sigla)) %>% 
+  group_by(sigla, grupo_atividade_economica) %>% 
+  summarise(mean = mean(proporcao_doacao)) %>% 
+  ungroup()
+
+```
+
+```{r fig.height=10}
+plot_financiamento_por_comissao(doacoes_sumario_comissoes_senado, "Participação na campanha de senadores \npor comissão e grupo econômico")
+```
 

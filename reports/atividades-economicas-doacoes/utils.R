@@ -14,13 +14,14 @@ format_currency <- function(tx) {
 #' @title Formata valor para exibição de montante (2500000 para 2.5 M)
 #' @description Formata valor para exibição de montante (2500000 para 2.5 M)
 #' @param tx Número para ser formatado
+#' @param digits Número de dígitos após o ponto decimal
 #' @return String com número formatado
 #' @examples
 #' format_currency_value(2500000)
-format_currency_value <- function(tx) { 
+format_currency_value <- function(tx, digits) { 
   div <- findInterval(as.numeric(gsub("\\,", "", tx)), 
                       c(0, 1e3, 1e6, 1e9) )
-  paste(round(as.numeric(gsub("\\,", "", tx))/10^(3*(div-1)), 2), 
+  paste(round(as.numeric(gsub("\\,", "", tx))/10^(3*(div-1)), digits), 
         c("", "k", "M", "B")[div] )
 }
 
