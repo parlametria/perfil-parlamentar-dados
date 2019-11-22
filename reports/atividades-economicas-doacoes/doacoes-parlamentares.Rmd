@@ -1,5 +1,5 @@
 ---
-title: "Financiamento de grandes grupos econômicos na Campanha de parlamentares em exercício"
+title: "Financiamento de grandes setores econômicos na Campanha de parlamentares em exercício"
 output: 
   html_document:
     css: styles.css
@@ -48,11 +48,11 @@ doacoes_sumario_senado <- doacoes_sumario %>%
 doacoes_origem <- processa_parlamentares_info_eleicao()
 ```
 
-Em 2018, quando foram eleitos 513 Deputados Federais e 54 Senadores, a eleição não permitiu a doação direta de empresas (pessoas jurídicas) para os candidatos, apenas doações de pessoas físicas. Iremos explorar nessa análise a participação dessas pessoas físicas como sócias de empresas e quais os grupos de atividades econômicas que essas empresas pertencem.
+Em 2018, quando foram eleitos 513 Deputados Federais e 54 Senadores, a eleição não permitiu a doação direta de empresas (pessoas jurídicas) para os candidatos, apenas doações de pessoas físicas. Iremos explorar nessa análise a participação dessas pessoas físicas como sócias de empresas e quais os setores de atividades econômicas que essas empresas pertencem.
 
-Quando for falado em doações de grupos econômicos para Parlamentares, deve ser intepretado como doações de sócios de empresas que atuam neste grupo econômico. Grupo econômico é o ramo de atividade que a empresa pode atuar. A classificação é obtida através da declaração dos CNAE's das empresas na Receita Federal. Foi considerado o CNAE fiscal registrado na Receita Federal para determinatr o grupo econômico de uma empresa.
+Quando for falado em doações de setores econômicos para Parlamentares, deve ser intepretado como doações de sócios de empresas que atuam neste setor econômico. Setor econômico é o ramo de atividade que a empresa pode atuar. A classificação é obtida através da declaração dos CNAE's das empresas na Receita Federal. Foi considerado o CNAE fiscal registrado na Receita Federal para determinatr o setor econômico de uma empresa.
 
-Se um doador possuir duas ou mais empresas com diferentes grupos econômicos então a doação será dividida pelo número de grupos econômicos. 
+Se um doador possuir duas ou mais empresas com diferentes setores econômicos então a doação será dividida pelo número de setores econômicos. 
 
 ```{r}
 plot_visao_geral <- function(casa_parlamentar, titulo, titulo_x) {
@@ -119,7 +119,7 @@ plot_visao_geral("senado", "Origem do financiamento de campanha \ndos senadores"
                  "Porcentagem do valor total de financiamento para campanha de senadores")
 ```
 
-A seguir iremos visualizar quais os grupos econômicos que mais doaram para deputados em 2018.
+A seguir iremos visualizar quais os setores econômicos que mais doaram para deputados em 2018.
 
 ```{r}
 doacoes_sumario_por_atividade <- doacoes_sumario_camara %>%
@@ -150,7 +150,7 @@ doacoes_sumario_por_atividade %>%
   theme(axis.text.y = element_text(size = 10))
 ```
 
-A seguir a lista dos grupos que mais doaram para senadores
+A seguir a lista dos setores que mais doaram para senadores
 
 ```{r}
 doacoes_sumario_por_atividade <- doacoes_sumario_senado %>%
@@ -181,7 +181,7 @@ doacoes_sumario_por_atividade %>%
   theme(axis.text.y = element_text(size = 10))
 ```
 
-## Total doado por Grupo Econômico
+## Total doado por Setor Econômico
 
 Abaixo exibimos a relação entre o valor total recebido em campanhas por setor econômico e o número de parlamentares que receberam essas doações. Todos os setores econômicos foram considerados nas visualizações.
 
@@ -194,12 +194,14 @@ plot_scatter_total_doado_e_parlamentares <- function(data, titulo, casa) {
   limite_para_exibir_labels <- 6e6
   breaks_x <-  seq(0, 500, 50)
   breaks_y <- seq(0, 9e6, 1e6)
+  color <- "#43a467"
   
   if (casa == "senado") {
     parlamentares <- "senadores"
     limite_para_exibir_labels <- 2e6
     breaks_x <-  seq(0, 60, 5)
     breaks_y <- seq(0, 3e6, 5e5)
+    color <- "#806CCC"
   }
   
   labels <- breaks_y %>% 
@@ -208,7 +210,7 @@ plot_scatter_total_doado_e_parlamentares <- function(data, titulo, casa) {
   data %>% 
     ggplot(aes(x = num_deputados,
                y = total_recebido)) +
-    geom_point(color="#43a467", 
+    geom_point(color = color, 
                size = 2.5,
                alpha = .8) +
     ggrepel::geom_text_repel(data = filter(data, total_recebido >= limite_para_exibir_labels), 
@@ -274,13 +276,13 @@ doacoes_grupo_sumario_senado <- doacoes_sumario_alt_senado %>%
 plot_scatter_total_doado_e_parlamentares(doacoes_grupo_sumario_senado, "Relação de total recebido e número de senadores que \nreceberam doações por setor econômico", "senado")
 ```
 
-## Distribuição dos parlamentares por Grupo Econômico
+## Distribuição dos parlamentares por Setor Econômico
 
 
 
-A seguir iremos visualizar a distribuição da proporção do recebido pelos parlamentares por Grupo Econômico.
+A seguir iremos visualizar a distribuição da proporção do recebido pelos parlamentares por Setor Econômico.
 
-Cada aglomerado de pontos na visualização representa um conjunto de parlamentares posicionados de forma correspondente a proporção de doação recebida de um determinado grupo econômico. A curva de densidade também ajuda a identificar concentração de parlamentares em faixas de valores específicas. A marca "|" rosa na visualização representa a média da proporção dos parlamentares de cada grupo. A visualização mostra os 10 grupos econômicos com maiores médias de proporção da campanha de parlamentares.
+Cada aglomerado de pontos na visualização representa um conjunto de parlamentares posicionados de forma correspondente a proporção de doação recebida de um determinado setor econômico. A curva de densidade também ajuda a identificar concentração de parlamentares em faixas de valores específicas. A marca "|" preta na visualização representa a média da proporção dos parlamentares de cada setor. A visualização mostra os 10 setores econômicos com maiores médias de proporção da campanha de parlamentares.
 
 ```{r fig.height=5}
 plot_geom_count_density <- function(data, title, numero_minimo_parlamentares_por_grupo_economico, casa) {
@@ -353,13 +355,15 @@ plot_geom_count_density(doacoes_sumario_alt_camara, "Distribuição da participa
 plot_geom_count_density(doacoes_sumario_alt_senado, "Distribuição da participação \nem campanha para senadores por Setor", 5, "senado")
 ```
 
-É possível perceber a ocorrência de vários casos de deputados com proporção de doação vinda do grupo econômico superior a 50% na Câmara. Em alguns casos o valor se aproxima bastante de 100%, ou seja, toda a doação recebida pelo deputado veio de sócios ligados a empresas do Grupo econômico.
+É possível perceber a ocorrência de vários casos de deputados com proporção de doação vinda do setor econômico superior a 50% na Câmara. Em alguns casos o valor se aproxima bastante de 100%, ou seja, toda a doação recebida pelo deputado veio de sócios ligados a empresas do setor econômico.
 
-Para o Senado, o cenário é um pouco diferente: a maioria dos senadores não concentra nem 20% das doações recebidas em campanha em um grupo específico.
+Para o Senado, o cenário é um pouco diferente: a maioria dos senadores não concentra nem 20% das doações recebidas em campanha em um setor específico.
 
 ## Distribuição dos parlamentares por Partido
 
 Para o cálculo da participação em campanha, somamos, para cada partido, todas as receitas que vieram de sócios de empresas para os deputados desses partidos. Depois dividimos pela soma do valor total que cada deputado desse partido recebeu, isto é, considerando doações de pessoas físicas (sócias de empresas ou não) e doações do partido ou de outros candidatos. Ou seja, para cada partido temos a proporção de receitas provenientes de sócios. 
+
+A linha tracejada indica a média geral, que é o valor proporcional que um parlamentar recebeu de doações de sócios de empresas. Para a Câmara, um deputado recebe, em média, 20% de suas receitas de campanha são de doações de sócios de empresas. No Senado, este valor é de 25%.
 
 A barra amarela representa a média geral de financiamento de campanha vindos de sócios de empresas. A barra azul representa a média de quanto os parlamentares de um partido tiveram suas campanhas financiadas por sócios de empresas.
 
@@ -368,21 +372,36 @@ Quando a barra amarela se sobressai significa que a média geral de financiament
 Caso a barra azul se sobressaia significa que a média do partido é maior que a média geral. Neste caso a barra cinza é a média geral.
 
 ```{r}
-plot_financiamento_partido_sumarizado <- function(data, titulo) {
+plot_financiamento_partido_sumarizado <- function(data, titulo, media_geral, casa) {
+  
+  y_texto = 0.27
+  
+  if (casa == "senado") {
+    y_texto = 0.32
+  }
+  
+  # cores_grafico = c("#FFD046", "#6699CC")
+  cores_grafico = c("#F4DE95", "#F4DE95")
+  
   levels <- data %>% 
     filter(key == "proporcao_partido_socios") %>% 
     arrange(desc(value)) %>% 
     pull(sg_partido)
   
-  ggplot(data = data %>% 
-         filter(key != "proporcao_partido_socios"),
+  data %>%
+    filter(key != "proporcao_partido_socios") %>%
+    mutate(superior = value > media_geral) %>%
+  # data %>% 
+  #   filter(key == "proporcao_partido_socios") %>% 
+  #   mutate(superior = value > media_geral) %>% 
+  ggplot(
        aes(
          x = forcats::fct_rev(factor(sg_partido, levels = levels)),
          y = value,
          fill = key
+         # fill = "#F4DE95"
        )) +
-    geom_col(fill = "#FFD046",
-             alpha = .5,
+    geom_col(alpha = .5,
              width = 0.5) +
     geom_text(data = filter(data, key == "proporcao_partido_socios"), 
               aes(label = paste0(round(value * 100, 1))),
@@ -395,8 +414,14 @@ plot_financiamento_partido_sumarizado <- function(data, titulo) {
       alpha = .5,
       width = 0.5
     ) +
+    
+    geom_hline(yintercept = media_geral, linetype="dashed") +
+    annotate("text", label = "média geral", x = 1.25, y = y_texto, color = "#4b4545") + 
+
     coord_flip() +
     scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    scale_fill_manual(values = cores_grafico) +
+    guides(fill = F) +
     labs(title = titulo,
          x = "",
          y = "Média da participação em campanha recebida de sócios de empresas (%)") +
@@ -407,7 +432,7 @@ plot_financiamento_partido_sumarizado <- function(data, titulo) {
 ## Para Deputados
 
 ```{r}
-media_geral <- doacoes_origem %>% 
+media_geral_camara <- doacoes_origem %>% 
   filter(casa == "camara") %>% 
   mutate(proporcao = total_receita_doadores_empresas / total_recebido_geral) %>% 
   filter(!is.na(proporcao)) %>% 
@@ -421,12 +446,12 @@ doacoes_partidos_sumario_camara <- doacoes_origem %>%
             total_partido_socios = sum(total_receita_doadores_empresas)) %>% 
   ungroup() %>% 
   mutate(proporcao_partido_socios = total_partido_socios / total_partido) %>% 
-  mutate(media_geral = media_geral) %>% 
+  mutate(media_geral = media_geral_camara) %>% 
   gather(key = "key", value = "value", proporcao_partido_socios:media_geral)
 ```
 
 ```{r fig.height=6}
-plot_financiamento_partido_sumarizado(doacoes_partidos_sumario_camara, "Participação de sócios em campanhas dos deputados \npor partido")
+plot_financiamento_partido_sumarizado(doacoes_partidos_sumario_camara, "Participação de sócios em campanhas dos deputados \npor partido", media_geral_camara, "camara")
 ```
 
 Proporcionalmente, NOVO e PSL foram os partidos que mais receberam doações de sócios de empresas quando comparados a média que um parlamentar recebe. Deputados do PSL, por exemplo, dentre todas suas receitas em campanha, mais de 42% vieram de sócios de empresas. A média geral considerando todos os deputados é próxima a 20%.
@@ -434,7 +459,7 @@ Proporcionalmente, NOVO e PSL foram os partidos que mais receberam doações de 
 ## Para Senadores
 
 ```{r}
-media_geral <- doacoes_origem %>% 
+media_geral_senado <- doacoes_origem %>% 
   filter(casa == "senado") %>% 
   mutate(proporcao = total_receita_doadores_empresas / total_recebido_geral) %>% 
   filter(!is.na(proporcao)) %>% 
@@ -448,17 +473,17 @@ doacoes_partidos_sumario_senado <- doacoes_origem %>%
             total_partido_socios = sum(total_receita_doadores_empresas)) %>% 
   ungroup() %>% 
   mutate(proporcao_partido_socios = total_partido_socios / total_partido) %>% 
-  mutate(media_geral = media_geral) %>% 
+  mutate(media_geral = media_geral_senado) %>% 
   gather(key = "key", value = "value", proporcao_partido_socios:media_geral)
 ```
 
 ```{r fig.height=6}
-plot_financiamento_partido_sumarizado(doacoes_partidos_sumario_senado, "Participação de sócios em campanhas dos senadores \npor partido")
+plot_financiamento_partido_sumarizado(doacoes_partidos_sumario_senado, "Participação de sócios em campanhas dos senadores \npor partido", media_geral_senado, "senado")
 ```
 
 ### Para Deputados
 
-A seguir iremos visualizar a distribuição dos deputados dos partidos com mais de 8 filiados. Para cada partido foi calculada a média de quanto cada setor econômico participou na campanha de seus deputados. Foram selecionados os seguintes setores econômicos:
+A seguir iremos visualizar a distribuição dos partidos que receberam, em média, mais doações de sócios de empresas proporcionalmente do que a média geral da Câmara. Para cada partido foi calculada a média de quanto cada setor econômico participou na campanha de seus deputados. Foram selecionados os seguintes setores econômicos:
   
  - ATIVIDADES IMOBILIÁRIAS
  - CONSTRUÇÃO
@@ -467,14 +492,32 @@ A seguir iremos visualizar a distribuição dos deputados dos partidos com mais 
  - COMÉRCIO VAREJISTA 
  - EDUCAÇÃO
 
-A barra amarela representa a média geral de quanto o setor econômico participou do financiamento da campanha dos deputados. A barra azul representa a média de quanto o setor econômico participou nas campanhas dos filiados ao partido. A barra cinza indica a interseção dos valores da média geral e da média no partido.
+<!-- A barra amarela representa a média geral de quanto o setor econômico participou do financiamento da campanha dos deputados. A barra azul representa a média de quanto o setor econômico participou nas campanhas dos filiados ao partido. A barra cinza indica a interseção dos valores da média geral e da média no partido. -->
 
-Quando a barra amarela se sobressai significa que a média geral de participação em campanha para aquele setor econômico é maior que a média do partido. Neste caso, a barra cinza irá indicar qual é a média do partido.
+<!-- Quando a barra amarela se sobressai significa que a média geral de participação em campanha para aquele setor econômico é maior que a média do partido. Neste caso, a barra cinza irá indicar qual é a média do partido. -->
 
-Caso a barra azul se sobressaia significa que a média do partido para o setor é maior que a geral. Neste caso a barra cinza irá indicar qual a média geral daquele setor.
+<!-- Caso a barra azul se sobressaia significa que a média do partido para o setor é maior que a geral. Neste caso a barra cinza irá indicar qual a média geral daquele setor. -->
 
 ```{r fig.height=30}
-plot_financiamento_por_partido <- function(data, lista_partidos, titulo) {
+plot_financiamento_por_partido <- function(data, lista_partidos, titulo, casa) {
+  
+  sg_partido_texto = "CIDADANIA"
+  grupo_atividade_economica_texto = "Comércio varejista"
+  cat_texto = "media_partido"
+  x_texto = 0.075
+  
+  if (casa == "senado") {
+    sg_partido_texto = "PDT"
+    grupo_atividade_economica_texto = "Saúde humana e serviços sociais"
+    cat_texto = "media_partido"
+    x_texto = 0.085
+  }
+  
+  data_text <- data.frame(value = x_texto, 
+                          sg_partido = sg_partido_texto, 
+                          grupo_atividade_economica = grupo_atividade_economica_texto, 
+                          cat = cat_texto)
+  
   ggplot(data = data %>% 
          filter(sg_partido %in% lista_partidos, cat != "media_partido"),
        aes(
@@ -490,7 +533,7 @@ plot_financiamento_por_partido <- function(data, lista_partidos, titulo) {
     # fill = "#6699CC",
     fill = "#f4de95",
     alpha = .5,
-    width = 0.5
+    width = 0.3
   ) +
   geom_point(data = filter(data, sg_partido %in% lista_partidos, cat != "media_partido"),
              aes(y = value), size = 6.5, color = "#111111", shape = 124) +
@@ -498,12 +541,18 @@ plot_financiamento_por_partido <- function(data, lista_partidos, titulo) {
              ncol = 3,
              scales = "free_y",
              repeat.tick.labels = c("bottom", "right")) +
+  
+    # geom_point(data_text, aes(x = 0.01, y = 0.01), size = 6, color = "#111111", shape = 124) +
+  geom_text(data = data_text, aes(label = "é a média")) +
+    
   coord_flip() +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(title = titulo,
        x = "",
        y = "Média da participação em campanha (%)") +
-  theme_ipsum_rc()
+  guides(fill = F) +
+  theme_ipsum_rc() +
+  theme(axis.title.x = element_text(hjust = 0))
 }
 ```
 
@@ -522,16 +571,24 @@ doacoes_sumario_partido_camara <- doacoes_sumario_alt_camara %>%
   gather(key = "cat", value = "value", media_geral:media_partido) %>% 
   complete(sg_partido, nesting(grupo_atividade_economica, cat), fill = list(value = 0))
 
-lista_partidos_camara <- doacoes_sumario_alt_camara %>% 
-  group_by(sg_partido) %>% 
-  summarise(n_parlamentares = n_distinct(id_parlamentar, casa)) %>% 
-  filter(n_parlamentares >= 8) %>% 
+# lista_partidos_camara <- doacoes_sumario_alt_camara %>% 
+#   group_by(sg_partido) %>% 
+#   summarise(n_parlamentares = n_distinct(id_parlamentar, casa)) %>% 
+#   filter(n_parlamentares >= 8) %>% 
+#   pull(sg_partido)
+
+lista_partidos_camara <- doacoes_partidos_sumario_camara %>% 
+  spread(key, value) %>% 
+  filter(proporcao_partido_socios >= media_geral) %>% 
+  arrange(desc(proporcao_partido_socios)) %>% 
   pull(sg_partido)
+
 ```
 
-```{r fig.height=25}
+```{r fig.height=15}
 plot_financiamento_por_partido(doacoes_sumario_partido_camara, lista_partidos_camara, 
-                               "Participação na campanha de deputados \npor partido e grupo econômico")
+                               "Participação na campanha de deputados \npor partido e setor econômico", 
+                               "camara")
 ```
 
 ### Para Senadores
@@ -560,15 +617,22 @@ doacoes_sumario_partido_senado <- doacoes_sumario_alt_senado %>%
   gather(key = "cat", value = "value", media_geral:media_partido) %>% 
   complete(sg_partido, nesting(grupo_atividade_economica, cat), fill = list(value = 0))
 
-lista_partidos_senado <- doacoes_sumario_alt_senado %>% 
-  group_by(sg_partido) %>% 
-  summarise(n_parlamentares = n_distinct(id_parlamentar, casa)) %>% 
+# lista_partidos_senado <- doacoes_sumario_alt_senado %>% 
+#   group_by(sg_partido) %>% 
+#   summarise(n_parlamentares = n_distinct(id_parlamentar, casa)) %>% 
+#   pull(sg_partido)
+
+lista_partidos_senado <- doacoes_partidos_sumario_senado %>% 
+  spread(key, value) %>% 
+  filter(proporcao_partido_socios >= media_geral) %>% 
+  arrange(desc(proporcao_partido_socios)) %>% 
   pull(sg_partido)
 ```
 
-```{r fig.height=15}
+```{r fig.height=10}
 plot_financiamento_por_partido(doacoes_sumario_partido_senado, lista_partidos_senado, 
-                               "Participação na campanha de senadores \npor partido e grupo econômico")
+                               "Participação na campanha de senadores \npor partido e setor econômico",
+                               "senado")
 ```
 
 ## Distribuição da média de participação em campanhas por comissão
@@ -632,12 +696,13 @@ plot_financiamento_por_comissao <- function(data, title) {
   labs(x = "", 
        y = "Média da participação em campanha (%)", 
        title = title) +
+  guides(fill = F) +
   theme_ipsum_rc()
 }
 ```
 
 ```{r fig.height=12}
-plot_financiamento_por_comissao(doacoes_sumario_comissoes_camara, "Participação na campanha de deputados \npor comissão e grupo econômico")
+plot_financiamento_por_comissao(doacoes_sumario_comissoes_camara, "Participação na campanha de deputados \npor comissão e setor econômico")
 ```
 
 ### Para Senadores
@@ -670,7 +735,7 @@ doacoes_sumario_comissoes_senado <- doacoes_sumario_alt_senado %>%
 ```
 
 ```{r fig.height=10}
-plot_financiamento_por_comissao(doacoes_sumario_comissoes_senado, "Participação na campanha de senadores \npor comissão e grupo econômico")
+plot_financiamento_por_comissao(doacoes_sumario_comissoes_senado, "Participação na campanha de senadores \npor comissão e setor econômico")
 ```
 ```{r}
 doacoes_grupos_filtrados_camara <- doacoes_sumario_alt_camara %>%
