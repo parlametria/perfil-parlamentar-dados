@@ -181,7 +181,49 @@ doacoes_sumario_por_atividade %>%
   theme(axis.text.y = element_text(size = 10))
 ```
 
-## Distribuição dos parlamentares por Grupo Econômico
+## Total doado por Grupo Econômico
+
+Abaixo exibimos a relação entre o valor total recebido em campanhas por setor econômico e o número de parlamentares que receberam essas doações. Todos os setores econômicos foram considerados nas visualizações.
+
+```{r}
+plot_scatter_total_doado_e_parlamentares <- function(data, titulo, casa) {
+
+  set.seed(2345)
+  
+  parlamentares <- "deputados"
+  limite_para_exibir_labels <- 6e6
+  breaks_x <-  seq(0, 500, 50)
+  breaks_y <- seq(0, 9e6, 1e6)
+  
+  if (casa == "senado") {
+    parlamentares <- "senadores"
+    limite_para_exibir_labels <- 2e6
+    breaks_x <-  seq(0, 60, 5)
+    breaks_y <- seq(0, 3e6, 5e5)
+  }
+  
+  labels <- breaks_y %>% 
+    format_currency_value(digits = 1)
+  
+  data %>% 
+    ggplot(aes(x = num_deputados,
+               y = total_recebido)) +
+    geom_point(color="#43a467", 
+               size = 2.5,
+               alpha = .8) +
+    ggrepel::geom_text_repel(data = filter(data, total_recebido >= limite_para_exibir_labels), 
+              aes(label = grupo_atividade_economica),
+              hjust = 1.1,
+              size = 3.3,
+              color = "#333333") +
+    scale_x_continuous(breaks = breaks_x) +
+    scale_y_continuous(breaks = breaks_y, labels = labels) +
+    labs(title = titulo,
+       y = "Valor financiado pelo setor econômico (milhões de reais)",
+       x = paste0("Número de ", parlamentares, " que receberam doações")) +
+    theme_ipsum_rc()
+}
+```
 
 ```{r}
 parlamentares_investimento <- read_csv(here("parlametria/raw_data/resumo/parlamentares_investimento.csv"),
@@ -205,6 +247,36 @@ doacoes_sumario_alt_senado <- doacoes_sumario_senado %>%
   ungroup()
 
 ```
+
+### Para Deputados
+
+```{r}
+doacoes_grupo_sumario_camara <- doacoes_sumario_alt_camara %>% 
+  group_by(grupo_atividade_economica) %>% 
+  summarise(total_recebido = sum(total_por_atividade), 
+            num_deputados = n())
+```
+
+```{r}
+plot_scatter_total_doado_e_parlamentares(doacoes_grupo_sumario_camara, "Relação de total recebido e número de deputados que \nreceberam doações por setor econômico", "camara")
+```
+
+### Para Senadores
+
+```{r}
+doacoes_grupo_sumario_senado <- doacoes_sumario_alt_senado %>% 
+  group_by(grupo_atividade_economica) %>% 
+  summarise(total_recebido = sum(total_por_atividade), 
+            num_deputados = n())
+```
+
+```{r}
+plot_scatter_total_doado_e_parlamentares(doacoes_grupo_sumario_senado, "Relação de total recebido e número de senadores que \nreceberam doações por setor econômico", "senado")
+```
+
+## Distribuição dos parlamentares por Grupo Econômico
+
+
 
 A seguir iremos visualizar a distribuição da proporção do recebido pelos parlamentares por Grupo Econômico.
 
@@ -410,15 +482,18 @@ plot_financiamento_por_partido <- function(data, lista_partidos, titulo) {
          y = value,
          fill = cat
        )) +
-  geom_col(fill = "#FFD046",
-           alpha = .5,
-           width = 0.5) +
+  # geom_col(fill = "#FFD046",
+  #          alpha = .5,
+  #          width = 0.5) +
   geom_col(
     data = filter(data, sg_partido %in% lista_partidos, cat == "media_partido"),
-    fill = "#6699CC",
+    # fill = "#6699CC",
+    fill = "#f4de95",
     alpha = .5,
     width = 0.5
   ) +
+  geom_point(data = filter(data, sg_partido %in% lista_partidos, cat != "media_partido"),
+             aes(y = value), size = 6.5, color = "#111111", shape = 124) +
   facet_rep_wrap(~ sg_partido,
              ncol = 3,
              scales = "free_y",
@@ -596,5 +671,9 @@ doacoes_sumario_comissoes_senado <- doacoes_sumario_alt_senado %>%
 
 ```{r fig.height=10}
 plot_financiamento_por_comissao(doacoes_sumario_comissoes_senado, "Participação na campanha de senadores \npor comissão e grupo econômico")
+```
+```{r}
+doacoes_grupos_filtrados_camara <- doacoes_sumario_alt_camara %>%
+  filter(grupo_atividade_economica_raw %in% categorias_economicas_camara)
 ```
 
