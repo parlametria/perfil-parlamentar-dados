@@ -25,6 +25,8 @@ library(ggchicklet)
 library(ggridges)
 library(gridExtra)
 library(lemon)
+library(reactable)
+library(htmltools)
 
 source(here("reports/atividades-economicas-doacoes/utils.R"))
 source(here("parlametria/processor/empresas/processa_parlamentares_info_eleicao.R"))
@@ -534,8 +536,8 @@ plot_financiamento_por_partido <- function(data, lista_partidos, titulo, casa) {
   #          width = 0.5) +
   geom_col(
     data = filter(data, sg_partido %in% lista_partidos, cat == "media_partido"),
-    # fill = "#6699CC",
-    fill = "#f4de95",
+    fill = "#6699CC",
+    # fill = "#f4de95",
     alpha = .5,
     width = 0.3
   ) +
@@ -745,4 +747,45 @@ plot_financiamento_por_comissao(doacoes_sumario_comissoes_senado, "Participaçã
 doacoes_grupos_filtrados_camara <- doacoes_sumario_alt_camara %>%
   filter(grupo_atividade_economica_raw %in% categorias_economicas_camara)
 ```
+
+### Deputados que receberam mais proporcionalmente de setores econômicos
+
+Total geral é o valor total de doações recebidas pelo parlamentar na eleição de 2018. Proporção é a razão entre o total por setor e o total geral.
+
+```{r}
+table_parlamentar_setor <- function(data) {
+  reactable(
+    data %>%
+      mutate(proporcao_doacao = round(proporcao_doacao * 100, 1)) %>% 
+      select(nome_eleitoral, sg_partido, uf, grupo_atividade_economica, 
+             total_por_atividade, total_recebido_geral, proporcao_doacao),
+    pagination = TRUE, filterable = TRUE, searchable = TRUE, resizable = TRUE,
+    defaultSorted = "proporcao_doacao",
+    defaultSortOrder = "desc",
+    defaultColDef = colDef(headerClass = "header", align = "left"),
+    columns = list(
+      nome_eleitoral = colDef(name = "Nome", width = 150),
+      sg_partido = colDef(name = "Partido", width = 100),
+      uf = colDef(width = 50),
+      grupo_atividade_economica = colDef(name = "Setor", width = 150),
+      total_por_atividade = colDef(name = "Total por setor", width = 150),
+      total_recebido_geral = colDef(name = "Total geral", width = 150),
+      proporcao_doacao = colDef(name = "Proporção", width = 150)
+    ),
+    compact = TRUE,
+    class = "followers-tbl"
+  )
+}
+```
+
+```{r}
+table_parlamentar_setor(doacoes_sumario_alt_camara)
+```
+
+### Senadores que receberam mais proporcionalmente de setores econômicos
+
+```{r}
+table_parlamentar_setor(doacoes_sumario_alt_senado)
+```
+
 
