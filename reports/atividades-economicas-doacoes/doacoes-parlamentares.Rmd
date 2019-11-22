@@ -296,21 +296,36 @@ Quando a barra amarela se sobressai significa que a média geral de financiament
 Caso a barra azul se sobressaia significa que a média do partido é maior que a média geral. Neste caso a barra cinza é a média geral.
 
 ```{r}
-plot_financiamento_partido_sumarizado <- function(data, titulo) {
+plot_financiamento_partido_sumarizado <- function(data, titulo, media_geral, casa) {
+  
+  y_texto = 0.27
+  
+  if (casa == "senado") {
+    y_texto = 0.32
+  }
+  
+  # cores_grafico = c("#FFD046", "#6699CC")
+  cores_grafico = c("#F4DE95", "#F4DE95")
+  
   levels <- data %>% 
     filter(key == "proporcao_partido_socios") %>% 
     arrange(desc(value)) %>% 
     pull(sg_partido)
   
-  ggplot(data = data %>% 
-         filter(key != "proporcao_partido_socios"),
+  data %>%
+    filter(key != "proporcao_partido_socios") %>%
+    mutate(superior = value > media_geral) %>%
+  # data %>% 
+  #   filter(key == "proporcao_partido_socios") %>% 
+  #   mutate(superior = value > media_geral) %>% 
+  ggplot(
        aes(
          x = forcats::fct_rev(factor(sg_partido, levels = levels)),
          y = value,
-         fill = key
+         fill = key,
+         # fill = "#F4DE95"
        )) +
-    geom_col(fill = "#FFD046",
-             alpha = .5,
+    geom_col(alpha = .5,
              width = 0.5) +
     geom_text(data = filter(data, key == "proporcao_partido_socios"), 
               aes(label = paste0(round(value * 100, 1))),
@@ -323,8 +338,14 @@ plot_financiamento_partido_sumarizado <- function(data, titulo) {
       alpha = .5,
       width = 0.5
     ) +
+    
+    geom_hline(yintercept = media_geral, linetype="dashed") +
+    annotate("text", label = "média geral", x = 1.25, y = y_texto, color = "#4b4545") + 
+
     coord_flip() +
     scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    scale_fill_manual(values = cores_grafico) +
+    guides(fill = F) +
     labs(title = titulo,
          x = "",
          y = "Média da participação em campanha recebida de sócios de empresas (%)") +
@@ -335,7 +356,7 @@ plot_financiamento_partido_sumarizado <- function(data, titulo) {
 ## Para Deputados
 
 ```{r}
-media_geral <- doacoes_origem %>% 
+media_geral_camara <- doacoes_origem %>% 
   filter(casa == "camara") %>% 
   mutate(proporcao = total_receita_doadores_empresas / total_recebido_geral) %>% 
   filter(!is.na(proporcao)) %>% 
@@ -349,12 +370,12 @@ doacoes_partidos_sumario_camara <- doacoes_origem %>%
             total_partido_socios = sum(total_receita_doadores_empresas)) %>% 
   ungroup() %>% 
   mutate(proporcao_partido_socios = total_partido_socios / total_partido) %>% 
-  mutate(media_geral = media_geral) %>% 
+  mutate(media_geral = media_geral_camara) %>% 
   gather(key = "key", value = "value", proporcao_partido_socios:media_geral)
 ```
 
 ```{r fig.height=6}
-plot_financiamento_partido_sumarizado(doacoes_partidos_sumario_camara, "Participação de sócios em campanhas dos deputados \npor partido")
+plot_financiamento_partido_sumarizado(doacoes_partidos_sumario_camara, "Participação de sócios em campanhas dos deputados \npor partido", media_geral_camara, "camara")
 ```
 
 Proporcionalmente, NOVO e PSL foram os partidos que mais receberam doações de sócios de empresas quando comparados a média que um parlamentar recebe. Deputados do PSL, por exemplo, dentre todas suas receitas em campanha, mais de 42% vieram de sócios de empresas. A média geral considerando todos os deputados é próxima a 20%.
@@ -362,7 +383,7 @@ Proporcionalmente, NOVO e PSL foram os partidos que mais receberam doações de 
 ## Para Senadores
 
 ```{r}
-media_geral <- doacoes_origem %>% 
+media_geral_senado <- doacoes_origem %>% 
   filter(casa == "senado") %>% 
   mutate(proporcao = total_receita_doadores_empresas / total_recebido_geral) %>% 
   filter(!is.na(proporcao)) %>% 
@@ -376,12 +397,12 @@ doacoes_partidos_sumario_senado <- doacoes_origem %>%
             total_partido_socios = sum(total_receita_doadores_empresas)) %>% 
   ungroup() %>% 
   mutate(proporcao_partido_socios = total_partido_socios / total_partido) %>% 
-  mutate(media_geral = media_geral) %>% 
+  mutate(media_geral = media_geral_senado) %>% 
   gather(key = "key", value = "value", proporcao_partido_socios:media_geral)
 ```
 
 ```{r fig.height=6}
-plot_financiamento_partido_sumarizado(doacoes_partidos_sumario_senado, "Participação de sócios em campanhas dos senadores \npor partido")
+plot_financiamento_partido_sumarizado(doacoes_partidos_sumario_senado, "Participação de sócios em campanhas dos senadores \npor partido", media_geral_senado, "senado")
 ```
 
 ### Para Deputados
