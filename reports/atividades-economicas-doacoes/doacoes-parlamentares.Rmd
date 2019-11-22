@@ -50,7 +50,7 @@ doacoes_origem <- processa_parlamentares_info_eleicao()
 
 Em 2018, quando foram eleitos 513 Deputados Federais e 54 Senadores, a eleição não permitiu a doação direta de empresas (pessoas jurídicas) para os candidatos, apenas doações de pessoas físicas. Iremos explorar nessa análise a participação dessas pessoas físicas como sócias de empresas e quais os setores de atividades econômicas que essas empresas pertencem.
 
-Quando for falado em doações de setores econômicos para Parlamentares, deve ser intepretado como doações de sócios de empresas que atuam neste setor econômico. Setor econômico é o ramo de atividade que a empresa pode atuar. A classificação é obtida através da declaração dos CNAE's das empresas na Receita Federal. Foi considerado o CNAE fiscal registrado na Receita Federal para determinatr o setor econômico de uma empresa.
+Quando for falado em doações de setores econômicos para Parlamentares, deve ser intepretado como doações de sócios de empresas que atuam neste setor econômico. Setor econômico é o ramo de atividade que a empresa pode atuar. A classificação é obtida através da declaração dos CNAE's das empresas na Receita Federal. Foi considerado o CNAE fiscal registrado na Receita Federal para determinar o setor econômico de uma empresa.
 
 Se um doador possuir duas ou mais empresas com diferentes setores econômicos então a doação será dividida pelo número de setores econômicos. 
 
@@ -119,10 +119,33 @@ plot_visao_geral("senado", "Origem do financiamento de campanha \ndos senadores"
                  "Porcentagem do valor total de financiamento para campanha de senadores")
 ```
 
-A seguir iremos visualizar quais os setores econômicos que mais doaram para deputados em 2018.
+A seguir iremos visualizar quais os setores econômicos que mais financiaram a campanha de deputados em 2018.
 
 ```{r}
-doacoes_sumario_por_atividade <- doacoes_sumario_camara %>%
+parlamentares_investimento <- read_csv(here("parlametria/raw_data/resumo/parlamentares_investimento.csv"),
+                                       col_types = cols(id = "c")) %>%
+  select(id_parlamentar = id, casa, partido_eleicao)
+
+doacoes_sumario_alt_camara <- doacoes_sumario_camara %>%
+  left_join(parlamentares_investimento, by = c("id_parlamentar", "casa")) %>%
+  rowwise() %>%
+  mutate(grupo_atividade_economica_raw = grupo_atividade_economica,
+         grupo_atividade_economica = str_to_sentence(grupo_atividade_economica),
+         grupo_atividade_economica = paste(stringi::stri_wrap(grupo_atividade_economica, 40), collapse = "\n")) %>%
+  ungroup()
+
+doacoes_sumario_alt_senado <- doacoes_sumario_senado %>%
+  left_join(parlamentares_investimento, by = c("id_parlamentar", "casa")) %>%
+  rowwise() %>%
+  mutate(grupo_atividade_economica_raw = grupo_atividade_economica,
+         grupo_atividade_economica = str_to_sentence(grupo_atividade_economica),
+         grupo_atividade_economica = paste(stringi::stri_wrap(grupo_atividade_economica, 40), collapse = "\n")) %>%
+  ungroup()
+
+```
+
+```{r}
+doacoes_sumario_por_atividade <- doacoes_sumario_alt_camara %>%
   group_by(grupo_atividade_economica) %>% 
   summarise(total = sum(total_por_atividade))
 
@@ -141,7 +164,7 @@ doacoes_sumario_por_atividade %>%
             color = "#333333") +
   coord_flip() +
   scale_fill_manual(values = c("#43a467")) +
-  scale_y_continuous(limits = c(0, 15)) +
+  scale_y_continuous(limits = c(0, 10), breaks = seq(0, 12, 2)) +
   guides(fill = FALSE) + 
   labs(title = "Setores econômicos que mais \nfinanciaram campanha para deputados",
        y = "Valor financiado para deputados (milhões de reais)",
@@ -150,10 +173,10 @@ doacoes_sumario_por_atividade %>%
   theme(axis.text.y = element_text(size = 10))
 ```
 
-A seguir a lista dos setores que mais doaram para senadores
+A seguir a lista dos setores que mais financiaram a campanha de senadores
 
 ```{r}
-doacoes_sumario_por_atividade <- doacoes_sumario_senado %>%
+doacoes_sumario_por_atividade <- doacoes_sumario_alt_senado %>%
   group_by(grupo_atividade_economica) %>% 
   summarise(total = sum(total_por_atividade))
 
@@ -183,7 +206,7 @@ doacoes_sumario_por_atividade %>%
 
 ## Total doado por Setor Econômico
 
-Abaixo exibimos a relação entre o valor total recebido em campanhas por setor econômico e o número de parlamentares que receberam essas doações. Todos os setores econômicos foram considerados nas visualizações.
+Abaixo exibimos a relação entre o valor total recebido em campanhas por setor econômico e o número de parlamentares que receberam essas doações. Todos os setores econômicos foram considerados na visualização.
 
 ```{r}
 plot_scatter_total_doado_e_parlamentares <- function(data, titulo, casa) {
@@ -227,29 +250,6 @@ plot_scatter_total_doado_e_parlamentares <- function(data, titulo, casa) {
 }
 ```
 
-```{r}
-parlamentares_investimento <- read_csv(here("parlametria/raw_data/resumo/parlamentares_investimento.csv"),
-                                       col_types = cols(id = "c")) %>%
-  select(id_parlamentar = id, casa, partido_eleicao)
-
-doacoes_sumario_alt_camara <- doacoes_sumario_camara %>%
-  left_join(parlamentares_investimento, by = c("id_parlamentar", "casa")) %>%
-  rowwise() %>%
-  mutate(grupo_atividade_economica_raw = grupo_atividade_economica,
-         grupo_atividade_economica = str_to_sentence(grupo_atividade_economica),
-         grupo_atividade_economica = paste(stringi::stri_wrap(grupo_atividade_economica, 40), collapse = "\n")) %>%
-  ungroup()
-
-doacoes_sumario_alt_senado <- doacoes_sumario_senado %>%
-  left_join(parlamentares_investimento, by = c("id_parlamentar", "casa")) %>%
-  rowwise() %>%
-  mutate(grupo_atividade_economica_raw = grupo_atividade_economica,
-         grupo_atividade_economica = str_to_sentence(grupo_atividade_economica),
-         grupo_atividade_economica = paste(stringi::stri_wrap(grupo_atividade_economica, 40), collapse = "\n")) %>%
-  ungroup()
-
-```
-
 ### Para Deputados
 
 ```{r}
@@ -282,7 +282,7 @@ plot_scatter_total_doado_e_parlamentares(doacoes_grupo_sumario_senado, "Relaçã
 
 A seguir iremos visualizar a distribuição da proporção do recebido pelos parlamentares por Setor Econômico.
 
-Cada aglomerado de pontos na visualização representa um conjunto de parlamentares posicionados de forma correspondente a proporção de doação recebida de um determinado setor econômico. A curva de densidade também ajuda a identificar concentração de parlamentares em faixas de valores específicas. A marca "|" preta na visualização representa a média da proporção dos parlamentares de cada setor. A visualização mostra os 10 setores econômicos com maiores médias de proporção da campanha de parlamentares.
+Cada marca "|" na visualização representa um parlamentar posicionado de forma correspondente a proporção de doação recebida de um determinado setor econômico. A marca "|" preta na visualização representa a média da proporção dos parlamentares de cada setor. A visualização mostra os 10 setores econômicos com maiores médias de proporção da campanha de parlamentares.
 
 ```{r fig.height=5}
 plot_geom_count_density <- function(data, title, numero_minimo_parlamentares_por_grupo_economico, casa) {
@@ -347,15 +347,19 @@ plot_geom_count_density <- function(data, title, numero_minimo_parlamentares_por
 }
 ```
 
+As cores verde e roxa apenas ajudam a facilitar a leitura da visualização.
+
 ```{r fig.height=6}
 plot_geom_count_density(doacoes_sumario_alt_camara, "Distribuição da participação \nem campanha para deputados por Setor", 10, "camara")
 ```
+
+As cores azul e roxa apenas ajudam a facilitar a leitura da visualização.
 
 ```{r fig.height=6}
 plot_geom_count_density(doacoes_sumario_alt_senado, "Distribuição da participação \nem campanha para senadores por Setor", 5, "senado")
 ```
 
-É possível perceber a ocorrência de vários casos de deputados com proporção de doação vinda do setor econômico superior a 50% na Câmara. Em alguns casos o valor se aproxima bastante de 100%, ou seja, toda a doação recebida pelo deputado veio de sócios ligados a empresas do setor econômico.
+É possível perceber a ocorrência de vários casos de deputados em que o setor econômico financiou mais de 50% da campanha. Em alguns casos o valor se aproxima bastante de 100%, ou seja, toda a doação recebida pelo deputado veio de sócios ligados a empresas do setor econômico.
 
 Para o Senado, o cenário é um pouco diferente: a maioria dos senadores não concentra nem 20% das doações recebidas em campanha em um setor específico.
 
