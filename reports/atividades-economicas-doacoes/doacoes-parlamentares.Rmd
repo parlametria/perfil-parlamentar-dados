@@ -407,8 +407,8 @@ plot_financiamento_partido_sumarizado <- function(data, titulo, media_geral, cas
          fill = key
          # fill = "#F4DE95"
        )) +
-    geom_col(alpha = .5,
-             width = 0.5) +
+    # geom_col(alpha = .5,
+    #          width = 0.5) +
     geom_text(data = filter(data, key == "proporcao_partido_socios"), 
               aes(label = paste0(round(value * 100, 1))),
             hjust = -0.1,
