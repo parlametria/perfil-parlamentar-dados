@@ -565,23 +565,21 @@ plot_financiamento_por_partido <- function(data, lista_partidos, titulo, casa) {
 ```{r}
 categorias_economicas_camara <- c("ATIVIDADES IMOBILIÁRIAS", "CONSTRUÇÃO", "ATIVIDADES FINANCEIRAS, DE SEGUROS E SERVIÇOS RELACIONADOS", "AGRICULTURA, PECUÁRIA, PRODUÇÃO FLORESTAL, PESCA E AQÜICULTURA", "COMÉRCIO VAREJISTA", "EDUCAÇÃO")
 
-doacoes_sumario_partido_camara <- doacoes_sumario_alt_camara %>%
+doacoes_media_geral_atividade_camara <- doacoes_sumario_alt_camara %>%
   filter(grupo_atividade_economica_raw %in% categorias_economicas_camara) %>%
   group_by(grupo_atividade_economica) %>%
-  mutate(media_geral = mean(proporcao_doacao)) %>%
-  ungroup() %>%
+  summarise(media_geral = mean(proporcao_doacao)) %>%
+  ungroup()
+
+doacoes_sumario_partido_camara <- doacoes_sumario_alt_camara %>%
+  filter(grupo_atividade_economica_raw %in% categorias_economicas_camara) %>%
   group_by(sg_partido, grupo_atividade_economica) %>%
   mutate(media_partido = mean(proporcao_doacao)) %>%
   ungroup() %>%
-  distinct(grupo_atividade_economica, sg_partido, media_geral, media_partido) %>%
-  gather(key = "cat", value = "value", media_geral:media_partido) %>% 
-  complete(sg_partido, nesting(grupo_atividade_economica, cat), fill = list(value = 0))
-
-# lista_partidos_camara <- doacoes_sumario_alt_camara %>% 
-#   group_by(sg_partido) %>% 
-#   summarise(n_parlamentares = n_distinct(id_parlamentar, casa)) %>% 
-#   filter(n_parlamentares >= 8) %>% 
-#   pull(sg_partido)
+  distinct(grupo_atividade_economica, sg_partido, media_partido) %>%
+  complete(sg_partido, nesting(grupo_atividade_economica), fill = list(media_partido = 0)) %>%
+  left_join(doacoes_media_geral_atividade_camara, by = c("grupo_atividade_economica")) %>% 
+  gather(key = "cat", value = "value", media_partido:media_geral)
 
 lista_partidos_camara <- doacoes_partidos_sumario_camara %>% 
   spread(key, value) %>% 
@@ -611,22 +609,21 @@ Para o Senado, foram selecionados os seguintes setores econômicos:
 ```{r}
 categorias_economicas_senado <- c("SAÚDE HUMANA E SERVIÇOS SOCIAIS", "INDÚSTRIA DE MÓVEIS E MADEIRAS", "INDÚSTRIA ALIMENTÍCIA E DE BEBIDAS", "EDUCAÇÃO", "ATIVIDADES FINANCEIRAS, DE SEGUROS E SERVIÇOS RELACIONADOS", "CONSTRUÇÃO")
 
-doacoes_sumario_partido_senado <- doacoes_sumario_alt_senado %>%
+doacoes_media_geral_atividade_senado <- doacoes_sumario_alt_senado %>%
   filter(grupo_atividade_economica_raw %in% categorias_economicas_senado) %>%
   group_by(grupo_atividade_economica) %>%
-  mutate(media_geral = mean(proporcao_doacao)) %>%
-  ungroup() %>%
+  summarise(media_geral = mean(proporcao_doacao)) %>%
+  ungroup()
+
+doacoes_sumario_partido_senado <- doacoes_sumario_alt_senado %>%
+  filter(grupo_atividade_economica_raw %in% categorias_economicas_senado) %>%
   group_by(sg_partido, grupo_atividade_economica) %>%
   mutate(media_partido = mean(proporcao_doacao)) %>%
   ungroup() %>%
-  distinct(grupo_atividade_economica, sg_partido, media_geral, media_partido) %>%
-  gather(key = "cat", value = "value", media_geral:media_partido) %>% 
-  complete(sg_partido, nesting(grupo_atividade_economica, cat), fill = list(value = 0))
-
-# lista_partidos_senado <- doacoes_sumario_alt_senado %>% 
-#   group_by(sg_partido) %>% 
-#   summarise(n_parlamentares = n_distinct(id_parlamentar, casa)) %>% 
-#   pull(sg_partido)
+  distinct(grupo_atividade_economica, sg_partido, media_partido) %>%
+  complete(sg_partido, nesting(grupo_atividade_economica), fill = list(media_partido = 0)) %>% 
+  left_join(doacoes_media_geral_atividade_senado, by = c("grupo_atividade_economica")) %>% 
+  gather(key = "cat", value = "value", media_partido:media_geral)
 
 lista_partidos_senado <- doacoes_partidos_sumario_senado %>% 
   spread(key, value) %>% 
