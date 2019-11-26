@@ -58,52 +58,43 @@ Quando for falado em doações de setores econômicos para Parlamentares, deve s
 Se um doador possuir duas ou mais empresas com diferentes setores econômicos então a doação será dividida pelo número de setores econômicos. 
 
 ```{r}
-plot_visao_geral <- function(casa_parlamentar, titulo, titulo_x) {
+plot_visao_geral <- function(titulo, titulo_x) {
   set.seed(123)
   
-  total_doacoes_socios_empresas <- doacoes_origem %>%
-    filter(casa == casa_parlamentar) %>%
-    pull(total_receita_doadores_empresas) %>%
-    sum()
-  
-  total_doacoes_pessoa_fisica <- doacoes_origem %>%
-    filter(casa == casa_parlamentar) %>%
-    pull(pessoa_fisica) %>%
-    sum()
-  
-  total_doacoes_partidos_candidatos <- doacoes_origem %>%
-    filter(casa == casa_parlamentar) %>%
-    mutate(partidos_candidatos = origem_partido + outros_candidatos) %>%
-    pull(partidos_candidatos) %>%
-    sum()
-  
-  visao_geral <- data.frame(
-    origem = c("Sócios", "Outros", "Partidos+Candidatos"),
-    valor = c(total_doacoes_socios_empresas,
-              total_doacoes_pessoa_fisica - total_doacoes_socios_empresas,
-              total_doacoes_partidos_candidatos),
-    stringsAsFactors = FALSE
-  )
+  visao_geral <- doacoes_origem %>% 
+    mutate(partidos_candidatos = origem_partido + outros_candidatos) %>% 
+    group_by(casa) %>% 
+    summarise(total_doacoes_socios_empresas = sum(total_receita_doadores_empresas),
+              total_doacoes_pessoa_fisica = sum(pessoa_fisica),
+              total_doacoes_partidos_candidatos = sum(partidos_candidatos)) %>% 
+    mutate(Outros = total_doacoes_pessoa_fisica - total_doacoes_socios_empresas,
+           `Partidos+Candidatos` = total_doacoes_partidos_candidatos,
+           `Sócios` = total_doacoes_socios_empresas) %>% 
+    select(casa, Outros, `Partidos+Candidatos`, `Sócios`) %>% 
+    gather(key = origem, value = valor, -casa)
   
   paleta <- c("#91bfda", "#E89D68", "#e06264", "#BA7E53")
   
   visao_geral %>%
+    mutate(casa = if_else(casa == "camara", "Câmara", "Senado")) %>% 
+    group_by(casa) %>% 
     mutate(proporcao = valor / sum(valor)) %>%
-    ggplot(aes(x = reorder(origem, proporcao), y = proporcao, fill = origem)) +
+    ggplot(aes(x = reorder(origem, proporcao), y = proporcao, fill = casa, group = casa)) +
     geom_chicklet(width = .7, position = "dodge") +
     geom_text(aes(label = paste0(round(proporcao * 100, 1), "% / ",
-                                 stringr::str_remove(string = format_currency_value(valor, 1), 
-                                                     pattern = " milhões"))),
-              hjust = -0.05,
-              position = "dodge"
+                                 stringr::str_remove(string = format_currency_value(valor, 1),
+                                                     pattern = " milhões")),
+                  group = casa),
+              hjust = -0.08,
+              position = position_dodge(width = 1),
+              vjust = 0.3
               ) +
     coord_flip() +
-    scale_fill_manual(values = c("Sócios" = paleta[3],
-                               "Outros" = paleta[2],
-                               "Partidos+Candidatos" = paleta[1]),
-                      name = "") +
+    scale_fill_manual(values = c("Câmara" = paleta[1],
+                               "Senado" = paleta[2]),
+                      name = "Casa") +
     scale_y_continuous(breaks = seq(0, 1, 0.25), limits = c(0, 1), labels = scales::percent_format(accuracy = 1)) +
-    guides(fill = F) +
+    # guides(fill = F) +
     labs(x = "",
          y = titulo_x,
          title = titulo,
@@ -112,14 +103,9 @@ plot_visao_geral <- function(casa_parlamentar, titulo, titulo_x) {
 }
 ```
 
-```{r fig.height=4}
-plot_visao_geral("camara", "Origem do financiamento de campanha \ndos deputados",
-                 "Porcentagem do valor total de financiamento para campanha de deputados")
-```
-
-```{r fig.height=4}
-plot_visao_geral("senado", "Origem do financiamento de campanha \ndos senadores",
-                 "Porcentagem do valor total de financiamento para campanha de senadores")
+```{r fig.height=5}
+plot_visao_geral("Origem do financiamento de campanha \ndos deputados e senadores",
+                 "Porcentagem do valor total de financiamento para campanha de parlamentares")
 ```
 
 A seguir iremos visualizar quais os setores econômicos que mais financiaram a campanha de deputados em 2018.
