@@ -130,6 +130,7 @@ parlamentares_investimento <- read_csv(here("parlametria/raw_data/resumo/parlame
 
 doacoes_sumario_alt_camara <- doacoes_sumario_camara %>%
   left_join(parlamentares_investimento, by = c("id_parlamentar", "casa")) %>%
+  filter(total_por_atividade > 0) %>% ## filtra aqueles que receberam algum valor doado pelo setor
   rowwise() %>%
   mutate(grupo_atividade_economica_raw = grupo_atividade_economica,
          grupo_atividade_economica = str_to_sentence(grupo_atividade_economica),
@@ -138,6 +139,7 @@ doacoes_sumario_alt_camara <- doacoes_sumario_camara %>%
 
 doacoes_sumario_alt_senado <- doacoes_sumario_senado %>%
   left_join(parlamentares_investimento, by = c("id_parlamentar", "casa")) %>%
+  filter(total_por_atividade > 0) %>%  ## filtra aqueles que receberam algum valor doado pelo setor
   rowwise() %>%
   mutate(grupo_atividade_economica_raw = grupo_atividade_economica,
          grupo_atividade_economica = str_to_sentence(grupo_atividade_economica),
