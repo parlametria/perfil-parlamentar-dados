@@ -27,6 +27,7 @@ library(gridExtra)
 library(lemon)
 library(reactable)
 library(htmltools)
+library(purrr)
 
 source(here("reports/atividades-economicas-doacoes/utils.R"))
 source(here("parlametria/processor/empresas/processa_parlamentares_info_eleicao.R"))
@@ -785,6 +786,132 @@ table_parlamentar_setor(doacoes_sumario_alt_camara)
 
 ```{r}
 table_parlamentar_setor(doacoes_sumario_alt_senado)
+```
+
+### Sócios que mais doaram para partidos em setores econômicos selecionados
+
+```{r}
+recupera_empresas_que_mais_doaram_por_partido <- function(casa_partido = "camara", 
+                                                          grupo_atividade = "EDUCAÇÃO", 
+                                                          partido = "CIDADANIA") {
+  
+  # print(paste(casa_partido, grupo_atividade, partido))
+  
+  empresas <- read_csv(here("parlametria/raw_data/empresas/doadores_socios_empresas.csv"),
+                       col_types = cols(cpf_cnpj_doador = "c"))
+  
+  parlamentares_doadores <- read_csv(here("parlametria/raw_data/receitas/parlamentares_doadores.csv"),
+                                     col_types = cols(id = "c")) %>% 
+    filter(casa == casa_partido) %>% 
+    rename(id_parlamentar = id)
+  
+  empresas_educacao <- empresas %>% 
+    filter(grupo_atividade_economica == grupo_atividade)
+  
+  maiores_doadores <- parlamentares_doadores %>% 
+    filter(sg_partido == partido) %>% 
+    filter(cpf_cnpj_doador %in% (empresas_educacao %>% 
+                                   distinct(cpf_cnpj_doador) %>% 
+                                   pull(cpf_cnpj_doador))) %>% 
+    group_by(cpf_cnpj_doador, nome_doador) %>% 
+    summarise(total_financiado = sum(valor_receita)) %>% 
+    ungroup() %>% 
+    arrange(desc(total_financiado)) %>% 
+    top_n(5, wt = total_financiado)
+  
+  maiores_doadores_empresas <- maiores_doadores %>% 
+    left_join(empresas_educacao %>% 
+                distinct(cpf_cnpj_doador, cnpj, .keep_all = TRUE) %>% 
+                select(cpf_cnpj_doador, nome_doador, cnpj, razao_social, grupo_atividade_economica),
+              by = c("cpf_cnpj_doador", "nome_doador")) %>% 
+    group_by(cpf_cnpj_doador, nome_doador, total_financiado, grupo_atividade_economica) %>% 
+    summarise(n_empresas = n_distinct(cnpj),
+              empresas_cnpj = paste(cnpj, collapse = ";"),
+              empresas_razao_social = paste(razao_social, collapse = ";")) %>% 
+    arrange(desc(total_financiado)) %>% 
+    mutate(sg_partido = partido)
+  
+  return(maiores_doadores_empresas)
+}
+```
+
+```{r}
+partidos_que_mais_receberam_doacoes_camara <- doacoes_sumario_partido_camara %>% 
+  filter(cat == "media_partido") %>% 
+  group_by(sg_partido) %>% 
+  mutate(valor_maximo = max(value)) %>% 
+  filter(value == valor_maximo) %>% 
+  filter(sg_partido %in% (lista_partidos_camara)) %>% 
+  left_join(doacoes_sumario_alt_camara %>% 
+              distinct(grupo_atividade_economica_raw, grupo_atividade_economica),
+            by = c("grupo_atividade_economica"))
+
+## Contém apenas para o grupo econômico com maior média de proporção de financiamento de campanha.
+doadores_que_mais_financiaram_por_partido_camara <- pmap_dfr(
+  list(
+    partidos_que_mais_receberam_doacoes_camara$grupo_atividade_economica_raw,
+    partidos_que_mais_receberam_doacoes_camara$sg_partido
+  ),
+  ~ recupera_empresas_que_mais_doaram_por_partido("camara", ..1, ..2)
+)
+```
+
+```{r}
+partidos_que_mais_receberam_doacoes_senado <- doacoes_sumario_partido_senado %>% 
+  filter(cat == "media_partido") %>% 
+  group_by(sg_partido) %>% 
+  mutate(valor_maximo = max(value)) %>% 
+  filter(value == valor_maximo) %>% 
+  filter(sg_partido %in% (lista_partidos_senado)) %>% 
+  left_join(doacoes_sumario_alt_senado %>% 
+              distinct(grupo_atividade_economica_raw, grupo_atividade_economica),
+            by = c("grupo_atividade_economica"))
+
+## Contém apenas para o grupo econômico com maior média de proporção de financiamento de campanha.
+doadores_que_mais_financiaram_por_partido_senado <- pmap_dfr(
+  list(
+    partidos_que_mais_receberam_doacoes_senado$grupo_atividade_economica_raw,
+    partidos_que_mais_receberam_doacoes_senado$sg_partido
+  ),
+  ~ recupera_empresas_que_mais_doaram_por_partido("senado", ..1, ..2)
+)
+```
+
+```{r}
+table_doadores_que_mais_financiaram <- function(data) {
+  reactable(
+    data %>% 
+      select(sg_partido, grupo_atividade_economica, cpf_cnpj_doador, nome_doador,
+             total_financiado, n_empresas, empresas_cnpj, empresas_razao_social),
+    pagination = TRUE, filterable = TRUE, searchable = TRUE, resizable = TRUE,
+    # defaultSorted = "",
+    defaultSortOrder = "desc",
+    defaultColDef = colDef(headerClass = "header", align = "left"),
+    columns = list(
+      cpf_cnpj_doador = colDef(name = "CPF", width = 100),
+      nome_doador = colDef(name = "Doador", width = 150),
+      total_financiado = colDef(name = "Total", width = 100),
+      sg_partido = colDef(name = "Partido", width = 100),
+      grupo_atividade_economica = colDef(name = "Grupo", width = 150),
+      n_empresas = colDef(name = "Nº empresas", width = 50),
+      empresas_cnpj = colDef(name = "CNPJs", width = 130),
+      empresas_razao_social = colDef(name = "Empresas", width = 200)
+    ),
+    compact = TRUE,
+    class = "followers-tbl"
+  )
+}
+```
+
+### Deputados
+```{r fig.width=12}
+table_doadores_que_mais_financiaram(doadores_que_mais_financiaram_por_partido_camara)
+```
+
+
+### Senadores
+```{r fig.width=12}
+table_doadores_que_mais_financiaram(doadores_que_mais_financiaram_por_partido_senado)
 ```
 
 
