@@ -41,10 +41,12 @@ doacoes_sumario <- read_csv(here("parlametria/raw_data/empresas/parlamentares_li
                             col_types = cols(id_parlamentar = "c"))
 
 doacoes_sumario_camara <- doacoes_sumario %>% 
-  filter(casa == "camara")
+  filter(casa == "camara") %>% 
+  select(-indice_ligacao_atividade_economica)
 
 doacoes_sumario_senado <- doacoes_sumario %>% 
-  filter(casa == "senado")
+  filter(casa == "senado") %>% 
+  select(-indice_ligacao_atividade_economica)
 ```
 
 ```{r}
@@ -125,13 +127,30 @@ plot_visao_geral("senado", "Origem do financiamento de campanha \ndos senadores"
 A seguir iremos visualizar quais os setores econômicos que mais financiaram a campanha de deputados em 2018.
 
 ```{r}
-parlamentares_investimento <- read_csv(here("parlametria/raw_data/resumo/parlamentares_investimento.csv"),
-                                       col_types = cols(id = "c")) %>%
-  select(id_parlamentar = id, casa, partido_eleicao)
-
 doacoes_sumario_alt_camara <- doacoes_sumario_camara %>%
-  left_join(parlamentares_investimento, by = c("id_parlamentar", "casa")) %>%
   filter(total_por_atividade > 0) %>% ## filtra aqueles que receberam algum valor doado pelo setor
+  
+  full_join(doacoes_origem %>% 
+              filter(casa == "camara") %>% 
+              select(id_parlamentar, casa, total_recebido_geral), 
+            by = c("id_parlamentar", "casa", "total_recebido_geral")) %>%
+  complete(id_parlamentar,
+           nesting(grupo_atividade_economica), 
+           fill = list(media_partido = 0)) %>%
+  filter(!is.na(grupo_atividade_economica)) %>% 
+  
+  left_join(doacoes_origem %>% 
+              filter(casa == "camara") %>% 
+              select(id_parlamentar, casa, nome_eleitoral, sg_partido, uf, total_recebido_geral),
+            by = c("id_parlamentar")) %>% 
+  select(id_parlamentar, casa = casa.y, grupo_atividade_economica, nome_eleitoral = nome_eleitoral.y, 
+         sg_partido = sg_partido.y, uf = uf.y, total_por_atividade, total_recebido_geral = total_recebido_geral.y) %>% 
+  
+  mutate(total_por_atividade = if_else(is.na(total_por_atividade), 0, total_por_atividade)) %>% 
+  
+  mutate(proporcao_doacao = total_por_atividade / total_recebido_geral) %>% 
+  mutate(proporcao_doacao = if_else(is.na(proporcao_doacao), 0, proporcao_doacao)) %>% 
+
   rowwise() %>%
   mutate(grupo_atividade_economica_raw = grupo_atividade_economica,
          grupo_atividade_economica = str_to_sentence(grupo_atividade_economica),
@@ -139,14 +158,35 @@ doacoes_sumario_alt_camara <- doacoes_sumario_camara %>%
   ungroup()
 
 doacoes_sumario_alt_senado <- doacoes_sumario_senado %>%
-  left_join(parlamentares_investimento, by = c("id_parlamentar", "casa")) %>%
-  filter(total_por_atividade > 0) %>%  ## filtra aqueles que receberam algum valor doado pelo setor
+  filter(total_por_atividade > 0) %>% ## filtra aqueles que receberam algum valor doado pelo setor
+  
+  full_join(doacoes_origem %>% 
+              filter(casa == "senado") %>% 
+              select(id_parlamentar, casa, total_recebido_geral), 
+            by = c("id_parlamentar", "casa", "total_recebido_geral")) %>%
+  complete(id_parlamentar,
+           nesting(grupo_atividade_economica), 
+           fill = list(media_partido = 0)) %>%
+  filter(!is.na(grupo_atividade_economica)) %>% 
+  
+  left_join(doacoes_origem %>% 
+              filter(casa == "senado") %>% 
+              select(id_parlamentar, casa, nome_eleitoral, sg_partido, uf, total_recebido_geral),
+            by = c("id_parlamentar")) %>% 
+  select(id_parlamentar, casa = casa.y, grupo_atividade_economica, nome_eleitoral = nome_eleitoral.y, 
+         sg_partido = sg_partido.y, uf = uf.y, total_por_atividade, total_recebido_geral = total_recebido_geral.y) %>% 
+  
+  filter(total_recebido_geral > 0) %>% ## filtra apenas senadores que receberam algo em 2018 (participaram da eleição)
+  mutate(total_por_atividade = if_else(is.na(total_por_atividade), 0, total_por_atividade)) %>% 
+  
+  mutate(proporcao_doacao = total_por_atividade / total_recebido_geral) %>% 
+  mutate(proporcao_doacao = if_else(is.na(proporcao_doacao), 0, proporcao_doacao)) %>% 
+
   rowwise() %>%
   mutate(grupo_atividade_economica_raw = grupo_atividade_economica,
          grupo_atividade_economica = str_to_sentence(grupo_atividade_economica),
          grupo_atividade_economica = paste(stringi::stri_wrap(grupo_atividade_economica, 40), collapse = "\n")) %>%
   ungroup()
-
 ```
 
 ```{r}
@@ -259,9 +299,10 @@ plot_scatter_total_doado_e_parlamentares <- function(data, titulo, casa) {
 
 ```{r}
 doacoes_grupo_sumario_camara <- doacoes_sumario_alt_camara %>% 
+  filter(total_por_atividade > 0) %>% 
   group_by(grupo_atividade_economica) %>% 
   summarise(total_recebido = sum(total_por_atividade), 
-            num_deputados = n())
+            num_deputados = n_distinct(id_parlamentar, casa))
 ```
 
 ```{r}
@@ -272,9 +313,10 @@ plot_scatter_total_doado_e_parlamentares(doacoes_grupo_sumario_camara, "Relaçã
 
 ```{r}
 doacoes_grupo_sumario_senado <- doacoes_sumario_alt_senado %>% 
+  filter(total_por_atividade > 0) %>% 
   group_by(grupo_atividade_economica) %>% 
   summarise(total_recebido = sum(total_por_atividade), 
-            num_deputados = n())
+            num_deputados = n_distinct(id_parlamentar, casa))
 ```
 
 ```{r}
@@ -291,15 +333,23 @@ Cada marca "|" na visualização representa um parlamentar posicionado de forma 
 
 ```{r fig.height=5}
 plot_geom_count_density <- function(data, title, numero_minimo_parlamentares_por_grupo_economico, casa) {
+  grupos_minimo_participantes <- data %>% 
+    filter(total_por_atividade > 0) %>% 
+    group_by(grupo_atividade_economica) %>% 
+    summarise(n_parlamentares = n_distinct(id_parlamentar, casa)) %>% 
+    ungroup() %>% 
+    filter(n_parlamentares >= numero_minimo_parlamentares_por_grupo_economico) %>% 
+    pull(grupo_atividade_economica)
+  
   levels <- data %>%
     filter(!is.na(proporcao_doacao)) %>%
     group_by(grupo_atividade_economica) %>%
-    summarise(mean = mean(proporcao_doacao),
-              n_parlamentares = n()) %>%
+    summarise(mean = mean(proporcao_doacao)) %>%
     ungroup() %>%
-    filter(n_parlamentares >= numero_minimo_parlamentares_por_grupo_economico) %>% 
+    filter(grupo_atividade_economica %in% grupos_minimo_participantes) %>% 
     arrange(desc(mean)) %>%
     pull(grupo_atividade_economica)
+  
   top_grupos <- levels %>%
     head(10)
   
@@ -308,8 +358,8 @@ plot_geom_count_density <- function(data, title, numero_minimo_parlamentares_por
   cores_grafico = c("#af8dc3", "#42a38f")
   
   if (casa == "senado") {
-    x_barra = 18.5
-    x_texto = 21
+    x_barra = 38.5
+    x_texto = 47.5
     cores_grafico = c("#af8dc3", "#91BFDA")
   }
   data %>%
@@ -336,6 +386,7 @@ plot_geom_count_density <- function(data, title, numero_minimo_parlamentares_por
     scale_shape_identity() +
     scale_color_manual(values = rep(cores_grafico, 15)) +
     scale_fill_manual(values = rep(cores_grafico, 15)) +
+    scale_x_continuous(limits = c(0, 100)) +
     geom_point(aes(x = mean), size = 6.5, color = "#111111", shape = 124) +
     
     geom_point(aes(x = x_barra, y = 10.3), size = 6, color = "#111111", shape = 124) +
@@ -468,6 +519,7 @@ Proporcionalmente, NOVO e PSL foram os partidos que mais receberam doações de 
 ## Para Senadores
 
 ```{r}
+## considera apenas os 54 senadores eleitos em 2018
 media_geral_senado <- doacoes_origem %>% 
   filter(casa == "senado") %>% 
   mutate(proporcao = total_receita_doadores_empresas / total_recebido_geral) %>% 
@@ -513,13 +565,13 @@ plot_financiamento_por_partido <- function(data, lista_partidos, titulo, casa) {
   sg_partido_texto = "CIDADANIA"
   grupo_atividade_economica_texto = "Comércio varejista"
   cat_texto = "media_partido"
-  x_texto = 0.075
+  x_texto = 0.055
   
   if (casa == "senado") {
     sg_partido_texto = "PDT"
     grupo_atividade_economica_texto = "Saúde humana e serviços sociais"
     cat_texto = "media_partido"
-    x_texto = 0.085
+    x_texto = 0.05
   }
   
   data_text <- data.frame(value = x_texto, 
@@ -584,15 +636,16 @@ doacoes_sumario_partido_camara <- doacoes_sumario_alt_camara %>%
   left_join(doacoes_media_geral_atividade_camara, by = c("grupo_atividade_economica")) %>% 
   gather(key = "cat", value = "value", media_partido:media_geral)
 
-lista_partidos_camara <- doacoes_partidos_sumario_camara %>% 
-  spread(key, value) %>% 
-  filter(proporcao_partido_socios >= media_geral) %>% 
-  arrange(desc(proporcao_partido_socios)) %>% 
+lista_partidos_camara <- doacoes_sumario_partido_camara %>% 
+  spread(cat, value) %>% 
+  filter(media_partido >= media_geral) %>% 
+  arrange(desc(media_partido)) %>%
+  top_n(10) %>% 
+  distinct(sg_partido) %>% 
   pull(sg_partido)
-
 ```
 
-```{r fig.height=15}
+```{r fig.height=8}
 plot_financiamento_por_partido(doacoes_sumario_partido_camara, lista_partidos_camara, 
                                "Participação na campanha de deputados \npor partido e setor econômico", 
                                "camara")
@@ -610,7 +663,7 @@ Para o Senado, foram selecionados os seguintes setores econômicos:
 - CONSTRUÇÃO
 
 ```{r}
-categorias_economicas_senado <- c("SAÚDE HUMANA E SERVIÇOS SOCIAIS", "INDÚSTRIA DE MÓVEIS E MADEIRAS", "INDÚSTRIA ALIMENTÍCIA E DE BEBIDAS", "EDUCAÇÃO", "ATIVIDADES FINANCEIRAS, DE SEGUROS E SERVIÇOS RELACIONADOS", "CONSTRUÇÃO")
+categorias_economicas_senado <- c("SAÚDE HUMANA E SERVIÇOS SOCIAIS", "COMÉRCIO VAREJISTA", "ALOJAMENTO E ALIMENTAÇÃO", "EDUCAÇÃO", "ATIVIDADES FINANCEIRAS, DE SEGUROS E SERVIÇOS RELACIONADOS", "CONSTRUÇÃO")
 
 doacoes_media_geral_atividade_senado <- doacoes_sumario_alt_senado %>%
   filter(grupo_atividade_economica_raw %in% categorias_economicas_senado) %>%
@@ -628,14 +681,16 @@ doacoes_sumario_partido_senado <- doacoes_sumario_alt_senado %>%
   left_join(doacoes_media_geral_atividade_senado, by = c("grupo_atividade_economica")) %>% 
   gather(key = "cat", value = "value", media_partido:media_geral)
 
-lista_partidos_senado <- doacoes_partidos_sumario_senado %>% 
-  spread(key, value) %>% 
-  filter(proporcao_partido_socios >= media_geral) %>% 
-  arrange(desc(proporcao_partido_socios)) %>% 
+lista_partidos_senado <- doacoes_sumario_partido_senado %>% 
+  spread(cat, value) %>% 
+  filter(media_partido >= media_geral) %>% 
+  arrange(desc(media_partido)) %>%
+  top_n(10) %>% 
+  distinct(sg_partido) %>% 
   pull(sg_partido)
 ```
 
-```{r fig.height=10}
+```{r fig.height=8}
 plot_financiamento_por_partido(doacoes_sumario_partido_senado, lista_partidos_senado, 
                                "Participação na campanha de senadores \npor partido e setor econômico",
                                "senado")
