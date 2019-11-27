@@ -83,14 +83,20 @@ plot_visao_geral <- function(titulo, titulo_x) {
     mutate(proporcao = valor / sum(valor)) %>%
     ggplot(aes(x = reorder(origem, proporcao), y = proporcao, fill = casa, group = casa)) +
     geom_chicklet(width = .7, position = "dodge") +
-    geom_text(aes(label = paste0(round(proporcao * 100, 1), "% / ",
-                                 stringr::str_remove(string = format_currency_value(valor, 1),
-                                                     pattern = " milhões")),
+    geom_text(aes(label = paste0(round(proporcao * 100, 1), "%"),
                   group = casa),
               hjust = -0.08,
               position = position_dodge(width = 1),
               vjust = 0.3
               ) +
+    # geom_text(aes(label = paste0(round(proporcao * 100, 1), "% / ",
+    #                              stringr::str_remove(string = format_currency_value(valor, 1),
+    #                                                  pattern = " milhões")),
+    #               group = casa),
+    #           hjust = -0.08,
+    #           position = position_dodge(width = 1),
+    #           vjust = 0.3
+    #           ) +
     coord_flip() +
     scale_fill_manual(values = c("Câmara" = paleta[1],
                                "Senado" = paleta[2]),
