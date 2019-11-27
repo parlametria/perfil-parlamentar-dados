@@ -105,8 +105,7 @@ plot_visao_geral <- function(titulo, titulo_x) {
     # guides(fill = F) +
     labs(x = "",
          y = titulo_x,
-         title = titulo,
-         subtitle = "Em milhões de reais") +
+         title = titulo) +
     theme_ipsum_rc() 
 }
 ```
