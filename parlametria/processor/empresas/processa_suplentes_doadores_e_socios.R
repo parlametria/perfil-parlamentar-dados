@@ -48,18 +48,25 @@ process_suplentes_doadores_e_socios_senado <- function() {
                by = c("cpf_cnpj_doador" = "cpf", "nome_doador")) %>%
     filter(casa == 'senado', em_exercicio == 1) %>%
     rename(id_senador_suplente_doador = id) %>%
-    select(cpf_cnpj_doador,
-           nome_doador,
-           id_parlamentar,
+    select(id_parlamentar,
            casa,
-           valor_receita)
+           nome_eleitoral,
+           sg_partido,
+           uf,
+           cpf_cnpj_doador,
+           nome_doador,
+           total_doado = valor_receita)
   
   
   suplentes_socios_senado <- doadores_suplentes_senado %>%
+    select(id_parlamentar,
+           casa,
+           cpf_cnpj_doador,
+           nome_doador,
+           total_doado) %>% 
     inner_join(
       doadores_socios_empresas,
-      by = c("cpf_cnpj_doador", "nome_doador", "id_parlamentar", "casa")
-    ) %>%
+      by = c("cpf_cnpj_doador", "nome_doador", "id_parlamentar", "casa")) %>%
     select(
       id_parlamentar,
       casa,
@@ -70,9 +77,16 @@ process_suplentes_doadores_e_socios_senado <- function() {
       nome_doador,
       cnpj,
       razao_social,
-      grupo_atividade_economica,
-      total_doado = valor_receita
+      grupo_atividade_economica
     )
   
-  return(suplentes_socios_senado)
+  
+  doadores_socios_cpf <-
+    suplentes_socios_senado %>% distinct(cpf_cnpj_doador) %>% pull(cpf_cnpj_doador)
+  
+  doadores_suplentes_socios_senado <- doadores_suplentes_senado %>%
+    filter(cpf_cnpj_doador %in% doadores_socios_cpf)
+
+  
+  return(list(doadores_suplentes_socios_senado, suplentes_socios_senado))
 }
