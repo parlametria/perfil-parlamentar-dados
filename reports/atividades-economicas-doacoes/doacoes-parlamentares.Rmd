@@ -426,9 +426,11 @@ Caso a barra azul se sobressaia significa que a média do partido é maior que a
 plot_financiamento_partido_sumarizado <- function(data, titulo, media_geral, casa) {
   
   y_texto = 0.27
+  breaks_y = seq(0, 1, 0.2)
   
   if (casa == "senado") {
     y_texto = 0.32
+    breaks_y = c(seq(0, 1, 0.2), media_geral)
   }
   
   # cores_grafico = c("#FFD046", "#6699CC")
@@ -470,7 +472,7 @@ plot_financiamento_partido_sumarizado <- function(data, titulo, media_geral, cas
     annotate("text", label = "média geral", x = 1.25, y = y_texto, color = "#4b4545") + 
 
     coord_flip() +
-    scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    scale_y_continuous(breaks = breaks_y, labels = scales::percent_format(accuracy = 2)) +
     scale_fill_manual(values = cores_grafico) +
     guides(fill = F) +
     labs(title = titulo,
