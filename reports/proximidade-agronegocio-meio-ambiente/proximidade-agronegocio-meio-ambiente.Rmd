@@ -1,0 +1,137 @@
+---
+title: "Análise de proximidade de parlamentares com Agronegócio e Meio Ambiente"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 6
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+
+source(here("parlametria/processor/processor_grupos_parlametria.R"))
+```
+
+
+<br>
+
+## *Resumo*
+
+Este relatório tem o objetivo de criar as visualizações necessárias para construir a narrativa de análise da proximidade de parlamentares com o Agronegócio e com a temática do Meio Ambiente.
+
+```{r}
+parlamentares_indices <- agrupa_parlamentares_parlametria()
+
+deputados_indices <- parlamentares_indices %>% 
+  filter(casa == "camara")
+
+senadores_indices <- parlamentares_indices %>% 
+  filter(casa == "senado")
+```
+
+## Como os índices foram criados?
+
+A análise apresentada neste documento é baseada em três índices que condensam dados de diferentes perspectivas sobre os parlamentares atualmente em exercício.
+
+- **Índice de vínculo econômico com o agronegócio:** considera a declaração ao TSE da posse de propriedades rurais (além de terras, gado, tratores etc), as empresas agrícolas das quais são sócios, segundo a Receita Federal, e as doações de campanhas recebidas de pessoas físicas que eram sócias de empresas agrícolas (incluindo exportadoras).
+
+- **Índice de ativismo ambiental:** considera a associação a frentes parlamentares progressistas (ambiental, indígenas, ODS, OSC e prestação de serviços ambientais) e a frentes mais conservadoras (agropecuária, mineração e livre mercado), as proposições apresentadas com conteúdo de meio ambiente, os requerimentos de informações apresentados aos ministérios de Meio-ambiente e Agricultura, a aderência à orientação do governo em votações nominais sobre meio-ambiente e a pontuação qualitativa do discurso sobre Meio-ambiente levantado pela [Pulso Público](https://www.pulsopublico.com.br/).
+
+- **Índice de importância política:** considera o número de mandatos prévios, as posições de liderança na Câmara (Mesa Diretora, presidência ou vice-presidência de partido/bloco e comissões) e o número de comissões das quais é titular.
+
+<br> 
+
+## Como os grupos foram formados?
+Os grupos foram formados usando critérios a partir dos índices e do partidos dos parlamentares.
+
+<br>
+
+### Vínculo com o agronegócio
+
+#### **Deputados financiados pelo agronegócio e simpáticos ao Meio Ambiente**
+
+Deputados que, mesmo com vínculo econômico com o agronegócio, possuem uma atividade parlamentar significativa em matéria ambiental. Para esse grupo, recomenda-se uma estratégia de comunicação que destaque a importância da preservação ambiental como um ativo que valoriza as exportações brasileiras do agronegócio - assim como destaque os riscos de prejuízos econômicos que a aprovação de leis e políticas públicas desfavoráveis ao meio ambiente pode trazer para o setor.
+
+```{r}
+plot_dispersao_grupos <- function(subgrupo_filtrado, titulo) {
+  
+  pallete_2 <- c("#999999", "#00AFBB")
+
+  deputados_indices %>% 
+    mutate(selecionado = ifelse(subgrupo == subgrupo_filtrado,
+                                TRUE,
+                                FALSE)) %>% 
+    mutate(selecionado = replace_na(selecionado, FALSE)) %>% 
+    ggplot(aes(x = indice_vinculo_economico_agro, y = indice_ativismo_ambiental, color = selecionado)) +
+    geom_jitter(width = 0.01) +
+    scale_color_manual(values = pallete_2, labels = c("Outros", "Pertence ao grupo")) +
+    labs(x = "Índice de Vínculo Econômico com o Agronegócio",
+         y = "Índice de Ativismo Ambiental",
+         title = titulo,
+         color = "") +
+    theme_ipsum_rc() +
+    theme(
+      legend.position = c(.95, .95),
+      legend.justification = c("right", "top"),
+      legend.box.just = "right",
+      legend.margin = margin(6, 6, 6, 6)
+      )
+}
+```
+
+```{r}
+plot_dispersao_grupos("Financiados pelo Agro e simpáticos ao Meio Ambiente", "Deputados ligados ao Agro e simpáticos ao Meio Ambiente")
+```
+
+
+#### **Deputados financiados pelo agronegócio e ligados à exportação**
+
+Parlamentares que, mesmo sem um “ativismo ambiental” relevante, tiveram boa parte de suas campanhas financiadas pelo agronegócio exportador.
+Este grupo, que tem tido uma atuação avessa à causa ambiental nesta legislatura, pode tentar ser convencido a mudar seu posicionamento por meio da sua dependência financeira em relação a doadores de campanha que são agroexportadores. Eventualmente pode-se buscar uma estratégia de mediação por meio desses empresários que financiaram mais do que 10% dos gastos de campanha desse grupo de parlamentares.
+
+```{r}
+plot_dispersao_grupos("Financiado pelo agro e ligado a exportação", 
+                      "Deputados ligados ao Agro e a exportação")
+```
+
+<br>
+
+### Oposição
+
+#### **Membros da oposição ligados ao Meio Ambiente**
+
+Deputados que, independentemente do vínculo econômico com o agronegócio, têm atividade parlamentar significativa em matéria ambiental.
+Trata-se do grupo mais favorável à causa socioambiental, que é reforçada pela atuação na centro-esquerda e na oposição ao governo. 
+
+```{r}
+plot_dispersao_grupos("Oposição e alto ativismo ambiental", 
+                      "Deputados da oposição com alto ativismo ambiental")
+```
+
+
+### Zona Cinza
+
+#### **Deputados com baixo vínculo com o agronegócio, porém simpáticos ao Meio Ambiente**
+
+Deputados sem vínculo econômico com o agronegócio, mas com atividade parlamentar relevante em matéria ambiental.
+
+Aqui também temos um grupo importante de parlamentares que merecem ser trabalhados de modo especial. Apesar de não terem vínculos econômicos com o agronegócio e atuarem em partidos de centro e direita, esses deputados estão tendo uma atuação positiva na área socioambiental nesta legislatura, e merecem, portanto, ter o seu trabalho reconhecido e destacado pelas entidades do setor. Estreitar os laços com esse grupo pode ser extremamente estratégico para diminuir resistência ao trabalho das organizações sociais da área, ainda mais porque, em tempos de polarização exacerbada, esses deputados não pertencem a partidos de oposição ao governo. Ampliar o diálogo com esses deputados pode ser muito proveitoso em termos de construir pontes com parlamentares do centro e da direita.
+
+```{r}
+plot_dispersao_grupos("Sem vínculo econômico, mas ativistas ambientais", 
+                      "Deputados sem proximidade econômica mas com ligação ao Meio Ambiente")
+```
+
