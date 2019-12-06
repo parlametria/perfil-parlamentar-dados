@@ -6,115 +6,80 @@
       "codigos": ["01", "02", "03"]
     },
     {
-      "nome": "EXTRAÇÃO DE CARVÃO MINERAL", 
-      "codigos": ["05"]
+      "nome": "PETRÓLEO, GÁS E CARVÃO MINERAL", 
+      "codigos": ["05", "06"]
     },
     {
-      "nome": "EXTRAÇÃO DE PETRÓLEO E GÁS NATURAL", 
-      "codigos": ["06"]
+      "nome": "MINERAÇÃO", 
+      "codigos": ["07", "08", "09"]
     },
     {
-      "nome": "EEXTRAÇÃO DE MINERAIS METÁLICOS", 
-      "codigos": ["07"]
+      "nome": "INDÚSTRIA ALIMENTÍCIA E DE BEBIDAS", 
+      "codigos": ["10", "11"]
     },
     {
-      "nome": "EXTRAÇÃO DE MINERAIS NÃO-METÁLICOS", 
-      "codigos": ["08"]
-    },
-    {
-      "nome": "ATIVIDADES DE APOIO À EXTRAÇÃO DE MINERAIS", 
-      "codigos": ["09"]
-    },
-    {
-      "nome": "FABRICAÇÃO DE PRODUTOS ALIMENTÍCIOS", 
-      "codigos": ["10"]
-    },
-    {
-      "nome": "FABRICAÇÃO DE BEBIDAS", 
-      "codigos": ["11"]
-    },
-    {
-      "nome": "FABRICAÇÃO DE PRODUTOS DO FUMO", 
+      "nome": "INDÚSTRIA DO FUMO", 
       "codigos": ["12"]
     },
     {
-      "nome": "FABRICAÇÃO DE PRODUTOS TÊXTEIS", 
-      "codigos": ["13"]
+      "nome": "INDÚSTRIA TÊXTIL E DE VESTUÁRIO", 
+      "codigos": ["13", "14"]
     },
-        {
-      "nome": "CONFECÇÃO DE ARTIGOS DO VESTUÁRIO E ACESSÓRIOS", 
-      "codigos": ["14"]
-    },
-        {
-      "nome": "PREPARAÇÃO DE COUROS E FABRICAÇÃO DE ARTEFATOS DE COURO, ARTIGOS PARA VIAGEM E CALÇADOS", 
+    
+    {
+      "nome": "INDÚSTRIA DE COUROS E CALÇADOS", 
       "codigos": ["15"]
     },
         {
-      "nome": "FABRICAÇÃO DE PRODUTOS DE MADEIRA", 
+      "nome": "INDÚSTRIA DE MÓVEIS E MADEIRAS", 
       "codigos": ["16"]
     },
     {
-      "nome": "FABRICAÇÃO DE CELULOSE, PAPEL E PRODUTOS DE PAPEL", 
+      "nome": "INDÚSTRIA DE CELULOSE E PAPEL", 
       "codigos": ["17"]
     },
     {
-      "nome": "IMPRESSÃO E REPRODUÇÃO DE GRAVAÇÕES",
+      "nome": "OUTROS PRODUTOS INDUSTRIAIS",
       "codigos": ["18"]
     },
     {
-      "nome": "FABRICAÇÃO DE COQUE, DE PRODUTOS DERIVADOS DO PETRÓLEO E DE BIOCOMBUSTÍVEIS", 
+      "nome": "INDÚSTRIA PETROQUÍMICA E BIOCOMBUSTÍVEIS", 
       "codigos": ["19"]
     },
         {
-      "nome": "FABRICAÇÃO DE PRODUTOS QUÍMICOS", 
+      "nome": "INDÚSTRIA QUÍMICA", 
       "codigos": ["20"]
     },
         {
-      "nome": "FABRICAÇÃO DE PRODUTOS FARMOQUÍMICOS E FARMACÊUTICOS", 
+      "nome": "INDÚSTRIA FARMACÊUTICA", 
       "codigos": ["21", "22"]
     },
     {
-      "nome": "FABRICAÇÃO DE PRODUTOS DE MINERAIS NÃO-METÁLICOS", 
-      "codigos": ["23"]
+      "nome": "INDÚSTRIA METALÚRGICA", 
+      "codigos": ["23", "24", "25"]
     },
     {
-      "nome": "METALURGIA", 
-      "codigos": ["24"]
+      "nome": "INDÚSTRIA ELETRO-ELETRÔNICA E DE INFORMÁTICA", 
+      "codigos": ["26", "27"]
     },
     {
-      "nome": "FABRICAÇÃO DE PRODUTOS DE METAL, EXCETO MÁQUINAS E EQUIPAMENTOS", 
-      "codigos": ["25"]
-    },
-    {
-      "nome": "FABRICAÇÃO DE EQUIPAMENTOS DE INFORMÁTICA, PRODUTOS ELETRÔNICOS E ÓPTICOS", 
-      "codigos": ["26"]
-    },
-    {
-      "nome": "FABRICAÇÃO DE MÁQUINAS, APARELHOS E MATERIAIS ELÉTRICOS", 
-      "codigos": ["27"]
-    },
-    {
-      "nome": "FABRICAÇÃO DE MÁQUINAS E EQUIPAMENTOS", 
+      "nome": "INDÚSTRIA DE MÁQUINAS E EQUIPAMENTOS", 
       "codigos": ["28"]
     },
     {
-      "nome": "FABRICAÇÃO DE VEÍCULOS AUTOMOTORES, REBOQUES E CARROCERIAS", 
-      "codigos": ["29"]
+      "nome": "INDÚSTRIA AUTOMOBILÍSTICA E DE TRANSPORTE", 
+      "codigos": ["29", "30"]
     },
     {
-      "nome": "FABRICAÇÃO DE OUTROS EQUIPAMENTOS DE TRANSPORTE, EXCETO VEÍCULOS AUTOMOTORES", 
-      "codigos": ["30"]
-    },
-    {
-      "nome": "FABRICAÇÃO DE MÓVEIS", 
+      "nome": "INDÚSTRIA DE MÓVEIS E MADEIRAS", 
       "codigos": ["31"]
     },
     {
-      "nome": "FABRICAÇÃO DE PRODUTOS DIVERSOS", 
+      "nome": "OUTROS PRODUTOS INDUSTRIAIS", 
       "codigos": ["32"]
     },
     {
-      "nome": "MANUTENÇÃO, REPARAÇÃO E INSTALAÇÃO DE MÁQUINAS E EQUIPAMENTOS", 
+      "nome": "INDÚSTRIA DE MÁQUINAS E EQUIPAMENTOS", 
       "codigos": ["33"]
     },
     {
@@ -122,16 +87,28 @@
       "codigos": ["35"]
     },
     {
-      "nome": "ÁGUA, ESGOTO, ATIVIDADES DE GESTÃO DE RESÍDUOS E DESCONTAMINAÇÃO", 
-      "codigos": ["36", "37", "38", "39"]
+      "nome": "ÁGUA E ESGOTO", 
+      "codigos": ["36", "37"]
+    },
+    {
+      "nome": "COLETA E GESTÃO DE RESÍDUOS", 
+      "codigos": ["38", "39"]
     },
     {
       "nome": "CONSTRUÇÃO", 
       "codigos": ["41", "42", "43"]
     },
     {
-      "nome": "COMÉRCIO; REPARAÇÃO DE VEÍCULOS AUTOMOTORES E MOTOCICLETAS", 
-      "codigos": ["45", "46", "47"]
+      "nome": "COMÉRCIO E REPARAÇÃO DE VEÍCULOS AUTOMOTORES E MOTOCICLETAS", 
+      "codigos": ["45"]
+    },
+    {
+      "nome": "COMÉRCIO POR ATACADO, EXCETO VEÍCULOS AUTOMOTORES E MOTOCICLETAS", 
+      "codigos": ["46"]
+    },
+    {
+      "nome": "COMÉRCIO VAREJISTA", 
+      "codigos": ["47"]
     },
     {
       "nome": "TRANSPORTE, ARMAZENAGEM E CORREIO", 
@@ -154,12 +131,28 @@
       "codigos": ["68"]
     },
     {
-      "nome": "ATIVIDADES PROFISSIONAIS, CIENTÍFICAS E TÉCNICAS", 
-      "codigos": ["69", "70", "71", "72", "73", "74", "75"]
+      "nome": "ATIVIDADES JURÍDICAS, DE CONTABILIDADE E DE AUDITORIA", 
+      "codigos": ["69"]
     },
     {
-      "nome": "ATIVIDADES ADMINISTRATIVAS E SERVIÇOS COMPLEMENTARES", 
-      "codigos": ["77", "78", "79", "80", "81", "82"]
+      "nome": "OUTRAS ATIVIDADES PROFISSIONAIS", 
+      "codigos": ["70", "71", "72", "73", "74", "75"]
+    },
+    {
+      "nome": "OUTRAS ATIVIDADES ADMINISTRATIVAS", 
+      "codigos": ["77"]
+    },
+    {
+      "nome": "VIGILÂNCIA E LOCAÇÃO DE MÃO-DE-OBRA TERCEIRIZADA", 
+      "codigos": ["78"]
+    },
+    {
+      "nome": "AGÊNCIAS DE VIAGEM E TURISMO", 
+      "codigos": ["79"]
+    },
+    {
+      "nome": "VIGILÂNCIA E LOCAÇÃO DE MÃO-DE-OBRA TERCEIRIZADA", 
+      "codigos": ["80", "81", "82"]
     },
     {
       "nome": "ADMINISTRAÇÃO PÚBLICA, DEFESA E SEGURIDADE SOCIAL", 
