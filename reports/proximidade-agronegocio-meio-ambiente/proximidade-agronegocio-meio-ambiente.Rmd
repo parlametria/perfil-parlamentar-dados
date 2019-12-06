@@ -20,7 +20,12 @@ knitr::opts_chunk$set(
 ```{r}
 library(tidyverse)
 library(here)
+library(ggchicklet)
 library(hrbrthemes)
+
+options(scipen = 999)
+
+theme_set(theme_minimal())
 
 source(here("parlametria/processor/processor_grupos_parlametria.R"))
 ```
@@ -32,14 +37,96 @@ source(here("parlametria/processor/processor_grupos_parlametria.R"))
 
 Este relatório tem o objetivo de criar as visualizações necessárias para construir a narrativa de análise da proximidade de parlamentares com o Agronegócio e com a temática do Meio Ambiente.
 
+## Parlamentares e suas propriedades rurais
+
+Com base no patrimônio declarado na campanha de 2018 ao TSE, filtramos as propriedades rurais dos deputados e senadores que participaram em 2018 e que estão em exercício. Portanto, foram considerados 513 deputados federais e 54 senadores.
+
 ```{r}
-parlamentares_indices <- agrupa_parlamentares_parlametria()
+parlamentares_propriedades <- read_csv(here("parlametria/raw_data/patrimonio/propriedades_rurais.csv"),
+                                      col_types = cols(id_parlamentar = "c")) %>% 
+  mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", sg_partido, "/", uf))
 
-deputados_indices <- parlamentares_indices %>% 
-  filter(casa == "camara")
+pallete_1 <- c("#0072B2", "#E69F00", "#999999", "#009E73",
+          "#D55E00", "#56B4E9", "#F0E442", "#CC79A7")
+```
 
-senadores_indices <- parlamentares_indices %>% 
-  filter(casa == "senado")
+Encontramos **`r parlamentares_propriedades %>% pull(n_propriedades) %>% sum()` propriedades rurais** distribuídas entre **`r parlamentares_propriedades %>% filter(casa == "camara") %>% nrow()` deputados** e **`r parlamentares_propriedades %>% filter(casa == "senado") %>% nrow()` senadores**.
+
+```{r fig.height=4}
+total_parlamentares <- parlamentares_propriedades %>% 
+  count(casa) %>% 
+  arrange(casa) %>% ## ordena pelo nome (camara, senado)
+  pull(n)
+
+parlamentares_propriedades %>% 
+  count(casa) %>% 
+  mutate(total_casa_eleitos = if_else(casa == "camara", 513, 54),
+         proporcao_parlamentar = if_else(casa == "camara", n / total_casa_eleitos, n / total_casa_eleitos),
+         proporcao_geral = 1 - proporcao_parlamentar) %>% 
+  gather(key = "key", value = "value", proporcao_parlamentar:proporcao_geral) %>% 
+  ggplot(aes(x = casa, y = value, fill = key)) +
+  geom_chicklet(width = .3, position = "stack", radius = grid::unit(4, "pt")) +
+  scale_y_continuous(breaks = seq(0, 1, 0.2), limits = c(0, 1), labels = scales::percent_format(accuracy = 1)) +
+  scale_x_discrete(labels = c("Câmara", "Senado")) +
+  scale_fill_manual(values = c("#999999", "#E69F00"), labels = c("Sem propriedades", "Têm propriedades")) +
+  coord_flip() +
+  
+  annotate("text", label = paste0(total_parlamentares[2], " senadores"), x = 2.25, y = 0.08, color = "#4b4545") +
+  annotate("text", label = paste0(total_parlamentares[1], " deputados"), x = 1.25, y = 0.08, color = "#4b4545") +
+  
+  annotate("text", label = "Quase 30% dos senadores eleitos têm propriedades rurais", x = 2.3, y = 0.61, color = "#4b4545") +
+  geom_curve(aes(x = 2.2, y = 0.3, xend = 2.3, yend = 0.35),
+             color = "#7d7373", size = 0.4, curvature = -0.35,
+             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+  
+  labs(y = "Quantos % do total de parlamentares eleitos para a casa",
+       x = "",
+       title = "Parlamentares com propriedades rurais",
+       fill = "") +
+  theme_ipsum_rc() +
+  theme(legend.position="top")
+```
+
+```{r}
+levels <- parlamentares_propriedades %>% 
+  filter(casa == "camara") %>% 
+  arrange(desc(total_declarado)) %>% 
+  pull(nome)
+
+total_somado <- parlamentares_propriedades %>% 
+  filter(casa == "camara") %>% 
+  pull(total_declarado) %>% 
+  sum()
+
+parlamentares_propriedades %>% 
+  filter(casa == "camara") %>% 
+  arrange(desc(total_declarado)) %>% 
+  head(15) %>% 
+  ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = total_declarado / 1e6 )) +
+  geom_chicklet(fill = "#E69F00") +
+  geom_text(aes(label = paste0(round(total_declarado / 1e6, 2))),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 12, 1), limits = c(0, 12)) +
+  
+  statebins:::geom_rrect(mapping = aes(xmin = 4.8, xmax = 7.5, ymin = 5.2, ymax = 10.7),
+                         radius = grid::unit(10, "pt"),
+                         fill = "#EEF0E2",
+                         color = "#7C7272") +
+  annotate("text",
+           label = paste0("O valor somado das propriedades rurais \ndos deputados é de ",
+                   round(total_somado / 1e6, 1),
+                   " milhões."
+                   ),
+           x = 6.25, y = 8, color = "#4b4545") +
+  
+  labs(x = "",
+       y = "Patrimonônio em propriedades rurais (milhões de reais)",
+       title = "Deputados com maiores patrimônios em \npropriedades rurais",
+       subtitle = "Em milhões de reais") +
+  theme_ipsum_rc()
 ```
 
 ## Como os índices foram criados?
@@ -51,6 +138,16 @@ A análise apresentada neste documento é baseada em três índices que condensa
 - **Índice de ativismo ambiental:** considera a associação a frentes parlamentares progressistas (ambiental, indígenas, ODS, OSC e prestação de serviços ambientais) e a frentes mais conservadoras (agropecuária, mineração e livre mercado), as proposições apresentadas com conteúdo de meio ambiente, os requerimentos de informações apresentados aos ministérios de Meio-ambiente e Agricultura, a aderência à orientação do governo em votações nominais sobre meio-ambiente e a pontuação qualitativa do discurso sobre Meio-ambiente levantado pela [Pulso Público](https://www.pulsopublico.com.br/).
 
 - **Índice de importância política:** considera o número de mandatos prévios, as posições de liderança na Câmara (Mesa Diretora, presidência ou vice-presidência de partido/bloco e comissões) e o número de comissões das quais é titular.
+
+```{r}
+parlamentares_indices <- agrupa_parlamentares_parlametria()
+
+deputados_indices <- parlamentares_indices %>% 
+  filter(casa == "camara")
+
+senadores_indices <- parlamentares_indices %>% 
+  filter(casa == "senado")
+```
 
 <br> 
 
