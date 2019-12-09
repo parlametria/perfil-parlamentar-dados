@@ -13,20 +13,24 @@ message("LEIA O README deste diretório")
 message("Use --help para mais informações\n")
 
 option_list = list(
-  make_option(c("-o", "--out"), type="character", default=here::here("parlametria/raw_data/empresas/empresas_doadores_agricolas_todos_parlamentares.csv"), 
+  make_option(c("-o", "--o"), type="character", default=here::here("parlametria/raw_data/empresas/empresas_doadores_agricolas_todos_parlamentares.csv"), 
+              help="nome do arquivo de saída [default= %default]", metavar="character"),
+  make_option(c("-s", "--s"), type="character", default=here::here("parlametria/raw_data/empresas/info_empresas_doadores_agricolas_todos_parlamentares.csv"), 
               help="nome do arquivo de saída [default= %default]", metavar="character")
 ) 
 
 opt_parser = OptionParser(option_list=option_list)
 opt = parse_args(opt_parser)
 
-saida <- opt$out
+saida_socios_empresas <- opt$o
+saida_info_empresas <- opt$s
 
 message("Iniciando processamento...")
 message("Baixando dados...")
 socios_empresas_agricolas_todos_doadores <- process_socios_empresas_agricolas_doadores(fragmentado = TRUE)
 
-message(paste0("Salvando o resultado em ", saida))
-write_csv(socios_empresas_agricolas_todos_doadores[[1]], saida)
+message(paste0("Salvando o resultado..."))
+write_csv(socios_empresas_agricolas_todos_doadores[[1]], saida_socios_empresas)
+write_csv(socios_empresas_agricolas_todos_doadores[[2]], saida_info_empresas)
 
 message("Concluído!")
