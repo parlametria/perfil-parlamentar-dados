@@ -35,6 +35,7 @@ process_socios_empresas_agricolas_doadores <- function(
   
   source(here("parlametria/crawler/empresas/socios_empresas/doadores_campanha/fetcher_socios_empresas_doadores_campanha.R"))
   source(here("parlametria/crawler/empresas/socios_empresas/doadores_campanha/analyzer_socios_empresas_doadores_campanha.R"))
+  source(here::here("parlametria/crawler/empresas/fetcher_empresas.R"))
   
   socios_empresas_doadores <-
     filter_socios_empresas_doadores(socios_folderpath, doadores_folderpath)
@@ -50,10 +51,18 @@ process_socios_empresas_agricolas_doadores <- function(
   socios_empresas_agricolas <- socios_empresas_agricolas %>% 
     mutate(id_parlamentar = as.character(id_parlamentar))
   
-  res_socios <- process_socios_empresas_doadores(socios_empresas_agricolas, ano)
+  res_socios <- process_socios_empresas_doadores(socios_empresas_agricolas, ano) %>% 
+    distinct()
+  
+  cnpjs <- res_socios %>% distinct(cnpj_empresa) 
+  
+  empresas_info <- purrr::map_df(cnpjs$cnpj_empresa, ~ fetch_dados_empresa_por_cnpj(.x))
+  
+  empresas_info <- empresas_info %>% 
+    distinct()
   
   if(ano >= 2018) {
-    return(list(res_socios))
+    return(list(res_socios, empresas_info))
   }
   
   empresas_doadoras <- filter_empresas_agricolas_doadoras(doadores_folderpath) %>% 
@@ -66,6 +75,6 @@ process_socios_empresas_agricolas_doadores <- function(
   
   res_empresas <- process_empresas_doadores(empresas_agricolas, ano)
   
-  return(list(res_socios, res_empresas))
+  return(list(res_socios, res_empresas, empresas_info))
   
 }
