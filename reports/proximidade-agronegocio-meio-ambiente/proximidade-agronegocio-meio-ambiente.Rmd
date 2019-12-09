@@ -170,6 +170,106 @@ parlamentares_propriedades %>%
   theme_ipsum_rc()
 ```
 
+
+## Parlamentares e suas empresas agrícolas
+
+Filtramos os parlamentares que possuem pelo menos uma empresa considerada agrícola. Foram consideradas as empresas cujo CNAEs fiscal ou secundários se enquadram nos setores econômicos correspondentes à **Agricultura, pecuária, produção florestal, pesca e aqüicultura**.
+
+```{r}
+parlamentares_empresas <- read_csv(here("parlametria/raw_data/empresas/socios_empresas_agricolas_todos_parlamentares.csv"))
+
+parlamentares <- read_csv(here("crawler/raw_data/parlamentares.csv"))
+
+parlamentares_socios_empresas <- parlamentares_empresas %>% 
+  select(-c(nome_socio, cnpj_cpf_do_socio)) %>% 
+  left_join(parlamentares, by = c("id_parlamentar" = "id", "casa")) %>% 
+  filter(em_exercicio == 1)
+```
+
+```{r fig.height=4}
+total_parlamentares_socios_empresas <- parlamentares_socios_empresas %>% 
+  group_by(casa) %>% 
+  summarise(n = n_distinct(id_parlamentar)) %>% 
+  arrange(casa) %>% ## ordena pelo nome (camara, senado)
+  pull(n)
+
+parlamentares_socios_empresas %>% 
+  group_by(casa) %>% 
+  summarise(n = n_distinct(id_parlamentar)) %>% 
+  mutate(total_casa_eleitos = if_else(casa == "camara", 513, 81),
+         proporcao_parlamentar = if_else(casa == "camara", n / total_casa_eleitos, n / total_casa_eleitos),
+         proporcao_geral = 1 - proporcao_parlamentar) %>% 
+  gather(key = "key", value = "value", proporcao_parlamentar:proporcao_geral) %>% 
+  ggplot(aes(x = casa, y = value, fill = key)) +
+  geom_chicklet(width = .3, position = "stack", radius = grid::unit(4, "pt")) +
+  scale_y_continuous(breaks = seq(0, 1, 0.2), limits = c(0, 1), labels = scales::percent_format(accuracy = 1)) +
+  scale_x_discrete(labels = c("Câmara", "Senado")) +
+  scale_fill_manual(values = c("#999999", "#56B4E9"), labels = c("Sem empresas", "Sócios de empresas")) +
+  coord_flip() +
+  
+  annotate("text", label = paste0(total_parlamentares_socios_empresas[2], " senadores"), x = 2.25, y = 0.08, color = "#4b4545") +
+  annotate("text", label = paste0(total_parlamentares_socios_empresas[1], " deputados"), x = 1.25, y = 0.08, color = "#4b4545") +
+  
+  labs(y = "% do total de parlamentares",
+       x = "",
+       title = "Parlamentares que são sócios de empresas agrícolas",
+       fill = "") +
+  theme_ipsum_rc() +
+  theme(legend.position="top")
+```
+
+```{r}
+parlamentares_socios_empresas_partido <-
+  parlamentares_socios_empresas %>%
+  filter(!is.na(sg_partido), casa == 'camara') 
+  
+levels <- parlamentares_socios_empresas %>%
+  group_by(id_parlamentar, sg_partido) %>%
+  summarise(num_empresas = n_distinct(cnpj)) %>%
+  ungroup() %>% 
+  group_by(sg_partido) %>%
+  summarise(mean = mean(num_empresas)) %>%
+  arrange(desc(mean)) %>%
+  pull(sg_partido)
+  
+cores_grafico = c("#56B4E9", "#CC79A7")
+  
+parlamentares_socios_empresas_partido %>%
+  group_by(id_parlamentar, sg_partido) %>%
+  summarise(num_empresas_total = n_distinct(cnpj)) %>%
+  ungroup() %>%
+  group_by(sg_partido) %>% 
+  mutate(mean = mean(num_empresas_total)) %>% 
+  ungroup() %>% 
+  ggplot(
+  aes(
+  x = num_empresas_total,
+  y = forcats::fct_rev(factor(sg_partido, levels = levels)),
+  color = forcats::fct_rev(factor(sg_partido, levels = levels))
+  )
+  ) +
+  geom_count() +
+  geom_point(aes(x = mean), size = 3.5, color = "black", shape = 124) +
+  scale_shape_identity() +
+  scale_color_manual(values = rep(cores_grafico, 15)) +
+  scale_fill_manual(values = rep(cores_grafico, 15)) +
+  scale_x_continuous(limits = c(0, 50)) +
+  annotate("text", label = "Deputado \nNewton Cardoso Júnior", x = 42, y = 11.5, color = "#4b4545") +
+  geom_curve(aes(x = 48, y = 13.8, xend = 45, yend = 12),
+             color = "#7d7373", size = 0.4, curvature = -0.35,
+             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+  guides(size = F, color = F, fill = F) +
+  labs(title = "",
+  y = "Partido",
+  x = "Número de empresas") +
+  theme_ipsum_rc() +
+  theme(
+  axis.text.y = element_text(size = 12),
+  axis.title.x = element_text(size = 11),
+  axis.title.y = element_text(size = 11)
+  )
+```
+
 ## Como os índices foram criados?
 
 A análise apresentada neste documento é baseada em três índices que condensam dados de diferentes perspectivas sobre os parlamentares atualmente em exercício.
