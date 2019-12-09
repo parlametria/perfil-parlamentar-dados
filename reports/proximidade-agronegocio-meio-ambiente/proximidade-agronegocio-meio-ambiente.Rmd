@@ -30,7 +30,6 @@ theme_set(theme_minimal())
 source(here("parlametria/processor/processor_grupos_parlametria.R"))
 ```
 
-
 <br>
 
 ## *Resumo*
@@ -123,8 +122,50 @@ parlamentares_propriedades %>%
            x = 6.25, y = 8, color = "#4b4545") +
   
   labs(x = "",
-       y = "Patrimonônio em propriedades rurais (milhões de reais)",
+       y = "Patrimônio em propriedades rurais (milhões de reais)",
        title = "Deputados com maiores patrimônios em \npropriedades rurais",
+       subtitle = "Em milhões de reais") +
+  theme_ipsum_rc()
+```
+
+```{r fig.height=4}
+levels <- parlamentares_propriedades %>% 
+  filter(casa == "senado") %>% 
+  arrange(desc(total_declarado)) %>% 
+  pull(nome)
+
+total_somado <- parlamentares_propriedades %>% 
+  filter(casa == "senado") %>% 
+  pull(total_declarado) %>% 
+  sum()
+
+parlamentares_propriedades %>% 
+  filter(casa == "senado") %>% 
+  arrange(desc(total_declarado)) %>% 
+  head(5) %>% 
+  ggplot(aes(x = fct_rev(factor(nome, levels = levels)), y = total_declarado / 1e6 )) +
+  geom_chicklet(fill = "#E69F00", width = .8) +
+  geom_text(aes(label = paste0(round(total_declarado / 1e6, 2))),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 26, 2), limits = c(0, 26)) +
+  
+  statebins:::geom_rrect(mapping = aes(xmin = 1.2, xmax = 2.8, ymin = 11.3, ymax = 24.3),
+                         radius = grid::unit(10, "pt"),
+                         fill = "#EEF0E2",
+                         color = "#7C7272") +
+  annotate("text",
+           label = paste0("O valor somado das propriedades rurais \ndos senadores é de ",
+                   round(total_somado / 1e6, 1),
+                   " milhões."
+                   ),
+           x = 2, y = 18, color = "#4b4545") +
+  
+  labs(x = "",
+       y = "Patrimônio em propriedades rurais (milhões de reais)",
+       title = "Senadores com maiores patrimônios em \npropriedades rurais",
        subtitle = "Em milhões de reais") +
   theme_ipsum_rc()
 ```
