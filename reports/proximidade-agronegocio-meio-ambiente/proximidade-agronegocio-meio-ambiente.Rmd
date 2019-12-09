@@ -181,7 +181,8 @@ A análise apresentada neste documento é baseada em três índices que condensa
 - **Índice de importância política:** considera o número de mandatos prévios, as posições de liderança na Câmara (Mesa Diretora, presidência ou vice-presidência de partido/bloco e comissões) e o número de comissões das quais é titular.
 
 ```{r}
-parlamentares_indices <- agrupa_parlamentares_parlametria()
+parlamentares_indices <- read_csv(here("parlametria/raw_data/grupos_parlametria/grupos_parlamentares_parlametria.csv"),
+                                  col_types = cols(id = "c"))
 
 deputados_indices <- parlamentares_indices %>% 
   filter(casa == "camara")
