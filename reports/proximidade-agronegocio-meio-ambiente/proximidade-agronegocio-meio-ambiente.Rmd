@@ -182,18 +182,20 @@ parlamentares <- read_csv(here("crawler/raw_data/parlamentares.csv"))
 
 parlamentares_socios_empresas <- parlamentares_empresas %>% 
   select(-c(nome_socio, cnpj_cpf_do_socio)) %>% 
-  left_join(parlamentares, by = c("id_parlamentar" = "id", "casa")) %>% 
+  right_join(parlamentares, by = c("id_parlamentar" = "id", "casa")) %>% 
   filter(em_exercicio == 1)
 ```
 
 ```{r fig.height=4}
 total_parlamentares_socios_empresas <- parlamentares_socios_empresas %>% 
+  filter(!is.na(cnpj)) %>% 
   group_by(casa) %>% 
   summarise(n = n_distinct(id_parlamentar)) %>% 
   arrange(casa) %>% ## ordena pelo nome (camara, senado)
   pull(n)
 
 parlamentares_socios_empresas %>% 
+  filter(!is.na(cnpj)) %>% 
   group_by(casa) %>% 
   summarise(n = n_distinct(id_parlamentar)) %>% 
   mutate(total_casa_eleitos = if_else(casa == "camara", 513, 81),
@@ -221,29 +223,35 @@ parlamentares_socios_empresas %>%
 ```{r}
 parlamentares_socios_empresas_partido_camara <-
   parlamentares_socios_empresas %>%
-  filter(!is.na(sg_partido), casa == 'camara') 
+  filter(!is.na(sg_partido), casa == 'camara')
   
-levels <- parlamentares_socios_empresas_partido_camara %>%
+levels <- parlamentares_socios_empresas_partido_camara %>% 
   group_by(id_parlamentar, sg_partido) %>%
-  summarise(num_empresas = n_distinct(cnpj)) %>%
+  mutate(num_empresas = if_else(is.na(cnpj), as.integer(0), n_distinct(cnpj))) %>%
+  ungroup() %>% 
+  distinct(id_parlamentar, sg_partido, num_empresas) %>%
   ungroup() %>% 
   group_by(sg_partido) %>%
   summarise(mean = mean(num_empresas)) %>%
   arrange(desc(mean)) %>%
+  filter(mean > 0) %>% 
   pull(sg_partido)
   
 cores_grafico = c("#56B4E9", "#CC79A7")
   
 parlamentares_socios_empresas_partido_camara %>%
   group_by(id_parlamentar, sg_partido) %>%
-  summarise(num_empresas_total = n_distinct(cnpj)) %>%
-  ungroup() %>%
+  mutate(num_empresas = if_else(is.na(cnpj), as.integer(0), n_distinct(cnpj))) %>%
+  ungroup() %>% 
+  distinct(id_parlamentar, sg_partido, num_empresas) %>%
+  ungroup() %>% 
   group_by(sg_partido) %>% 
-  mutate(mean = mean(num_empresas_total)) %>% 
+  mutate(mean = mean(num_empresas)) %>% 
+  filter(mean > 0) %>% 
   ungroup() %>% 
   ggplot(
   aes(
-  x = num_empresas_total,
+  x = num_empresas,
   y = forcats::fct_rev(factor(sg_partido, levels = levels)),
   color = forcats::fct_rev(factor(sg_partido, levels = levels))
   )
@@ -278,25 +286,31 @@ parlamentares_socios_empresas_partido_senado <-
   
 levels <- parlamentares_socios_empresas_partido_senado %>%
   group_by(id_parlamentar, sg_partido) %>%
-  summarise(num_empresas = n_distinct(cnpj)) %>%
+  mutate(num_empresas = if_else(is.na(cnpj), as.integer(0), n_distinct(cnpj))) %>%
+  ungroup() %>% 
+  distinct(id_parlamentar, sg_partido, num_empresas) %>%
   ungroup() %>% 
   group_by(sg_partido) %>%
   summarise(mean = mean(num_empresas)) %>%
   arrange(desc(mean)) %>%
+  filter(mean > 0) %>% 
   pull(sg_partido)
   
 cores_grafico = c("#56B4E9", "#CC79A7")
   
 parlamentares_socios_empresas_partido_senado %>%
   group_by(id_parlamentar, sg_partido) %>%
-  summarise(num_empresas_total = n_distinct(cnpj)) %>%
-  ungroup() %>%
+  mutate(num_empresas = if_else(is.na(cnpj), as.integer(0), n_distinct(cnpj))) %>%
+  ungroup() %>% 
+  distinct(id_parlamentar, sg_partido, num_empresas) %>%
+  ungroup() %>% 
   group_by(sg_partido) %>% 
-  mutate(mean = mean(num_empresas_total)) %>% 
+  mutate(mean = mean(num_empresas)) %>% 
+  filter(mean > 0) %>% 
   ungroup() %>% 
   ggplot(
   aes(
-  x = num_empresas_total,
+  x = num_empresas,
   y = forcats::fct_rev(factor(sg_partido, levels = levels)),
   color = forcats::fct_rev(factor(sg_partido, levels = levels))
   )
