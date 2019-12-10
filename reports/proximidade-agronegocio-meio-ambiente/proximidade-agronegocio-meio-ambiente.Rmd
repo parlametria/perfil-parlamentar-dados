@@ -398,6 +398,105 @@ parlamentares_doadores_agro %>%
   theme_ipsum_rc()
 ```
 
+```{r}
+todos_parlamentares_doadores_agro <- parlamentares_exercicio %>% 
+  left_join(parlamentares_doadores_agro %>% 
+              select(id_parlamentar, casa, nome, total_por_atividade, total_recebido_geral, 
+                     proporcao_doacao),
+            by = c("id_parlamentar", "casa")) %>% 
+  select(id_parlamentar, casa, nome, uf, sg_partido, total_por_atividade, total_recebido_geral,
+         proporcao_doacao) %>% 
+  mutate_at(.vars = vars(total_por_atividade, total_recebido_geral, proporcao_doacao), 
+            .funs = list(~replace_na(., 0)))
+```
+
+```{r fig.height=8}
+parlamentares_doadores_agro_camara <- todos_parlamentares_doadores_agro %>%
+  filter(!is.na(sg_partido), 
+         casa == 'camara') 
+  
+levels <- parlamentares_doadores_agro_camara %>%
+  group_by(sg_partido) %>%
+  summarise(mean = mean(proporcao_doacao)) %>%
+  arrange(desc(mean)) %>%
+  pull(sg_partido)
+  
+cores_grafico = c("#56B4E9", "#CC79A7")
+  
+parlamentares_doadores_agro_camara %>%
+  group_by(sg_partido) %>% 
+  mutate(total_atividade_partido = sum(total_por_atividade)) %>% 
+  ungroup() %>% 
+  filter(total_atividade_partido > 0) %>% 
+  group_by(sg_partido) %>% 
+  mutate(mean = mean(proporcao_doacao)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = proporcao_doacao, y = forcats::fct_rev(factor(sg_partido, levels = levels)),
+             color = forcats::fct_rev(factor(sg_partido, levels = levels)))) +
+  geom_count() +
+  geom_point(aes(x = mean), size = 3.5, color = "black", shape = 124) +
+  scale_shape_identity() +
+  scale_color_manual(values = rep(cores_grafico, 15)) +
+  scale_fill_manual(values = rep(cores_grafico, 15)) +
+  scale_x_continuous(limits = c(0, 1), labels = scales::percent_format(accuracy = 1)) +
+  
+  geom_point(aes(x = .3, y = 17.4), size = 6, color = "black", shape = 124) +
+  annotate("text", label = "é a média do partido", x = .41, y = 17.4, color = "#4b4545") +
+  
+  guides(size = F, color = F, fill = F) +
+  labs(title = "Distribuição de deputados e a proporção de doações \nvindas de sócios de empresas agrícolas por partido",
+       y = "",
+       x = "Quanto % veio de sócios de empresas agrícolas") +
+  theme_ipsum_rc()
+```
+
+```{r fig.height=6}
+parlamentares_doadores_agro_senado <- todos_parlamentares_doadores_agro %>%
+  filter(!is.na(sg_partido), 
+         casa == 'senado') 
+  
+levels <- parlamentares_doadores_agro_senado %>%
+  group_by(sg_partido) %>%
+  summarise(mean = mean(proporcao_doacao)) %>%
+  arrange(desc(mean)) %>%
+  pull(sg_partido)
+  
+cores_grafico = c("#56B4E9", "#CC79A7")
+  
+parlamentares_doadores_agro_senado %>%
+  group_by(sg_partido) %>% 
+  mutate(total_atividade_partido = sum(total_por_atividade)) %>% 
+  ungroup() %>% 
+  filter(total_atividade_partido > 0) %>% 
+  group_by(sg_partido) %>% 
+  mutate(mean = mean(proporcao_doacao)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = proporcao_doacao, y = forcats::fct_rev(factor(sg_partido, levels = levels)),
+             color = forcats::fct_rev(factor(sg_partido, levels = levels)))) +
+  geom_count() +
+  geom_point(aes(x = mean), size = 3.5, color = "black", shape = 124) +
+  scale_shape_identity() +
+  scale_color_manual(values = rep(cores_grafico, 15)) +
+  scale_fill_manual(values = rep(cores_grafico, 15)) +
+  scale_x_continuous(limits = c(0, 1), labels = scales::percent_format(accuracy = 1)) +
+  
+  geom_point(aes(x = .3, y = 11.4), size = 6, color = "black", shape = 124) +
+  annotate("text", label = "é a média do partido", x = .4, y = 11.4, color = "#4b4545") +
+  
+  geom_text(aes(label = ifelse(proporcao_doacao > .25, 
+                           nome, 
+                           "")),
+            vjust = 2,
+            size = 3.5,
+            color = "#4b4545") +
+  
+  guides(size = F, color = F, fill = F) +
+  labs(title = "Distribuição de senadores e a proporção de doações \nvindas de sócios de empresas agrícolas por partido",
+       y = "",
+       x = "Quanto % veio de sócios de empresas agrícolas") +
+  theme_ipsum_rc()
+```
+
 ## Parlamentares e suas empresas agrícolas
 
 Filtramos os parlamentares que possuem pelo menos uma empresa considerada agrícola. Foram consideradas as empresas cujo CNAEs fiscal ou secundários se enquadram nos setores econômicos correspondentes à **Agricultura, pecuária, produção florestal, pesca e aqüicultura**.
@@ -614,6 +713,7 @@ parlamentares_socios_empresas_senado <-
   theme_ipsum_rc()
 ```
  
+
 
 ## Como os índices foram criados?
 
