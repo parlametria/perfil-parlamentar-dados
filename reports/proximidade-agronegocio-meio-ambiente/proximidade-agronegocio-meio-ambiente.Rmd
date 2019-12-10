@@ -29,6 +29,7 @@ theme_set(theme_minimal())
 
 source(here("parlametria/processor/processor_grupos_parlametria.R"))
 source(here("parlametria/processor/empresas/processor_indice_atividades_economicas.R"))
+source(here("reports/proximidade-agronegocio-meio-ambiente/utils.R"))
 ```
 
 <br>
@@ -224,11 +225,7 @@ parlamentares_propriedades_camara %>%
   labs(title = "Distribuição de deputados e suas propriedades rurais \npor partido",
        y = "",
        x = "Número de propriedades rurais dos deputados") +
-  theme_ipsum_rc() +
-  theme(axis.text.y = element_text(size = 12),
-        axis.title.x = element_text(size = 11),
-        axis.title.y = element_text(size = 11)
-        )
+  theme_ipsum_rc()
 ```
 
 ```{r fig.height=5.5}
@@ -275,11 +272,7 @@ parlamentares_propriedades_senado %>%
   labs(title = "Distribuição de senadores e suas propriedades rurais \npor partido",
        y = "",
        x = "Número de propriedades rurais dos senadores") +
-  theme_ipsum_rc() +
-  theme(axis.text.y = element_text(size = 12),
-        axis.title.x = element_text(size = 11),
-        axis.title.y = element_text(size = 11)
-        )
+  theme_ipsum_rc()
 ```
 
 ## Sócios de empresas agrícolas que doaram para campanha de parlamentares
@@ -363,6 +356,46 @@ parlamentares_doadores_agro %>%
        fill = "") +
   theme_ipsum_rc() +
   theme(legend.position="top")
+```
+
+```{r}
+parlamentares_doadores_agro %>% 
+  filter(casa == "camara") %>% 
+  arrange(desc(total_por_atividade)) %>%
+  head(10) %>% 
+  ggplot(aes(x = reorder(nome, total_por_atividade), y = total_por_atividade / 1e3)) +
+  geom_chicklet(fill = "#009E73") +
+  geom_text(aes(label = paste0(format_currency(total_por_atividade))),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 1e3, 1e2), limits = c(0, 1e3)) +
+  labs(x = "",
+       y = "Total recebido de sócios de empresas agrícolas (mil reais)",
+       title = "Deputados que mais receberam de \nsócios de empresas agrícolas",
+       subtitle = "Escala em mil reais") +
+  theme_ipsum_rc()
+```
+
+```{r}
+parlamentares_doadores_agro %>% 
+  filter(casa == "senado") %>% 
+  arrange(desc(total_por_atividade)) %>%
+  head(10) %>% 
+  ggplot(aes(x = reorder(nome, total_por_atividade), y = total_por_atividade / 1e6)) +
+  geom_chicklet(fill = "#009E73") +
+  geom_text(aes(label = paste0(format_currency(total_por_atividade))),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 2.2)) +
+  labs(x = "",
+       y = "Total recebido de sócios de empresas agrícolas (milhões de reais)",
+       title = "Senadores que mais receberam de \nsócios de empresas agrícolas",
+       subtitle = "Escala em milhões de reais") +
+  theme_ipsum_rc()
 ```
 
 ## Parlamentares e suas empresas agrícolas
