@@ -33,10 +33,17 @@ processa_parlamentares_socios_atividades_economicas <- function() {
 #' @title Processa proporção de doações para os parlamentares para cada atividade econômica
 #' @description A partir dos dados de doadores para parlamentares em 2018, recupera a proporção de doações por atividade 
 #' econômica para cada parlamentar
+#' @param doadores_empresas_datapath Caminho para o CSV com informação dos doadores sócios de empresas
+#' @param info_empresas_datapath Caminho para o CSV com informação das empresas e suas atividades econômicas
+#' @param apenas_cnae_fiscal TRUE se apenas o cnae fiscal da empresa deve ser considerado. FALSE caso contrário
 #' @return Dataframe com proporção da doação de sócios por atividade ecomômica para os parlamentares
 #' @examples
 #' proporcao_doadores_atividades_economicas <- processa_proporcao_doadores_atividades_economicas()
-processa_proporcao_doadores_atividades_economicas <- function() {
+processa_proporcao_doadores_atividades_economicas <- function(
+  doadores_empresas_datapath = here::here("parlametria/raw_data/empresas/empresas_doadores_todos_parlamentares.csv"),
+  info_empresas_datapath = here::here("parlametria/raw_data/empresas/info_empresas_doadores_todos_parlamentares.csv"),
+  apenas_cnae_fiscal = TRUE
+) {
   library(tidyverse)
   library(here)
   options(scipen = 999)
@@ -47,15 +54,15 @@ processa_proporcao_doadores_atividades_economicas <- function() {
                                     col_types = cols(id = "c")) %>% 
     rename(id_parlamentar = id)
  
-  parlamentares_doadores_empresas <- read_csv(here("parlametria/raw_data/empresas/empresas_doadores_todos_parlamentares.csv"),
+  parlamentares_doadores_empresas <- read_csv(doadores_empresas_datapath,
                                      col_types = cols(id_parlamentar = "c", cnpj_empresa = "c", cpf_cnpj_socio = "c")) %>% 
     mutate(cnpj = stringr::str_pad(cnpj_empresa, 14, pad = "0")) %>% 
     select(id_parlamentar, casa = casa_parlamentar, cnpj, cpf_cnpj_socio) %>% 
     distinct(id_parlamentar, casa, cnpj, cpf_cnpj_socio) 
   
   info_empresas <- process_cnaes_empresas(
-    info_empresas_datapath = here::here("parlametria/raw_data/empresas/info_empresas_doadores_todos_parlamentares.csv"),
-    apenas_cnae_fiscal = TRUE) %>% 
+    info_empresas_datapath,
+    apenas_cnae_fiscal) %>% 
     distinct(cnpj, grupo_atividade_economica)
   
   parlamentares_socios_atividades <- parlamentares_doadores_empresas %>% 
