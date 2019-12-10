@@ -28,6 +28,7 @@ options(scipen = 999)
 theme_set(theme_minimal())
 
 source(here("parlametria/processor/processor_grupos_parlametria.R"))
+source(here("parlametria/processor/empresas/processor_indice_atividades_economicas.R"))
 ```
 
 <br>
@@ -168,6 +169,94 @@ parlamentares_propriedades %>%
        title = "Senadores com maiores patrimônios em \npropriedades rurais",
        subtitle = "Em milhões de reais") +
   theme_ipsum_rc()
+```
+
+## Sócios de empresas agrícolas que doaram para campanha de parlamentares
+
+Em seguida vamos analisar as **doações de sócios de empresas agrícolas** para parlamentares durante a campanha em 2018.
+
+Uma empresa é considerada **agrícola** quando possui pelo menos um CNAE registrado na Receita Federal pertencente a Seção **AGRICULTURA, PECUÁRIA, PRODUÇÃO FLORESTAL, PESCA E AQÜICULTURA**.
+
+```{r}
+doacoes_agronegocio <- processa_proporcao_doadores_atividades_economicas(
+  doadores_empresas_datapath = here("parlametria/raw_data/empresas/empresas_doadores_agricolas_todos_parlamentares.csv"),
+  info_empresas_datapath = here("parlametria/raw_data/empresas/info_empresas_doadores_todos_parlamentares.csv"),
+  apenas_cnae_fiscal = FALSE
+) %>% 
+  filter(grupo_atividade_economica == "AGRICULTURA, PECUÁRIA, PRODUÇÃO FLORESTAL, PESCA E AQÜICULTURA")
+
+parlamentares <- read_csv(here("crawler/raw_data/parlamentares.csv"),
+                         col_types = cols(id = "c")) %>% 
+  rename(id_parlamentar = id)
+
+parlamentares_doadores_agro <- doacoes_agronegocio %>% 
+  left_join(parlamentares %>% 
+              select(id_parlamentar, casa, nome_eleitoral, uf, sg_partido), 
+            by = c("id_parlamentar", "casa")) %>% 
+  mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", sg_partido, "/", uf)) %>% 
+  select(id_parlamentar, casa, nome, nome_eleitoral, uf, sg_partido, grupo_atividade_economica, total_por_atividade,
+         total_recebido_geral, proporcao_doacao)
+```
+
+```{r fig.height=3.5}
+total_parlamentares <- parlamentares_doadores_agro %>% 
+  group_by(casa) %>% 
+  summarise(n_parlamentares = n_distinct(id_parlamentar, casa)) %>% 
+  arrange(casa) %>% ## ordena pelo nome (camara, senado)
+  pull(n_parlamentares)
+
+parlamentares_doadores_agro %>% 
+  group_by(casa) %>% 
+  summarise(n_parlamentares = n_distinct(id_parlamentar, casa),
+            total_doado = sum(total_por_atividade)) %>% 
+  ggplot(aes(x = casa, total_doado / 1e6)) +
+  geom_chicklet(width = .4, radius = grid::unit(4, "pt"),
+                fill = "#009E73") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 14, 1), limits = c(0, 14)) +
+  
+  annotate("text", label = paste0(total_parlamentares[2], " senadores"), x = 2.3, y = 1, color = "#4b4545") +
+  annotate("text", label = paste0(total_parlamentares[1], " deputados"), x = 1.3, y = 1, color = "#4b4545") +
+  
+  labs(x = "",
+       y = "Total doado (milhões de reais)",
+       title = "Total doado por sócios de empresas agrícolas",
+       subtitle = "Em milhões de reais") +
+  theme_ipsum_rc()
+```
+
+```{r fig.height=4}
+total_parlamentares <- parlamentares_doadores_agro %>% 
+  count(casa) %>% 
+  arrange(casa) %>% ## ordena pelo nome (camara, senado)
+  pull(n)
+
+parlamentares_doadores_agro %>% 
+  count(casa) %>% 
+  mutate(total_casa_eleitos = if_else(casa == "camara", 513, 54),
+         proporcao_parlamentar = if_else(casa == "camara", n / total_casa_eleitos, n / total_casa_eleitos),
+         proporcao_geral = 1 - proporcao_parlamentar) %>% 
+  gather(key = "key", value = "value", proporcao_parlamentar:proporcao_geral) %>% 
+  ggplot(aes(x = casa, y = value, fill = key)) +
+  geom_chicklet(width = .3, position = "stack", radius = grid::unit(4, "pt")) +
+  scale_y_continuous(breaks = seq(0, 1, 0.1), limits = c(0, 1), labels = scales::percent_format(accuracy = 1)) +
+  scale_x_discrete(labels = c("Câmara", "Senado")) +
+  scale_fill_manual(values = c("#999999", "#009E73"), labels = c("Não recebeu doações", "Recebeu doações do setor")) +
+  coord_flip() +
+  
+  annotate("text", label = paste0(total_parlamentares[2], " senadores"), x = 2.25, y = 0.08, color = "#4b4545") +
+  annotate("text", label = paste0(total_parlamentares[1], " deputados"), x = 1.25, y = 0.08, color = "#4b4545") +
+  
+  geom_curve(aes(x = 2.2, y = 0.3, xend = 2.3, yend = 0.35),
+             color = "#7d7373", size = 0.4, curvature = -0.35,
+             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+  
+  labs(y = "Quantos % do total de parlamentares eleitos para a casa",
+       x = "",
+       title = "Parlamentares que receberam doações de sócios do setor agrícola",
+       fill = "") +
+  theme_ipsum_rc() +
+  theme(legend.position="top")
 ```
 
 ## Como os índices foram criados?
