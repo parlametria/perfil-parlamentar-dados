@@ -48,6 +48,11 @@ parlamentares_propriedades <- read_csv(here("parlametria/raw_data/patrimonio/pro
 
 pallete_1 <- c("#0072B2", "#E69F00", "#999999", "#009E73",
           "#D55E00", "#56B4E9", "#F0E442", "#CC79A7")
+
+parlamentares_exercicio <- read_csv(here("crawler/raw_data/parlamentares.csv"),
+                                    col_types = cols(id = "c")) %>% 
+  filter(em_exercicio == 1) %>% 
+  rename(id_parlamentar = id)
 ```
 
 Encontramos **`r parlamentares_propriedades %>% pull(n_propriedades) %>% sum()` propriedades rurais** distribuídas entre **`r parlamentares_propriedades %>% filter(casa == "camara") %>% nrow()` deputados** e **`r parlamentares_propriedades %>% filter(casa == "senado") %>% nrow()` senadores**.
@@ -169,6 +174,112 @@ parlamentares_propriedades %>%
        title = "Senadores com maiores patrimônios em \npropriedades rurais",
        subtitle = "Em milhões de reais") +
   theme_ipsum_rc()
+```
+
+```{r}
+todos_parlamentares_propriedades <- parlamentares_exercicio %>% 
+  left_join(parlamentares_propriedades %>% 
+              select(id_parlamentar, casa, n_propriedades, total_declarado, nome),
+            by = c("id_parlamentar", "casa")
+            ) %>% 
+  select(id_parlamentar, casa, nome, uf, sg_partido, n_propriedades, total_declarado) %>% 
+  mutate_at(.vars = vars(n_propriedades, total_declarado), 
+            .funs = list(~replace_na(., 0)))
+```
+
+```{r fig.height=6.5}
+parlamentares_propriedades_camara <- todos_parlamentares_propriedades %>%
+  filter(!is.na(sg_partido), 
+         casa == 'camara') 
+  
+levels <- parlamentares_propriedades_camara %>%
+  group_by(sg_partido) %>%
+  summarise(mean = mean(n_propriedades)) %>%
+  arrange(desc(mean)) %>%
+  pull(sg_partido)
+  
+cores_grafico = c("#56B4E9", "#CC79A7")
+  
+parlamentares_propriedades_camara %>%
+  group_by(sg_partido) %>% 
+  mutate(n_propriedades_partido = sum(n_propriedades)) %>% 
+  ungroup() %>% 
+  filter(n_propriedades_partido > 0) %>% 
+  group_by(sg_partido) %>% 
+  mutate(mean = mean(n_propriedades)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = n_propriedades, y = forcats::fct_rev(factor(sg_partido, levels = levels)),
+             color = forcats::fct_rev(factor(sg_partido, levels = levels)))) +
+  geom_count() +
+  geom_point(aes(x = mean), size = 3.5, color = "black", shape = 124) +
+  scale_shape_identity() +
+  scale_color_manual(values = rep(cores_grafico, 15)) +
+  scale_fill_manual(values = rep(cores_grafico, 15)) +
+  scale_x_continuous(breaks = seq(0, 15, 2), limits = c(0, 12)) +
+  
+  geom_point(aes(x = 7.5, y = 15.4), size = 6, color = "black", shape = 124) +
+  annotate("text", label = "é a média do partido", x = 8.8, y = 15.4, color = "#4b4545") +
+  
+  guides(size = F, color = F, fill = F) +
+  labs(title = "Distribuição de deputados e suas propriedades rurais \npor partido",
+       y = "",
+       x = "Número de propriedades rurais dos deputados") +
+  theme_ipsum_rc() +
+  theme(axis.text.y = element_text(size = 12),
+        axis.title.x = element_text(size = 11),
+        axis.title.y = element_text(size = 11)
+        )
+```
+
+```{r fig.height=5.5}
+parlamentares_propriedades_senado <- todos_parlamentares_propriedades %>%
+  filter(!is.na(sg_partido), 
+         casa == 'senado') 
+  
+levels <- parlamentares_propriedades_senado %>%
+  group_by(sg_partido) %>%
+  summarise(mean = mean(n_propriedades)) %>%
+  arrange(desc(mean)) %>%
+  pull(sg_partido)
+  
+cores_grafico = c("#56B4E9", "#CC79A7")
+  
+parlamentares_propriedades_senado %>%
+  group_by(sg_partido) %>% 
+  mutate(n_propriedades_partido = sum(n_propriedades)) %>% 
+  ungroup() %>% 
+  filter(n_propriedades_partido > 0) %>% 
+  group_by(sg_partido) %>% 
+  mutate(mean = mean(n_propriedades)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = n_propriedades, y = forcats::fct_rev(factor(sg_partido, levels = levels)),
+             color = forcats::fct_rev(factor(sg_partido, levels = levels)))) +
+  geom_count() +
+  geom_point(aes(x = mean), size = 3.5, color = "black", shape = 124) +
+  scale_shape_identity() +
+  scale_color_manual(values = rep(cores_grafico, 15)) +
+  scale_fill_manual(values = rep(cores_grafico, 15)) +
+  scale_x_continuous(breaks = seq(0, 75, 10), limits = c(0, 75)) +
+  
+  geom_text(aes(label = ifelse(n_propriedades > 20, 
+                             nome, 
+                             "")),
+            vjust = 2,
+            size = 3.5,
+            color = "#4b4545") +
+    
+  geom_point(aes(x = 22.5, y = 9.4), size = 6, color = "black", shape = 124) +
+  annotate("text", label = "é a média do partido", x = 30, y = 9.4, color = "#4b4545") +
+  
+  guides(size = F, color = F, fill = F) +
+  labs(title = "Distribuição de senadores e suas propriedades rurais \npor partido",
+       y = "",
+       x = "Número de propriedades rurais dos senadores") +
+  theme_ipsum_rc() +
+  theme(axis.text.y = element_text(size = 12),
+        axis.title.x = element_text(size = 11),
+        axis.title.y = element_text(size = 11)
+        )
 ```
 
 ## Sócios de empresas agrícolas que doaram para campanha de parlamentares
@@ -494,7 +605,7 @@ senadores_indices <- parlamentares_indices %>%
 
 <br> 
 
-## Como os grupos foram formados?
+### Como os grupos foram formados?
 Os grupos foram formados usando critérios a partir dos índices e do partidos dos parlamentares.
 
 <br>
@@ -574,4 +685,6 @@ Aqui também temos um grupo importante de parlamentares que merecem ser trabalha
 plot_dispersao_grupos("Sem vínculo econômico, mas ativistas ambientais", 
                       "Deputados sem proximidade econômica mas com ligação ao Meio Ambiente")
 ```
+
+
 
