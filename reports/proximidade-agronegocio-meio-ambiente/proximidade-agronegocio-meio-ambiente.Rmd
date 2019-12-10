@@ -219,11 +219,11 @@ parlamentares_socios_empresas %>%
 ```
 
 ```{r}
-parlamentares_socios_empresas_partido <-
+parlamentares_socios_empresas_partido_camara <-
   parlamentares_socios_empresas %>%
   filter(!is.na(sg_partido), casa == 'camara') 
   
-levels <- parlamentares_socios_empresas %>%
+levels <- parlamentares_socios_empresas_partido_camara %>%
   group_by(id_parlamentar, sg_partido) %>%
   summarise(num_empresas = n_distinct(cnpj)) %>%
   ungroup() %>% 
@@ -234,7 +234,7 @@ levels <- parlamentares_socios_empresas %>%
   
 cores_grafico = c("#56B4E9", "#CC79A7")
   
-parlamentares_socios_empresas_partido %>%
+parlamentares_socios_empresas_partido_camara %>%
   group_by(id_parlamentar, sg_partido) %>%
   summarise(num_empresas_total = n_distinct(cnpj)) %>%
   ungroup() %>%
@@ -254,14 +254,14 @@ parlamentares_socios_empresas_partido %>%
   scale_color_manual(values = rep(cores_grafico, 15)) +
   scale_fill_manual(values = rep(cores_grafico, 15)) +
   scale_x_continuous(limits = c(0, 50)) +
-  annotate("text", label = "Deputado \nNewton Cardoso Júnior", x = 42, y = 11.5, color = "#4b4545") +
-  geom_curve(aes(x = 48, y = 13.8, xend = 45, yend = 12),
-             color = "#7d7373", size = 0.4, curvature = -0.35,
+  annotate("text", label = "Deputado \nNewton Cardoso Júnior", x = 42.5, y = 12, color = "#4b4545") +
+  geom_curve(aes(x = 47.5, y = 14, xend = 42, yend = 12.8),
+             color = "#7d7373", size = 0.35, curvature = 0.35,
              arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
   guides(size = F, color = F, fill = F) +
-  labs(title = "",
+  labs(title = "Distribuição de deputados\nsócios de empresas agrícolas por partido",
   y = "Partido",
-  x = "Número de empresas") +
+  x = "Número de empresas dos deputados") +
   theme_ipsum_rc() +
   theme(
   axis.text.y = element_text(size = 12),
@@ -269,6 +269,124 @@ parlamentares_socios_empresas_partido %>%
   axis.title.y = element_text(size = 11)
   )
 ```
+
+
+```{r fig.height=4}
+parlamentares_socios_empresas_partido_senado <-
+  parlamentares_socios_empresas %>%
+  filter(!is.na(sg_partido), casa == 'senado') 
+  
+levels <- parlamentares_socios_empresas_partido_senado %>%
+  group_by(id_parlamentar, sg_partido) %>%
+  summarise(num_empresas = n_distinct(cnpj)) %>%
+  ungroup() %>% 
+  group_by(sg_partido) %>%
+  summarise(mean = mean(num_empresas)) %>%
+  arrange(desc(mean)) %>%
+  pull(sg_partido)
+  
+cores_grafico = c("#56B4E9", "#CC79A7")
+  
+parlamentares_socios_empresas_partido_senado %>%
+  group_by(id_parlamentar, sg_partido) %>%
+  summarise(num_empresas_total = n_distinct(cnpj)) %>%
+  ungroup() %>%
+  group_by(sg_partido) %>% 
+  mutate(mean = mean(num_empresas_total)) %>% 
+  ungroup() %>% 
+  ggplot(
+  aes(
+  x = num_empresas_total,
+  y = forcats::fct_rev(factor(sg_partido, levels = levels)),
+  color = forcats::fct_rev(factor(sg_partido, levels = levels))
+  )
+  ) +
+  geom_count() +
+  geom_point(aes(x = mean), size = 3.5, color = "black", shape = 124) +
+  scale_shape_identity() +
+  scale_color_manual(values = rep(cores_grafico, 15)) +
+  scale_fill_manual(values = rep(cores_grafico, 15)) +
+  scale_x_continuous(limits = c(0, 6), breaks = seq(0, 10, 2)) +
+  annotate("text", label = "Senador \nJayme Veríssimo de Campos", x = 4.7, y = 4, color = "#4b4545") +
+  geom_curve(aes(x = 4.95, y = 5, xend = 4.7, yend = 4.5),
+             color = "#7d7373", size = 0.35, curvature = 0.1,
+             arrow = arrow(length = unit(0.3, "cm"), ends="first")) +
+  guides(size = F, color = F, fill = F) +
+  labs(title = "Distribuição de senadores\nsócios de empresas agrícolas por partido",
+  y = "Partido",
+  x = "Número de empresas dos senadores") +
+  theme_ipsum_rc() +
+  theme(
+  axis.text.y = element_text(size = 12),
+  axis.title.x = element_text(size = 11),
+  axis.title.y = element_text(size = 11)
+  )
+```
+
+```{r}
+parlamentares_socios_empresas_camara <-
+  parlamentares_socios_empresas_partido_camara %>%
+  mutate(nome_processado = paste0(str_to_title(nome_eleitoral), ' - ', sg_partido, '/', uf))
+  
+  levels <- parlamentares_socios_empresas_camara %>%
+  group_by(id_parlamentar, nome_processado) %>%
+  summarise(n = n_distinct(cnpj)) %>%
+  arrange(desc(n)) %>%
+  head(15) %>%
+  pull(nome_processado)
+  
+  parlamentares_socios_empresas_camara %>%
+  group_by(id_parlamentar, nome_processado) %>%
+  summarise(n = n_distinct(cnpj)) %>%
+  arrange(desc(n)) %>%
+  head(15) %>%
+  ggplot(aes(x = fct_rev(factor(nome_processado, levels = levels)), y = n)) +
+  geom_chicklet(fill = "#56B4E9", width = .8) +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
+  geom_text(aes(label = n),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+  coord_flip() +
+  labs(x = "",
+       y = "Número de empresas agrícolas",
+       title = "Deputados sócios de empresas agrícolas") +
+  theme_ipsum_rc()
+```
+
+```{r fig.height=3}
+parlamentares_socios_empresas_senado <-
+  parlamentares_socios_empresas_partido_senado %>%
+  mutate(nome_processado = paste0(str_to_title(nome_eleitoral), ' - ', sg_partido, '/', uf))
+  
+  levels <- parlamentares_socios_empresas_senado %>%
+  group_by(id_parlamentar, nome_processado) %>%
+  summarise(n = n_distinct(cnpj)) %>%
+  arrange(desc(n)) %>%
+  head(5) %>%
+  pull(nome_processado)
+  
+  parlamentares_socios_empresas_senado %>%
+  group_by(id_parlamentar, nome_processado) %>%
+  summarise(n = n_distinct(cnpj)) %>%
+  arrange(desc(n)) %>%
+  head(5) %>%
+  ggplot(aes(x = fct_rev(factor(nome_processado, levels = levels)), y = n)) +
+  geom_chicklet(fill = "#56B4E9", width = .8) +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 5), breaks = seq(0, 5, 1)) +
+  # geom_text(aes(label = n),
+  #           hjust = -0.1,
+  #           size = 3.3,
+  #           color = "#333333") +
+  coord_flip() +
+  labs(x = "",
+       y = "Número de empresas agrícolas",
+       title = "Senadores sócios de empresas agrícolas") +
+  theme_ipsum_rc()
+```
+ 
 
 ## Como os índices foram criados?
 
