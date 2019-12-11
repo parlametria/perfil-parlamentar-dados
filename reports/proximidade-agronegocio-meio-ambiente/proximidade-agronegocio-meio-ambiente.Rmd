@@ -726,8 +726,122 @@ parlamentares_socios_empresas_senado <-
        title = "Senadores sócios de empresas agrícolas") +
   theme_ipsum_rc()
 ```
- 
 
+
+## Parlamentares e suas ligações com o Agro
+
+```{r}
+parlamentares_ligacao_agro <- parlamentares_exercicio %>% 
+  mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", sg_partido, "/", uf)) %>% 
+  select(id_parlamentar, casa, nome, uf, sg_partido) %>% 
+  
+  ## Join com doações do setor agro
+  left_join(todos_parlamentares_doadores_agro %>% 
+              select(id_parlamentar, casa, total_por_atividade),
+            by = c("id_parlamentar", "casa")) %>% 
+  
+  ## Join com propriedades
+  left_join(todos_parlamentares_propriedades %>% 
+              select(id_parlamentar, casa, n_propriedades),
+            by = c("id_parlamentar", "casa")) %>% 
+  
+  ## Join com sociedade de empresas
+  left_join(parlamentares_socios_empresas %>% 
+              mutate(id_parlamentar = as.character(id_parlamentar)) %>% 
+              filter(!is.na(cnpj)) %>% 
+              group_by(id_parlamentar, casa) %>% 
+              summarise(n_empresas = n_distinct(cnpj)) %>% 
+              ungroup(),
+            by = c("id_parlamentar", "casa")) %>% 
+  mutate_at(.vars = vars(n_empresas), 
+            .funs = list(~replace_na(., 0))) %>% 
+  
+  rowwise() %>% 
+  mutate(ligacao_agro = min(total_por_atividade, 1) + min(n_propriedades, 1) + min(n_empresas, 1)) %>% 
+  ungroup()
+```
+
+```{r fig.height=4}
+ligacoes_agro_group <- parlamentares_ligacao_agro %>% 
+  filter(casa == "camara") %>% 
+  count(ligacao_agro)
+
+prop_ligacoes_agro_group <- ligacoes_agro_group %>% 
+  filter(ligacao_agro %in% 1:3) %>% 
+  pull(n) %>% 
+  sum()
+
+prop_ligacoes_agro_group <- round((prop_ligacoes_agro_group / 513), 2) * 100
+
+ligacoes_agro_group %>% 
+  ggplot(aes(x = "câmara", y = n, fill = as.factor(ligacao_agro))) +
+  geom_chicklet(width = .3, position = "stack", radius = grid::unit(4, "pt")) +
+  coord_flip() +
+  
+  scale_fill_manual(values = c("#999999", "#fdcc8a", "#fc8d59", "#e34a33")) +
+  geom_text(aes(label = n),
+            position = "stack",
+            hjust = 1.2,
+            vjust = 3.8,
+            size = 3.3,
+            color = "#333333") +
+  
+  statebins:::geom_rrect(mapping = aes(xmin = 0.5, xmax = 0.7, ymin = 35, ymax = 195),
+                         radius = grid::unit(10, "pt"),
+                         fill = "#EEF0E2",
+                         color = "#7C7272") +
+  annotate("text",
+           label = paste0(prop_ligacoes_agro_group, "% dos deputados tem ligação"),
+           x = 0.6, y = 115, color = "#4b4545") +
+  
+  labs(x = "",
+       y = "Quantidade de parlamentares",
+       fill = "Quantidade de ligações",
+       title = "Deputados e suas ligações com o setor agrícola") +
+  theme_ipsum_rc() +
+  theme(legend.position="top")
+```
+
+```{r fig.height=4}
+ligacoes_agro_group <- parlamentares_ligacao_agro %>% 
+  filter(casa == "senado") %>% 
+  count(ligacao_agro)
+
+prop_ligacoes_agro_group <- ligacoes_agro_group %>% 
+  filter(ligacao_agro %in% 1:3) %>% 
+  pull(n) %>% 
+  sum()
+
+prop_ligacoes_agro_group <- round((prop_ligacoes_agro_group / 81), 2) * 100
+
+ligacoes_agro_group %>% 
+  ggplot(aes(x = "senado", y = n, fill = as.factor(ligacao_agro))) +
+  geom_chicklet(width = .3, position = "stack", radius = grid::unit(4, "pt")) +
+  coord_flip() +
+  
+  scale_fill_manual(values = c("#999999", "#fdcc8a", "#fc8d59", "#e34a33")) +
+  geom_text(aes(label = n),
+            position = "stack",
+            hjust = 1.2,
+            vjust = 3.8,
+            size = 3.3,
+            color = "#333333") +
+  
+  statebins:::geom_rrect(mapping = aes(xmin = 0.5, xmax = 0.7, ymin = 3, ymax = 27),
+                         radius = grid::unit(10, "pt"),
+                         fill = "#EEF0E2",
+                         color = "#7C7272") +
+  annotate("text",
+           label = paste0(prop_ligacoes_agro_group, "% dos senadores tem ligação"),
+           x = 0.6, y = 15, color = "#4b4545") +
+
+  labs(x = "",
+       y = "Quantidade de parlamentares",
+       fill = "Quantidade de ligações",
+       title = "Senadores e suas ligações com o setor agrícola") +
+  theme_ipsum_rc() +
+  theme(legend.position="top")
+```
 
 ## Como os índices foram criados?
 
@@ -832,6 +946,4 @@ Aqui também temos um grupo importante de parlamentares que merecem ser trabalha
 plot_dispersao_grupos("Sem vínculo econômico, mas ativistas ambientais", 
                       "Deputados sem proximidade econômica mas com ligação ao Meio Ambiente")
 ```
-
-
 
