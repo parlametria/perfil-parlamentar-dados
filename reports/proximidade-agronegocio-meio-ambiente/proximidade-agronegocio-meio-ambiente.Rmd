@@ -2,7 +2,7 @@
 title: "Análise de proximidade de parlamentares com Agronegócio e Meio Ambiente"
 output: 
   html_document:
-    css: styles.css
+    css: styles-parlametria.css
 ---
 
 ```{r setup, include=FALSE}
@@ -729,6 +729,8 @@ parlamentares_socios_empresas_senado <-
 
 
 ## Parlamentares e suas ligações com o Agro
+
+Um parlamentar pode estar ligado ao setor agrícola de 3 formas: é sócio de empresas do setor, recebeu doações de sócios de empresas do setor, possui propriedades rurais declaradadas ao TSE. Um mesmo parlamentar pode estar ligado 1, 2 ou 3 vezes ao setor (é sócio, recebeu doação e tem propriedades).
 
 ```{r}
 parlamentares_ligacao_agro <- parlamentares_exercicio %>% 
