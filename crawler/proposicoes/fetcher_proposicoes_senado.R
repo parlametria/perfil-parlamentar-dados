@@ -6,7 +6,10 @@
 #' proposicoes <- fetch_proposicoes_senado(id_proposicao)
 fetch_proposicoes_senado <- function(id_proposicao) {
   library(tidyverse)
-  proposicao <- 
+  
+  print(paste0("Baixando Proposição de id ", id_proposicao))
+  
+  proposicao <- tryCatch({
     rcongresso::fetch_proposicao_senado(id_proposicao) %>% 
     select(
       id = codigo_materia,
@@ -22,6 +25,12 @@ fetch_proposicoes_senado <- function(id_proposicao) {
           "https://www25.senado.leg.br/web/atividade/materias/-/materia/",
           id_proposicao)
       )
+  }, error=function(e) {
+    print(paste0("Não foi possível baixar as informações da Proposição ", id_proposicao))
+    print(e)
+    return(tribble(~ id, ~ data_apresentacao, ~ nome, ~ ementa, ~ tema, ~ autor, ~ uri_tramitacao))
+  })
+  
   return(proposicao)
 }
 
