@@ -19,28 +19,33 @@ fetcher_socios_empresas_fragmentado <-
     nrow_socios = nrow(socios_empresas_doadores)
     batch_size = 8000
     
-    reparticoes <- split(
-      socios_empresas_doadores,
-      rep(
-        1:ceiling(nrow_socios / batch_size),
-        each = batch_size,
-        length.out = nrow_socios
+    if (ceiling(nrow_socios / batch_size) >= 2) {
+      reparticoes <- split(
+        socios_empresas_doadores,
+        rep(
+          1:ceiling(nrow_socios / batch_size),
+          each = batch_size,
+          length.out = nrow_socios
+        )
       )
-    )
-    
-    # Cria, se não existe, o diretório para armazenar os dataframes intermediários
-    dir.create(file.path(here("parlametria/raw_data/empresas"), "socios_empresas"), showWarnings = FALSE)
-    
-    purrr::map(seq(1:length(reparticoes)), function(x) {
-      print(paste0("Baixando batch número ", x))
-      df <- fetch_socios_empresas_doadores(reparticoes[[x]], somente_agricolas)
-      write_csv(df, paste0(
-        here("parlametria/raw_data/empresas/socios_empresas/"),
-        "socios_empresas_parte_",
-        x,
-        ".csv"
-      ))
-    })
+      
+      # Cria, se não existe, o diretório para armazenar os dataframes intermediários
+      dir.create(file.path(here("parlametria/raw_data/empresas"), "socios_empresas"), showWarnings = FALSE)
+      
+      purrr::map(seq(1:length(reparticoes)), function(x) {
+        print(paste0("Baixando batch número ", x))
+        df <- fetch_socios_empresas_doadores(reparticoes[[x]], somente_agricolas)
+        write_csv(df, paste0(
+          here("parlametria/raw_data/empresas/socios_empresas/"),
+          "socios_empresas_parte_",
+          x,
+          ".csv"
+        ))
+      })
+    } else {
+      df <- fetch_socios_empresas_doadores(socios_empresas_doadores, somente_agricolas)
+      write_csv(df, here("parlametria/raw_data/empresas/socios_empresas/socios_empresas_parte_1.csv"))
+    }
     
   }
 
@@ -56,7 +61,7 @@ process_socios_empresas_fragmentado <- function(socios_empresas_doadores, soment
   library(tidyverse)
   library(here)
 
-  # fetcher_socios_empresas_fragmentado(socios_empresas_doadores, somente_agricolas)
+  #fetcher_socios_empresas_fragmentado(socios_empresas_doadores, somente_agricolas)
   
   datapaths <-
     list.files(
