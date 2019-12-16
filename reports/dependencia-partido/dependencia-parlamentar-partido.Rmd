@@ -189,7 +189,7 @@ Se olharmos com mais detalhes para a lista de 20 deputados que menos adere, pode
 
 
 ```{r}
-paleta <- c("#999999", "#fdcc8a", "#fc8d59", "#e34a33")
+paleta <- c( "#e34a33","#d9d1c7", "#fc8d59", "#fdcc8a")
 match_valores <- c("seguiu", "faltou", "nao_seguiu", "partido_liberou")
 
 data_long <- deputados_summary_freq_wide %>% 
@@ -269,7 +269,7 @@ deputados_summary_freq_wide %>%
   geom_count() +
   scale_x_discrete(position = "left") +
   scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
-  scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
+  scale_color_manual(values = rep(c("#648fff", "#fc5185"), 15)) +
   coord_flip() +
   scale_shape_identity() +
   geom_point(aes(y = median), size = 5, color = "black", shape = 124) +
