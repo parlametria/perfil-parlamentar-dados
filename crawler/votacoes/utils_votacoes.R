@@ -20,6 +20,48 @@ enumera_voto <- function(df) {
     )
 }
 
+#' @title Nomeia votações da câmara
+#' @description Recebe um dataframe com coluna voto e enumera o número para um valor
+#' @param df Dataframe com a coluna voto
+#' @return Dataframe com coluna voto nomeada
+#' @examples
+#' nomeia_voto_camara(df)
+nomeia_voto_camara <- function(df) {
+  df %>%
+    mutate(
+      voto = case_when(
+        voto == -1 ~ "Não",
+        voto == 1 ~ "Sim",
+        voto == 2 ~ "Obstrução",
+        voto == 3 ~ "Abstenção",
+        voto == 4 ~ "Art. 17",
+        voto == 5 ~ "Liberado",
+        TRUE ~ "-"
+      )
+    )
+}
+
+#' @title Nomeia votações do senado
+#' @description Recebe um dataframe com coluna voto e enumera o número para um valor
+#' @param df Dataframe com a coluna voto
+#' @return Dataframe com coluna voto nomeada
+#' @examples
+#' nomeia_voto_senado(df)
+nomeia_voto_senado <- function(df) {
+  df %>%
+    mutate(
+      voto = case_when(
+        voto == -1 ~ "Não",
+        voto == 1 ~ "Sim",
+        voto == 2 ~ "P-OD",
+        voto == 3 ~ "Abstenção",
+        voto == 4 ~ "art. 51 RISF",
+        voto == 5 ~ "Liberado",
+        TRUE ~ "-"
+      )
+    )
+}
+
 #' @title Padroniza siglas de partidos
 #' @description Recebe uma sigla de partido como input e retorna seu valor padronizado
 #' @param sigla Sigla do partido

@@ -129,6 +129,7 @@ fetch_votos_por_sessao_camara <- function(cod_sessao, hora, xml) {
 fetch_votos_por_ano_camara <- function(id_proposicao, ano = 2019) {
   library(tidyverse)
   source(here("crawler/votacoes/utils_votacoes.R"))
+  source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
   
   if (is.na(id_proposicao)) {
     data <- tribble(~ id_votacao, ~ id_deputado, ~ voto, ~ partido)
