@@ -1,5 +1,6 @@
 ---
 title: "Aderência deputado - partido"
+date: "16/12/2019"
 output: 
   html_document:
     css: styles.css
@@ -30,11 +31,14 @@ source(here("reports/dependencia-partido/scripts/processa_dados_votacoes.R"))
 ```
 
 ```{r}
-dados_votos_orientacao <- processa_dados_votacoes()
+dados_votos_orientacao <- processa_dados_votacoes(here::here("reports/dependencia-partido/data/parlamentares.csv"),
+                                                  here::here("reports/dependencia-partido/data/orientacoes.csv"),
+                                                  here::here("reports/dependencia-partido/data/votos.csv"))
 
 deputados <- dados_votos_orientacao[[1]]
 proposicoes_votadas <- dados_votos_orientacao[[2]]
-votos <- dados_votos_orientacao[[3]]
+votos <- dados_votos_orientacao[[3]] %>% 
+  rename(id_parlamentar = id_deputado)
 orientacao <- dados_votos_orientacao[[4]]
 ```
 
@@ -100,10 +104,11 @@ Acima temos a informações dos 20 deputados que possuem **menor aderência** co
 Abaixo detalhamos o número absoluto de votações em que cada um desses deputados seguiu ou não a orientação do partido. As barras têm comprimento diferente pois os deputados tem um número diferente de votações nas quais participaram e houve orientação do partido. Os deputaods estão ordenados da maior aderência para a menor. 
 
 ```{r}
-lbls = as.character(c(seq(range_votacoes, 10, -10), seq(0, range_votacoes, 10)))
+lbls = as.character(c(seq(range_votacoes, 10, -25), seq(0, range_votacoes, 25)))
 
 levels <- deputados_summary_freq_wide %>%
   arrange(freq) %>% 
+  head(20) %>% 
   pull(nome)
 
 deputados_summary_freq_wide %>%
@@ -119,7 +124,7 @@ deputados_summary_freq_wide %>%
   geom_bar(stat = "identity", width = .6) +
   coord_flip() +
   scale_fill_brewer(palette = "Dark2", direction = -1, labels = c("Não seguiu", "Seguiu")) +  
-  scale_y_continuous(breaks = seq(-range_votacoes, range_votacoes, 10), labels = lbls) +
+  scale_y_continuous(breaks = seq(-range_votacoes, range_votacoes, 25), labels = lbls) +
   labs(y = "Nº de votações", x = "Deputado", fill = "", 
        title = "Deputados que menos seguiram à \n orientação do partido") +
   theme_ipsum_rc() +
@@ -147,7 +152,7 @@ deputados_summary_freq_wide %>%
                size = 0.1) +
   coord_flip() +
   scale_y_continuous(breaks = seq(0, 100, 5)) +
-  labs(title="Deputados com menos aderência à \n orientação do partido", 
+  labs(title="Deputados com mais aderência à \n orientação do partido", 
        y = "Aderência ao Partido (%)",
        x = "Deputado") +
     theme_ipsum_rc()
@@ -157,7 +162,7 @@ Na lista dos 20 deputados com maior valor de aderência todos têm aderência de
 
 
 ```{r}
-lbls = as.character(c(seq(range_votacoes, 10, -10), seq(0, range_votacoes, 10)))
+lbls = as.character(c(seq(range_votacoes, 10, -25), seq(0, range_votacoes, 25)))
 
 deputados_summary_freq_wide %>%
   arrange(desc(freq), desc(seguiu)) %>% 
@@ -172,7 +177,7 @@ deputados_summary_freq_wide %>%
   geom_bar(stat = "identity", width = .6) +
   coord_flip() +
   scale_fill_brewer(palette = "Dark2", direction = -1, labels = c("Não seguiu", "Seguiu")) +
-  scale_y_continuous(breaks = seq(-range_votacoes, range_votacoes, 10), labels = lbls) +
+  scale_y_continuous(breaks = seq(-range_votacoes, range_votacoes, 25), labels = lbls) +
   labs(y = "Nº de votações", x = "Deputado", fill = "", title = "Deputados que mais seguiram à \norientação do partido") +
   theme_ipsum_rc() +
   theme(legend.position="bottom")
@@ -184,7 +189,7 @@ Se olharmos com mais detalhes para a lista de 20 deputados que menos adere, pode
 
 
 ```{r}
-paleta <- c("#91bfda", "#E89D68", "#e06264", "#BA7E53")
+paleta <- c("#999999", "#fdcc8a", "#fc8d59", "#e34a33")
 match_valores <- c("seguiu", "faltou", "nao_seguiu", "partido_liberou")
 
 data_long <- deputados_summary_freq_wide %>% 
@@ -327,7 +332,7 @@ Abaixo apresentamos uma tabela pesquisável com os dados de todos os deputados q
 ```{r}
 deputados_summary_freq_wide %>% 
   mutate(freq = round(freq, 2)) %>% 
-  select(id_deputado, nome, partido, freq, seguiu, nao_seguiu, faltou, partido_liberou) %>% 
+  select(id_deputado = id, nome, partido, freq, seguiu, nao_seguiu, faltou, partido_liberou) %>% 
   datatable(class = 'cell-border stripe',
             filter = 'top',
             rownames = FALSE, 
