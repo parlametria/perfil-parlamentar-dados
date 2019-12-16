@@ -1,0 +1,61 @@
+---
+title: "Votos dos deputados na votação da PEC 6/2019"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+options(scipen = 999)
+
+votos_reforma_previdencia <- read_csv(here("reports/atuacao-deputados-milionarios/data/votos_pec_6_2019.csv"))
+```
+
+```{r}
+votos_por_partido <- votos_reforma_previdencia %>% 
+  count(sg_partido, voto)
+```
+
+
+```{r}
+lbls = as.character(c(seq(7, 0, -1), seq(1, 7, 1)))
+
+levels <- votos_por_partido %>%
+  filter(voto != "-") %>%
+  mutate(n = if_else(voto == "Sim", n, -n)) %>% 
+  arrange(n) %>% 
+  distinct(sg_partido) %>% 
+  pull(sg_partido)
+
+votos_por_partido %>%
+  arrange(n) %>% 
+  filter(voto != "-") %>% 
+  mutate(n = if_else(voto == "Sim", n, -n)) %>% 
+  ggplot(aes(x = factor(sg_partido, levels = levels), 
+             y = n, 
+             fill = voto)) + 
+  geom_bar(stat = "identity", width = .6) +
+  coord_flip() +
+  scale_fill_brewer(palette = "Dark2", direction = -1, labels = c("Não", "Sim")) +  
+  scale_y_continuous(breaks = seq(-7, 7, 1), labels = lbls) +
+  labs(y = "Nº de votos", x = "Partido", fill = "", 
+       title = "Votos dos deputados milionários por partido") +
+  theme_ipsum_rc() +
+  theme(legend.position="bottom")
+```
+
