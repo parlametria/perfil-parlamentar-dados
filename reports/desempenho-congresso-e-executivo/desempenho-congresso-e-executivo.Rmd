@@ -5,16 +5,42 @@ output:
     css: styles.css
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
-```{r}
-plot(cars)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+library(ggchicklet)
+```
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+```{r}
+path_report <- "reports/desempenho-congresso-e-executivo/"
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+parlamentares <- read_csv(here(paste0(path_report, "data/parlamentares.csv")), 
+                          col_types = cols(id = "c")) %>% 
+  rename(id_parlamentar = id) %>% 
+  filter(em_exercicio == 1)
+
+partidos_investimento_uf <- read_csv(here(paste0(path_report, "data/investimento_partidario.csv"))) %>% 
+  rename(total_partido_uf = valor, n_candidatos_uf = numero_candidatos)
+
+investimento <- read_csv(here(paste0(path_report, "data/investimento_partidario_parlamentar.csv")),
+                           col_types = cols(id_parlamentar = "c")) %>% 
+  left_join(partidos_investimento_uf, by = c("partido_eleicao" = "sg_partido", "uf", "casa" = "esfera"))
+```
+
+```{r}
+
+```
+
