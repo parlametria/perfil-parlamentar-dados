@@ -228,4 +228,3 @@ aderencia_parlamentares %>%
        title = "Aderência dos parlamentares ao Governo \n em proposições da Agenda Nacional") +
   theme_ipsum_rc()
 ```
-
