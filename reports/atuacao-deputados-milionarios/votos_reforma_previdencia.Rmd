@@ -1,5 +1,5 @@
 ---
-title: "Votos dos deputados na votação da PEC 6/2019"
+title: "Votos dos deputados milionários na votação da PEC 6/2019"
 output: 
   html_document:
     css: styles.css
@@ -21,18 +21,60 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(here)
 library(hrbrthemes)
+library(ggrepel)
+library(ggchicklet)
+library(reactable)
 options(scipen = 999)
 
 votos_reforma_previdencia <- read_csv(here("reports/atuacao-deputados-milionarios/data/votos_pec_6_2019.csv"))
 ```
+
+Para este relatório, foram considerados os votos de 36 deputados selecionados nesta [planilha](https://docs.google.com/spreadsheets/d/1C9qAgH7blB-PITp1W-TTDyyp3m76P8hKJWpUwPdGVmk/edit?usp=sharing) na votação do texto final da PEC 6/2019, conhecida como Reforma da Previdência, com resultados disponíveis neste [link](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=9002&numLegislatura=56&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=207&indTipoSessao=E&tipo=partido).
+
 
 ```{r}
 votos_por_partido <- votos_reforma_previdencia %>% 
   count(sg_partido, voto)
 ```
 
+### Visão geral dos votos
+```{r fig.height=4}
+levels <- votos_reforma_previdencia %>% 
+  mutate(voto = if_else(voto == "-", "Faltou", voto)) %>% 
+  count(voto) %>% 
+  pull(voto)
+  
 
-```{r}
+votos_reforma_previdencia %>% 
+  count(voto) %>% 
+  mutate(voto = if_else(voto == "-", "Faltou", voto)) %>% 
+  ggplot(aes(x = '', fill = fct_rev(factor(voto, levels = levels)), y = n)) +
+  geom_chicklet(width = .3, position = "stack", radius = grid::unit(4, "pt")) +
+  geom_text(aes(label = n),
+            size = 3.3,
+            color = "#726f6f",
+            vjust = 4.5,
+            hjust = 1,
+            position = "stack") +
+  scale_fill_brewer(palette = "Dark2", direction = -1, labels = c("Sim", "Não", "Faltou")) +
+  coord_flip() + 
+  scale_y_continuous(breaks = seq(0, 36, 4), limits = c(0, 36)) +
+  scale_fill_manual(values = c("#78A9A8","#FF9849", "#CCCCD1")) +
+  labs(y = "Nº de votos", x = "", fill = "", 
+       title = "Votos dos 36 deputados na PEC 6/2019") +
+  theme_ipsum_rc() + 
+  theme(legend.position = "bottom")
+  
+```
+
+
+Contabilizando os votos dos 36 deputados selecionados, resultamos em 1 voto faltoso, 8 votos contra e 27 a favor do texto final da proposição.
+
+### Votos por partido
+
+Abaixo veremos os dados de votos sumarizados dos deputados escolhidos e agrupados por partido, considerando apenas os votos 'Sim' ou 'Não'. O deputado que faltou a votação é do partido MDB.
+
+```{r fig.height = 6}
 lbls = as.character(c(seq(7, 0, -1), seq(1, 7, 1)))
 
 levels <- votos_por_partido %>%
@@ -51,11 +93,68 @@ votos_por_partido %>%
              fill = voto)) + 
   geom_bar(stat = "identity", width = .6) +
   coord_flip() +
-  scale_fill_brewer(palette = "Dark2", direction = -1, labels = c("Não", "Sim")) +  
+  scale_fill_manual(labels = c("Não", "Sim"), values = c("#FF9849", "#78A9A8")) +  
   scale_y_continuous(breaks = seq(-7, 7, 1), labels = lbls) +
   labs(y = "Nº de votos", x = "Partido", fill = "", 
-       title = "Votos dos deputados milionários por partido") +
+       title = "Votos por partido") +
   theme_ipsum_rc() +
   theme(legend.position="bottom")
 ```
+
+É possível notar que, dentre os partidos dos deputados escolhidos, o PSB e o PP tiveram filiados contrários e favoráveis ao texto da proposição. Os partidos de Oposição (PT, PCdoB, PDT) votaram contra e os demais partidos de Direita e Centrão votaram a favor da Reforma da Previdência. 
+
+### Votos dos deputados selecionados
+
+No gráfico e na tabela a seguir, podemos ver cada voto dos deputados da planilha:
+
+```{r}
+pos <- position_jitter(width = 0.5, seed = 1234)
+votos_reforma_previdencia %>% 
+  mutate(voto = if_else(voto == "-", "Faltou", voto),
+         nome_eleitoral = str_to_title(nome_eleitoral)) %>% 
+  ggplot(aes(x = voto, y = '')) +
+  geom_jitter(aes(color = voto), 
+              position = pos,
+              size = 2) +
+  geom_text_repel(
+    aes(label = nome_eleitoral),
+    segment.size  = 0.2,
+    segment.color = "grey50",
+    direction     = "y",
+    position = pos,
+    force = 3,
+    size = 3) +
+  scale_color_manual(values = c("#CCCCD1", "#FF9849", "#78A9A8")) +
+  scale_y_discrete(breaks = seq(0, 0, 0)) +
+  labs(y = "", x = "", fill = "", 
+       title = "Votos dos deputados") +
+  theme_ipsum_rc() +
+  theme(legend.position="none")
+
+```
+
+
+### Tabela de votos
+
+
+```{r fig.width=8}
+reactable(
+    votos_reforma_previdencia %>% 
+    mutate(voto = if_else(voto == '-', 'Faltou', voto),
+           nome_eleitoral = str_to_title(nome_eleitoral)),
+    pagination = TRUE, filterable = TRUE, searchable = TRUE, resizable = TRUE,
+    defaultSortOrder = "desc",
+    defaultColDef = colDef(headerClass = "header", align = "left"),
+    columns = list(
+      id = colDef(name = "Id", width = 150),
+      nome_eleitoral = colDef(name = "Nome eleitoral", width = 450),
+      sg_partido = colDef(name = "Partido", width = 100),
+      uf = colDef(name = "UF", width = 100),
+      voto = colDef(name = "Voto", width = 100)
+    ),
+    compact = TRUE,
+    class = "followers-tbl"
+  )
+```
+
 
