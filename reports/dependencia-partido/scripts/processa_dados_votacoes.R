@@ -8,7 +8,7 @@ processa_dados_votacoes <- function() {
   library(here)
   
   source(here("crawler/votacoes/utils_votacoes.R"))
-  source(here("crawler/votacoes/fetcher_votacoes.R"))
+  source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
   
   deputados <- read_csv(here("crawler/raw_data/parlamentares.csv"), col_types = cols(id = "c")) %>% 
     filter(casa == "camara") %>% 
