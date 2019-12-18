@@ -42,6 +42,7 @@ paleta <- c("#0072B2", "#E69F00", "#999999", "#009E73",
           "#D55E00", "#56B4E9", "#F0E442", "#CC79A7")
 
 aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
   count(sg_partido) %>% 
   ggplot(aes(x = reorder(sg_partido, n), y = n)) +
   geom_chicklet(width = .7, radius = grid::unit(4, "pt"),
@@ -75,10 +76,12 @@ A seguir vemos os parlamentares ordenados pela aderência
 
 ```{r fig.height=10}
 media_aderencia <- aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
   pull(aderencia) %>% 
   mean()
 
 aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
   ggplot(aes(x = reorder(nome, aderencia), y = aderencia)) +
   geom_chicklet(width = .6, radius = grid::unit(4, "pt"),
                 fill = "#E69F00") +
@@ -98,6 +101,8 @@ aderencia_parlamentares %>%
   theme_ipsum_rc()
 ```
 
+A média na visualização é a média de aderência desses parlamentares selecionados
+
 ### Como cada parlamentar seguiu a orientação do Governo?
 
 A seguir iremos analisar a quantidade de votações nas quais os parlamentares seguiram ou não a orientação do Governo. 
@@ -108,10 +113,12 @@ A visualização a seguir apresenta a distribuição das votações entre os par
 match_valido <- c("seguiu", "nao_seguiu")
 
 levels <- aderencia_parlamentares %>%
+  filter(selecionado) %>% 
   arrange(aderencia) %>% 
   pull(nome)
 
 aderencia_parlamentares %>%
+  filter(selecionado) %>% 
   arrange(desc(aderencia), desc(seguiu)) %>% 
   gather(key = "match", value = "n", faltou:seguiu) %>% 
   mutate(n = if_else(match == "nao_seguiu", -n, n)) %>% 
@@ -141,12 +148,14 @@ paleta <- c("#91bfda", "#CCCCCC", "#e06264", "#EDA16A")
 match_valores <- c("seguiu", "faltou", "nao_seguiu", "liberado")
 
 data_long <- aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
   filter(id != "74693") %>% ## remove rodrigo maia
   arrange(aderencia) %>% 
   gather("match", "n", faltou:seguiu) %>% 
   filter(match %in% match_valores)
   
 levels <- aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
   arrange(aderencia, desc(nao_seguiu)) %>% 
   pull(nome)
 
@@ -185,10 +194,11 @@ data_long %>%
 
 ## Dados
 
-Os dados de aderência usados nessa análise podem ser conferidos na tabela abaixo.
+Os dados de aderência para os parlamentares selecionados usados nessa análise podem ser conferidos na tabela abaixo.
 
 ```{r}
 aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
   mutate(aderencia = round(aderencia, 2)) %>% 
   select(id, nome, sg_partido, aderencia, seguiu, nao_seguiu, faltou, liberado) %>% 
   datatable(class = 'cell-border stripe',
@@ -206,10 +216,12 @@ PL 1292/1995, PEC 70/2011, PEC 2/2015, PLP 441/2017, PL 10431/2018, MPV 852/2018
 
 ```{r fig.height=10}
 media_aderencia <- aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
   pull(aderencia_temas_governo) %>% 
   mean()
 
 aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
   ggplot(aes(x = reorder(nome, aderencia_temas_governo), y = aderencia_temas_governo)) +
   geom_chicklet(width = .6, radius = grid::unit(4, "pt"),
                 fill = "#E69F00") +
@@ -228,3 +240,6 @@ aderencia_parlamentares %>%
        title = "Aderência dos parlamentares ao Governo \n em proposições da Agenda Nacional") +
   theme_ipsum_rc()
 ```
+
+A média na visualização é a média de aderência desses parlamentares selecionados
+
