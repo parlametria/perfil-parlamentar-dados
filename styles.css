@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
 
 body{
-  font-family: Roboto;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .twitter-followers {
