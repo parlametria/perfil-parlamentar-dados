@@ -281,6 +281,20 @@ aderencia_parlamentares %>%
 
 Na visualização é possível conhecer a posição do parlamentar no Ranking de Aderência ao Governo. A aderência ao governo do parlamentar está presente entre parênteses.
 
+```{r fig.height=6}
+aderencia_parlamentares %>% 
+  arrange(desc(aderencia), seguiu) %>% 
+  tibble::rowid_to_column(var = "rank") %>% 
+  filter(selecionado) %>% 
+  ggplot(aes(x = rank)) + 
+  geom_histogram(binwidth = 50, boundary = 0, fill = "white", color = "salmon") +
+  scale_y_continuous(breaks = seq(0, 10, 1)) +
+  labs(x = "Posição no ranking",
+       y = "Número de parlamentares",
+       title = "Distribuição do ranking dos parlamentares da lista") +
+  theme_ipsum_rc()
+```
+
 ### Aderência por partido
 
 A seguir visualizaremos a posição da aderência dos parlamentares comparados com os demais membros do partido.
@@ -366,6 +380,57 @@ aderencia_parlamentares %>%
 ```
 
 Os pontos amarelos que estão depois da marca | preta indicam os parlamentares que possuem maior aderência ao Governo do que a média dos parlamentares de seu partido.
+
+A seguir outra alternativa de visualização para comparação da aderência ao governo dos parlamentares com a média de seu partido.
+
+Na visualização existem duas barras: **a barra amarela é a aderência do parlamentar ao Governo** enquanto que a 
+**barra azul indica a média do partido**. Quando as duas barras se sobrepõem o resultado é a cor cinza. 
+
+Quando o parlamentar possui uma maior aderência ao governo do que a média do partido a cor amarela é cor execedente na visualização. Se a aderência do parlamentar é menor que a média do partido a barra azul será maior que a amarela.
+
+A diferença entre a aderência do parlamentar e a média do partido é dada pela diferença entre a barra cinza (menor valor) e a barra que se sobrepõe (maior valor).
+
+Paulo Eduardo Martins (PSC/PR) possui maior aderência ao governo do que a média de seu partido (barra amarela se destaca). Enquanto que Fernando Monteiro (PP/PE) possui uma aderência ao governo menor que a média de seu partido (barra azul se destaca).
+
+```{r fig.height=10}
+id_parlamentares_selecionados <- aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  pull(id)
+
+data <- aderencia_parlamentares %>% 
+  group_by(sg_partido) %>% 
+  mutate(media_partido = mean(aderencia)) %>% 
+  ungroup() %>% 
+  filter(id %in% id_parlamentares_selecionados) %>% 
+  select(nome, aderencia, media_partido) %>% 
+  gather(key = "key", value = "value", aderencia:media_partido)
+
+ggplot(data = data %>% 
+         filter(key != "media_partido"),
+       aes(
+         x = reorder(nome, value),
+         y = value,
+         fill = key
+       )) +
+  geom_col(fill = "#FFD046",
+           alpha = .5,
+           width = 0.5) +
+  geom_col(
+    data = filter(data, key == "media_partido"),
+    fill = "#6699CC",
+    alpha = .5,
+    width = 0.5
+  ) +
+    
+  scale_x_discrete(position = "left") +
+  scale_y_continuous(breaks = seq(0, 100, 10)) +
+  coord_flip() +
+  labs(title = "Aderência dos parlamentares ao Governo \ncomparados com a média do partido",
+       x = "",
+       y = "Aderência ao Governo (%)") +
+  guides(fill = F) +
+  theme_ipsum_rc()
+```
 
 ## Dados
 
