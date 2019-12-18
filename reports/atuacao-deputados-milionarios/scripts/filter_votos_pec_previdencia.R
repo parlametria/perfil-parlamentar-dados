@@ -8,7 +8,8 @@
 #' votos_pec_6_2019 <- filter_votos_pec_6_2019()
 filter_votos_pec_6_2019 <- function(
   url_planilha_deputados_selecionados = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShw-2Or9QH4WzRagrBxvWC9eqBRCiYaKkgV7YUlExxb8spHNW6k-VCeDmnv1peK7caIVdyBuW6V_kG/pub?gid=0&single=true&output=csv",
-  parlamentares_datapath = here::here("reports/atuacao-deputados-milionarios/data/parlamentares.csv")) {
+  parlamentares_datapath = here::here("reports/atuacao-deputados-milionarios/data/parlamentares.csv"),
+  filtrar = TRUE) {
   library(tidyverse)
   library(here)
   
@@ -26,13 +27,20 @@ filter_votos_pec_6_2019 <- function(
   
   votos <- fetch_votos_por_ano_camara(proposicao, ano = 2019) 
   
-  votos_filtrados <- votos %>% 
-    filter(id_deputado %in% deputados_selecionados, id_votacao == votacao)
+  if(filtrar) {
+    votos <- votos %>% 
+      filter(id_deputado %in% deputados_selecionados)
+  }
   
-  votos_deputados <- votos_filtrados %>% 
+  votos <- votos %>% 
+    filter(id_votacao == votacao)
+  
+  votos_deputados <- votos %>% 
     inner_join(parlamentares, by = c("id_deputado"="id")) %>% 
-    select(id = id_deputado, nome_eleitoral, sg_partido, uf, voto) %>% 
-    nomeia_voto_camara()
+    mutate(id_proposicao = proposicao,
+           ano = 2019,
+           casa = "camara") %>% 
+    select(ano, id_proposicao, id_votacao, id_parlamentar = id_deputado, voto, partido = sg_partido, casa)
   
   return(votos_deputados)
 }

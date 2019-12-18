@@ -26,7 +26,35 @@ library(ggchicklet)
 library(reactable)
 options(scipen = 999)
 
+source(here("crawler/votacoes/aderencia/processa_dados_aderencia.R"))
+source(here("reports/dependencia-partido/scripts/processa_dados_votacoes.R"))
+
 votos_reforma_previdencia <- read_csv(here("reports/atuacao-deputados-milionarios/data/votos_pec_6_2019.csv"))
+
+votos <- read_csv(here("reports/atuacao-deputados-milionarios/data/todos_votos_pec_6_2019.csv"),
+                                      col_types = cols(.default = "c")) %>% 
+  select(-c(casa, ano))
+deputados <- read_csv(here("reports/atuacao-deputados-milionarios/data/parlamentares.csv"), 
+                      col_types = cols(.default = "c")) %>% 
+  filter(em_exercicio == 1, casa == "camara")
+orientacao <- read_csv(here("reports/atuacao-deputados-milionarios/data/orientacoes_pec_6_2019.csv"),
+                                           col_types = cols(.default = "c")) %>% 
+  filter(id_votacao == 168870012) %>% 
+  select(-c(casa, ano)) %>% 
+  mutate(partido = if_else(partido == "PRB", "REPUBLICANOS", partido))
+```
+
+
+```{r}
+dados_aderencia <- processa_dados_deputado_aderencia(votos, orientacao, deputados, filtrar = FALSE)
+
+deputados_votos_match <- dados_aderencia[[1]]
+deputados_summary_freq_wide <- dados_aderencia[[2]] %>% select(-freq)
+
+deputados_selecionados <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vShw-2Or9QH4WzRagrBxvWC9eqBRCiYaKkgV7YUlExxb8spHNW6k-VCeDmnv1peK7caIVdyBuW6V_kG/pub?gid=0&single=true&output=csv", col_types = cols(.default = "c")) %>% 
+  distinct(id)
+
+minimo_membros_partido <- 5
 ```
 
 Para este relatório, foram considerados os votos de 36 deputados selecionados nesta [planilha](https://docs.google.com/spreadsheets/d/1C9qAgH7blB-PITp1W-TTDyyp3m76P8hKJWpUwPdGVmk/edit?usp=sharing) na votação do texto final da PEC 6/2019, conhecida como Reforma da Previdência, com resultados disponíveis neste [link](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=9002&numLegislatura=56&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=207&indTipoSessao=E&tipo=partido).
@@ -34,20 +62,21 @@ Para este relatório, foram considerados os votos de 36 deputados selecionados n
 
 ```{r}
 votos_por_partido <- votos_reforma_previdencia %>% 
+  # filter(id_parlamentar %in% deputados_selecionados$id) %>% 
   count(sg_partido, voto)
 ```
 
 ### Visão geral dos votos
 ```{r fig.height=4}
-levels <- votos_reforma_previdencia %>% 
-  mutate(voto = if_else(voto == "-", "Faltou", voto)) %>% 
-  count(voto) %>% 
+levels <- votos_reforma_previdencia %>%
+  mutate(voto = if_else(voto == "-", "Faltou", voto)) %>%
+  count(voto) %>%
   pull(voto)
-  
 
-votos_reforma_previdencia %>% 
-  count(voto) %>% 
-  mutate(voto = if_else(voto == "-", "Faltou", voto)) %>% 
+
+votos_reforma_previdencia %>%
+  count(voto) %>%
+  mutate(voto = if_else(voto == "-", "Faltou", voto)) %>%
   ggplot(aes(x = '', fill = fct_rev(factor(voto, levels = levels)), y = n)) +
   geom_chicklet(width = .3, position = "stack", radius = grid::unit(4, "pt")) +
   geom_text(aes(label = n),
@@ -57,17 +86,15 @@ votos_reforma_previdencia %>%
             hjust = 1,
             position = "stack") +
   scale_fill_brewer(palette = "Dark2", direction = -1, labels = c("Sim", "Não", "Faltou")) +
-  coord_flip() + 
+  coord_flip() +
   scale_y_continuous(breaks = seq(0, 36, 4), limits = c(0, 36)) +
   scale_fill_manual(values = c("#78A9A8","#FF9849", "#CCCCD1")) +
-  labs(y = "Nº de votos", x = "", fill = "", 
-       title = "Votos dos 36 deputados na PEC 6/2019") +
-  theme_ipsum_rc() + 
-  theme(legend.position = "bottom")
-  
+  labs(y = "Nº de votos", x = "", fill = "",
+        title = "Votos dos 36 deputados na PEC 6/2019") +
+   theme_ipsum_rc() +
+   theme(legend.position = "bottom")
+
 ```
-
-
 Contabilizando os votos dos 36 deputados selecionados, resultamos em 1 voto faltoso, 8 votos contra e 27 a favor do texto final da proposição.
 
 ### Votos por partido
@@ -103,43 +130,72 @@ votos_por_partido %>%
 
 É possível notar que, dentre os partidos dos deputados escolhidos, o PSB e o PP tiveram filiados contrários e favoráveis ao texto da proposição. Os partidos de Oposição (PT, PCdoB, PDT) votaram contra e os demais partidos de Direita e Centrão votaram a favor da Reforma da Previdência. 
 
-### Votos dos deputados selecionados
-
-No gráfico e na tabela a seguir, podemos ver cada voto dos deputados da planilha:
-
 ```{r}
-pos <- position_jitter(width = 0.5, seed = 1234)
-votos_reforma_previdencia %>% 
-  mutate(voto = if_else(voto == "-", "Faltou", voto),
-         nome_eleitoral = str_to_title(nome_eleitoral)) %>% 
-  ggplot(aes(x = voto, y = '')) +
-  geom_jitter(aes(color = voto), 
-              position = pos,
-              size = 2) +
-  geom_text_repel(
-    aes(label = nome_eleitoral),
-    segment.size  = 0.2,
-    segment.color = "grey50",
-    direction     = "y",
-    position = pos,
-    force = 3,
-    size = 3) +
-  scale_color_manual(values = c("#CCCCD1", "#FF9849", "#78A9A8")) +
-  scale_y_discrete(breaks = seq(0, 0, 0)) +
-  labs(y = "", x = "", fill = "", 
-       title = "Votos dos deputados") +
-  theme_ipsum_rc() +
-  theme(legend.position="none")
+paleta <- c("#91bfda", "#CCCCCC", "#e06264", "#EDA16A")
+match_valores <- c("seguiu", "faltou", "nao_seguiu", "liberado")
 
+votos_partido <-  deputados_summary_freq_wide %>% 
+  filter(id != "74693") %>% ## remove rodrigo maia
+  group_by(partido) %>% 
+  summarise(seguiu = sum(seguiu),
+            nao_seguiu = sum(nao_seguiu),
+            faltou = sum(faltou),
+            liberado = sum(partido_liberou)) 
+
+data_long <- votos_partido %>% 
+  arrange(seguiu) %>% 
+  gather(seguiu, nao_seguiu, faltou, liberado, key = "match", value = "n") %>% 
+  filter(match %in% match_valores)
+  
+levels <- votos_partido %>% 
+  arrange(desc(seguiu), nao_seguiu, desc(liberado)) %>% 
+  pull(partido)
+
+data_long %>% 
+  mutate(match = factor(match, 
+                        levels = c("faltou",
+                                   "liberado",
+                                   "nao_seguiu",
+                                   "seguiu"),
+                        ordered = TRUE)) %>% 
+  filter(n > 0) %>% 
+  ggplot(aes(x = (forcats::fct_rev(factor(partido, levels = levels))), y = n, fill = match)) +
+  geom_bar(width = .7, stat = "identity", position = "stack") +
+  geom_text(aes(label = n),
+            hjust = 1.3,
+            position = "stack"
+            ) +
+  coord_flip() +
+  scale_fill_manual(values = c("liberado" = paleta[4],
+                               "faltou" = paleta[2], 
+                               "nao_seguiu" = paleta[3],
+                               "seguiu" = paleta[1]),
+                    name = "", labels = c("Faltou",
+                                          "Liberado",
+                                          "Não seguiu",
+                                          "Seguiu")) +
+  labs(x = "", 
+       y = "Número de deputados", 
+       title = "Aderência às orientações dos partidos",
+       subtitle = "na PEC 6/2019") + 
+  annotate("rect", xmin = 2.5, xmax = 6.5, ymin = 24, ymax = 56, alpha = .2) + 
+  annotate("text", 
+           label = "Os deputados Felipe Rigoni (PSB/ES) e Fernando Monteiro (PP/PE)\nforam contrários às orientações de seus partidos.\nSergio Souza (PR) foi um dos faltosos do MDB.",
+           x = 4.5, y = 40, size = 3.2) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme_ipsum_rc() +
+  theme(legend.position = "top",
+        plot.subtitle = element_text(size = 12))
 ```
 
 
 ### Tabela de votos
 
+Na tabela a seguir, é possível ver os votos dos deputados selecionados para a votação da PEC 6/2019.
 
 ```{r fig.width=8}
 reactable(
-    votos_reforma_previdencia %>% 
+    votos_reforma_previdencia %>%   
     mutate(voto = if_else(voto == '-', 'Faltou', voto),
            nome_eleitoral = str_to_title(nome_eleitoral)),
     pagination = TRUE, filterable = TRUE, searchable = TRUE, resizable = TRUE,
