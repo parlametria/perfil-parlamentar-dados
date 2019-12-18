@@ -37,7 +37,7 @@ votos <- read_csv(here("reports/atuacao-deputados-milionarios/data/todos_votos_p
 deputados <- read_csv(here("reports/atuacao-deputados-milionarios/data/parlamentares.csv"), 
                       col_types = cols(.default = "c")) %>% 
   filter(em_exercicio == 1, casa == "camara")
-orientacao <- read_csv(here("reports/atuacao-deputados-milionarios/data/orientacoes.csv"),
+orientacao <- read_csv(here("reports/atuacao-deputados-milionarios/data/orientacoes_pec_6_2019.csv"),
                                            col_types = cols(.default = "c")) %>% 
   filter(id_votacao == 168870012) %>% 
   select(-c(casa, ano)) %>% 
