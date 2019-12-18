@@ -252,6 +252,7 @@ A visualização abaixo mostra a posição dos parlamentares selecionados com re
 
 ```{r fig.height=12}
 levels <- aderencia_parlamentares %>%
+  filter(selecionado) %>% 
   arrange(desc(aderencia), seguiu) %>% 
   pull(nome)
 
@@ -260,12 +261,12 @@ aderencia_parlamentares %>%
   tibble::rowid_to_column(var = "rank") %>% 
   filter(selecionado) %>% 
   ggplot(aes(x = forcats::fct_rev(factor(nome, levels = levels)), y = rank)) + 
-  geom_point(col="tomato3", size = 3) + 
-  geom_segment(aes(x = nome, 
-                   xend = nome, 
+  geom_segment(aes(x = forcats::fct_rev(factor(nome, levels = levels)), 
+                   xend = forcats::fct_rev(factor(nome, levels = levels)), 
                    y = 0, 
                    yend = rank), 
                size = 0.1) +
+  geom_point(col="#E69F00", size = 3) + 
   coord_flip() +
   geom_text(aes(label = paste0(rank, "º (", round(aderencia, 1), "%)")),
             hjust = -0.1,
