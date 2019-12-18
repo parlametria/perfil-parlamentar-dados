@@ -281,6 +281,92 @@ aderencia_parlamentares %>%
 
 Na visualização é possível conhecer a posição do parlamentar no Ranking de Aderência ao Governo. A aderência ao governo do parlamentar está presente entre parênteses.
 
+### Aderência por partido
+
+A seguir visualizaremos a posição da aderência dos parlamentares comparados com os demais membros do partido.
+
+Cada marca | na visualização é um parlamentar, os parlamentares em preto são aqueles selecionados por terem recebido doação de grandes doadores. As cores verde e roxo apenas ajudam a diferenciar os partidos entre si. A ordem dos partidos é definida daqueles com maiores médias de aderência para aqueles com menores médias.
+
+```{r fig.height=6}
+cores_grafico <- c("#af8dc3", "#42a38f")
+
+lista_partidos <- aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  count(sg_partido) %>% 
+  pull(sg_partido)
+
+levels <- aderencia_parlamentares %>%
+  group_by(sg_partido) %>% 
+  summarise(mean = mean(aderencia)) %>% 
+  ungroup() %>% 
+  arrange(desc(mean)) %>%
+  pull(sg_partido)
+
+aderencia_parlamentares %>%
+  filter(sg_partido %in% lista_partidos) %>%
+  ggplot(aes(x = aderencia,
+             y = forcats::fct_rev(factor(sg_partido, levels = levels)),
+             color = forcats::fct_rev(factor(sg_partido, levels = levels)),
+             fill = forcats::fct_rev(factor(sg_partido, levels = levels)))) +
+  geom_point(shape = 124, size = 5) +
+  scale_shape_identity() +
+  scale_color_manual(values = rep(cores_grafico, 15)) +
+  scale_fill_manual(values = rep(cores_grafico, 15)) +
+  scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, 10)) +
+  geom_point(data = aderencia_parlamentares %>% filter(selecionado),
+             aes(x = aderencia), size = 6.5, color = "#111111", shape = 124) +
+  
+  geom_point(aes(x = 10, y = 12.5), size = 6.5, color = "#111111", shape = 124) +
+  annotate("text", label = "deputados selecionados", x = 23, y = 12.5, color = "#4b4545") +
+
+  guides(size = F, color = F, fill = F) +
+  labs(title = "Aderência ao Governo de parlamentares por partido",
+       x = "Aderência ao Governo (%)",
+       y = "") +
+  theme_ipsum_rc() +
+      theme(axis.title.x = element_text(size = 10, font_rc_light))
+```
+
+Agora iremos comparar cada um desses deputados selecionados com a média de aderência de seus partidos
+
+```{r}
+media_partidos <- aderencia_parlamentares %>%
+  group_by(sg_partido) %>% 
+  summarise(mean = mean(aderencia)) %>% 
+  ungroup() %>% 
+  arrange(desc(mean))
+
+levels <- aderencia_parlamentares %>%
+  filter(selecionado) %>% 
+  arrange(desc(aderencia), seguiu) %>% 
+  pull(nome)
+
+aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  left_join(media_partidos, by = c("sg_partido")) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = levels)), y = aderencia)) + 
+  geom_segment(aes(x = forcats::fct_rev(factor(nome, levels = levels)), 
+                   xend = forcats::fct_rev(factor(nome, levels = levels)), 
+                   y = 0, 
+                   yend = aderencia), 
+               size = 0.1) +
+  geom_point(col="#E69F00", size = 3) + 
+  geom_point(aes(y = mean), size = 6.5, color = "#111111", shape = 124) +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 110), breaks = seq(0, 100, 20)) +
+  
+  geom_point(aes(x = 3.5, y = 70), size = 5, color = "#111111", shape = 124) +
+  annotate("text", label = "média do partido", x = 3.5, y = 82, color = "#4b4545") +
+
+  
+  labs(x = "",
+       y = "Aderência ao Governo (%)",
+       title = "Aderência dos parlamentares ao Governo \ncomparados com a média do partido") +
+  theme_ipsum_rc()
+```
+
+Os pontos amarelos que estão depois da marca | preta indicam os parlamentares que possuem maior aderência ao Governo do que a média dos parlamentares de seu partido.
+
 ## Dados
 
 Os dados de aderência para os todos os parlamentares usados nessa análise podem ser conferidos na tabela abaixo.
