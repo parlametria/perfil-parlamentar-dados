@@ -1,0 +1,197 @@
+---
+title: "Efetividade do Senado em 2019"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(ggchicklet)
+library(hrbrthemes)
+library(lemon)
+
+proposicoes_votadas <- read_csv(here("reports/efetividade-senado/data/proposicoes_votadas_senado.csv"), col_types = cols(.default = "c")) %>% 
+  distinct()
+
+votacoes <- read_csv(here("reports/efetividade-senado/data/votacoes_senado.csv"), col_types = cols(.default = "c"))
+
+votacoes <- votacoes %>% 
+  left_join(proposicoes_votadas %>% 
+              select(-uri_tramitacao),
+            by = c("id_proposicao"="id"))
+```
+
+
+## Votações secretas e abertas
+
+No Senado, as votações podem ser abertas, com os votos explícitos dos senadores; ou secretas, quando há somente a informação de quem estava ou não presente. Essas votações secretas geralmente são feitas para apreciação de mensagens de indicação de autoridades, vetos presidenciais e cassação de parlamentares.
+
+Abaixo, fizemos um levantamento de como estão distribuídos estes tipos de votações nos anos das primeiras legislaturas: 1999, 2003, 2007, 2011, 2015 e 2019.
+
+```{r}
+levels <- votacoes %>% 
+  count(ano, votacao_secreta) %>%  
+  distinct(ano) %>% 
+  arrange(ano) %>% 
+  pull(ano)
+
+
+votacoes %>% 
+  count(ano, votacao_secreta) %>%
+  arrange(ano) %>% 
+  mutate(tipo_votacao = if_else(votacao_secreta == "1", "Secreta", "Aberta")) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(ano, levels)), fill = factor(tipo_votacao, c("Aberta", "Secreta")), y = n)) + 
+  geom_chicklet(width = .3, position = "stack", radius = grid::unit(4, "pt")) +
+  geom_text(aes(label = n),
+            size = 3.3,
+            color = "#726f6f",
+            vjust = 4.5,
+            hjust = 1,
+            position = "stack") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 200, 50), limits = c(0, 200)) +
+  scale_fill_manual(values = c('#ef8a62', '#67a9cf'), labels = c("Aberta", "Secreta")) +
+  labs(y = "Nº de votações", x = "", fill = "",
+        title = "Votações secretas e abertas no Senado",
+       subtitle = "Nos primeiros anos de legislaturas") +
+   theme_ipsum_rc() +
+   theme(legend.position = "bottom")
+```
+
+
+Podemos ver que em 1999 e 2019, primeiros anos de legislatura onde o governo é de direita, o número de votações em si é menor quando comparado aos anos onde o governo era de esquerda. 
+
+### Os temas mais votados
+
+As proposições com tema 'Não especificado' não foram consideradas. Os temas mais votados no decorrer nos primeiros anos de legislaturas são:
+
+
+```{r}
+temas <- votacoes %>% 
+  filter(votacao_secreta == 0) %>% 
+  count(ano, tema) %>% 
+  count(tema) %>% 
+  filter(n >= 5, tema != "Nao especificado") %>% 
+  distinct(tema) %>% 
+  pull(tema)
+
+levels <- votacoes %>% 
+  filter(tema %in% temas)  %>% 
+  count(tema, ano) %>% 
+  count(tema) %>% 
+  arrange(desc(n)) %>% 
+  pull(tema)
+
+temas_votacoes <- votacoes %>% 
+  filter(tema %in% temas) %>% 
+  count(ano, tema) %>% 
+  spread(tema, n, fill = 0) %>%
+  gather(`Administração pública: órgãos públicos`, 
+         `Direito eleitoral e partidos políticos`, 
+         `Organização político-administrativa do Estado`,
+         `Planejamento e orçamento`,
+         `Política econômica e sistema financeiro`,
+         `Previdência social`,
+         `Tributação`,
+         key = "tema", value = "n")
+
+temas_votacoes %>% 
+  ggplot(aes(
+         x = reorder(tema, n),
+         y = n
+       )) +
+  geom_col(
+    fill = "#ef8a62",
+    alpha = .5,
+    width = 0.3
+  ) +
+  facet_rep_wrap(~ ano,
+             ncol = 3,
+             scales = "free_y",
+             repeat.tick.labels = c("bottom", "right")) +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 30, 5), limits=c(0, 30)) +
+  labs(title = "Temas mais votados no Senado",
+       x = "",
+       y = "Número de proposições votadas") +
+  guides(fill = F) +
+  theme_ipsum_rc() +
+  theme(axis.title.x = element_text(hjust = 0))
+```
+
+Observando o gráfico acima, percebemos que em 1999, no Governo FHC, os temas das proposições mais votados no Senado foram: Organização político-administrativa do Estado, Administração pública: órgãos públicos e Direito eleitoral e partidos políticos.
+
+Nos governos Lula e Dilma, em 2003, 2007, 2011 e 2015, Tributação foi o tema mais votado; Administração pública: órgãos públicos foi o segundo tema mais votado no governo Lula; Para o governo Dilma, o Política econômica e sistema financeiro ocupa o 2º lugar no primeiro mandato e Direito eleitoral e partidos políticos no segundo.
+
+Em 2019, o tema mais votado foi Previdência social, totalizando 17 votações: 11 foram relacionadas à [PEC 6/2019](https://www25.senado.leg.br/web/atividade/materias/-/materia/137999), 5 sobre a [PEC 133/2019](https://www25.senado.leg.br/web/atividade/materias/-/materia/138555) e uma sobre a [MPV 871/2019](https://www25.senado.leg.br/web/atividade/materias/-/materia/135079).
+
+<!-- ```{r} -->
+<!-- votacoes %>%  -->
+<!--   mutate(tipo_proposicao = str_remove(nome, "[:space:].*")) %>%  -->
+<!--   count(ano, tipo_proposicao) %>%  -->
+<!--   count(tipo_proposicao) %>%  -->
+<!--   View() -->
+
+
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- proposicoes <- votacoes %>%  -->
+<!--   mutate(tipo_proposicao = str_remove(nome, "[:space:].*")) %>%  -->
+<!--   count(ano, tipo_proposicao) %>%  -->
+<!--   count(tipo_proposicao) %>%  -->
+<!--   filter(n > 5) %>%  -->
+<!--   pull(tipo_proposicao) -->
+
+
+<!-- levels <- votacoes %>%  -->
+<!--   mutate(tipo_proposicao = str_remove(nome, "[:space:].*")) %>%  -->
+<!--   filter(tipo_proposicao %in% proposicoes)  %>%  -->
+<!--   count(tipo_proposicao, ano) %>%  -->
+<!--   count(tipo_proposicao) %>%  -->
+<!--   arrange(desc(n)) %>%  -->
+<!--   pull(tipo_proposicao) -->
+
+
+<!-- votacoes %>%  -->
+<!--   mutate(tipo_proposicao = str_remove(nome, "[:space:].*")) %>%  -->
+<!--   filter(tipo_proposicao %in% proposicoes)  %>%  -->
+<!--   count(tipo_proposicao, ano) %>%  -->
+<!--   ggplot(aes( -->
+<!--          x = reorder(tipo_proposicao, n), -->
+<!--          y = n -->
+<!--        )) + -->
+<!--   geom_col( -->
+<!--     fill = "#ef8a62", -->
+<!--     alpha = .5, -->
+<!--     width = 0.3 -->
+<!--   ) + -->
+<!--   facet_rep_wrap(~ ano, -->
+<!--              ncol = 3, -->
+<!--              scales = "free_y", -->
+<!--              repeat.tick.labels = c("bottom", "right")) + -->
+<!--   coord_flip() + -->
+<!--   scale_y_continuous(breaks = seq(0, 100, 20), limits=c(0, 100)) + -->
+<!--   labs(title = "Temas de proposições mais votados ", -->
+<!--        x = "", -->
+<!--        y = "Número de proposições votadas") + -->
+<!--   guides(fill = F) + -->
+<!--   theme_ipsum_rc() + -->
+<!--   theme(axis.title.x = element_text(hjust = 0)) -->
+
+<!-- ``` -->
