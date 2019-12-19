@@ -49,11 +49,12 @@ calcula_aderencia_parlamentares_milionarios <- function(
   aderencia_governo_summary <- dados_aderencia_governo[[2]]
   
   parlamentares_lista <- parlamentares %>% 
-    filter(id %in% parlamentares_ids) %>% 
+    mutate(selecionado = id %in% parlamentares_ids) %>% 
+    filter(em_exercicio == 1, casa == "camara") %>% 
     
     left_join(aderencia_governo_summary, by = c("id")) %>% 
     select(id, casa, nome_eleitoral, uf, sg_partido, faltou, liberado = partido_liberou, 
-           nao_seguiu, seguiu, total_votacoes, aderencia = freq)
+           nao_seguiu, seguiu, total_votacoes, aderencia = freq, selecionado)
 
   return(parlamentares_lista)  
 }
