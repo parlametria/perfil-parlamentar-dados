@@ -36,7 +36,7 @@ votacoes <- votacoes %>%
 ```
 
 
-## Votações secretas e abertas
+### Votações secretas e abertas
 
 No Senado, as votações podem ser abertas, com os votos explícitos dos senadores; ou secretas, quando há somente a informação de quem estava ou não presente. Essas votações secretas geralmente são feitas para apreciação de mensagens de indicação de autoridades, vetos presidenciais e cassação de parlamentares.
 
@@ -138,6 +138,19 @@ Observando o gráfico acima, percebemos que em 1999, no Governo FHC, os temas da
 Nos governos Lula e Dilma, em 2003, 2007, 2011 e 2015, Tributação foi o tema mais votado; Administração pública: órgãos públicos foi o segundo tema mais votado no governo Lula; Para o governo Dilma, o Política econômica e sistema financeiro ocupa o 2º lugar no primeiro mandato e Direito eleitoral e partidos políticos no segundo.
 
 Em 2019, o tema mais votado foi Previdência social, totalizando 17 votações: 11 foram relacionadas à [PEC 6/2019](https://www25.senado.leg.br/web/atividade/materias/-/materia/137999), 5 sobre a [PEC 133/2019](https://www25.senado.leg.br/web/atividade/materias/-/materia/138555) e uma sobre a [MPV 871/2019](https://www25.senado.leg.br/web/atividade/materias/-/materia/135079).
+
+### Tabela de votações
+
+```{r}
+DT::datatable(votacoes %>% 
+                select(
+                  ano,
+                  nome,
+                  tema,
+                  data_votacao = datetime,
+                  votacao_secreta,
+                  objeto_votacao))
+```
 
 <!-- ```{r} -->
 <!-- votacoes %>%  -->
