@@ -14,7 +14,8 @@ enumera_voto <- function(df) {
         str_detect(voto, "Abstenção") ~ 3,
         str_detect(voto, "Art. 17|art. 51 RISF") ~ 4,
         str_detect(voto, "Liberado") ~ 5,
-        #TODO: Tratar caso P-NRV: Presente mas não registrou foto
+        str_detect(voto, "P-NRV|MIS") ~ 6,
+        str_detect(voto, "Votou") ~ 7, ## casos de presentes em votações secretas
         TRUE ~ 0
       )
     )
@@ -40,6 +41,7 @@ padroniza_sigla <- function(sigla) {
     str_detect(sigla, "PODE.*") ~ "PODEMOS",
     str_detect(sigla, "GOV.") ~ "GOVERNO",
     str_detect(sigla, "PHS.*") ~ "PHS",
+    str_detect(sigla, "PRB") ~ "REPUBLICANOS",
     TRUE ~ sigla
   ) %>%
     stringr::str_replace("REPR.", "") %>% 

@@ -1,8 +1,8 @@
 ---
-title: " Desempenho do Congresso e Executivo"
+title: "Desempenho do Congresso e Executivo"
 output: 
   html_document:
-    css: styles.css
+    css: styles-parlametria.css
 ---
 
 ```{r setup, include=FALSE}
@@ -22,7 +22,17 @@ library(tidyverse)
 library(here)
 library(hrbrthemes)
 library(ggchicklet)
+library(hrbrthemes)
+theme_set(theme_minimal())
+
+source(here("crawler/votacoes/utils_votacoes.R"))
 ```
+
+## *Resumo*
+
+*Atualizado em 19 de Dezembro*
+
+Este relatório tem o objetivo de analisar o Congresso Nacional sob a perspectiva de duas variáveis sobre os parlamentares. A primeira delas é o quanto o partido investiu no parlamentar durante a campanha de 2018 comparado com o investimento em candidatos da mesma Unidade Federativa. A segunda variável é a assiduidade em votações nominais em plenário durante o primeiro ano de mandato. 
 
 ```{r}
 path_report <- "reports/desempenho-congresso-e-executivo/"
@@ -33,14 +43,286 @@ parlamentares <- read_csv(here(paste0(path_report, "data/parlamentares.csv")),
   filter(em_exercicio == 1)
 
 partidos_investimento_uf <- read_csv(here(paste0(path_report, "data/investimento_partidario.csv"))) %>% 
-  rename(total_partido_uf = valor, n_candidatos_uf = numero_candidatos)
+  rename(total_partido_uf = valor, n_candidatos_uf = numero_candidatos) %>% 
+  mutate(sg_partido = padroniza_sigla(sg_partido))
 
 investimento <- read_csv(here(paste0(path_report, "data/investimento_partidario_parlamentar.csv")),
                            col_types = cols(id_parlamentar = "c")) %>% 
-  left_join(partidos_investimento_uf, by = c("partido_eleicao" = "sg_partido", "uf", "casa" = "esfera"))
+  mutate(partido_eleicao = padroniza_sigla(partido_eleicao),
+         partido_atual = padroniza_sigla(partido_atual)) %>% 
+  left_join(partidos_investimento_uf, by = c("partido_eleicao" = "sg_partido", "uf", "casa" = "esfera")) %>% 
+  mutate(proporcao_investimento_uf = total_receita_partido / total_partido_uf)
 ```
 
 ```{r}
+parlamentares_alt <- parlamentares %>%
+  left_join(investimento, by = c("id_parlamentar", "casa")) %>% 
+  select(id_parlamentar, casa, nome_eleitoral = nome_eleitoral.x, uf = uf.x, partido_atual, 
+         partido_eleicao, total_receita_partido, total_receita_candidato, total_partido_uf, 
+         proporcao_investimento_uf) %>% 
+  filter(!is.na(total_receita_candidato)) %>% # filtra fora parlamentares que não participaram das eleições
+  mutate(total_partido_uf = ifelse(is.na(total_partido_uf), 0, total_partido_uf)) %>% 
+  mutate(proporcao_investimento_uf = ifelse(is.na(proporcao_investimento_uf), 0, proporcao_investimento_uf))
+```
 
+```{r}
+votos_camara <- read_csv(here(paste0(path_report, "data/votos_camara_2019.csv")),
+                         col_types = cols(.default = "c", voto = "i")) %>% 
+  mutate(casa = "camara") %>% 
+  select(id_proposicao, id_votacao, id_parlamentar = id_deputado, casa, voto, partido)
+
+votos_senado <- read_csv(here(paste0(path_report, "data/votos_senado_2019.csv")),
+                         col_types = cols(.default = "c", voto = "i")) %>% 
+  select(id_proposicao, id_votacao, id_parlamentar, casa, voto, partido)
+
+votos <- votos_camara %>% 
+  rbind(votos_senado) %>% 
+  filter(!is.na(id_parlamentar))
+```
+
+```{r}
+parlamentares_votos <- votos %>% 
+  group_by(id_parlamentar, casa, voto) %>% 
+  summarise(n_votacoes = n_distinct(id_votacao)) %>% 
+  ungroup() %>% 
+  mutate(presente = if_else(voto == 0, 0, 1)) %>% 
+  group_by(id_parlamentar, casa, presente) %>% 
+  summarise(n_votacoes = sum(n_votacoes)) %>% 
+  ungroup() %>% 
+  spread(key = presente, value = n_votacoes) %>% 
+  rename(faltou = `0`, presente = `1`)
+
+parlamentares_merge <- parlamentares_alt %>% 
+  left_join(parlamentares_votos, by = c("id_parlamentar", "casa")) %>% 
+  mutate(faltou = ifelse(is.na(faltou), 0, faltou)) %>% 
+  mutate(total_de_votacoes = faltou + presente) %>% 
+  mutate(assiduidade = presente / total_de_votacoes)
+```
+
+```{r}
+parlamentares_camara <- parlamentares_merge %>%
+  filter(casa == "camara") %>% 
+  mutate(nome = paste0(nome_eleitoral, " - ", partido_atual, "/", uf))
+
+parlamentares_senado <- parlamentares_merge %>% 
+  filter(casa == "senado") %>% 
+  mutate(nome = paste0(nome_eleitoral, " - ", partido_atual, "/", uf))
+```
+
+## Distribuição do Investimento partidário entre os Parlamentares
+
+A seguir iremos visualizar a distribuição da variável de investimento partidário entre os parlamentares. Todas as análises daqui em diante estarão separadas entre câmara e senado
+
+### Deputados
+
+Para os deputados o investimento partidário foi calculado como sendo a razão entre o total que o deputado recebeu do partido na eleição (dados vindos do TSE) dividido pelo total distribuído pelo partido para todos os candidatos a deputado federal na unidade federativa do deputado em questão.
+
+Foram considerados apenas os parlamentares que mantiveram seus partidos da eleição até os dias atuais.
+
+```{r fig.height=4}
+parlamentares_camara %>% 
+  filter(partido_atual == partido_eleicao) %>% 
+  ggplot(aes(x = proporcao_investimento_uf)) + 
+  geom_histogram(binwidth = 0.1, boundary = 0, fill = "white", color = "#231D38") +
+  scale_x_continuous(breaks = seq(0, 1, 0.1), labels = scales::percent_format(accuracy = 1)) +
+  scale_y_continuous(breaks = seq(0, 140, 20), limits = c(0, 140)) +
+  labs(x = "% do que recebeu do partido na UF",
+       y = "Número de parlamentares",
+       title = "Distribuição do investimento partidário para os deputados") +
+  theme_ipsum_rc()
+```
+
+Os 20 Deputados que mais receberam proporcionalmente de seu partido no estado
+
+```{r fig.height=8}
+levels <- parlamentares_camara %>% 
+  filter(partido_atual == partido_eleicao) %>% 
+  arrange(desc(proporcao_investimento_uf), desc(total_receita_partido)) %>% 
+  pull(nome)
+
+parlamentares_camara %>% 
+  filter(partido_atual == partido_eleicao) %>%
+  arrange(desc(proporcao_investimento_uf), desc(total_receita_partido)) %>% 
+  head(20) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = levels)), y = proporcao_investimento_uf)) +
+  geom_chicklet(width = .6, radius = grid::unit(4, "pt"),
+                fill = "#7454A3") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(y = "% do que recebeu do partido na UF",
+       x = "",
+       title = "Parlamentares que mais receberam \nproporcionalmente do partido") +
+  theme_ipsum_rc()
+```
+
+### Senadores
+
+Foram considerados apenas os 54 senadores eleitos em 2018.
+
+Para os senadores o investimento partidário foi calculado como sendo a razão entre o total que o senador recebeu do partido na eleição (dados vindos do TSE) dividido pelo total distribuído pelo partido para todos os candidatos ao congresso (deputados E senadores) na unidade federativa do senador em questão.
+
+Foram considerados apenas os parlamentares que mantiveram seus partidos da eleição até os dias atuais.
+
+
+```{r fig.height=4}
+parlamentares_senado %>% 
+  filter(partido_atual == partido_eleicao) %>% 
+  ggplot(aes(x = proporcao_investimento_uf)) + 
+  geom_histogram(binwidth = 0.1, boundary = 0, fill = "white", color = "#231D38") +
+  scale_x_continuous(breaks = seq(0, 1, 0.1), labels = scales::percent_format(accuracy = 1)) +
+  scale_y_continuous(breaks = seq(0, 12, 2), limits = c(0, 12)) +
+  labs(x = "% do que recebeu do partido na UF",
+       y = "Número de parlamentares",
+       title = "Distribuição do investimento partidário para os senadores") +
+  theme_ipsum_rc()
+```
+
+Os 20 Senadores que mais receberam proporcionalmente de seu partido no estado
+
+```{r fig.height=8}
+levels <- parlamentares_senado %>% 
+  filter(partido_atual == partido_eleicao) %>% 
+  arrange(desc(proporcao_investimento_uf), desc(total_receita_partido)) %>% 
+  pull(nome)
+
+parlamentares_senado %>% 
+  filter(partido_atual == partido_eleicao) %>%
+  arrange(desc(proporcao_investimento_uf), desc(total_receita_partido)) %>% 
+  head(20) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = levels)), y = proporcao_investimento_uf)) +
+  geom_chicklet(width = .6, radius = grid::unit(4, "pt"),
+                fill = "#7454A3") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(y = "% do que recebeu do partido na UF",
+       x = "",
+       title = "Parlamentares que mais receberam \nproporcionalmente do partido") +
+  theme_ipsum_rc()
+```
+
+## Distribuição da Assiduidade entre os parlamentares
+
+### Deputados
+
+Foram consideradas `r votos_camara %>% count(id_votacao, id_proposicao) %>% nrow()` votações nominais realizadas no plenário da Câmara em 2019. Alguns parlamentares não estavam exercendo mandato durante o período de algumas votações.
+
+```{r fig.height=4}
+parlamentares_camara %>% 
+  ggplot(aes(x = assiduidade)) + 
+  geom_histogram(binwidth = 0.1, boundary = 0, fill = "white", color = "#231D38") +
+  scale_x_continuous(breaks = seq(0, 1, 0.1), labels = scales::percent_format(accuracy = 1)) +
+  scale_y_continuous(breaks = seq(0, 140, 20), limits = c(0, 140)) +
+  labs(x = "% de presença em votações nominais no plenário",
+       y = "Número de parlamentares",
+       title = "Distribuição do investimento partidário para os deputados") +
+  theme_ipsum_rc()
+```
+
+### Senadores
+
+Foram consideradas `r votos_senado %>% count(id_votacao, id_proposicao) %>% nrow()` votações nominais realizadas no plenário do Senado em 2019. Alguns parlamentares não estavam exercendo mandato durante o período de algumas votações. Foram consideradas as presenças em votações secretas e abertas (com voto divulgado).
+
+```{r fig.height=4}
+parlamentares_senado %>% 
+  ggplot(aes(x = assiduidade)) + 
+  geom_histogram(binwidth = 0.1, boundary = 0, fill = "white", color = "#231D38") +
+  scale_x_continuous(breaks = seq(0, 1, 0.1), labels = scales::percent_format(accuracy = 1)) +
+  scale_y_continuous(breaks = seq(0, 40, 5), limits = c(0, 40)) +
+  labs(x = "% de presença em votações nominais no plenário",
+       y = "Número de parlamentares",
+       title = "Distribuição do investimento partidário para os senadores") +
+  theme_ipsum_rc()
+```
+
+
+## Investimento partidário e Assiduidade
+
+A seguir iremos visualizar as duas variáveis de interesse para os parlamentares que mantiveram seus partidos da eleição. Rodrigo Maia, presidente da Câmara, foi removido da visualização por se tratar de um caso especial de não participação nas votações.
+
+### Deputados
+
+```{r fig.height=4, fig.width=5}
+library(plotly)
+
+g <- parlamentares_camara %>%
+filter(id_parlamentar != "74693") %>% 
+ ggplot(aes(x = proporcao_investimento_uf * 100, y = assiduidade * 100)) +
+ geom_point(aes(text = sprintf("%s \nAssiduidade: %s \nInvestimento partidário: %s",
+                               nome,
+                               scales::percent(assiduidade),
+                               scales::percent(proporcao_investimento_uf))),
+            height = 0.2, col="#7454A3") +
+ scale_y_continuous(breaks = seq(0, 100, 10), limits = c(0, 100)) +
+ scale_x_continuous(breaks = seq(0, 100, 10), limits = c(0, 100)) +
+ # scale_x_continuous(trans='log2') +
+ labs(x = "Investimento partidário (%)",
+      y = "Assiduidade (%)",
+      title = "Investimento Partidário x Assiduidade") +
+ theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+ config(displayModeBar = F) %>%
+ layout(autosize = F)
+```
+
+### Senadores
+
+```{r fig.height=4, fig.width=5}
+library(plotly)
+
+g <- parlamentares_senado %>%
+ ggplot(aes(x = proporcao_investimento_uf * 100, y = assiduidade * 100)) +
+ geom_point(aes(text = sprintf("%s \nAssiduidade: %s \nInvestimento partidário: %s",
+                               nome,
+                               scales::percent(assiduidade),
+                               scales::percent(proporcao_investimento_uf))),
+            height = 0.2, col="#7454A3") +
+ scale_y_continuous(breaks = seq(0, 100, 10), limits = c(0, 100)) +
+ scale_x_continuous(breaks = seq(0, 100, 10), limits = c(0, 100)) +
+ # scale_x_continuous(trans='log2') +
+ labs(x = "Investimento partidário (%)",
+      y = "Assiduidade (%)",
+      title = "Investimento Partidário x Assiduidade") +
+ theme_ipsum_rc()
+
+ggplotly(g, tooltip = "text") %>%
+ config(displayModeBar = F) %>%
+ layout(autosize = F)
+```
+
+
+## Dados
+
+Os dados de parlamentares usados nas visualizações podem ser vistos nas tabelas abaixo
+
+### Deputados
+
+```{r fig.height=8}
+library(DT)
+
+parlamentares_camara %>% 
+  filter(id_parlamentar != "74693") %>% 
+  mutate(proporcao_investimento_uf = round(proporcao_investimento_uf * 100, 2)) %>% 
+  mutate(assiduidade = round(assiduidade * 100, 2)) %>% 
+  select(id_parlamentar, nome_eleitoral, partido_atual, partido_eleicao, uf, proporcao_investimento_uf, assiduidade) %>% 
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE, 
+            colnames = c("id", "Nome", "Partido atual", "Partido na eleição", "UF", "Investimento Partidário", "Assiduidade"))
+```
+
+### Senadores
+
+```{r fig.height=8}
+library(DT)
+
+parlamentares_senado %>% 
+  mutate(proporcao_investimento_uf = round(proporcao_investimento_uf * 100, 2)) %>% 
+  mutate(assiduidade = round(assiduidade * 100, 2)) %>% 
+  select(id_parlamentar, nome_eleitoral, partido_atual, partido_eleicao, uf, proporcao_investimento_uf, assiduidade) %>% 
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE, 
+            colnames = c("id", "Nome", "Partido atual", "Partido na eleição", "UF", "Investimento Partidário", "Assiduidade"))
 ```
 
