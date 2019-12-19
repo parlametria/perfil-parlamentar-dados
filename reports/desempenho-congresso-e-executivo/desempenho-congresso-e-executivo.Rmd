@@ -145,8 +145,8 @@ parlamentares_camara %>%
   arrange(desc(proporcao_investimento_uf), desc(total_receita_partido)) %>% 
   head(20) %>% 
   ggplot(aes(x = forcats::fct_rev(factor(nome, levels = levels)), y = proporcao_investimento_uf)) +
-  geom_chicklet(width = .6, radius = grid::unit(4, "pt"),
-                fill = "#7454A3") +
+  geom_chicklet(width = .6, radius = grid::unit(3, "pt"),
+                fill = "#7454A3", alpha = .7) +
   coord_flip() +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(y = "% do que recebeu do partido na UF",
@@ -190,8 +190,8 @@ parlamentares_senado %>%
   arrange(desc(proporcao_investimento_uf), desc(total_receita_partido)) %>% 
   head(20) %>% 
   ggplot(aes(x = forcats::fct_rev(factor(nome, levels = levels)), y = proporcao_investimento_uf)) +
-  geom_chicklet(width = .6, radius = grid::unit(4, "pt"),
-                fill = "#7454A3") +
+  geom_chicklet(width = .6, radius = grid::unit(3, "pt"),
+                fill = "#7454A3", alpha = .7) +
   coord_flip() +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(y = "% do que recebeu do partido na UF",
