@@ -28,6 +28,7 @@ library(ggchicklet)
 library(hrbrthemes)
 library(DT)
 theme_set(theme_minimal())
+source(here("parlametria/crawler/cargos_mesa/fetcher_cargos_mesa.R"))
 
 aderencia_parlamentares <- read_csv(here("reports/atuacao-deputados-milionarios/data/aderencia_parlamentares_governo.csv"), col_types = cols(id = "c")) %>% 
   mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", sg_partido, "/", uf))
@@ -446,3 +447,72 @@ aderencia_parlamentares %>%
             colnames = c("id", "Nome", "Partido", "Aderência", "Seguiu", "Não Seguiu", "Faltou", "Liberado"))
 ```
 
+## Comparação da distribuição de cargos na Câmara
+
+Na seção a seguir iremos abordar como os cargos dos parlamentares da lista pode ser comparado com os demais parlamentares da Câmara. Para isto iremos considerar:
+
+- **cargos de liderança em partidos/bancadas**
+- **cargos de titularidade em comissões permamentes** 
+- **cargos na mesa diretora da Câmara**
+
+Consideramos cargos de lideranças em partidos como sendo cargos de líder ou vice-líder nos partidos e bancadas da Câmara.
+
+```{r}
+comissoes <- read_csv(here("reports/atuacao-deputados-milionarios/data/comissoes.csv")) %>% 
+  select(id, casa, sigla)
+
+cargos_comissoes <- read_csv(here("reports/atuacao-deputados-milionarios/data/composicao_comissoes.csv"),
+                             col_types = cols(id_parlamentar = "c")) %>% 
+  left_join(comissoes, by = c("comissao_id" = "id", "casa")) %>% 
+  filter(casa == "camara") %>% 
+  filter(situacao == "Titular") %>% 
+  mutate(tipo = "comissao") %>% 
+  select(id_parlamentar, cargo, local = sigla, tipo)
+
+liderancas <- read_csv(here("reports/atuacao-deputados-milionarios/data/liderancas.csv"), 
+                       col_types = cols(id = "c")) %>%
+  filter(casa == "camara") %>% 
+  mutate(tipo = "lideranca") %>% 
+  select(id_parlamentar = id, cargo, local = bloco_partido, tipo)
+
+cargos_mesa <- fetch_cargos_mesa_camara(legislatura = 56, atual_cargo = TRUE) %>% 
+  mutate(id_parlamentar = as.character(id)) %>% 
+  mutate(tipo = "mesa",
+         local = "mesa") %>% 
+  select(id_parlamentar, cargo, local, tipo)
+```
+
+```{r}
+cargos <- cargos_comissoes %>% 
+  rbind(liderancas) %>% 
+  rbind(cargos_mesa) %>% 
+  distinct()
+```
+
+```{r}
+cargos_summary <- cargos %>% 
+  group_by(id_parlamentar) %>% 
+  summarise(n_cargos = n())
+
+parlamentares_cargos <- aderencia_parlamentares %>% 
+  left_join(cargos_summary, by = c("id" = "id_parlamentar")) %>% 
+  mutate(n_cargos = ifelse(is.na(n_cargos), 0, n_cargos))
+```
+
+Na tabela a seguir mostra para os parlamentares da lista a comparação entre o nº de cargos que ele possui e qual a média que um parlamentar da Câmara teria distribuindo os 900 cargos analisados entre os 513 deputados.
+
+```{r fig.height=8}
+parlamentares_cargos_lista <- parlamentares_cargos %>% 
+  mutate(media_camara = round(nrow(cargos) / 513, 2)) %>% 
+  filter(selecionado) %>% 
+  select(id, nome, sg_partido, uf, n_cargos, media_camara) %>% 
+  arrange(desc(n_cargos))
+
+parlamentares_cargos_lista %>% 
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE, 
+            colnames = c("id", "Nome", "Partido", "UF", "Nº de cargos", "Média de cargos da Câmara"))
+```
+
+Os primeiros `r nrow(parlamentares_cargos_lista %>% filter(n_cargos > media_camara))` parlamentares possuem mais cargos do que a média da Câmara. Os demais parlamentares possuem apenas 1 cargo.
