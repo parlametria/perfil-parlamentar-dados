@@ -492,7 +492,8 @@ cargos <- cargos_comissoes %>%
 ```{r}
 cargos_summary <- cargos %>% 
   group_by(id_parlamentar) %>% 
-  summarise(n_cargos = n())
+  summarise(n_cargos = n()) %>% 
+  ungroup()
 
 parlamentares_cargos <- aderencia_parlamentares %>% 
   left_join(cargos_summary, by = c("id" = "id_parlamentar")) %>% 
@@ -516,3 +517,67 @@ parlamentares_cargos_lista %>%
 ```
 
 Os primeiros `r nrow(parlamentares_cargos_lista %>% filter(n_cargos > media_camara))` parlamentares possuem mais cargos do que a média da Câmara. Os demais parlamentares possuem apenas 1 cargo.
+
+```{r}
+cargos_info <- cargos %>%
+  mutate(cargo = paste0(cargo, " ", local)) %>% 
+  group_by(id_parlamentar, tipo) %>% 
+  mutate(cargos = paste0(cargo, collapse = ";")) %>% 
+  ungroup() %>% 
+  distinct(id_parlamentar, tipo, cargos) %>% 
+  spread(key = "tipo", value = "cargos") %>% 
+  select(id_parlamentar, lista_comissao = comissao, lista_lideranca = lideranca, lista_mesa = mesa)
+
+cargos_info_summary <- cargos %>% 
+  group_by(id_parlamentar, tipo) %>% 
+  summarise(n_cargos = n_distinct(local)) %>% 
+  spread(key = "tipo", value = "n_cargos") %>% 
+  select(id_parlamentar, n_comissao = comissao, n_lideranca = lideranca, n_mesa = mesa)
+
+parlamentares_info <- aderencia_parlamentares %>% 
+  select(id, nome_eleitoral, uf, sg_partido, selecionado) %>% 
+  left_join(cargos_info, by = c("id" = "id_parlamentar")) %>% 
+  left_join(cargos_info_summary, by = c("id" = "id_parlamentar")) %>% 
+  mutate_at(
+      .funs = list(~ replace_na(., 0)),
+      .vars = vars(
+        n_comissao,
+        n_lideranca, 
+        n_mesa
+      )
+    ) %>% 
+  mutate_at(
+      .funs = list(~ replace_na(., "")),
+      .vars = vars(
+        lista_comissao,
+        lista_lideranca, 
+        lista_mesa
+      )
+    ) %>% 
+  filter(selecionado) %>% 
+  select(id, nome_eleitoral, uf, sg_partido, n_comissao, lista_comissao, n_lideranca, lista_lideranca, n_mesa, lista_mesa)
+```
+
+```{r}
+aderencia_parlamentar_por_partido <- aderencia_parlamentares %>% 
+  group_by(sg_partido) %>% 
+  mutate(media_partido = mean(aderencia)) %>% 
+  ungroup() %>% 
+  filter(selecionado) %>% 
+  select(id, nome_eleitoral, uf, sg_partido, aderencia, media_partido)
+```
+
+```{r}
+cargos_summary %>% 
+  ggplot(aes(x = n_cargos)) + 
+  geom_histogram(binwidth = 1, boundary = 0, fill = "white", color = "steelblue") +
+  # scale_y_continuous(breaks = seq(0, 10, 1)) +
+  labs(x = "Nº de cargos",
+       y = "Número de parlamentares",
+       title = "Distribuição do número de cargos por parlamentar") +
+  theme_ipsum_rc()
+```
+
+
+
+
