@@ -49,7 +49,6 @@ levels <- votacoes %>%
   arrange(ano) %>% 
   pull(ano)
 
-
 votacoes %>% 
   count(ano, votacao_secreta) %>%
   arrange(ano) %>% 
@@ -72,8 +71,66 @@ votacoes %>%
    theme(legend.position = "bottom")
 ```
 
-
 Podemos ver que em 1999 e 2019, primeiros anos de legislatura onde o governo é de direita, o número de votações em si é menor quando comparado aos anos onde o governo era de esquerda. 
+
+```{r}
+votacoes %>% 
+  group_by(ano) %>% 
+  summarise(n_votacoes = n_distinct(id_votacao)) %>% 
+  ungroup() %>% 
+  DT::datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE, 
+            options = list(dom = 't'),
+            colnames = c("Ano", "Quantidade de votações"))
+```
+
+### Proposições votadas ao longo dos anos
+
+A seguir estaremos interessados em analisar o número de proposições votadas. Ou seja, considerando PEC's, PL's, MPV's e demais proposições.
+
+```{r fig.height=4.5}
+levels <- votacoes %>% 
+  group_by(ano) %>%  
+  summarise(n_proposicoes = n_distinct(id_proposicao)) %>%
+  ungroup() %>% 
+  arrange(ano) %>% 
+  pull(ano)
+
+votacoes %>% 
+  group_by(ano) %>%  
+  summarise(n_proposicoes = n_distinct(id_proposicao)) %>%
+  ungroup() %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(ano, levels)), y = n_proposicoes)) + 
+  geom_chicklet(width = .6, position = "stack", radius = grid::unit(4, "pt"),
+                fill = "#ef8a62") +
+  geom_text(aes(label = n_proposicoes),
+            size = 3.3,
+            color = "#726f6f",
+            hjust = -0.1) +
+  coord_flip() +
+  labs(y = "Nº de proposições", x = "", fill = "",
+        title = "Proposições votadas no Senado",
+       subtitle = "Nos primeiros anos de legislaturas") +
+   theme_ipsum_rc() +
+   theme(legend.position = "bottom")
+```
+
+Olhando para o número de proposições votadas percebe-se que 1999 e 2019 são os anos em que o senado votou menos proposições. 2007, 2011 e 2015 são bem próximos no número de proposições votadas com valores perto de 145.
+
+A tabela a seguir é a usada na visualização
+
+```{r}
+votacoes %>% 
+  group_by(ano) %>% 
+  summarise(n_proposicoes = n_distinct(id_proposicao)) %>% 
+  ungroup() %>% 
+  DT::datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE, 
+            options = list(dom = 't'),
+            colnames = c("Ano", "Quantidade de votações"))
+```
 
 ### Os temas mais votados
 
