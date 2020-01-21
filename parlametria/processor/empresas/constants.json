@@ -1,0 +1,186 @@
+{
+  "grupos_cnaes":
+  [
+    {
+      "nome": "AGRICULTURA, PECUÁRIA, PRODUÇÃO FLORESTAL, PESCA E AQÜICULTURA", 
+      "codigos": ["01", "02", "03"]
+    },
+    {
+      "nome": "PETRÓLEO, GÁS E CARVÃO MINERAL", 
+      "codigos": ["05", "06"]
+    },
+    {
+      "nome": "MINERAÇÃO", 
+      "codigos": ["07", "08", "09"]
+    },
+    {
+      "nome": "INDÚSTRIA ALIMENTÍCIA E DE BEBIDAS", 
+      "codigos": ["10", "11"]
+    },
+    {
+      "nome": "INDÚSTRIA DO FUMO", 
+      "codigos": ["12"]
+    },
+    {
+      "nome": "INDÚSTRIA TÊXTIL E DE VESTUÁRIO", 
+      "codigos": ["13", "14"]
+    },
+    
+    {
+      "nome": "INDÚSTRIA DE COUROS E CALÇADOS", 
+      "codigos": ["15"]
+    },
+        {
+      "nome": "INDÚSTRIA DE MÓVEIS E MADEIRAS", 
+      "codigos": ["16"]
+    },
+    {
+      "nome": "INDÚSTRIA DE CELULOSE E PAPEL", 
+      "codigos": ["17"]
+    },
+    {
+      "nome": "OUTROS PRODUTOS INDUSTRIAIS",
+      "codigos": ["18"]
+    },
+    {
+      "nome": "INDÚSTRIA PETROQUÍMICA E BIOCOMBUSTÍVEIS", 
+      "codigos": ["19"]
+    },
+        {
+      "nome": "INDÚSTRIA QUÍMICA", 
+      "codigos": ["20"]
+    },
+        {
+      "nome": "INDÚSTRIA FARMACÊUTICA", 
+      "codigos": ["21", "22"]
+    },
+    {
+      "nome": "INDÚSTRIA METALÚRGICA", 
+      "codigos": ["23", "24", "25"]
+    },
+    {
+      "nome": "INDÚSTRIA ELETRO-ELETRÔNICA E DE INFORMÁTICA", 
+      "codigos": ["26", "27"]
+    },
+    {
+      "nome": "INDÚSTRIA DE MÁQUINAS E EQUIPAMENTOS", 
+      "codigos": ["28"]
+    },
+    {
+      "nome": "INDÚSTRIA AUTOMOBILÍSTICA E DE TRANSPORTE", 
+      "codigos": ["29", "30"]
+    },
+    {
+      "nome": "INDÚSTRIA DE MÓVEIS E MADEIRAS", 
+      "codigos": ["31"]
+    },
+    {
+      "nome": "OUTROS PRODUTOS INDUSTRIAIS", 
+      "codigos": ["32"]
+    },
+    {
+      "nome": "INDÚSTRIA DE MÁQUINAS E EQUIPAMENTOS", 
+      "codigos": ["33"]
+    },
+    {
+      "nome": "ELETRICIDADE E GÁS", 
+      "codigos": ["35"]
+    },
+    {
+      "nome": "ÁGUA E ESGOTO", 
+      "codigos": ["36", "37"]
+    },
+    {
+      "nome": "COLETA E GESTÃO DE RESÍDUOS", 
+      "codigos": ["38", "39"]
+    },
+    {
+      "nome": "CONSTRUÇÃO", 
+      "codigos": ["41", "42", "43"]
+    },
+    {
+      "nome": "COMÉRCIO E REPARAÇÃO DE VEÍCULOS AUTOMOTORES E MOTOCICLETAS", 
+      "codigos": ["45"]
+    },
+    {
+      "nome": "COMÉRCIO POR ATACADO, EXCETO VEÍCULOS AUTOMOTORES E MOTOCICLETAS", 
+      "codigos": ["46"]
+    },
+    {
+      "nome": "COMÉRCIO VAREJISTA", 
+      "codigos": ["47"]
+    },
+    {
+      "nome": "TRANSPORTE, ARMAZENAGEM E CORREIO", 
+      "codigos": ["49", "50", "51", "52", "53"]
+    },
+    {
+      "nome": "ALOJAMENTO E ALIMENTAÇÃO",
+      "codigos": ["55", "56"]
+    },
+    {
+      "nome": "INFORMAÇÃO E COMUNICAÇÃO", 
+      "codigos": ["58", "59", "60", "61", "62", "63"]
+    },
+    {
+      "nome": "ATIVIDADES FINANCEIRAS, DE SEGUROS E SERVIÇOS RELACIONADOS", 
+      "codigos": ["64", "65", "66"]
+    },
+    {
+      "nome": "ATIVIDADES IMOBILIÁRIAS", 
+      "codigos": ["68"]
+    },
+    {
+      "nome": "ATIVIDADES JURÍDICAS, DE CONTABILIDADE E DE AUDITORIA", 
+      "codigos": ["69"]
+    },
+    {
+      "nome": "OUTRAS ATIVIDADES PROFISSIONAIS", 
+      "codigos": ["70", "71", "72", "73", "74", "75"]
+    },
+    {
+      "nome": "OUTRAS ATIVIDADES ADMINISTRATIVAS", 
+      "codigos": ["77"]
+    },
+    {
+      "nome": "VIGILÂNCIA E LOCAÇÃO DE MÃO-DE-OBRA TERCEIRIZADA", 
+      "codigos": ["78"]
+    },
+    {
+      "nome": "AGÊNCIAS DE VIAGEM E TURISMO", 
+      "codigos": ["79"]
+    },
+    {
+      "nome": "VIGILÂNCIA E LOCAÇÃO DE MÃO-DE-OBRA TERCEIRIZADA", 
+      "codigos": ["80", "81", "82"]
+    },
+    {
+      "nome": "ADMINISTRAÇÃO PÚBLICA, DEFESA E SEGURIDADE SOCIAL", 
+      "codigos": ["84"]
+    },
+    {
+      "nome": "EDUCAÇÃO", 
+      "codigos": ["85"]
+    },
+    {
+      "nome": "SAÚDE HUMANA E SERVIÇOS SOCIAIS", 
+      "codigos": ["86", "87", "88"]
+    },
+    {
+      "nome": "ARTES, CULTURA, ESPORTE E RECREAÇÃO", 
+      "codigos": ["90", "91", "92", "93"]
+    },
+    {
+      "nome": "OUTRAS ATIVIDADES DE SERVIÇOS", 
+      "codigos": ["94", "95", "96"]
+    },
+    {
+      "nome": "SERVIÇOS DOMÉSTICOS", 
+      "codigos": ["97"]
+    },
+    {
+      "nome": "ORGANISMOS INTERNACIONAIS E OUTRAS INSTITUIÇÕES EXTRATERRITORIAIS", 
+      "codigos": ["99"]
+    }
+  ]
+}

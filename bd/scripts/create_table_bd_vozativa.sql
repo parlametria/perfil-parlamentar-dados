@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS "parlamentares" (
     "condicao_eleitoral" VARCHAR(255),
     "ultima_legislatura" VARCHAR(255),
     "em_exercicio" BOOLEAN,
+    "id_perfil_politico" VARCHAR(40),
     PRIMARY KEY("id_parlamentar_voz"));  
 
 CREATE TABLE IF NOT EXISTS "perguntas" (
@@ -160,7 +161,7 @@ CREATE TABLE IF NOT EXISTS "liderancas" (
     PRIMARY KEY("id_parlamentar_voz", "id_partido")
 );
 
-CREATE TABLE IF NOT EXISTS "investimento_partidario" (    
+CREATE TABLE IF NOT EXISTS "investimento_partidario_parlamentar" (    
     "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
     "id_partido_atual" INTEGER REFERENCES "partidos" ("id_partido") ON DELETE SET NULL ON UPDATE CASCADE,
     "id_partido_eleicao" INTEGER REFERENCES "partidos" ("id_partido") ON DELETE SET NULL ON UPDATE CASCADE,
@@ -168,4 +169,56 @@ CREATE TABLE IF NOT EXISTS "investimento_partidario" (
     "total_receita_candidato" NUMERIC(15, 2),
     "indice_investimento_partido" REAL,        
     PRIMARY KEY("id_parlamentar_voz")
+);
+
+CREATE TABLE IF NOT EXISTS "investimento_partidario" (    
+    "id_partido" INTEGER REFERENCES "partidos" ("id_partido") ON DELETE SET NULL ON UPDATE CASCADE,
+    "uf" VARCHAR(20),
+    "esfera" VARCHAR(40),
+    "valor" NUMERIC(15, 2),
+    "numero_candidatos" INTEGER,
+    PRIMARY KEY("id_partido", "uf", "esfera")
+);
+
+CREATE TABLE IF NOT EXISTS "perfil_mais" (    
+    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
+    "indice_vinculo_economico_agro" REAL,
+    "indice_ativismo_ambiental" REAL,
+    "peso_politico" REAL,        
+    PRIMARY KEY("id_parlamentar_voz")
+);
+
+CREATE TABLE IF NOT EXISTS "atividades_economicas" (    
+    "id_atividade_economica" INTEGER,
+    "nome" VARCHAR(255),
+    PRIMARY KEY("id_atividade_economica")
+);
+
+CREATE TABLE IF NOT EXISTS "ligacoes_economicas" (    
+    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
+    "id_atividade_economica" INTEGER REFERENCES "atividades_economicas" ("id_atividade_economica") ON DELETE SET NULL ON UPDATE CASCADE,
+    "total_por_atividade" NUMERIC(15, 2),
+    "proporcao_doacao" REAL,
+    "indice_ligacao_atividade_economica" REAL,        
+    PRIMARY KEY("id_parlamentar_voz", "id_atividade_economica")
+);
+
+CREATE TABLE IF NOT EXISTS "empresas" (    
+    "cnpj" VARCHAR(14),
+    "razao_social" VARCHAR(255),
+    PRIMARY KEY("cnpj")
+);
+
+CREATE TABLE IF NOT EXISTS "atividades_economicas_empresas" (    
+    "cnpj" VARCHAR(14) REFERENCES "empresas" ("cnpj") ON DELETE SET NULL ON UPDATE CASCADE,
+    "id_atividade_economica" INTEGER REFERENCES "atividades_economicas" ("id_atividade_economica") ON DELETE SET NULL ON UPDATE CASCADE,
+    "cnae_tipo" VARCHAR(50),
+    PRIMARY KEY("cnpj", "id_atividade_economica", "cnae_tipo")
+);
+
+CREATE TABLE IF NOT EXISTS "empresas_parlamentares" (    
+    "cnpj" VARCHAR(14) REFERENCES "empresas" ("cnpj") ON DELETE SET NULL ON UPDATE CASCADE,
+    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
+    "data_entrada_sociedade" DATE,
+    PRIMARY KEY("cnpj", "id_parlamentar_voz")
 );

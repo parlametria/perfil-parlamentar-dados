@@ -14,5 +14,6 @@ CREATE TABLE IF NOT EXISTS "parlamentares" (
     "condicao_eleitoral" VARCHAR(255),
     "ultima_legislatura" VARCHAR(255),
     "em_exercicio" BOOLEAN,
+    "id_perfil_politico" VARCHAR(40),
     PRIMARY KEY("id_parlamentar_voz")
 ); 

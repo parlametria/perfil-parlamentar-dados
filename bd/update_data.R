@@ -144,6 +144,21 @@ tryCatch(
 
 tryCatch(
   {
+    log <- paste0(log, date(), " - Executando processador dos dados para o perfil mais...\n")
+    source(here::here("parlametria/processor/export_dados_perfil_mais.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução processador dos dados para o perfil mais")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
+tryCatch(
+  {
     log <- paste0(log, date(), " - Executando processamento dos dados para o formato do BD...\n")
     source(here::here("bd/export_dados_tratados_bd.R"))
   },
