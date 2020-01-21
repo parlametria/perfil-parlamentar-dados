@@ -155,6 +155,7 @@ process_votos_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
       process_votos_por_ano_camara,
       url
     )) %>% 
+    mutate(dados = map(dados, ~ mutate_at(.x, vars(-voto), as.character))) %>% 
     unnest(dados) %>% 
     distinct() %>% 
     rename(id_parlamentar = id_deputado) %>% 
