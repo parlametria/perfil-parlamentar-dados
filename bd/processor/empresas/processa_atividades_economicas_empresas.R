@@ -16,7 +16,7 @@ processa_atividades_economicas_empresas <- function(
   
   cnaes_enum <- processa_atividade_economica()
   
-  empresas_cnaes <- process_cnaes_empresas() %>% 
+  empresas_cnaes <- process_cnaes_empresas(apenas_cnae_fiscal = F) %>% 
     select(cnpj, cnae_tipo, cnae_codigo, grupo_atividade_economica)
   
   empresas <- process_empresas() %>% 
