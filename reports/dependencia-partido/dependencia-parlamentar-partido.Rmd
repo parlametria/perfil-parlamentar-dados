@@ -1,5 +1,6 @@
 ---
 title: "Aderência deputado - partido"
+date: "16/12/2019"
 output: 
   html_document:
     css: styles.css
@@ -30,11 +31,14 @@ source(here("reports/dependencia-partido/scripts/processa_dados_votacoes.R"))
 ```
 
 ```{r}
-dados_votos_orientacao <- processa_dados_votacoes()
+dados_votos_orientacao <- processa_dados_votacoes(here::here("reports/dependencia-partido/data/parlamentares.csv"),
+                                                  here::here("reports/dependencia-partido/data/orientacoes.csv"),
+                                                  here::here("reports/dependencia-partido/data/votos.csv"))
 
 deputados <- dados_votos_orientacao[[1]]
 proposicoes_votadas <- dados_votos_orientacao[[2]]
-votos <- dados_votos_orientacao[[3]]
+votos <- dados_votos_orientacao[[3]] %>% 
+  rename(id_parlamentar = id_deputado)
 orientacao <- dados_votos_orientacao[[4]]
 ```
 
@@ -95,15 +99,16 @@ deputados_summary_freq_wide %>%
     theme_ipsum_rc()
 ```
 
-Acima temos a informações dos 20 deputados que possuem **menor aderência** com seu partido. Átila Lira (PSB/PI) é o deputado com menor aderência da Câmara. Ele seguiu o partido em 16 votações e não seguiu em 54 votações. A aderência para Átila é de 16 / (16 + 54), isto é `r round(16 / (16 + 54), 2) * 100`%. Para resumir, em 23% das votações Átila seguiu o partido.
+Acima temos a informações dos 20 deputados que possuem **menor aderência** com seu partido. Átila Lira (PSB/PI) é o deputado com menor aderência da Câmara. Ele seguiu o partido em 75 votações e não seguiu em 146 votações. A aderência para Átila é de 75 / (75 + 146), isto é `r round(75 / (75 + 146), 2) * 100`%.
 
 Abaixo detalhamos o número absoluto de votações em que cada um desses deputados seguiu ou não a orientação do partido. As barras têm comprimento diferente pois os deputados tem um número diferente de votações nas quais participaram e houve orientação do partido. Os deputaods estão ordenados da maior aderência para a menor. 
 
 ```{r}
-lbls = as.character(c(seq(range_votacoes, 10, -10), seq(0, range_votacoes, 10)))
+lbls = as.character(c(seq(range_votacoes, 10, -25), seq(0, range_votacoes, 25)))
 
 levels <- deputados_summary_freq_wide %>%
   arrange(freq) %>% 
+  head(20) %>% 
   pull(nome)
 
 deputados_summary_freq_wide %>%
@@ -119,7 +124,7 @@ deputados_summary_freq_wide %>%
   geom_bar(stat = "identity", width = .6) +
   coord_flip() +
   scale_fill_brewer(palette = "Dark2", direction = -1, labels = c("Não seguiu", "Seguiu")) +  
-  scale_y_continuous(breaks = seq(-range_votacoes, range_votacoes, 10), labels = lbls) +
+  scale_y_continuous(breaks = seq(-range_votacoes, range_votacoes, 25), labels = lbls) +
   labs(y = "Nº de votações", x = "Deputado", fill = "", 
        title = "Deputados que menos seguiram à \n orientação do partido") +
   theme_ipsum_rc() +
@@ -147,7 +152,7 @@ deputados_summary_freq_wide %>%
                size = 0.1) +
   coord_flip() +
   scale_y_continuous(breaks = seq(0, 100, 5)) +
-  labs(title="Deputados com menos aderência à \n orientação do partido", 
+  labs(title="Deputados com mais aderência à \n orientação do partido", 
        y = "Aderência ao Partido (%)",
        x = "Deputado") +
     theme_ipsum_rc()
@@ -157,7 +162,7 @@ Na lista dos 20 deputados com maior valor de aderência todos têm aderência de
 
 
 ```{r}
-lbls = as.character(c(seq(range_votacoes, 10, -10), seq(0, range_votacoes, 10)))
+lbls = as.character(c(seq(range_votacoes, 10, -25), seq(0, range_votacoes, 25)))
 
 deputados_summary_freq_wide %>%
   arrange(desc(freq), desc(seguiu)) %>% 
@@ -172,7 +177,7 @@ deputados_summary_freq_wide %>%
   geom_bar(stat = "identity", width = .6) +
   coord_flip() +
   scale_fill_brewer(palette = "Dark2", direction = -1, labels = c("Não seguiu", "Seguiu")) +
-  scale_y_continuous(breaks = seq(-range_votacoes, range_votacoes, 10), labels = lbls) +
+  scale_y_continuous(breaks = seq(-range_votacoes, range_votacoes, 25), labels = lbls) +
   labs(y = "Nº de votações", x = "Deputado", fill = "", title = "Deputados que mais seguiram à \norientação do partido") +
   theme_ipsum_rc() +
   theme(legend.position="bottom")
@@ -180,11 +185,11 @@ deputados_summary_freq_wide %>%
 
 ### Mais detalhes sobre quem não adere
 
-Se olharmos com mais detalhes para a lista de 20 deputados que menos adere, podemos destrinchar como ocorreram as votações para cada deputado. Átila Lira, mostrado na visualização anterior com menos de 25% de aderência, teve 16 votações em que seguiu o partido, 54 em que não seguiu o partido, 12 em que o partido liberou o voto e outras 11 em que faltou.
+Se olharmos com mais detalhes para a lista de 20 deputados que menos adere, podemos destrinchar como ocorreram as votações para cada deputado. Átila Lira, mostrado na visualização anterior com menos de 34% de aderência, teve 75 votações em que seguiu o partido, 146 em que não seguiu o partido, 22 em que o partido liberou o voto e outras 28 em que faltou.
 
 
 ```{r}
-paleta <- c("#91bfda", "#E89D68", "#e06264", "#BA7E53")
+paleta <- c( "#e34a33","#d9d1c7", "#fc8d59", "#fdcc8a")
 match_valores <- c("seguiu", "faltou", "nao_seguiu", "partido_liberou")
 
 data_long <- deputados_summary_freq_wide %>% 
@@ -249,7 +254,7 @@ levels <- partidos_summary %>%
 
 Subindo o nível de visão, podemos analisar a aderência dos deputados por partido. 
 
-O gráfico abaixo ajuda a entender melhor a distribuição dos pontos (deputados) ao longo do eixo de aderência.Os partidos estão ordenados pela mediana, portanto, o PCdoB é considerando o partido com deputados mais aderentes, seguido de perto pelo NOVO. As maiores amplitudes (diferença entre o máximo e o mínimo) são observadas para o PROS e o PSB. Existem deputados que nesses partidos que são muito aderentes e outros que são pouco aderentes.
+O gráfico abaixo ajuda a entender melhor a distribuição dos pontos (deputados) ao longo do eixo de aderência.Os partidos estão ordenados pela mediana, portanto, o partido NOVO é considerando o partido com deputados mais aderentes, seguido pelo REPUBLICANOS. As maiores amplitudes (diferença entre o máximo e o mínimo) são observadas para o PSB e PROS. Existem deputados que nesses partidos que são muito aderentes e outros que são pouco aderentes.
 
 As cores na visualização apenas ajudam a diferenciar deputados vizinhos um ao outro (na própria visualização).
 
@@ -264,7 +269,7 @@ deputados_summary_freq_wide %>%
   geom_count() +
   scale_x_discrete(position = "left") +
   scale_y_continuous(breaks = seq(0, 100, 5), position = "bottom", sec.axis = dup_axis()) +
-  scale_color_manual(values = rep(c("#648fff", "#ffb000"), 15)) +
+  scale_color_manual(values = rep(c("#648fff", "#fc5185"), 15)) +
   coord_flip() +
   scale_shape_identity() +
   geom_point(aes(y = median), size = 5, color = "black", shape = 124) +
@@ -279,7 +284,7 @@ Interessante observar que o PT não apresenta uma alta mediana de aderência qua
 
 ## Aderência por votação
 
-Quando olhamos a aderência para cada votação do conjunto das 93 abordadas podemos analisar a proporção do nº de deputados que seguiu a orientação do partido sobre o nº de deputados que seguiu somado com o nº de deputados que não seguiu. 
+Quando olhamos a aderência para cada votação do conjunto das 314 abordadas podemos analisar a proporção do nº de deputados que seguiu a orientação do partido sobre o nº de deputados que seguiu somado com o nº de deputados que não seguiu. 
 
 ```{r}
 votacoes_summary <- deputados_votos_match %>% 
@@ -316,9 +321,10 @@ As três votações com menos aderência são:
 
 - REQUERIMENTO DE RETIRADA DE PAUTA da [PDC 379/2016](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2083376). Aprova o texto do Acordo de Cooperação Educacional entre o Governo da República Federativa do Brasil e o Governo da Federação de São Cristóvão e Névis, assinado em Brasília, em 26 de abril de 2010.
 
-- REQ. PARA QUE TODAS AS VOTAÇÕES SEJA PELO PROCESSO NOMINAL da [MPV 870/2019](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2190288). Estabelece a organização básica dos órgãos da Presidência da República e dos Ministérios. Prejudicada por falta de quórum.
+- REQUERIMENTO DE ADIAMENTO DA VOTAÇÃO POR 2 SESSÕES da [PL 1292/1995](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=16526). Altera a lei nº 8.666, de 21 de junho de 1993, que regulamenta o art. 37, inciso XXI, da Constituição Federal, institui normas para licitações e contratos da Administração Pública e dá outras providências.
 
-- REQUERIMENTO DE RETIRADA DE PAUTA [PLP 441/2017](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2160860). Altera a Lei Complementar nº 105, de 10 de janeiro de 2001, e a Lei nº 12.414, de 9 de junho de 2011, para dispor sobre os cadastros positivos de crédito e regular a responsabilidade civil dos operadores. O requerimento foi rejeitado.
+
+- CRÉDITO SUPLEMENTAR - PODER JUDICIÁRIO E MINISTÉRIO PÚBLICO [PLN 6/2019 CN](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2202987). Abre ao Orçamento Fiscal da União, em favor das Justiças Federal, Eleitoral, do Trabalho e do Distrito Federal e dos Territórios, do Ministério Público da União e do Conselho Nacional do Ministério Público, crédito suplementar no valor de R$ 236.566.628,00, para reforço de dotações constantes da Lei Orçamentária vigente.
 
 - A [votação](https://www.camara.leg.br/internet/votacao/mostraVotacao.asp?ideVotacao=8846&numLegislatura=56&codCasa=1&numSessaoLegislativa=1&indTipoSessaoLegislativa=O&numSessao=114&indTipoSessao=E&tipo=uf) da permanência do COAF no Ministério da Justiça teve 80% de aderência.
 
@@ -327,7 +333,7 @@ Abaixo apresentamos uma tabela pesquisável com os dados de todos os deputados q
 ```{r}
 deputados_summary_freq_wide %>% 
   mutate(freq = round(freq, 2)) %>% 
-  select(id_deputado, nome, partido, freq, seguiu, nao_seguiu, faltou, partido_liberou) %>% 
+  select(id_deputado = id, nome, partido, freq, seguiu, nao_seguiu, faltou, partido_liberou) %>% 
   datatable(class = 'cell-border stripe',
             filter = 'top',
             rownames = FALSE, 

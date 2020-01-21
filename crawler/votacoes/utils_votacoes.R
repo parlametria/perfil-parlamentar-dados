@@ -82,7 +82,7 @@ padroniza_sigla <- function(sigla) {
     str_detect(sigla, "PODE.*") ~ "PODEMOS",
     str_detect(sigla, "GOV.") ~ "GOVERNO",
     str_detect(sigla, "PHS.*") ~ "PHS",
-    str_detect(sigla, "REPUBLICAN") ~ "REPUBLICANOS",
+    str_detect(sigla, "REPUBLICAN.*") ~ "REPUBLICANOS",
     TRUE ~ sigla
   ) %>%
     stringr::str_replace("REPR.", "") %>% 
