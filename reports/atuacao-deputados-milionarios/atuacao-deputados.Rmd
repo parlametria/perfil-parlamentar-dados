@@ -1,0 +1,448 @@
+---
+title: "Aderência de parlamentares que receberam recurso de grandes doadores"
+output: 
+  html_document:
+    css: styles-parlametria.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = '',
+  fig.align = 'center',
+  fig.width = 10,
+  fig.height = 8
+)
+```
+
+## *Resumo*
+
+Este relatório busca analisar e visualizar dados sobre deputados que receberam doações dos maiores doadores na campanha de 2018. Foi avaliado a aderência de parlamentares ao Governo considerando todas as votações nominais no plenário da Câmara em 2019.
+
+```{r}
+library(tidyverse)
+library(here)
+library(ggchicklet)
+library(hrbrthemes)
+library(DT)
+theme_set(theme_minimal())
+
+aderencia_parlamentares <- read_csv(here("reports/atuacao-deputados-milionarios/data/aderencia_parlamentares_governo.csv"), col_types = cols(id = "c")) %>% 
+  mutate(nome = paste0(str_to_title(nome_eleitoral), " - ", sg_partido, "/", uf))
+```
+
+### Quais os partidos dos parlamentares selecionados?
+
+A seguir vamos visualizar quais os partidos que compõem a lista dos 36 parlamentares selecionados para análise.
+
+```{r fig.height=5}
+paleta <- c("#0072B2", "#E69F00", "#999999", "#009E73",
+          "#D55E00", "#56B4E9", "#F0E442", "#CC79A7")
+
+aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  count(sg_partido) %>% 
+  ggplot(aes(x = reorder(sg_partido, n), y = n)) +
+  geom_chicklet(width = .7, radius = grid::unit(4, "pt"),
+                fill = "#E69F00") +
+  geom_text(aes(label = n),
+            hjust = -0.5,
+            size = 3.3,
+            color = "#333333") +
+  coord_flip() +
+  labs(x = "",
+       y = "Quantidade de parlamentares",
+       title = "Parlamentares por partido") +
+  theme_ipsum_rc()
+```
+
+DEM é o partido com mais parlamentares (7) na lista, seguido de PT, PP e NOVO com 4 cada.
+
+### Visualização da Aderência com média
+
+```{r}
+votos_2019 <- read_csv(here("reports/atuacao-deputados-milionarios/data/votos.csv"), col_types = cols(.default = "c"))
+
+n_votacoes <- votos_2019 %>% count(id_votacao) %>% nrow()
+```
+
+Consideramos todas as **`r n_votacoes` votações nominais realizadas no plenário da Câmara em 2019** disponíveis na API da Câmara Federal. A orientação do Governo é obtida também pela API da explícita indicação presente na votação. Quando essa indicação não está disponível na API, o voto do líder do Governo é considerado.
+
+A **Aderência ao Governo** é a razão entre o número de vezes em que seguiu a orientação do governo dividido pelo número de vezes que participou de votações com orientação do governo (tendo seguido ou não essa orientação).
+
+A seguir vemos os parlamentares ordenados pela aderência
+
+```{r fig.height=10}
+media_aderencia <- aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  pull(aderencia) %>% 
+  mean()
+
+aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  ggplot(aes(x = reorder(nome, aderencia), y = aderencia)) +
+  geom_chicklet(width = .6, radius = grid::unit(4, "pt"),
+                fill = "#E69F00") +
+  geom_text(aes(label = paste0(round(aderencia, 1), "%")),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+  geom_hline(yintercept = media_aderencia, linetype="dashed", color = "#333333") +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 110), breaks = seq(0, 100, 20)) +
+  
+  annotate("text", label = paste0("Média de ", round(media_aderencia, 1), "%"), x = 2, y = 88, color = "#4b4545") +
+  
+  labs(x = "",
+       y = "Aderência ao Governo (%)",
+       title = "Aderência dos parlamentares ao Governo") +
+  theme_ipsum_rc()
+```
+
+A média na visualização é a média de aderência desses parlamentares selecionados
+
+### Como cada parlamentar seguiu a orientação do Governo?
+
+A seguir iremos analisar a quantidade de votações nas quais os parlamentares seguiram ou não a orientação do Governo. 
+
+A visualização a seguir apresenta a distribuição das votações entre os parlamentares considerando aquelas em que seguiu o Governo e aquelas que não seguiu. A ordem dos deputados é definida da maior aderência para a menor.
+
+```{r fig.height=12}
+match_valido <- c("seguiu", "nao_seguiu")
+
+levels <- aderencia_parlamentares %>%
+  filter(selecionado) %>% 
+  arrange(aderencia) %>% 
+  pull(nome)
+
+aderencia_parlamentares %>%
+  filter(selecionado) %>% 
+  arrange(desc(aderencia), desc(seguiu)) %>% 
+  gather(key = "match", value = "n", faltou:seguiu) %>% 
+  mutate(n = if_else(match == "nao_seguiu", -n, n)) %>% 
+  arrange(desc(n)) %>% 
+  filter(match %in% match_valido) %>%
+  ggplot(aes(x = (factor(nome, levels = levels)), 
+             y = n, 
+             fill = match)) + 
+  geom_bar(stat = "identity", width = .6) +
+  coord_flip() +
+  scale_fill_manual(values = c("#e06264", "#91bfda"), labels = c("Não seguiu", "Seguiu")) +
+  labs(y = "Número de votações", x = "", 
+       fill = "", 
+       title = "Parlamentares segundo a orientação do Governo") +
+  theme_ipsum_rc() +
+  theme(legend.position="bottom")
+```
+
+A seguir podemos visualizar mais detalhes de como os parlamentares votaram de acordo com a orientação do Governo.
+
+Rodrigo Maia é um caso especial uma vez que enquanto Presidente da Câmara não participa de todas as votações nominais. Por este motivo foi removido da visualização a seguir. Maia participou de 31 votações, tendo seguido o Governo em 30 delas.
+
+Nesta próxima visualização as votações são destrinchadas considerando mais 2 possibilidades. O deputado não participou da votação ou o Governo não apresentou orientação então o voto é considerado liberado.
+
+```{r fig.height=12}
+paleta <- c("#91bfda", "#CCCCCC", "#e06264", "#EDA16A")
+match_valores <- c("seguiu", "faltou", "nao_seguiu", "liberado")
+
+data_long <- aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  filter(id != "74693") %>% ## remove rodrigo maia
+  arrange(aderencia) %>% 
+  gather("match", "n", faltou:seguiu) %>% 
+  filter(match %in% match_valores)
+  
+levels <- aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  arrange(aderencia, desc(nao_seguiu)) %>% 
+  pull(nome)
+
+data_long %>% 
+  mutate(match = factor(match, 
+                        levels = c("faltou",
+                                   "liberado",
+                                   "nao_seguiu",
+                                   "seguiu"),
+                        ordered = TRUE)) %>% 
+  filter(n > 0) %>% 
+  ggplot(aes(x = (factor(nome, levels = levels)), y = n, fill = match)) +
+  geom_bar(width = .7, stat = "identity", position = "stack") +
+  geom_text(aes(label = n),
+            hjust = 1.3,
+            position = "stack"
+            ) +
+  coord_flip() +
+  scale_fill_manual(values = c("liberado" = paleta[4],
+                               "faltou" = paleta[2], 
+                               "nao_seguiu" = paleta[3],
+                               "seguiu" = paleta[1]),
+                    name = "", labels = c("Faltou",
+                                          "Liberado",
+                                          "Não seguiu",
+                                          "Seguiu")) +
+  labs(x = "", 
+       y = "Número de votações", 
+       title = "Parlamentares segundo a orientação do Governo",
+       subtitle = "Ordenados por frequência de aderência") + 
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme_ipsum_rc() +
+  theme(legend.position = "top",
+        plot.subtitle = element_text(size = 12))
+```
+
+## Dados
+
+Os dados de aderência para os parlamentares selecionados usados nessa análise podem ser conferidos na tabela abaixo.
+
+```{r fig.height=8}
+aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  mutate(aderencia = round(aderencia, 2)) %>% 
+  select(id, nome, sg_partido, aderencia, seguiu, nao_seguiu, faltou, liberado) %>% 
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE, 
+            colnames = c("id", "Nome", "Partido", "Aderência", "Seguiu", "Não Seguiu", "Faltou", "Liberado"))
+```
+
+## Aderência em votações de proposições de Agenda Nacional e MPVs
+
+A seguir vamos analisar a aderência ao Governo num subconjunto de proposições que fazem parte da pauta do Governo e que chamamos de Agenda Nacional. Também foram incluídas todas as Medidas Provisórias votadas em 2019.
+
+O subconjunto das proposições analisadas é formado por:  
+PL 1292/1995, PEC 70/2011, PEC 2/2015, PLP 441/2017, PL 10431/2018, MPV 852/2018, PL 5029/2019 (Nº Anterior: PL 11021/2018), MPV 861/2018 , MPV 863/2018, MPV 866/2018, MPV 867/2018, MPV 867/2018, MPV 870/2019, MPV 871/2019, PDL 3/2019, PEC 6/2019, PLN 2/2019 CN, PEC 34/2019, MPV 879/2019 , MPV 881/2019, MPV 886/2019 , MPV 889/2019, MPV 890/2019.
+
+```{r fig.height=10}
+media_aderencia <- aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  pull(aderencia_temas_governo) %>% 
+  mean()
+
+aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  ggplot(aes(x = reorder(nome, aderencia_temas_governo), y = aderencia_temas_governo)) +
+  geom_chicklet(width = .6, radius = grid::unit(4, "pt"),
+                fill = "#E69F00") +
+  geom_text(aes(label = paste0(round(aderencia, 1), "%")),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+  geom_hline(yintercept = media_aderencia, linetype="dashed", color = "#333333") +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 110), breaks = seq(0, 100, 20)) +
+  
+  annotate("text", label = paste0("Média de ", round(media_aderencia, 1), "%"), x = 2, y = 88, color = "#4b4545") +
+  
+  labs(x = "",
+       y = "Aderência ao Governo (%)",
+       title = "Aderência dos parlamentares ao Governo \n em proposições da Agenda Nacional") +
+  theme_ipsum_rc()
+```
+
+A média na visualização é a média de aderência desses parlamentares selecionados
+
+# Comparando com todos os parlamentares
+
+A seguir vamos comparar a aderência da lista de parlamentares selecionados com todos os demais parlamentares. 
+Aqui foram consideradas **todas as votações nominais no plenário da Câmara** e como o Governo orientou nessas votações.
+
+A visualização abaixo mostra a posição dos parlamentares selecionados com relação a aderência ao Governo em votações nominais.
+
+```{r fig.height=12}
+levels <- aderencia_parlamentares %>%
+  filter(selecionado) %>% 
+  arrange(desc(aderencia), seguiu) %>% 
+  pull(nome)
+
+aderencia_parlamentares %>% 
+  arrange(desc(aderencia), seguiu) %>% 
+  tibble::rowid_to_column(var = "rank") %>% 
+  filter(selecionado) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = levels)), y = rank)) + 
+  geom_segment(aes(x = forcats::fct_rev(factor(nome, levels = levels)), 
+                   xend = forcats::fct_rev(factor(nome, levels = levels)), 
+                   y = 0, 
+                   yend = rank), 
+               size = 0.1) +
+  geom_point(col="#E69F00", size = 3) + 
+  coord_flip() +
+  geom_text(aes(label = paste0(rank, "º (", round(aderencia, 1), "%)")),
+            hjust = -0.1,
+            size = 3.3,
+            color = "#333333") +
+  scale_y_continuous(limits = c(0, 550), breaks = seq(0, 550, 50), sec.axis = dup_axis()) +
+  labs(title="Posição dos parlamentares no ranking de \naderência ao Governo", 
+       y = "Posição no Ranking de Aderência",
+       x = "Deputado") +
+    theme_ipsum_rc()
+```
+
+Na visualização é possível conhecer a posição do parlamentar no Ranking de Aderência ao Governo. A aderência ao governo do parlamentar está presente entre parênteses.
+
+```{r fig.height=6}
+aderencia_parlamentares %>% 
+  arrange(desc(aderencia), seguiu) %>% 
+  tibble::rowid_to_column(var = "rank") %>% 
+  filter(selecionado) %>% 
+  ggplot(aes(x = rank)) + 
+  geom_histogram(binwidth = 50, boundary = 0, fill = "white", color = "salmon") +
+  scale_y_continuous(breaks = seq(0, 10, 1)) +
+  labs(x = "Posição no ranking",
+       y = "Número de parlamentares",
+       title = "Distribuição do ranking dos parlamentares da lista") +
+  theme_ipsum_rc()
+```
+
+### Aderência por partido
+
+A seguir visualizaremos a posição da aderência dos parlamentares comparados com os demais membros do partido.
+
+Cada marca | na visualização é um parlamentar, os parlamentares em preto são aqueles selecionados por terem recebido doação de grandes doadores. As cores verde e roxo apenas ajudam a diferenciar os partidos entre si. A ordem dos partidos é definida daqueles com maiores médias de aderência para aqueles com menores médias.
+
+```{r fig.height=6}
+cores_grafico <- c("#af8dc3", "#42a38f")
+
+lista_partidos <- aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  count(sg_partido) %>% 
+  pull(sg_partido)
+
+levels <- aderencia_parlamentares %>%
+  group_by(sg_partido) %>% 
+  summarise(mean = mean(aderencia)) %>% 
+  ungroup() %>% 
+  arrange(desc(mean)) %>%
+  pull(sg_partido)
+
+aderencia_parlamentares %>%
+  filter(sg_partido %in% lista_partidos) %>%
+  ggplot(aes(x = aderencia,
+             y = forcats::fct_rev(factor(sg_partido, levels = levels)),
+             color = forcats::fct_rev(factor(sg_partido, levels = levels)),
+             fill = forcats::fct_rev(factor(sg_partido, levels = levels)))) +
+  geom_point(shape = 124, size = 5) +
+  scale_shape_identity() +
+  scale_color_manual(values = rep(cores_grafico, 15)) +
+  scale_fill_manual(values = rep(cores_grafico, 15)) +
+  scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, 10)) +
+  geom_point(data = aderencia_parlamentares %>% filter(selecionado),
+             aes(x = aderencia), size = 6.5, color = "#111111", shape = 124) +
+  
+  geom_point(aes(x = 10, y = 12.5), size = 6.5, color = "#111111", shape = 124) +
+  annotate("text", label = "deputados selecionados", x = 23, y = 12.5, color = "#4b4545") +
+
+  guides(size = F, color = F, fill = F) +
+  labs(title = "Aderência ao Governo de parlamentares por partido",
+       x = "Aderência ao Governo (%)",
+       y = "") +
+  theme_ipsum_rc() +
+      theme(axis.title.x = element_text(size = 10, font_rc_light))
+```
+
+Agora iremos comparar cada um desses deputados selecionados com a média de aderência de seus partidos
+
+```{r}
+media_partidos <- aderencia_parlamentares %>%
+  group_by(sg_partido) %>% 
+  summarise(mean = mean(aderencia)) %>% 
+  ungroup() %>% 
+  arrange(desc(mean))
+
+levels <- aderencia_parlamentares %>%
+  filter(selecionado) %>% 
+  arrange(desc(aderencia), seguiu) %>% 
+  pull(nome)
+
+aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  left_join(media_partidos, by = c("sg_partido")) %>% 
+  ggplot(aes(x = forcats::fct_rev(factor(nome, levels = levels)), y = aderencia)) + 
+  geom_segment(aes(x = forcats::fct_rev(factor(nome, levels = levels)), 
+                   xend = forcats::fct_rev(factor(nome, levels = levels)), 
+                   y = 0, 
+                   yend = aderencia), 
+               size = 0.1) +
+  geom_point(col="#E69F00", size = 3) + 
+  geom_point(aes(y = mean), size = 6.5, color = "#111111", shape = 124) +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 110), breaks = seq(0, 100, 20)) +
+  
+  geom_point(aes(x = 3.5, y = 70), size = 5, color = "#111111", shape = 124) +
+  annotate("text", label = "média do partido", x = 3.5, y = 82, color = "#4b4545") +
+
+  
+  labs(x = "",
+       y = "Aderência ao Governo (%)",
+       title = "Aderência dos parlamentares ao Governo \ncomparados com a média do partido") +
+  theme_ipsum_rc()
+```
+
+Os pontos amarelos que estão depois da marca | preta indicam os parlamentares que possuem maior aderência ao Governo do que a média dos parlamentares de seu partido.
+
+A seguir outra alternativa de visualização para comparação da aderência ao governo dos parlamentares com a média de seu partido.
+
+Na visualização existem duas barras: **a barra amarela é a aderência do parlamentar ao Governo** enquanto que a 
+**barra azul indica a média do partido**. Quando as duas barras se sobrepõem o resultado é a cor cinza. 
+
+Quando o parlamentar possui uma maior aderência ao governo do que a média do partido a cor amarela é cor execedente na visualização. Se a aderência do parlamentar é menor que a média do partido a barra azul será maior que a amarela.
+
+A diferença entre a aderência do parlamentar e a média do partido é dada pela diferença entre a barra cinza (menor valor) e a barra que se sobrepõe (maior valor).
+
+Paulo Eduardo Martins (PSC/PR) possui maior aderência ao governo do que a média de seu partido (barra amarela se destaca). Enquanto que Fernando Monteiro (PP/PE) possui uma aderência ao governo menor que a média de seu partido (barra azul se destaca).
+
+```{r fig.height=10}
+id_parlamentares_selecionados <- aderencia_parlamentares %>% 
+  filter(selecionado) %>% 
+  pull(id)
+
+data <- aderencia_parlamentares %>% 
+  group_by(sg_partido) %>% 
+  mutate(media_partido = mean(aderencia)) %>% 
+  ungroup() %>% 
+  filter(id %in% id_parlamentares_selecionados) %>% 
+  select(nome, aderencia, media_partido) %>% 
+  gather(key = "key", value = "value", aderencia:media_partido)
+
+ggplot(data = data %>% 
+         filter(key != "media_partido"),
+       aes(
+         x = reorder(nome, value),
+         y = value,
+         fill = key
+       )) +
+  geom_col(fill = "#FFD046",
+           alpha = .5,
+           width = 0.5) +
+  geom_col(
+    data = filter(data, key == "media_partido"),
+    fill = "#6699CC",
+    alpha = .5,
+    width = 0.5
+  ) +
+    
+  scale_x_discrete(position = "left") +
+  scale_y_continuous(breaks = seq(0, 100, 10)) +
+  coord_flip() +
+  labs(title = "Aderência dos parlamentares ao Governo \ncomparados com a média do partido",
+       x = "",
+       y = "Aderência ao Governo (%)") +
+  guides(fill = F) +
+  theme_ipsum_rc()
+```
+
+## Dados
+
+Os dados de aderência para os todos os parlamentares usados nessa análise podem ser conferidos na tabela abaixo.
+
+```{r fig.height=8}
+aderencia_parlamentares %>% 
+  mutate(aderencia = round(aderencia, 2)) %>% 
+  select(id, nome, sg_partido, aderencia, seguiu, nao_seguiu, faltou, liberado) %>% 
+  datatable(class = 'cell-border stripe',
+            filter = 'top',
+            rownames = FALSE, 
+            colnames = c("id", "Nome", "Partido", "Aderência", "Seguiu", "Não Seguiu", "Faltou", "Liberado"))
+```
+
