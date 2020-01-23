@@ -15,7 +15,7 @@ fetch_liderancas_camara <- function() {
   xml <- xml[[1]]
   
   data <- purrr::map_df(xml, function(x) {
-    partido_lideranca <- attr(x, "sigla")
+    partido_lideranca <- attributes(x)$sigla
     
     if (!is.null(x$lider)) {
       df <- x$lider %>%
@@ -23,26 +23,25 @@ fetch_liderancas_camara <- function() {
         as_data_frame() %>%
         unnest() %>%
         mutate(cargo = "Líder") %>%
-        rename(id = ideCadastro)
+        rename(id = ideCadastro) %>% 
+        unnest()
       
       if (!is.null(x$vice_lider)) {
         vices <- x %>%
-          t() %>%
-          as_tibble() %>%
-          unnest() %>%
-          t() %>%
-          as_tibble() %>%
-          unnest()
+          t()
+        
+        # Resolve problema de dois objetos dentro de uma única tag
+        vices <- purrr::map_df(vices, function(y) {
+          if (length(y) > 4) {
+            return(y[1:5])
+          }
+          return(y)
+        })
         
         vices <- vices %>%
-          slice(2:nrow(vices)) %>%
-          rename(
-            nome = V1,
-            id = V2,
-            partido = V3,
-            uf = V4
-          ) %>%
-          mutate(cargo = "Vice-líder")
+          unnest() %>%
+          mutate(cargo = "Vice-líder") %>% 
+          rename(id = ideCadastro)
         
         df <- bind_rows(df, vices)
         
@@ -52,19 +51,20 @@ fetch_liderancas_camara <- function() {
         mutate(bloco_partido = partido_lideranca) %>%
         select(bloco_partido, id, nome, cargo, partido, uf)
       
-    } else {
+    } 
+    else {
       df <- x$representante %>%
         t() %>%
         as_data_frame() %>%
         unnest() %>%
         mutate(cargo = "Representante",
                bloco_partido = partido_lideranca) %>%
-        select(bloco_partido, id = ideCadastro, nome, cargo, partido, uf)
+        select(bloco_partido, id = ideCadastro, nome, cargo, partido, uf) %>% 
+        unnest()
     }
     
     return(df)
   }) %>%
-    unnest() %>% 
     mutate(casa = "camara")
   
   return(data)
