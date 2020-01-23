@@ -29,6 +29,11 @@ Crie as tabelas e importe os dados:
 make create
 ```
 
+Também é possível atualizar os dados:
+```
+make update
+```
+
 Você será capaz de acessar o banco via psql através do comando:
 ```
 psql -h localhost -U postgres -d vozativa
