@@ -13,7 +13,7 @@ processa_dados_deputados <- function() {
   source(here::here("crawler/parlamentares/deputados/fetcher_deputado.R"))
   source(here::here("crawler/votacoes/utils_votacoes.R"))
   
-  deputados <- purrr::map_df(legislaturas_list, ~ fetch_deputados(.x))
+  deputados <- purrr::map_df(legislaturas_list, ~ fetch_deputados_segmentado(.x))
   
   deputados <- deputados %>% 
     dplyr::group_by(id) %>% 
