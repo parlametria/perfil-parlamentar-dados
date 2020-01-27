@@ -27,6 +27,8 @@ fetch_liderancas_camara <- function() {
         unnest()
       
       if (!is.null(x$vice_lider)) {
+        x$lider <- NULL
+        
         vices <- x %>%
           t()
         
