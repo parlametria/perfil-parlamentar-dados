@@ -195,8 +195,8 @@ CREATE TABLE IF NOT EXISTS "atividades_economicas" (
 );
 
 CREATE TABLE IF NOT EXISTS "ligacoes_economicas" (    
-    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
-    "id_atividade_economica" INTEGER REFERENCES "atividades_economicas" ("id_atividade_economica") ON DELETE SET NULL ON UPDATE CASCADE,
+    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE CASCADE ON UPDATE CASCADE,
+    "id_atividade_economica" INTEGER REFERENCES "atividades_economicas" ("id_atividade_economica") ON DELETE CASCADE ON UPDATE CASCADE,
     "total_por_atividade" NUMERIC(15, 2),
     "proporcao_doacao" REAL,
     "indice_ligacao_atividade_economica" REAL,        
@@ -210,15 +210,15 @@ CREATE TABLE IF NOT EXISTS "empresas" (
 );
 
 CREATE TABLE IF NOT EXISTS "atividades_economicas_empresas" (    
-    "cnpj" VARCHAR(14) REFERENCES "empresas" ("cnpj") ON DELETE SET NULL ON UPDATE CASCADE,
-    "id_atividade_economica" INTEGER REFERENCES "atividades_economicas" ("id_atividade_economica") ON DELETE SET NULL ON UPDATE CASCADE,
+    "cnpj" VARCHAR(14) REFERENCES "empresas" ("cnpj") ON DELETE CASCADE ON UPDATE CASCADE,
+    "id_atividade_economica" INTEGER REFERENCES "atividades_economicas" ("id_atividade_economica") ON DELETE CASCADE ON UPDATE CASCADE,
     "cnae_tipo" VARCHAR(50),
     PRIMARY KEY("cnpj", "id_atividade_economica", "cnae_tipo")
 );
 
 CREATE TABLE IF NOT EXISTS "empresas_parlamentares" (    
-    "cnpj" VARCHAR(14) REFERENCES "empresas" ("cnpj") ON DELETE SET NULL ON UPDATE CASCADE,
-    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE SET NULL ON UPDATE CASCADE,
+    "cnpj" VARCHAR(14) REFERENCES "empresas" ("cnpj") ON DELETE CASCADE ON UPDATE CASCADE,
+    "id_parlamentar_voz" VARCHAR(40) REFERENCES "parlamentares" ("id_parlamentar_voz") ON DELETE CASCADE ON UPDATE CASCADE,
     "data_entrada_sociedade" DATE,
     PRIMARY KEY("cnpj", "id_parlamentar_voz")
 );

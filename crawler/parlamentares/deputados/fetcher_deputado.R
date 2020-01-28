@@ -101,3 +101,36 @@ extract_partido_informations <- function(url) {
   
   return (partido)
 }
+
+#' @title Importa dados de todos os deputados de uma legislatura específica de forma segmentada
+#' @description Importa os dados de todos os deputados federais de uma legislatura específica de forma segmentada:
+#' a cada 20 requisições, o sistema faz uma pausa
+#' @return Dataframe contendo informações dos deputados: id, nome civil e cpf
+#' @examples
+#' deputados <- fetch_deputados_segmentado(56)
+fetch_deputados_segmentado <- function(legislatura = 56) {
+  library(tidyverse)
+  url <- paste0("https://dadosabertos.camara.leg.br/api/v2/deputados?idLegislatura=", legislatura)
+  
+  ids_deputados <- 
+    (RCurl::getURL(url) %>%
+       jsonlite::fromJSON())$dados %>% 
+    select(id) %>% distinct() %>% 
+   rowid_to_column(var = 'indice')
+  
+  info_pessoais <- 
+    purrr::map2_df(ids_deputados$id, ids_deputados$indice, 
+                   function(x, y) {
+                     if(y %% 20 == 0) {
+                       Sys.sleep(10)
+                     }
+                     df <- fetch_deputado(x)
+                     return(df)
+                   })
+    
+  return(info_pessoais %>% 
+           unique() %>% 
+           mutate_if(is.factor, as.character) %>% 
+           mutate(id = as.integer(id),
+                  legislatura = legislatura))
+}
