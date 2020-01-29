@@ -9,8 +9,7 @@ processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/l
   liderancas <- read_csv(liderancas_path) %>% 
     mutate(
       casa_enum = dplyr::if_else(casa == "camara", 1, 2),
-      id_parlamentar_voz = paste0(casa_enum, as.character(id)),
-      bloco_partido = gsub("Bloco ", "", bloco_partido)
+      id_parlamentar_voz = paste0(casa_enum, as.character(id))
     )
   
   liderancas_partidos <- liderancas %>% 
