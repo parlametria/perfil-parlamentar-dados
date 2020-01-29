@@ -58,8 +58,7 @@ map_sigla_padronizada_para_sigla <- function(sigla) {
   
   sigla_alt <- case_when(
     str_detect(sigla_clean, "PODEMOS") ~ "PODE",
-    str_detect(sigla_clean, "REPUBLICANOS") ~ "PRB",
-    str_detect(sigla_clean, "BLOCO PP MDB PTB") ~ "PP, MDB, PTB",
+    str_detect(sigla_clean, "BLOCO PP MDB PTB") ~ "BLOCO PP, MDB, PTB",
     str_detect(sigla_clean, "BLOCO PARLAMENTAR PSDBPSL") ~ "BLOCO PARLAMENTAR PSDB/PSL",
     TRUE ~ sigla_clean
   )

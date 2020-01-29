@@ -61,19 +61,16 @@ fetch_partidos_por_leg <- function(legislatura = 56) {
       jsonlite::fromJSON())$dados
     
     data <- data %>% 
-      dplyr::select(id)
+      dplyr::select(id, sigla) %>% 
+      mutate(tipo = "partido",
+             situacao = "Ativo")
     
   }, error = function(e) {
     return(
       dplyr::tribble(~ id, ~ sigla, ~ tipo, ~ situacao)
       )
   })
-  
-  if (nrow(partidos) > 0) {
-    partidos <- 
-      purrr::map_df(partidos$id, ~ fetch_info_partido(.x))
-  }
-  
+  ## TODO: situacao do partido não corresponde com a realidade
   return(partidos %>% 
            dplyr::arrange(id))
   
@@ -131,7 +128,8 @@ process_partidos_por_leg <- function(legislaturas = c(55, 56)) {
     purrr::map_df(legislaturas, ~ fetch_partidos_por_leg(.x)) %>% 
     unique()
   
-  blocos <- fetch_blocos()
+  blocos <- fetch_blocos() %>%
+    mutate(sigla = paste0("Bloco ", sigla))
   
   governo <- 
     dplyr::tribble(~ id, ~ sigla, ~ tipo, ~ situacao, 
