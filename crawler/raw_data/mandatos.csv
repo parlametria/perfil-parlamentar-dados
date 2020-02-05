@@ -1,6 +1,7 @@
 id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_exercicio,desc_causa_fim_exercicio
 178957,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
 178864,camara,55,2015-02-01,2015-11-17,Titular,12,Secretário de Estado
+178914,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
 178890,camara,55,2015-02-01,2015-03-06,Titular,36,Afastamento por Decisão
 178968,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
 133374,camara,52,2005-01-03,2007-01-31,Efetivado,99,Término da Legislatura
