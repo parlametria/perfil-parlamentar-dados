@@ -187,10 +187,10 @@ fetch_membros_comissao_camara_by_page <- function(page = 1,  url, sigla_comissao
                           cargo = dplyr::case_when(
                             startsWith(cargo, "Presidente") ~ "PRESIDENTE",
                             startsWith(cargo, "Titular") ~ "TITULAR",
-                            startsWith(cargo, "1º Vice-Presidente	2") ~ "PRIMEIRO VICE-PRESIDENTE",
+                            startsWith(cargo, "1º Vice-Presidente") ~ "PRIMEIRO VICE-PRESIDENTE",
                             startsWith(cargo, "Suplente") ~ "SUPLENTE",
-                            startsWith(cargo, "2º Vice-Presidente	2") ~ "SEGUNDO VICE-PRESIDENTE",
-                            startsWith(cargo, "3º Vice-Presidente	2") ~ "TERCEIRO VICE-PRESIDENTE"
+                            startsWith(cargo, "2º Vice-Presidente") ~ "SEGUNDO VICE-PRESIDENTE",
+                            startsWith(cargo, "3º Vice-Presidente") ~ "TERCEIRO VICE-PRESIDENTE"
                           ),
                           situacao = if_else(cargo == 'SUPLENTE', 'Suplente', 'Titular'))
           membros <- membros[!duplicated(membros$id) | membros$cargo %in% 
