@@ -1464,7 +1464,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 38,senado,5525,Presidente,Titular
 38,senado,5523,Suplente,Suplente
 38,senado,5990,Titular,Titular
-38,senado,5926,Suplente,Suplente
+38,senado,5927,Suplente,Suplente
 38,senado,5385,Titular,Titular
 38,senado,5967,Suplente,Suplente
 38,senado,5732,Titular,Titular
@@ -1492,12 +1492,12 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 40,senado,5988,Titular,Titular
 40,senado,5894,Suplente,Suplente
 40,senado,5979,Titular,Titular
-40,senado,5895,Suplente,Suplente
+40,senado,5718,Suplente,Suplente
 40,senado,5411,Titular,Titular
 40,senado,5971,Suplente,Suplente
 40,senado,345,Titular,Titular
 40,senado,5953,Suplente,Suplente
-40,senado,5718,Titular,Titular
+40,senado,5895,Titular,Titular
 40,senado,5008,Titular,Titular
 40,senado,825,Suplente,Suplente
 40,senado,5352,Titular,Titular
@@ -1507,7 +1507,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 40,senado,5985,Titular,Titular
 40,senado,5990,Suplente,Suplente
 40,senado,5385,Titular,Titular
-40,senado,5926,Suplente,Suplente
+40,senado,5927,Suplente,Suplente
 40,senado,5523,Titular,Titular
 40,senado,4560,Suplente,Suplente
 40,senado,4531,Titular,Titular
@@ -1531,7 +1531,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 34,senado,5529,Titular,Titular
 34,senado,677,Suplente,Suplente
 34,senado,3396,Titular,Titular
-34,senado,90,Suplente,Suplente
+34,senado,5502,Suplente,Suplente
 34,senado,5942,Titular,Titular
 34,senado,5905,Suplente,Suplente
 34,senado,5924,Titular,Titular
@@ -1624,7 +1624,6 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 834,senado,4981,Titular,Titular
 834,senado,5953,Suplente,Suplente
 834,senado,5979,Titular,Titular
-834,senado,5895,Suplente,Suplente
 834,senado,825,Presidente,Titular
 834,senado,374,Suplente,Suplente
 834,senado,5535,Vice-presidente,Titular
@@ -1632,7 +1631,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 834,senado,751,Titular,Titular
 834,senado,4560,Suplente,Suplente
 834,senado,5985,Titular,Titular
-834,senado,5926,Suplente,Suplente
+834,senado,5927,Suplente,Suplente
 834,senado,5422,Titular,Titular
 834,senado,1023,Suplente,Suplente
 834,senado,470,Titular,Titular
@@ -1658,14 +1657,14 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 1306,senado,5627,Suplente,Suplente
 1306,senado,5783,Vice-presidente,Titular
 1306,senado,5008,Suplente,Suplente
-1306,senado,5926,Titular,Titular
+1306,senado,5927,Titular,Titular
 1306,senado,5967,Suplente,Suplente
 1306,senado,5525,Titular,Titular
 1306,senado,5523,Suplente,Suplente
 1306,senado,470,Titular,Titular
 1306,senado,5350,Suplente,Suplente
 1306,senado,3806,Titular,Titular
-1306,senado,5531,Titular,Titular
+1306,senado,5976,Titular,Titular
 1306,senado,5959,Suplente,Suplente
 47,senado,70,Titular,Titular
 47,senado,3777,Suplente,Suplente
@@ -1691,6 +1690,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 47,senado,5988,Suplente,Suplente
 47,senado,5529,Suplente,Suplente
 47,senado,5979,Titular,Titular
+47,senado,5718,Suplente,Suplente
 47,senado,5971,Titular,Titular
 47,senado,1249,Suplente,Suplente
 47,senado,345,Vice-presidente,Titular
@@ -1729,10 +1729,10 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 59,senado,1186,Suplente,Suplente
 59,senado,5502,Titular,Titular
 59,senado,90,Suplente,Suplente
+59,senado,3396,Titular,Titular
 59,senado,4770,Suplente,Suplente
 59,senado,677,Titular,Titular
 59,senado,5929,Suplente,Suplente
-59,senado,5895,Titular,Titular
 59,senado,5411,Suplente,Suplente
 59,senado,4981,Titular,Titular
 59,senado,5748,Suplente,Suplente
@@ -1744,7 +1744,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 59,senado,374,Suplente,Suplente
 59,senado,581,Titular,Titular
 59,senado,5535,Suplente,Suplente
-59,senado,5926,Titular,Titular
+59,senado,5927,Titular,Titular
 59,senado,5967,Suplente,Suplente
 59,senado,5990,Titular,Titular
 59,senado,5985,Suplente,Suplente
@@ -1754,7 +1754,6 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 59,senado,4531,Suplente,Suplente
 59,senado,1173,Vice-presidente,Titular
 59,senado,3806,Suplente,Suplente
-59,senado,5959,Titular,Titular
 59,senado,5924,Suplente,Suplente
 59,senado,5531,Titular,Titular
 59,senado,5533,Suplente,Suplente
@@ -1783,7 +1782,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 50,senado,5627,Suplente,Suplente
 50,senado,5535,Titular,Titular
 50,senado,374,Suplente,Suplente
-50,senado,5926,Titular,Titular
+50,senado,5927,Titular,Titular
 50,senado,5990,Suplente,Suplente
 50,senado,5523,Titular,Titular
 50,senado,5525,Suplente,Suplente
@@ -1825,7 +1824,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 1307,senado,5535,Suplente,Suplente
 1307,senado,374,Titular,Titular
 1307,senado,5783,Suplente,Suplente
-1307,senado,5926,Titular,Titular
+1307,senado,5927,Titular,Titular
 1307,senado,5732,Suplente,Suplente
 1307,senado,4560,Titular,Titular
 1307,senado,5967,Suplente,Suplente
@@ -1844,7 +1843,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 54,senado,739,Titular,Titular
 54,senado,5899,Suplente,Suplente
 54,senado,5529,Titular,Titular
-54,senado,4770,Suplente,Suplente
+54,senado,677,Suplente,Suplente
 54,senado,5376,Titular,Titular
 54,senado,5894,Suplente,Suplente
 54,senado,5666,Titular,Titular
@@ -1895,7 +1894,6 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 1956,senado,5376,Suplente,Suplente
 1956,senado,5929,Titular,Titular
 1956,senado,5666,Suplente,Suplente
-1956,senado,5895,Titular,Titular
 1956,senado,5953,Suplente,Suplente
 1956,senado,5411,Titular,Titular
 1956,senado,5718,Suplente,Suplente

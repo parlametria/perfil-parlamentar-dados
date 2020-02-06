@@ -2027,6 +2027,11 @@ cnpj,id_atividade_economica,cnae_tipo
 20201491000146,37,cnae_secundario
 20237155000153,41,cnae_fiscal
 20237155000153,41,cnae_secundario
+20340017000103,44,cnae_fiscal
+20340017000103,45,cnae_fiscal
+20340017000103,35,cnae_secundario
+20340017000103,14,cnae_secundario
+20340017000103,32,cnae_secundario
 20435853000163,14,cnae_fiscal
 20435853000163,7,cnae_secundario
 20435853000163,8,cnae_secundario
