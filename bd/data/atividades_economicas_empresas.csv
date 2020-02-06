@@ -386,6 +386,12 @@ cnpj,id_atividade_economica,cnae_tipo
 03153143000121,35,cnae_fiscal
 03165946000104,43,cnae_fiscal
 03188076000180,13,cnae_fiscal
+03195048000190,44,cnae_fiscal
+03195048000190,45,cnae_fiscal
+03195048000190,44,cnae_secundario
+03195048000190,45,cnae_secundario
+03195048000190,37,cnae_secundario
+03195048000190,32,cnae_secundario
 03199269000137,32,cnae_fiscal
 03199269000137,6,cnae_secundario
 03199269000137,32,cnae_secundario
@@ -2021,6 +2027,11 @@ cnpj,id_atividade_economica,cnae_tipo
 20201491000146,37,cnae_secundario
 20237155000153,41,cnae_fiscal
 20237155000153,41,cnae_secundario
+20340017000103,44,cnae_fiscal
+20340017000103,45,cnae_fiscal
+20340017000103,35,cnae_secundario
+20340017000103,14,cnae_secundario
+20340017000103,32,cnae_secundario
 20435853000163,14,cnae_fiscal
 20435853000163,7,cnae_secundario
 20435853000163,8,cnae_secundario
