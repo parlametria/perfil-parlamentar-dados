@@ -153,7 +153,7 @@ fetch_membros_comissao_camara_with_backoff <- function(orgao_id, sigla_comissao,
     )) %>% 
     unnest(data)
   
-
+  return(membros)
 }
 
 #' @title Recupera informações dos membros de uma Comissão em uma data de inicio específica
