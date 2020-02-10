@@ -27,8 +27,9 @@ fetch_cargos_mesa_camara <- function(legislatura = 56, atual_cargo = TRUE) {
   }
   
   cargos_mesa_res <- cargos_mesa %>% 
-    mutate(legislatura = legislatura) %>% 
-    select(id, nome, sg_partido = siglaPartido, uf = siglaUf, cargo = titulo, 
+    mutate(legislatura = legislatura,
+           casa = "camara") %>% 
+    select(id, casa, nome, sg_partido = siglaPartido, uf = siglaUf, cargo = titulo, 
            data_inicio = dataInicio, data_fim = dataFim, legislatura) %>% 
     check_cargos()
   
@@ -66,8 +67,9 @@ fetch_cargos_mesa_senado <- function() {
       separate(bancada, into = c("sg_partido", "uf"), sep = "-") %>% 
       filter(!is.na(id)) %>% 
       mutate(data_inicio = NA, data_fim = NA, 
-             legislatura = 56, cargo = str_to_title(cargo)) %>% ## Legislatura atual é a 56
-      select(id, nome, sg_partido, uf, cargo, data_inicio, data_fim, legislatura) %>% 
+             legislatura = 56, cargo = str_to_title(cargo),
+             casa = "senado") %>% ## Legislatura atual é a 56
+      select(id, casa, nome, sg_partido, uf, cargo, data_inicio, data_fim, legislatura) %>% 
       check_cargos()
     
   }, error = function(e) {
