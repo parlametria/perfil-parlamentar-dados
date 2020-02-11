@@ -21,3 +21,4 @@
 \copy empresas FROM '/data/empresas.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
 \copy atividades_economicas_empresas FROM '/data/atividades_economicas_empresas.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
 \copy empresas_parlamentares FROM '/data/empresas_parlamentares.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
+\copy cargos_mesa FROM '/data/cargos_mesa.csv' WITH NULL AS 'NA' DELIMITER ',' CSV HEADER;
