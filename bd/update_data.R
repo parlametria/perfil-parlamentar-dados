@@ -172,6 +172,21 @@ tryCatch(
   }
 )
 
+tryCatch(
+  {
+    log <- paste0(log, date(), " - Executando processador dos dados de cargos na mesa diretora...\n")
+    source(here::here("parlametria/crawler/cargos_mesa/export_cargos_mesa.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução processador dos dados de cargos na mesa diretora")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
 ## TODO: processar dados de propriedades rurais
 ## TODO: processar dados de empresas agrícolas
 ## TODO: processar dados de índice de vínculo econômico com agro
@@ -187,21 +202,6 @@ tryCatch(
   },
   error=function(cond) {
     log_error <- get_log_error(cond, "Um erro ocorreu durante a execução processador dos dados para o perfil mais")
-    message(log_error)
-    log <- paste0(log, date(), " ", log_error)
-    send_log_to_bot(log)
-    stop("A execução foi interrompida", call. = FALSE)
-    return(NA)
-  }
-)
-
-tryCatch(
-  {
-    log <- paste0(log, date(), " - Executando processador dos dados de cargos na mesa diretora...\n")
-    source(here::here("parlametria/crawler/cargos_mesa/export_cargos_mesa.R"))
-  },
-  error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução processador dos dados de cargos na mesa diretora")
     message(log_error)
     log <- paste0(log, date(), " ", log_error)
     send_log_to_bot(log)
