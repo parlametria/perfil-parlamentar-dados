@@ -7,7 +7,7 @@ processa_cargos_mesa <- function() {
   library(tidyverse)
   library(here)
   
-  source(here("parlametria/crawler/cargos_mesa/fetcher_cargos_mesa.R"))
+  source(here("crawler/parlamentares/cargos_mesa/fetcher_cargos_mesa.R"))
   
   cargos_mesa <-fetch_cargos_mesa_camara() %>% 
     rbind(fetch_cargos_mesa_senado()) %>% 

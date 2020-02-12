@@ -92,7 +92,7 @@ check_cargos <- function(df) {
   library(tidyverse)
   library(here)
   
-  source(here("parlametria/crawler/cargos_mesa/constants.R"))
+  source(here("crawler/parlamentares/cargos_mesa/constants.R"))
   
   lista_cargos <- c(.SECRETARIO_1, .SECRETARIO_2, .SECRETARIO_3, .SECRETARIO_4,
                     .VICE_PRESIDENTE_1, .VICE_PRESIDENTE_2, .PRESIDENTE, 

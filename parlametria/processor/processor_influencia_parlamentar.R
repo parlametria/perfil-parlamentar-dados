@@ -90,7 +90,7 @@ process_indice_influencia_parlamentar <- function() {
     mutate(indice_liderancas = score_liderancas / 8) %>%  ## 8 é a soma dos pesos 3 + 2 + 3
     select(id, casa, indice_liderancas)
   
-  source(here("parlametria/crawler/cargos_mesa/fetcher_cargos_mesa.R"))
+  source(here("crawler/parlamentares/cargos_mesa/fetcher_cargos_mesa.R"))
   
   cargos_mesa_camara <- fetch_cargos_mesa_camara(legislatura = 56, atual_cargo = TRUE) %>% 
     mutate(casa = "camara")
