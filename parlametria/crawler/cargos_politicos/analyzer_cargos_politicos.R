@@ -26,7 +26,10 @@ analyzer_cargos_politicos <- function() {
            votos = QTDE_VOTOS
     )
   
-  return(cargos_parlamentares_alt)
+  cargos_parlamentares_filtered <- 
+    filter_suplentes_com_exercicio(cargos_parlamentares_alt)
+  
+  return(cargos_parlamentares_filtered)
 }
 
 #' @title Filtra os parlamentares suplentes que estiveram em exercício
