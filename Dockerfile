@@ -22,6 +22,7 @@ RUN R -e "devtools::install_github('analytics-ufcg/leggoR', force = T)"
 RUN apt-get install -y libjpeg-dev
 RUN R -e "install.packages('pdftools')"
 RUN R -e "install.packages('eeptools')"
+RUN R -e "devtools::install_github('Cepesp-Fgv/cepesp-r')"
 
 ## Configura cron para execução automática da atualização
 ENV TZ=America/Recife
