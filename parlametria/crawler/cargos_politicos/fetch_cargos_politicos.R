@@ -5,13 +5,15 @@
 #' @param cargos Conjunto de cargos de eleições
 #' @param nivel_detalhamento Nível de detalhamento dos resultados. Pode ser:
 #' Brasil, Macro, Estado, Meso, Micro, Municipio, Municipio-Zona, Zona, Votação e Seção.
+#' @param elected TRUE para filtrar apenas candidatos eleitos, FALSE caso contrário.
 #' @return Dataframe com informações sobre candidatos eleitos em cargos e anos específicos.
 #' @example fetch_eleicoes()
 fetch_eleicoes <- function(
   anos = c(2018), 
   cargos = c("Presidente", "Governador", "Senador", "Deputado Federal", "Deputado Estadual"),
   nivel_detalhamento = "Brasil",
-  elected = TRUE) {
+  elected = TRUE
+  ) {
   
   library(tidyverse)
   library(cepespR)
@@ -23,24 +25,36 @@ fetch_eleicoes <- function(
         cargos,
         function(y) {
           print(paste0("Baixando resultado das eleições de ", x, " para o cargo ", y, "..."))
-          return(get_elections(x, 
-                          only_elected = elected,
-                          position = y,
-                          regional_aggregation = nivel_detalhamento) %>% 
-            mutate(CPF_CANDIDATO = as.character(CPF_CANDIDATO)) %>%
-            select(CPF_CANDIDATO,
-                   ANO_ELEICAO,
-                   NUM_TURNO,
-                   DESCRICAO_CARGO,
-                   SIGLA_UE,
-                   DES_SITUACAO_CANDIDATURA,
-                   DESC_SIT_TOT_TURNO, 
-                   NUMERO_CANDIDATO, 
-                   SIGLA_PARTIDO,
-                   COMPOSICAO_COLIGACAO, 
-                   QTDE_VOTOS
-                )
-            )
+          
+          eleicao <- get_elections(x, 
+                                   only_elected = elected,
+                                   position = y,
+                                   regional_aggregation = nivel_detalhamento) %>% 
+            mutate(CPF_CANDIDATO = as.character(CPF_CANDIDATO))
+          
+          if (nivel_detalhamento == "Municipio") {
+            eleicao <- eleicao %>% 
+              mutate(SIGLA_UE = NOME_MUNICIPIO) %>% 
+              mutate(SIGLA_UF = UF)
+          }
+          
+          if (nivel_detalhamento == "Brasil") {
+            eleicao <- eleicao %>% 
+              mutate(SIGLA_UF = SIGLA_UE)
+          }
+          
+          return(eleicao %>%
+                   select(CPF_CANDIDATO,
+                          ANO_ELEICAO,
+                          NUM_TURNO,
+                          DESCRICAO_CARGO,
+                          SIGLA_UE,
+                          SIGLA_UF,
+                          DES_SITUACAO_CANDIDATURA,
+                          DESC_SIT_TOT_TURNO,
+                          SIGLA_PARTIDO,
+                          QTDE_VOTOS)
+                 )
         }
       )
   })
@@ -58,7 +72,7 @@ fetch_all_cargos_politicos <- function(parlamentares_datapath = here::here("craw
   library(tidyverse)
   library(purrr)
   library(here)
-  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_parlamentares.R"))
+  source(here("crawler/parlamentares/process_cpf_parlamentares.R"))
   
   cargos_nacionais <- list(cargos = c("Presidente", "Governador", "Senador", "Deputado Federal", "Deputado Estadual"),
                            elected = c(TRUE, TRUE, FALSE, FALSE, TRUE))
@@ -79,7 +93,7 @@ fetch_all_cargos_politicos <- function(parlamentares_datapath = here::here("craw
                         cargos_eleicoes_municipais)
   
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(cpf = "c", id = "c")) %>% 
-    filter(em_exercicio == 1)
+    filter(ultima_legislatura == 56)
   
   ids_senadores <- process_cpf_parlamentares_senado() %>% 
     select(id_senador = id, cpf_senador = cpf)
@@ -87,9 +101,11 @@ fetch_all_cargos_politicos <- function(parlamentares_datapath = here::here("craw
   parlamentares <- parlamentares %>% 
     left_join(ids_senadores, by = c("id" = "id_senador")) %>% 
     mutate(cpf = if_else(casa == "senado", cpf_senador, cpf)) %>% 
-    select(-cpf_senador)
-    
-  cargos_parlamentares <- left_join(parlamentares, todos_cargos, by = c("cpf" =  "CPF_CANDIDATO"))
+    select(-cpf_senador) %>% 
+    distinct()
+
+  cargos_parlamentares <- parlamentares %>% 
+    left_join(todos_cargos, by = c("cpf" =  "CPF_CANDIDATO"))
   
   return(cargos_parlamentares)
-} 
+}

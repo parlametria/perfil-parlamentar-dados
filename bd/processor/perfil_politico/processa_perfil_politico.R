@@ -68,7 +68,7 @@ processa_perfil_politico <-
   
   library(tidyverse)
   library(here)
-  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_parlamentares.R"))
+  source(here("crawler/parlamentares/process_cpf_parlamentares.R"))
   source(here("crawler/utils/utils.R"))
   
   perfil_politico <- read_csv(candidatos_perfil_politico_data_path, col_types = cols(id = "c")) %>% 

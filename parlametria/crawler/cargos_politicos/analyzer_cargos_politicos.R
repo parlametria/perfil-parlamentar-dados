@@ -8,7 +8,7 @@ analyzer_cargos_politicos <- function() {
   
   cargos_parlamentares <- fetch_all_cargos_politicos()
     
-  cargos_parlamentares <- cargos_parlamentares %>% 
+  cargos_parlamentares_alt <- cargos_parlamentares %>% 
     select(id_parlamentar = id,
            casa,
            cpf, 
@@ -18,22 +18,15 @@ analyzer_cargos_politicos <- function() {
            ano_eleicao = ANO_ELEICAO,
            num_turno = NUM_TURNO,
            cargo = DESCRICAO_CARGO, 
-           uf_eleitoral = SIGLA_UE,
+           unidade_eleitoral = SIGLA_UE,
+           uf_eleitoral = SIGLA_UF,
            situacao_candidatura = DES_SITUACAO_CANDIDATURA,
            situacao_totalizacao_turno = DESC_SIT_TOT_TURNO,
-           numero_urna = NUMERO_CANDIDATO,
            sigla_partido_eleicao = SIGLA_PARTIDO,
-           composicao_coligacao = COMPOSICAO_COLIGACAO,
            votos = QTDE_VOTOS
-    ) %>% 
-    mutate(composicao_coligacao = if_else(str_detect(composicao_coligacao, '#NE#|#NULO#'),
-                                          as.character(NA),
-                                          composicao_coligacao))
+    )
   
-  cargos_parlamentares_filtered <- 
-    filter_suplentes_com_exercicio(cargos_parlamentares)
-  
-  return(cargos_parlamentares_filtered)
+  return(cargos_parlamentares_alt)
 }
 
 #' @title Filtra os parlamentares suplentes que estiveram em exercício
