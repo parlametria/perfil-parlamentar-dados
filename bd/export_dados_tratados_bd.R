@@ -94,6 +94,9 @@ atividades_economicas_empresas <- processa_atividades_economicas_empresas()
 source(here("bd/processor/empresas/processa_parlamentares_empresas.R"))
 empresas_parlamentares <- processa_parlamentares_empresas()
 
+source(here("bd/processor/cargos_mesa/processa_cargos_mesa.R"))
+cargos_mesa <- processa_cargos_mesa()
+
 message("Escrevendo dados em csv...")	
 write_csv(parlamentares, paste0(output, "parlamentares.csv"))
 write_csv(perguntas, paste0(output, "perguntas.csv"))
@@ -118,5 +121,6 @@ write_csv(ligacoes_economicas, paste0(output, "ligacoes_economicas.csv"))
 write_csv(empresas, paste0(output, "empresas.csv"))
 write_csv(atividades_economicas_empresas, paste0(output, "atividades_economicas_empresas.csv"))
 write_csv(empresas_parlamentares, paste0(output, "empresas_parlamentares.csv"))
+write_csv(cargos_mesa, paste0(output, "cargos_mesa.csv"))
 
 message("Concluído")

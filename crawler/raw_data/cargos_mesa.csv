@@ -1,0 +1,23 @@
+id_parlamentar,casa,cargo,data_inicio,data_fim,legislatura
+74693,camara,Presidente,2019-02-01,NA,56
+74158,camara,Segundo Secretário,2019-02-01,NA,56
+178951,camara,Primeiro Suplente de Secretário,2019-02-01,NA,56
+141428,camara,Terceiro Secretário,2019-02-01,NA,56
+178966,camara,Segundo Suplente de Secretário,2019-02-01,NA,56
+74478,camara,Segundo Vice-presidente,2019-02-01,NA,56
+159237,camara,Quarto Suplente de Secretário,2019-02-01,NA,56
+204436,camara,Terceiro Suplente de Secretário,2019-02-01,NA,56
+178882,camara,Quarto Secretário,2019-02-01,NA,56
+178946,camara,Primeiro Secretário,2019-02-01,NA,56
+204506,camara,Primeiro Vice-presidente,2019-02-01,NA,56
+3830,senado,Presidente,NA,NA,56
+5529,senado,Primeiro Vice-presidente,NA,NA,56
+5533,senado,Segundo Vice-presidente,NA,NA,56
+4560,senado,Primeiro Secretário,NA,NA,56
+3777,senado,Segundo Secretário,NA,NA,56
+5894,senado,Terceiro Secretário,NA,NA,56
+1186,senado,Quarto Secretário,NA,NA,56
+5942,senado,Primeiro Suplente,NA,NA,56
+5411,senado,Segundo Suplente,NA,NA,56
+581,senado,Terceiro Suplente,NA,NA,56
+5979,senado,Quarto Suplente,NA,NA,56
