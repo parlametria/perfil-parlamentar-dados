@@ -12,7 +12,7 @@ args = commandArgs(trailingOnly=TRUE)
 message("LEIA O README deste diretório")
 
 option_list = list(
-  make_option(c("-oa", "--out"), type="character", default=here::here("parlametria/raw_data/resumo/parlamentares_cargos.csv"), 
+  make_option(c("-o", "--out"), type="character", default=here::here("parlametria/raw_data/resumo/parlamentares_cargos.csv"), 
               help="nome do arquivo de saída [default= %default]", metavar="character")
 ) 
 
