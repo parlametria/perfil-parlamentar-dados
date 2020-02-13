@@ -144,11 +144,26 @@ tryCatch(
 
 tryCatch(
   {
-    log <- paste0(log, date(), " - Executando processador dos dados para o perfil mais...\n")
-    source(here::here("parlametria/processor/export_dados_perfil_mais.R"))
+    log <- paste0(log, date(), " - Executando crawler do histórico de cargos políticos...\n")
+    source(here::here("parlametria/crawler/cargos_politicos/export_cargos_politicos.R"))
   },
   error=function(cond) {
-    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução processador dos dados para o perfil mais")
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do histórico de cargos políticos")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
+tryCatch(
+  {
+    log <- paste0(log, date(), " - Executando processamento para dados de cargos em comissões e lideranças...\n")
+    source(here::here("parlametria/crawler/resumo/cargos_resumo/export_cargos_resumo.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do processamento para dados de cargos em comissões e lideranças")
     message(log_error)
     log <- paste0(log, date(), " ", log_error)
     send_log_to_bot(log)
@@ -164,6 +179,29 @@ tryCatch(
   },
   error=function(cond) {
     log_error <- get_log_error(cond, "Um erro ocorreu durante a execução processador dos dados de cargos na mesa diretora")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
+## TODO: processar dados de propriedades rurais
+## TODO: processar dados de empresas agrícolas
+## TODO: processar dados de índice de vínculo econômico com agro
+## TODO: processar dados de frentes parlamentares
+## TODO: processar dados de aderência (parlametria/crawler/resumo)
+## TODO: processar dados de atores meio ambiente
+## TODO: processar dados de requerimentos de informação (agricultura e meio ambiente)
+
+tryCatch(
+  {
+    log <- paste0(log, date(), " - Executando processador dos dados para o perfil mais...\n")
+    source(here::here("parlametria/processor/export_dados_perfil_mais.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução processador dos dados para o perfil mais")
     message(log_error)
     log <- paste0(log, date(), " ", log_error)
     send_log_to_bot(log)

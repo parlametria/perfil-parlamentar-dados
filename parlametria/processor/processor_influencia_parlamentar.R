@@ -90,19 +90,10 @@ process_indice_influencia_parlamentar <- function() {
     mutate(indice_liderancas = score_liderancas / 8) %>%  ## 8 é a soma dos pesos 3 + 2 + 3
     select(id, casa, indice_liderancas)
   
-  source(here("parlametria/crawler/cargos_mesa/fetcher_cargos_mesa.R"))
-  
-  cargos_mesa_camara <- fetch_cargos_mesa_camara(legislatura = 56, atual_cargo = TRUE) %>% 
-    mutate(casa = "camara")
-  
-  cargos_mesa_senado <- fetch_cargos_mesa_senado() %>% 
-    mutate(casa = "senado")
-  
-  cargos_mesa <- cargos_mesa_camara %>% 
-    rbind(cargos_mesa_senado) %>% 
-    mutate(id = as.character(id)) %>% 
+  cargos_mesa <- read_csv(here("crawler/raw_data/cargos_mesa.csv")) %>% 
+    mutate(id = as.character(id_parlamentar)) %>% 
     mutate(indice_cargo_mesa = case_when(
-      str_detect(cargo, "Suplente de Secretário") ~ 0.2,
+      str_detect(cargo, "Suplente de Secretário|Suplente") ~ 0.2,
       str_detect(cargo, "Secretário") ~ 0.6,
       str_detect(cargo, "Vice-Presidente") ~ 0.8,
       str_detect(cargo, "Presidente") ~ 1,
