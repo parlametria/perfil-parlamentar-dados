@@ -175,7 +175,7 @@ tryCatch(
 tryCatch(
   {
     log <- paste0(log, date(), " - Executando processador dos dados de cargos na mesa diretora...\n")
-    source(here::here("parlametria/crawler/cargos_mesa/export_cargos_mesa.R"))
+    source(here::here("crawler/parlamentares/cargos_mesa/export_cargos_mesa.R"))
   },
   error=function(cond) {
     log_error <- get_log_error(cond, "Um erro ocorreu durante a execução processador dos dados de cargos na mesa diretora")
