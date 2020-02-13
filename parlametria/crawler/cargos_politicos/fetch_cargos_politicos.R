@@ -91,7 +91,7 @@ fetch_all_cargos_politicos <- function(parlamentares_datapath = here::here("craw
   
   todos_cargos <- rbind(cargos_eleicoes_nacionais, 
                         cargos_eleicoes_municipais)
-  
+
   parlamentares <- read_csv(parlamentares_datapath, col_types = cols(cpf = "c", id = "c")) %>% 
     filter(ultima_legislatura == 56)
   
@@ -107,5 +107,10 @@ fetch_all_cargos_politicos <- function(parlamentares_datapath = here::here("craw
   cargos_parlamentares <- parlamentares %>% 
     left_join(todos_cargos, by = c("cpf" =  "CPF_CANDIDATO"))
   
-  return(cargos_parlamentares)
+  cargos_parlamentares_alt <- cargos_parlamentares %>% 
+    filter(! (str_detect(DESCRICAO_CARGO, "GOVERNADOR|PRESIDENTE") &
+              str_detect(DESC_SIT_TOT_TURNO, "2º TURNO|NÃO ELEITO") )
+           )
+  
+  return(cargos_parlamentares_alt)
 }
