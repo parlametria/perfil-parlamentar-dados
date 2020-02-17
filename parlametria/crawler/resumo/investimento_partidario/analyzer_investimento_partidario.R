@@ -63,7 +63,7 @@ process_investimento_partidario <- function(filtrar_em_exercicio = TRUE, casa_pa
   source(here("crawler/votacoes/utils_votacoes.R"))
 
   ## função process_cpf_parlamentares_senado
-  source(here("parlametria/crawler/empresas/socios_empresas/parlamentares/analyzer_socios_empresas_parlamentares.R"))
+  source(here("crawler/parlamentares/process_cpf_parlamentares.R"))
   
   receita <- process_receita_partido() %>% 
     select(cpf, partido_eleicao = partido, total_receita_partido = total_receita, 
