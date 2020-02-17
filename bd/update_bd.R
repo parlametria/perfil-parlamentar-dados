@@ -5,6 +5,7 @@ Sys.setenv(TZ='America/Recife')
 host <- Sys.getenv("PGHOST")
 user <- Sys.getenv("PGUSER")
 database <- Sys.getenv("PGDATABASE")
+pc_name <- Sys.info()["nodename"]
 ## password env PGPASSWORD
 
 execute_migration <- function(migration, log_output) {
@@ -111,11 +112,11 @@ file = here::here("bd/scripts/migrations/migration_empresas_parlamentares.sql")
 execute_migration(file, log_file)
 
 if (length(grep("ROLLBACK", readLines(log_file), value = TRUE)) > 0) {
-  error <- paste0('Um erro ocorreu durante a execução das migrações. Mais informações em ', log_file)
+  error <- paste0(pc_name, " - ", 'Um erro ocorreu durante a execução das migrações. Mais informações em ')
   send_log_to_bot(error)
   print(error)
 } else {
-  success <- "As migrações foram realizadas com sucesso!"
+  success <- paste0(pc_name, " - ", "As migrações foram realizadas com sucesso!")
   send_log_to_bot(success)
   print(success)
 }
