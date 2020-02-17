@@ -10,7 +10,7 @@ processa_cargos_mesa <- function(cargos_mesa_path = here::here("crawler/raw_data
       casa_enum = dplyr::if_else(casa == "camara", 1, 2),
       id_parlamentar_voz = paste0(casa_enum, as.character(id_parlamentar))
     ) %>% 
-    select(id_parlamentar_voz, casa, cargo, data_inicio, data_fim, legislatura)
+    select(id_parlamentar_voz, casa, cargo)
   
   return(cargos_mesa)
 }

@@ -1,23 +1,23 @@
-id_parlamentar_voz,casa,cargo,data_inicio,data_fim,legislatura
-174693,camara,Presidente,2019-02-01,NA,56
-174158,camara,Segundo Secretário,2019-02-01,NA,56
-1178951,camara,Primeiro Suplente de Secretário,2019-02-01,NA,56
-1141428,camara,Terceiro Secretário,2019-02-01,NA,56
-1178966,camara,Segundo Suplente de Secretário,2019-02-01,NA,56
-174478,camara,Segundo Vice-presidente,2019-02-01,NA,56
-1159237,camara,Quarto Suplente de Secretário,2019-02-01,NA,56
-1204436,camara,Terceiro Suplente de Secretário,2019-02-01,NA,56
-1178882,camara,Quarto Secretário,2019-02-01,NA,56
-1178946,camara,Primeiro Secretário,2019-02-01,NA,56
-1204506,camara,Primeiro Vice-presidente,2019-02-01,NA,56
-23830,senado,Presidente,NA,NA,56
-25529,senado,Primeiro Vice-presidente,NA,NA,56
-25533,senado,Segundo Vice-presidente,NA,NA,56
-24560,senado,Primeiro Secretário,NA,NA,56
-23777,senado,Segundo Secretário,NA,NA,56
-25894,senado,Terceiro Secretário,NA,NA,56
-21186,senado,Quarto Secretário,NA,NA,56
-25942,senado,Primeiro Suplente,NA,NA,56
-25411,senado,Segundo Suplente,NA,NA,56
-2581,senado,Terceiro Suplente,NA,NA,56
-25979,senado,Quarto Suplente,NA,NA,56
+id_parlamentar_voz,casa,cargo
+174693,camara,Presidente
+174158,camara,Segundo Secretário
+1178951,camara,Primeiro Suplente de Secretário
+1141428,camara,Terceiro Secretário
+1178966,camara,Segundo Suplente de Secretário
+174478,camara,Segundo Vice-presidente
+1159237,camara,Quarto Suplente de Secretário
+1204436,camara,Terceiro Suplente de Secretário
+1178882,camara,Quarto Secretário
+1178946,camara,Primeiro Secretário
+1204506,camara,Primeiro Vice-presidente
+23830,senado,Presidente
+25529,senado,Primeiro Vice-presidente
+25533,senado,Segundo Vice-presidente
+24560,senado,Primeiro Secretário
+23777,senado,Segundo Secretário
+25894,senado,Terceiro Secretário
+21186,senado,Quarto Secretário
+25942,senado,Primeiro Suplente
+25411,senado,Segundo Suplente
+2581,senado,Terceiro Suplente
+25979,senado,Quarto Suplente

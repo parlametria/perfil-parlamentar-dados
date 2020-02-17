@@ -1,4 +1,4 @@
-source(here::here("parlametria/crawler/cargos_mesa/analyzer_cargos_mesa.R"))
+source(here::here("crawler/parlamentares/cargos_mesa/analyzer_cargos_mesa.R"))
 
 if(!require(optparse)){
   install.packages("optparse")
