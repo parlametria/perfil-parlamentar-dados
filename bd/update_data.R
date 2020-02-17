@@ -24,6 +24,21 @@ tryCatch(
 
 tryCatch(
   {
+    log <- paste0(log, date(), " - Executando crawler de Partidos...\n")
+    source(here::here("crawler/parlamentares/partidos/export_partidos.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Partidos")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
+tryCatch(
+  {
     log <- paste0(log, date(), " - Executando crawler de Comissões...\n")
     source(here::here("crawler/parlamentares/comissoes/export_comissoes.R"))
   },
