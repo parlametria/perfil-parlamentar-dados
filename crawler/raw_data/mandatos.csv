@@ -1345,7 +1345,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 160637,camara,55,2015-02-01,2018-05-28,Titular,11,Ministro de Estado
 178845,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
 122466,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
-122466,camara,56,2019-10-09,NA,Suplente,NA,NA
+122466,camara,56,2019-10-09,2020-02-08,Suplente,53,Afastamento
 163321,camara,54,2011-02-16,2013-11-26,Suplente,53,Afastamento
 163321,camara,55,2015-02-01,2016-05-12,Titular,11,Ministro de Estado
 178870,camara,55,2015-02-01,2019-01-31,Titular,99,Término da Legislatura
@@ -1734,7 +1734,7 @@ id_parlamentar,casa,id_legislatura,data_inicio,data_fim,situacao,cod_causa_fim_e
 204391,camara,56,2019-02-01,NA,Titular,NA,NA
 204555,camara,56,2019-02-01,NA,Titular,NA,NA
 209189,camara,56,2019-03-13,2019-10-22,Suplente,53,Afastamento
-204563,camara,56,2019-02-01,NA,Titular,NA,NA
+204563,camara,56,2019-02-01,2020-02-11,Titular,20,Licença Conjunta Consecutiva
 204474,camara,56,2019-02-01,NA,Titular,NA,NA
 204420,camara,56,2019-02-01,NA,Titular,NA,NA
 204372,camara,56,2019-02-01,NA,Titular,NA,NA

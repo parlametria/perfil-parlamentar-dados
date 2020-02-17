@@ -121,12 +121,12 @@ fetch_blocos <- function(legislatura = NULL) {
 #' @return Dataframe de partidos políticos das legislaturas e governo
 #' @examples
 #' process_partidos_por_leg(55)
-process_partidos_por_leg <- function(legislaturas = c(55, 56)) {
+process_partidos_por_leg <- function(legislaturas = c(51, 52, 53, 54, 55, 56)) {
   library(tidyverse)
   
   partidos <- 
     purrr::map_df(legislaturas, ~ fetch_partidos_por_leg(.x)) %>% 
-    unique()
+    distinct()
   
   blocos <- fetch_blocos() %>%
     mutate(sigla = paste0("Bloco ", sigla))
