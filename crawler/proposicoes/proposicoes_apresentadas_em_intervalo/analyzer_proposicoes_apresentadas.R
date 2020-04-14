@@ -69,8 +69,10 @@ process_props_apresentadas_intervalo_senado <-
                     ~ fetch_proposicoes_senado(.x))
     
     proposicoes_alt <- proposicoes_metadados %>%
-      mutate(indexacao = "") %>%
+      mutate(indexacao = "",
+             casa = "senado") %>%
       select(id,
+             casa,
              nome,
              data_apresentacao,
              ementa,
