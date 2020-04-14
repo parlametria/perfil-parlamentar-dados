@@ -5,30 +5,107 @@
 #' @param data_final Data Final do intervalo para a apresentação das proposições. FOrmato YYYY-MM-DD.
 #' @return Dataframe contendo informações das proposições
 #' @examples
-#' proposicao <- process_props_apresentadas_intervalo("", "")
-process_props_apresentadas_intervalo <- function(data_inicial, data_final) {
-  library(tidyverse)
-  library(here)
-  source(here::here("crawler/proposicoes/proposicoes_apresentadas_em_intervalo/fetcher_proposicoes_apresentadas.R"))
-  source(here::here("crawler/votacoes/votacoes_nominais/votacoes_com_inteiro_teor/analyzer_votacoes_com_inteiro_teor.R"))
-  
-  proposicoes <- fetch_proposicoes_votadas_intervalo(data_inicial, data_final)
-  
-  proposicoes_metadados <-
-    purrr::map_df(proposicoes %>% 
-                    distinct(id) %>% 
-                    pull(id),
-                  ~ fetch_info_proposicao(.x))
-  
-  proposicoes_alt <- proposicoes_metadados %>% 
-    select(id,
-           nome,
-           data_apresentacao,
-           ementa,
-           autor,
-           indexacao,
-           tema,
-           uri_tramitacao)
-  
-  return(proposicoes_alt)
-}
+#' proposicao <- process_props_apresentadas_intervalo_camara("", "")
+process_props_apresentadas_intervalo_camara <-
+  function(data_inicial, data_final) {
+    library(tidyverse)
+    library(here)
+    source(
+      here::here(
+        "crawler/proposicoes/proposicoes_apresentadas_em_intervalo/fetcher_proposicoes_apresentadas_em_intervalo_camara.R"
+      )
+    )
+    source(
+      here::here(
+        "crawler/votacoes/votacoes_nominais/votacoes_com_inteiro_teor/analyzer_votacoes_com_inteiro_teor.R"
+      )
+    )
+    
+    proposicoes <-
+      fetcher_proposicoes_em_intervalo_camara(data_inicial, data_final)
+    
+    proposicoes_metadados <-
+      purrr::map_df(proposicoes %>%
+                      distinct(id) %>%
+                      pull(id),
+                    ~ fetch_info_proposicao(.x))
+    
+    proposicoes_alt <- proposicoes_metadados %>%
+      select(id,
+             nome,
+             data_apresentacao,
+             ementa,
+             autor,
+             indexacao,
+             tema,
+             uri_tramitacao)
+    
+    return(proposicoes_alt)
+  }
+
+#' @title Processa metadados para proposições apresentadas no Senado em um intervalo de tempo
+#' @description Usando a API do Senado Federal, recupera quais as proposições apresentadas em um intervalo
+#' de tempo e quais os metadados dessas proposições
+#' @param data_inicial Data de Início do intervalo para a apresentação das proposições. Formato YYYYMMDD.
+#' @param data_final Data Final do intervalo para a apresentação das proposições. Formato YYYYMMDD.
+#' @return Dataframe contendo informações das proposições
+#' @examples
+#' proposicao <- process_props_apresentadas_intervalo_senado(20200311, gsub("-", "", Sys.Date()))
+process_props_apresentadas_intervalo_senado <-
+  function(data_inicial, data_final) {
+    library(tidyverse)
+    source(
+      here::here(
+        "crawler/proposicoes/proposicoes_apresentadas_em_intervalo/fetcher_proposicoes_apresentadas_em_intervalo_senado.R"
+      )
+    )
+    source(here::here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
+    
+    proposicoes <-
+      fetcher_proposicoes_em_intervalo_senado(data_inicial, data_final)
+    
+    proposicoes_metadados <-
+      purrr::map_df(proposicoes %>%
+                      distinct(id) %>%
+                      pull(id),
+                    ~ fetch_proposicoes_senado(.x))
+    
+    proposicoes_alt <- proposicoes_metadados %>%
+      mutate(indexacao = "") %>%
+      select(id,
+             nome,
+             data_apresentacao,
+             ementa,
+             autor,
+             indexacao,
+             tema,
+             uri_tramitacao)
+    
+    return(proposicoes_alt)
+  }
+
+#' @title Processa metadados para proposições apresentadas no Senado em um intervalo de tempo
+#' @description Usando as APIs da Câmara dos Deputados e do Senado Federal, recupera quais as 
+#' proposições apresentadas em um intervalo de tempo e quais os metadados dessas proposições.
+#' @param data_inicial Data de Início do intervalo para a apresentação das proposições. Formato YYYY-MM-DD.
+#' @param data_final Data Final do intervalo para a apresentação das proposições. Formato YYYY-MM-DD.
+#' @return Dataframe contendo informações das proposições
+#' @examples
+#' proposicao <- process_props_apresentadas_intervalo("2020-03-11", Sys.Date())
+process_props_apresentadas_intervalo <-
+  function(data_inicial = "2020-03-11", data_final = Sys.Date()) {
+    library(tidyverse)
+    
+    proposicoes_camara <-
+      process_props_apresentadas_intervalo_camara(data_inicial, data_final) %>% 
+      mutate(casa = "camara")
+    
+    proposicoes_senado <-
+      process_props_apresentadas_intervalo_senado(gsub("-", "", data_inicial),
+                                                  gsub("-", "", data_final)) %>% 
+      mutate(casa = "senado")
+    
+    proposicoes <- rbind(proposicoes_camara, proposicoes_senado)
+    
+    return(proposicoes)
+  }

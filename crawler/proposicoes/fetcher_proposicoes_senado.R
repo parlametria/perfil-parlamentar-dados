@@ -6,6 +6,9 @@
 #' proposicoes <- fetch_proposicoes_senado(id_proposicao)
 fetch_proposicoes_senado <- function(id_proposicao) {
   library(tidyverse)
+  
+  cat(paste0("Baixando dados de proposição de id ", id_proposicao, "...\n"))
+  
   proposicao <- 
     rcongresso::fetch_proposicao_senado(id_proposicao) %>% 
     select(
