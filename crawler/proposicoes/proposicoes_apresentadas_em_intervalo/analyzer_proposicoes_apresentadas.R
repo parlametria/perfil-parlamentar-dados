@@ -71,6 +71,9 @@ process_props_apresentadas_intervalo_senado <-
     proposicoes_alt <- proposicoes_metadados %>%
       mutate(indexacao = "",
              casa = "senado") %>%
+      mutate(data_apresentacao = format(as.Date(data_apresentacao, 
+                                                tryFormats = c("%Y-%m-%d")), 
+                                        "%d/%m/%Y")) %>% 
       select(id,
              casa,
              nome,
