@@ -6,22 +6,38 @@
 #' proposicoes <- fetch_proposicoes_senado(id_proposicao)
 fetch_proposicoes_senado <- function(id_proposicao) {
   library(tidyverse)
-  proposicao <- 
-    rcongresso::fetch_proposicao_senado(id_proposicao) %>% 
-    select(
-      id = codigo_materia,
-      data_apresentacao,
-      nome = descricao_identificacao_materia,
-      ementa = ementa_materia,
-      tema = assunto_especifico,
-      autor = autor_nome
-    ) %>%
-    mutate(
-      uri_tramitacao = 
-        paste0(
-          "https://www25.senado.leg.br/web/atividade/materias/-/materia/",
-          id_proposicao)
+  
+  cat(paste0("Baixando dados de proposição de id ", id_proposicao, "...\n"))
+  
+  proposicao <- tryCatch({
+    rcongresso::fetch_proposicao_senado(id_proposicao) %>%
+      select(
+        id = codigo_materia,
+        data_apresentacao,
+        nome = descricao_identificacao_materia,
+        ementa = ementa_materia,
+        tema = assunto_especifico,
+        autor = autor_nome
+      ) %>%
+      mutate(
+        uri_tramitacao =
+          paste0(
+            "https://www25.senado.leg.br/web/atividade/materias/-/materia/",
+            id_proposicao
+          )
       )
+  }, error = function(e) {
+    return(tribble(
+      ~ id,
+      ~ data_apresentacao,
+      ~ nome,
+      ~ ementa,
+      ~ tema,
+      ~ autor,
+      ~ uri_tramitacao
+    ))
+  })
+    
   return(proposicao)
 }
 
