@@ -98,7 +98,7 @@ process_props_apresentadas_intervalo <- function(data_inicial, data_final) {
   proposicoes_camara <- process_props_apresentadas_intervalo_camara(data_inicial, data_final)
   proposicoes_senado <- process_props_apresentadas_intervalo_senado(gsub("-", "", data_inicial), gsub("-", "", data_final))
   
-  proposicoes_apresentadas <- proposicoes_camara #%>% 
+  proposicoes_apresentadas <- proposicoes_camara %>% 
     dplyr::bind_rows(proposicoes_senado)
   
   return(proposicoes_apresentadas)
