@@ -2,6 +2,12 @@
 
 Este repositório contém os módulos de processamento de dados usados pela aplicação [Perfil Parlamentar](perfil.parlametria.org/).
 
+## [**Descrição dos dados usados na aplicação**](docs/dados.md)
+
+Acesse a descrição [aqui](docs/dados.md).
+
+## Sobre o desenvolvimento
+
 Usamos docker para gerenciar e facilitar a execução dos serviços usados pela aplicação. Portanto, recomendamos fortemente sua instalação:
 
 Instale o [**Docker**](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce) e o [**docker-compose**](https://docs.docker.com/compose/install/).
