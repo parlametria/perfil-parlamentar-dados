@@ -16,48 +16,6 @@ Este repositório contém dois serviços principais da aplicação [Perfil Parla
 - **Serviço R (r-updater)**: serviço em código R com módulos para recuperação e processamento dos dados do poder legislativo e gerenciamento da atualização do banco de dados
 - **Banco de dados Perfil (db-perfil)**: serviço que executa um banco de dados local com os dados necessários para o Perfil Parlamentar.
 
-## Sobre a arquitetura docker
-
-Optamos neste projeto por separar os serviços (R e Postgres) em duas arquiteturas. Vamos começar pela mais simples
-
-### **Postgres**
-Neste módulo criamos um docker-compose que levanta um serviço baseado na imagem **postgres:11.1-alpine**, o container em execução terá o nome **postgres** e terá mapeado os volumes dos diretórios ./data e ./scripts (dentro de **./bd**), também criará um volume específico para persistência do banco de dados (*postgres_data*). Para acessar o container é possível executar:
-
-```sh
-docker exec -it postgres bash
-```
-
-Então você estará dentro do container postgres.
-
-### **r-updater**
-
-Neste módulo o Dockerfile presente na raiz do repositório contém a instalação das dependências necessárias para execução do processamente do dados. Quaisquer novos pacotes que devem ser instalados devem constar nesse arquivo que monta a imagem baseada em **rocker/tidyverse:3.6.1**.
-
-Outro Dockerfile importante é o de servidor de logs (presente no diretório **bd/server**). O Servidor de logs é baseado no node/express e disponibiliza os logs das migrações realizadas no Banco de dados usando o módulo de gerenciamento de migrações do **r-updater**.
-
-**Lembrete:** sempre que um novo pacote for adicionado como dependência no projeto o mesmo deve ser adicionado como passo na construção da imagem presente no Dockerfile na raiz desse repositório.
-
-O docker-compose na raiz desse repositório orquestra os dois serviços supracitados: r-updater e servidor de logs. Ele também mapeia o código do repositório como volume montado no r-updater. Ou seja, qualquer mudança no código já refletirá dentro do container.
-
-Para acessar o container do servidor de logs:
-
-```
-docker exec -it log-server bash
-```
-
-Para acessar o container do r-updater:
-
-```
-docker exec -it r-updater bash
-```
-
-Executar algum script do crawler: 
-
-```
-docker exec -it r-updater sh -c "cd /app/crawler && Rscript <caminho para o script pertencente ao diretório crawler>"
-```
-
-
 # Como iniciar o banco de dados local?
 
 No terminal, vá para o diretório **bd**: ```cd bd/```
@@ -213,3 +171,44 @@ O r-updater já vem configurado com um job que executa todas as terças às 7 ho
 
 O repositório está aberto a contribuições :)
 Também é bem útil você nos apontar sugestões, críticas ou bugs! Fale com a gente por meio das [issues no Github](https://github.com/parlametria/perfil-parlamentar-dados/issues).
+
+## Sobre a arquitetura docker
+
+Optamos neste projeto por separar os serviços (R e Postgres) em duas arquiteturas. Vamos começar pela mais simples
+
+### **Postgres**
+Neste módulo criamos um docker-compose que levanta um serviço baseado na imagem **postgres:11.1-alpine**, o container em execução terá o nome **postgres** e terá mapeado os volumes dos diretórios ./data e ./scripts (dentro de **./bd**), também criará um volume específico para persistência do banco de dados (*postgres_data*). Para acessar o container é possível executar:
+
+```sh
+docker exec -it postgres bash
+```
+
+Então você estará dentro do container postgres.
+
+### **r-updater**
+
+Neste módulo o Dockerfile presente na raiz do repositório contém a instalação das dependências necessárias para execução do processamente do dados. Quaisquer novos pacotes que devem ser instalados devem constar nesse arquivo que monta a imagem baseada em **rocker/tidyverse:3.6.1**.
+
+Outro Dockerfile importante é o de servidor de logs (presente no diretório **bd/server**). O Servidor de logs é baseado no node/express e disponibiliza os logs das migrações realizadas no Banco de dados usando o módulo de gerenciamento de migrações do **r-updater**.
+
+**Lembrete:** sempre que um novo pacote for adicionado como dependência no projeto o mesmo deve ser adicionado como passo na construção da imagem presente no Dockerfile na raiz desse repositório.
+
+O docker-compose na raiz desse repositório orquestra os dois serviços supracitados: r-updater e servidor de logs. Ele também mapeia o código do repositório como volume montado no r-updater. Ou seja, qualquer mudança no código já refletirá dentro do container.
+
+Para acessar o container do servidor de logs:
+
+```
+docker exec -it log-server bash
+```
+
+Para acessar o container do r-updater:
+
+```
+docker exec -it r-updater bash
+```
+
+Executar algum script do crawler: 
+
+```
+docker exec -it r-updater sh -c "cd /app/crawler && Rscript <caminho para o script pertencente ao diretório crawler>"
+```
