@@ -1,6 +1,6 @@
 # Perfil Parlamentar Dados
 
-Este repositório contém os módulos de processamento de dados usados pela aplicação [Perfil Parlamentar](perfil.parlametria.org/).
+Este repositório contém os módulos de processamento de dados usados pela aplicação [Perfil Parlamentar](https://perfil.parlametria.org/).
 
 ## [**Descrição dos dados usados na aplicação**](docs/dados.md)
 
@@ -12,7 +12,7 @@ Usamos docker para gerenciar e facilitar a execução dos serviços usados pela 
 
 Instale o [**Docker**](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce) e o [**docker-compose**](https://docs.docker.com/compose/install/).
 
-Este repositório contém dois serviços principais da aplicação [Perfil Parlamentar](perfil.parlametria.org):
+Este repositório contém dois serviços principais da aplicação [Perfil Parlamentar](https://perfil.parlametria.org/):
 - **Serviço R (r-updater)**: serviço em código R com módulos para recuperação e processamento dos dados do poder legislativo e gerenciamento da atualização do banco de dados
 - **Banco de dados Perfil (db-perfil)**: serviço que executa um banco de dados local com os dados necessários para o Perfil Parlamentar.
 
