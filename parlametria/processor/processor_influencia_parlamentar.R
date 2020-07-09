@@ -1,3 +1,7 @@
+#' @title Calcula 
+#' @description Processa e cruza dados de atuação dos parlamentares para construção de um índice de influência
+#' @return Dataframe contendo variáveis utilizadas para construção de índice de influência.
+
 #' @title Processa e cruza dados de atuação dos parlamentares para construção de um índice de influência
 #' @description Processa e cruza dados de atuação dos parlamentares para construção de um índice de influência
 #' @return Dataframe contendo variáveis utilizadas para construção de índice de influência.
@@ -28,12 +32,16 @@ process_indice_influencia_parlamentar <- function() {
     filter(sg_partido == partido_eleicao,
            em_exercicio == 1) %>% 
     select(id, casa, investimento_partidario = proporcao_campanhas_medias_receita) %>% 
-    distinct()
+    distinct() %>% 
+    mutate(
+      investimento_partidario = sqrt(investimento_partidario)/sqrt(max(investimento_partidario)))
   
   mandatos_cargos <- read_csv(here("parlametria/raw_data/cargos_politicos/historico_parlamentares_cargos_politicos.csv"),
                               col_types = cols(id_parlamentar = "c")) %>% 
     group_by(id_parlamentar, casa) %>% 
-    summarise(numero_de_mandatos = n_distinct(ano_eleicao))
+    summarise(numero_de_mandatos = n_distinct(ano_eleicao)) %>% 
+    ungroup() %>% 
+    mutate(numero_de_mandatos = (numero_de_mandatos - 1) / (max(numero_de_mandatos) - 1) )
   
   n_max_comissoes <-  read_csv(here("parlametria/raw_data/resumo/parlamentares_cargos.csv"),
                                col_types = cols(id = "c")) %>% 
@@ -60,17 +68,17 @@ process_indice_influencia_parlamentar <- function() {
     ungroup() %>% 
     rowwise() %>% 
     mutate(peso = case_when(
-      str_detect(cargo, "Presidente") ~ 4,
-      str_detect(cargo, "Primeiro Vice-presidente") ~ 3,
-      str_detect(cargo, "Segundo Vice-presidente") ~ 2,
-      str_detect(cargo, "Terceiro Vice-presidente") ~ 1,
-      str_detect(cargo, "Titular") ~ 1 / (n_max_comissoes %>% filter(casa_parlamentar == casa) %>% pull(max))
+      str_detect(cargo, "Presidente") ~ 1,
+      str_detect(cargo, "Primeiro Vice-presidente") ~ 0.3,
+      str_detect(cargo, "Segundo Vice-presidente") ~ 0.1,
+      str_detect(cargo, "Terceiro Vice-presidente") ~ 0.05,
+      str_detect(cargo, "Titular") ~ 0 / (n_max_comissoes %>% filter(casa_parlamentar == casa) %>% pull(max))
     )) %>% 
     ungroup() %>% 
     group_by(id, casa) %>% 
     summarise(score_comissoes = sum(peso)) %>% 
     ungroup() %>% 
-    mutate(indice_comissoes = score_comissoes / 11 ) %>%  ## 11 é a soma dos pesos 4 + 3 + 2 + 1 + 1 (peso máximo para comissões)
+    mutate(indice_comissoes = score_comissoes / max(score_comissoes)) %>% 
     select(id, casa, indice_comissoes)
     
   lideranca_partido <- read_csv(here("parlametria/raw_data/resumo/parlamentares_cargos.csv"),
@@ -81,13 +89,13 @@ process_indice_influencia_parlamentar <- function() {
     separate_rows(partido, sep = ";") %>% 
     mutate(peso = case_when(
       str_detect(cargo, "Líder") ~ 3,
-      str_detect(cargo, "Vice-líder") ~ 2,
+      str_detect(cargo, "Vice-líder") ~ 0,
       str_detect(cargo, "Representante") ~ 3
     )) %>% 
     group_by(id, casa) %>% 
     summarise(score_liderancas = sum(peso)) %>% 
     ungroup() %>% 
-    mutate(indice_liderancas = score_liderancas / 8) %>%  ## 8 é a soma dos pesos 3 + 2 + 3
+    mutate(indice_liderancas = score_liderancas / max(score_liderancas)) %>% 
     select(id, casa, indice_liderancas)
   
   source(here("parlametria/crawler/cargos_mesa/fetcher_cargos_mesa.R"))
@@ -102,11 +110,12 @@ process_indice_influencia_parlamentar <- function() {
     rbind(cargos_mesa_senado) %>% 
     mutate(id = as.character(id)) %>% 
     mutate(indice_cargo_mesa = case_when(
-      str_detect(cargo, "Suplente de Secretário") ~ 0.2,
-      str_detect(cargo, "Secretário") ~ 0.6,
-      str_detect(cargo, "Vice-Presidente") ~ 0.8,
-      str_detect(cargo, "Presidente") ~ 1,
+      str_detect(cargo, "Suplente de Secretário") ~ 0,
+      str_detect(cargo, "Secretário") ~ 3,
+      str_detect(cargo, "Vice-Presidente") ~ 1,
+      str_detect(cargo, "Presidente") ~ 7,
       TRUE ~ 0)) %>% 
+    mutate(indice_cargo_mesa = indice_cargo_mesa / max(indice_cargo_mesa)) %>% 
     select(id, casa, indice_cargo_mesa)
   
   ## TODO: porcentagem dos votos recebidos em 2018 com relação a UF e ao partido
@@ -125,9 +134,11 @@ process_indice_influencia_parlamentar <- function() {
                                                             indice_liderancas,
                                                             indice_cargo_mesa)
               ) %>% 
-    
+    ## Substituindo NA no número de mandatos por 1 (parlamentar está em exercício apesar da suplência)
+    mutate(numero_de_mandatos = ifelse(is.na(numero_de_mandatos), 1, numero_de_mandatos)) %>% 
     mutate(indice_influencia_parlamentar = 
-             (investimento_partidario + indice_liderancas + indice_comissoes + indice_cargo_mesa + (numero_de_mandatos / 6)) / 5)
+             (investimento_partidario*2 + indice_liderancas*4 + indice_comissoes*2 + indice_cargo_mesa*6 + numero_de_mandatos*1) / 15) %>%  ## 15 é a soma dos pesos (2+4+2+6+1)
+    mutate(indice_influencia_parlamentar = indice_influencia_parlamentar / max(indice_influencia_parlamentar))
 
   return(parlamentares_processed)
 }
