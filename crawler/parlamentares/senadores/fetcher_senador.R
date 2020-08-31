@@ -10,7 +10,7 @@ fetch_senadores_legislatura <- function(legislatura = 56) {
   url <- paste0("http://legis.senado.leg.br/dadosabertos/senador/lista/legislatura/", legislatura)
   
   senadores <- tryCatch({
-    xml <- RCurl::getURL(url) %>% xml2::read_xml()
+    xml <- RCurl::getURL(url, .encoding = "Windows-1252") %>% xml2::read_xml()
     data <- xml2::xml_find_all(xml, ".//Parlamentar") %>%
       map_df(function(x) {
         list(
@@ -64,7 +64,7 @@ fetch_senadores_atuais <- function(legislatura_atual = 56) {
   url <- paste0("http://legis.senado.leg.br/dadosabertos/senador/lista/atual")
   
   senadores <- tryCatch({
-    xml <- RCurl::getURL(url) %>% xml2::read_xml()
+    xml <- RCurl::getURL(url, .encoding = "Windows-1252") %>% xml2::read_xml()
     data <- xml2::xml_find_all(xml, ".//Parlamentar") %>%
       map_df(function(x) {
         list(
@@ -99,7 +99,7 @@ fetch_info_por_senador <- function(id_senador) {
   url <- paste0("http://legis.senado.leg.br/dadosabertos/senador/", id_senador)
   
   senador <- tryCatch({
-    xml <- RCurl::getURL(url) %>% xml2::read_xml()
+    xml <- RCurl::getURL(url, .encoding = "Windows-1252") %>% xml2::read_xml()
     data <- xml2::xml_find_all(xml, ".//Parlamentar") %>%
       map_df(function(x) {
         list(
