@@ -3,10 +3,7 @@
 #' @param url URL da requisição
 #' @param dest_path Caminho + nome do arquivo PDF que será baixado.
 download_pdf <- function(url, dest_path = "votacao_senado.pdf") {
-  pdf <- RCurl::getBinaryURL(url,  
-                      ssl.verifypeer=FALSE)
-  
-  writeBin(pdf, dest_path)
+  download.file(url, dest_path, mode="wb")
 }
 
 #' @title Raspa os dados de votos de um pdf
@@ -55,28 +52,25 @@ delete_file <- function(filepath) {
   file.remove(filepath)
 }
 
-#' @title Extrai informações de votos dos senadores a partir de uma url
-#' @description A partir de uma url, extrai os dados de votos dos senadores.
-#' @param url URL da requisição
+#' @title Extrai informações de votos dos senadores a partir dos ids de proposicao e de votacao
+#' @description A partir de uma url base, extrai os dados de votos dos senadores por meia de seus ids
+#' @param id_proposicao id da proposicao requerida
+#' @param id_votacao id da votacao requerida
 #' @return Dataframe com informações de votos dos senadores
-fetch_votos_por_link_votacao_senado <- function(url) {
+fetch_votos_por_link_votacao_senado <- function(id_proposicao, id_votacao) {
   library(RCurl)
   library(rvest)
   library(xml2)
  
-  print(paste0("Extraindo informações de votação de id ", 
-               str_extract(url, "\\d*$")))
+  url_default <- 'https://rl.senado.gov.br/reports/rwservlet?legis&report=/forms/parlam/vono_r01.RDF&paramform=no&p_cod_materia_i=%s&p_cod_materia_f=%s&p_cod_sessao_votacao_i=%s&p_cod_sessao_votacao_f=%s&p_order_by=nom_parlamentar'
   
-  new_url <- 
-    getURL(url, 
-           ssl.verifypeer = FALSE) %>% 
-    read_html() %>% 
-    html_node('a') %>% 
-    html_attr('href')
+  url <- url_default %>% sprintf(id_proposicao, id_proposicao, id_votacao, id_votacao)
+  
+  print(paste0("Extraindo informações de votação de id ", id_votacao))
   
   pdf_filepath <- here::here("crawler/votacoes/votos/votacao_senado.pdf")
   
-  download_pdf(new_url, pdf_filepath)
+  download_pdf(url, pdf_filepath)
   
   votos <- scrap_votos_from_pdf_senado(pdf_filepath)
   
@@ -118,9 +112,7 @@ fetch_all_votos_senado <- function(url_proposicoes = NULL) {
       ano = votacoes$ano,
       url = votacoes$link_votacao,
       casa = "senado") %>% 
-    mutate(dados = purrr::map(
-      url,
-      fetch_votos_por_link_votacao_senado)) %>% 
+    mutate(dados = purrr::map2(id_proposicao, id_votacao, fetch_votos_por_link_votacao_senado)) %>% 
     unnest(dados) %>% 
     filter(senador != '')
   
