@@ -11,7 +11,7 @@ fetch_liderancas_senado <- function() {
   url <- "http://legis.senado.leg.br/dadosabertos/plenario/lista/liderancas"
   
   tryCatch({
-    xml <- RCurl::getURL(url) %>% xml2::read_xml()
+    xml <- RCurl::getURL(url, .encoding = "Windows-1252") %>% xml2::read_xml()
     
     liderancas_bloco <- xml2::xml_find_all(xml, ".//Lideranca/Parlamentares/Parlamentar") %>%
       map_df(function(x) {

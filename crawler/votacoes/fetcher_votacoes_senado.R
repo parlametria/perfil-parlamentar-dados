@@ -61,11 +61,11 @@ fetcher_votacoes_por_intervalo_senado <-
                 
                 id_proposicao =
                   extract_number_from_regex(link_votacao,
-                                            "p_cod_materia_i=[\\d]*&"),
+                                            "materia.[0-9]+"),
                 
                 id_votacao =
                   extract_number_from_regex(link_votacao,
-                                            "p_cod_sessao_votacao_i=.*"),
+                                            "votacao.[0-9]+"),
                 
                 datetime =
                   extract_data(x, "caption")
@@ -176,7 +176,7 @@ fetcher_votacoes_por_proposicao_senado <-
 #' extract_number_from_regex("p_cod_materia_i=[\\d]*&")
 extract_number_from_regex <- function(text, text_regex) {
   return(stringr::str_extract(text, text_regex) %>%
-           stringr::str_extract("[\\d]+"))
+           stringr::str_extract("[0-9]+"))
 }
 
 #' @title Extrai data no formato "dd/mm/yyyy" de uma tag dentro de um xml_nodeset html
