@@ -14,3 +14,5 @@ nodes_edges <- generate_coautorias(anos, tema, parlamentares_datapath)
   - `tema`: Tema de interesse das proposições **na Câmara** que se deseja criar a rede. O valor default é 'Meio Ambiente';
 
   - `parlamentares_datapath`: Caminho para o dataframe de parlamentares. Se nenhum valor for passado, será considerado o csv que está em `crawler/raw_data/parlamentares.csv`.
+
+O resultado dessa função é uma lista com os nodes e as edges.
