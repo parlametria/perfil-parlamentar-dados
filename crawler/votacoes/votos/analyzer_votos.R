@@ -86,9 +86,11 @@ processa_votos <- function(url = NULL) {
 #' @return Dataframe com informações dos votos
 #' @examples
 #' votos <- process_votos_por_ano_camara(2019)
-process_votos_por_ano_camara <- function(ano = 2019, url = NULL) {
+process_votos_por_ano_camara <- function(ano = 2021, url = NULL, selecionadas = 1) {
   library(tidyverse)
   library(here)
+  
+  url <- .URL_PROPOSICOES_PLENARIO_CAMARA
   
   source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
   source(here("crawler/votacoes/votos/fetcher_votos_camara.R"))
@@ -106,7 +108,7 @@ process_votos_por_ano_camara <- function(ano = 2019, url = NULL) {
       filter(tolower(tema_va) != "não entra") %>% 
       select(id, nome_proposicao = nome)
     
-    proposicoes_votadas <- proposicoes_votadas %>% 
+    proposicoes_votadas <- proposicoes_votadas %>%
       filter(id %in% (proposicoes_selecionadas %>% pull(id)))
   }
   
@@ -140,8 +142,8 @@ process_votos_por_ano_camara <- function(ano = 2019, url = NULL) {
 #' @examples
 #' votos <- process_votos_anos_url_camara(2019)
 process_votos_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
-                                              url = NULL) {
-  library(tidyverse)
+                                              url = NULL, selecionadas = 1) {
+  library(tidyverse) 
   library(here)
   
   if(is.null(url)) {
@@ -153,7 +155,8 @@ process_votos_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
     mutate(dados = map(
       ano,
       process_votos_por_ano_camara,
-      url
+      url,
+      selecionadas
     )) %>% 
     mutate(dados = map(dados, ~ mutate_at(.x, vars(-voto), as.character))) %>% 
     unnest(dados) %>% 
@@ -230,14 +233,14 @@ processa_votacoes_com_votos_incompletos <- function(votacoes,
 #' @return Dataframe com os votos processados
 #' @examples
 #' votos <- process_votos_url_senado()
-process_votos_url_senado <- function(proposicoes_url = NULL) {
+process_votos_url_senado <- function(proposicoes_url = NULL, selecionadas = 1) {
   library(tidyverse)
   source(here::here("crawler/votacoes/votos/fetcher_votos_senado.R"))
   source(here::here("crawler/votacoes/utils_votacoes.R"))
   source(here::here("crawler/votacoes/fetcher_votacoes_senado.R"))
   
   
-  if(is.null(proposicoes_url)) {
+  if(is.null(proposicoes_url) && selecionadas == 1) {
     source(here::here("crawler/proposicoes/utils_proposicoes.R"))
     proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
   }

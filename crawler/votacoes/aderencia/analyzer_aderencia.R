@@ -12,10 +12,12 @@ processa_aderencia_parlamentares <-
            orientacoes_path = here::here("crawler/raw_data/orientacoes.csv"),
            parlamentares_path = here::here("crawler/raw_data/parlamentares.csv"),
            proposicoes_url = NULL,
-           casa_aderencia = "camara") {
+           casa_aderencia = "camara",
+           seleciona_proposicoes = 1) {
     library(tidyverse)
     library(here)
     source(here("crawler/votacoes/utils_votacoes.R"))
+    source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
     source(here("crawler/votacoes/aderencia/processa_dados_aderencia.R"))
     source(here("crawler/parlamentares/partidos/utils_partidos.R"))
     source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
@@ -51,8 +53,29 @@ processa_aderencia_parlamentares <-
     }
     
     ## Preparando dados de proposições e seus respectivos temas
-    proposicoes <-
+    proposicoes_selecionadas <-
       fetch_proposicoes_plenario_selecionadas_senado(proposicoes_url)
+    
+    proposicoes <- fetch_proposicoes_votadas_por_ano_camara() %>% 
+      mutate(descricao = NA,
+             titulo = NA,
+             status_proposicao = "Inativa",
+             status_importante = "Ativa",
+             casa = casa_aderencia) %>%
+      select(id_proposicao = id, 
+             casa, 
+             projeto_lei = nome_proposicao, 
+             titulo, 
+             descricao, 
+             status_proposicao, 
+             status_importante)
+    
+    proposicoes <- proposicoes_selecionadas %>% 
+      rbind(proposicoes) %>%
+      distinct(id_proposicao, .keep_all = TRUE)
+    
+    proposicoes <- proposicoes %>%
+      mutate(selecionada = if_else(id_proposicao %in% proposicoes_selecionadas$id_proposicao, 1, 0))
     
     proposicoes <- proposicoes %>%
       filter(status_importante == "Ativa")

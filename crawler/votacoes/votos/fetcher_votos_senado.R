@@ -87,7 +87,7 @@ fetch_votos_por_link_votacao_senado <- function(id_proposicao, id_votacao) {
 #' @example 
 #' source(here::here("crawler/proposicoes/utils_proposicoes.R"))
 #' votos <- fetch_all_votos_senado(.URL_PROPOSICOES_PLENARIO_SENADO)
-fetch_all_votos_senado <- function(url_proposicoes = NULL) {
+fetch_all_votos_senado <- function(url_proposicoes = NULL, selecionadas = 1) {
   library(tidyverse)
   source(here::here("crawler/votacoes/fetcher_votacoes_senado.R"))
   
