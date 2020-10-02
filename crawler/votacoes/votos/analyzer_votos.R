@@ -86,7 +86,7 @@ processa_votos <- function(url = NULL) {
 #' @return Dataframe com informações dos votos
 #' @examples
 #' votos <- process_votos_por_ano_camara(2019)
-process_votos_por_ano_camara <- function(ano = 2021, url = NULL, selecionadas = 1) {
+process_votos_por_ano_camara <- function(ano = 2019, url = NULL, selecionadas = 1) {
   library(tidyverse)
   library(here)
   
@@ -103,7 +103,13 @@ process_votos_por_ano_camara <- function(ano = 2021, url = NULL, selecionadas = 
     return(data)
   })
   
-  if (!is.null(url)) {
+  ## checa se existem proposições com dados de votações em plenário para aquele ano
+  if (nrow(proposicoes_votadas) == 0) {
+    data <- tribble(~ id_proposicao, ~ id_votacao, ~ id_deputado, ~ voto, ~ partido)
+    return(data)
+  }
+  
+  if (!is.null(url) && selecionadas == 1) {
     proposicoes_selecionadas <- read_csv(url, col_types = cols(id = "c")) %>% 
       filter(tolower(tema_va) != "não entra") %>% 
       select(id, nome_proposicao = nome)
@@ -112,7 +118,7 @@ process_votos_por_ano_camara <- function(ano = 2021, url = NULL, selecionadas = 
       filter(id %in% (proposicoes_selecionadas %>% pull(id)))
   }
   
-  ## checa se existem proposições com dados de votações em plenário para aquele ano
+  ## checa se existem proposições com dados de votações em plenário após ser realizada seleção
   if (nrow(proposicoes_votadas) == 0) {
     data <- tribble(~ id_proposicao, ~ id_votacao, ~ id_deputado, ~ voto, ~ partido)
     return(data)
