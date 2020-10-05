@@ -52,6 +52,8 @@ processa_aderencia_parlamentares <-
       }
     }
     
+    #TODO SEPARAR ENTRE SELECIONADAS OU NÃO
+    
     ## Preparando dados de proposições e seus respectivos temas
     proposicoes_selecionadas <-
       fetch_proposicoes_plenario_selecionadas_senado(proposicoes_url)
