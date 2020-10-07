@@ -13,9 +13,11 @@ processa_aderencia_parlamentares <-
            parlamentares_path = here::here("crawler/raw_data/parlamentares.csv"),
            proposicoes_url = NULL,
            casa_aderencia = "camara",
-           seleciona_proposicoes = 1) {
+           selecionadas = 1) {
     library(tidyverse)
     library(here)
+    
+    #TODO eliminar extras
     source(here("crawler/votacoes/utils_votacoes.R"))
     source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
     source(here("crawler/votacoes/aderencia/processa_dados_aderencia.R"))
@@ -23,6 +25,7 @@ processa_aderencia_parlamentares <-
     source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
     source(here("crawler/proposicoes/utils_proposicoes.R"))
     source(here("crawler/proposicoes/process_proposicao_tema.R"))
+    source(here("crawler/proposicoes/fetcher_proposicao_info.R"))
     
     ## Preparando dados de votos, orientações e senadores
     votos <-
@@ -44,47 +47,17 @@ processa_aderencia_parlamentares <-
       dplyr::mutate(id_partido = map_sigla_id(sg_partido)) %>%
       ungroup()
     
-    if (is.null(proposicoes_url)) {
-      if (casa_aderencia == "camara") {
-        proposicoes_url <- .URL_PROPOSICOES_PLENARIO_CAMARA
-      } else {
-        proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
-      }
+    proposicoes <- seleciona_proposicoes(selecionadas, casa_aderencia)
+    
+    if(selecionadas == 1) {
+      proposicoes_temas <-
+        process_proposicoes_plenario_selecionadas_temas(proposicoes_url) %>%
+        filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
+    } else {
+      #TODO padronizar temas
+      proposicoes_temas <- process_proposicoes_plenario_temas(proposicoes) %>%
+        filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
     }
-    
-    #TODO SEPARAR ENTRE SELECIONADAS OU NÃO
-    
-    ## Preparando dados de proposições e seus respectivos temas
-    proposicoes_selecionadas <-
-      fetch_proposicoes_plenario_selecionadas_senado(proposicoes_url)
-    
-    proposicoes <- fetch_proposicoes_votadas_por_ano_camara() %>% 
-      mutate(descricao = NA,
-             titulo = NA,
-             status_proposicao = "Inativa",
-             status_importante = "Ativa",
-             casa = casa_aderencia) %>%
-      select(id_proposicao = id, 
-             casa, 
-             projeto_lei = nome_proposicao, 
-             titulo, 
-             descricao, 
-             status_proposicao, 
-             status_importante)
-    
-    proposicoes <- proposicoes_selecionadas %>% 
-      rbind(proposicoes) %>%
-      distinct(id_proposicao, .keep_all = TRUE)
-    
-    proposicoes <- proposicoes %>%
-      mutate(selecionada = if_else(id_proposicao %in% proposicoes_selecionadas$id_proposicao, 1, 0))
-    
-    proposicoes <- proposicoes %>%
-      filter(status_importante == "Ativa")
-    
-    proposicoes_temas <-
-      process_proposicoes_plenario_selecionadas_temas(proposicoes_url) %>%
-      filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
     
     temas <- processa_temas_proposicoes()
     
@@ -187,4 +160,36 @@ processa_aderencia_parlamentares <-
       )
     
     return(aderencia_alt)
+  }
+
+seleciona_proposicoes <- 
+  function(selecionadas = 1, 
+           casa_aderencia = "camara", 
+           proposicoes_url = NULL) {
+    
+    source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
+    
+    if (is.null(proposicoes_url)) {
+      if (casa_aderencia == "camara") {
+        proposicoes_url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+      } else {
+        proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
+      }
+    }
+    
+    proposicoes_selecionadas <-
+      fetch_proposicoes_plenario_selecionadas_senado(proposicoes_url)
+    
+    proposicoes <- proposicoes_selecionadas %>%
+      filter(status_importante == "Ativa")
+    
+    if (selecionadas == 0) {
+          proposicoes <- fetch_proposicoes_plenario(casa_aderencia) 
+          
+          proposicoes <- proposicoes_selecionadas %>% 
+            rbind(proposicoes) %>%
+            distinct(id_proposicao, .keep_all = TRUE)
+    }
+    
+    proposicoes
   }

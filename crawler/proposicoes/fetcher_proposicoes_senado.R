@@ -104,3 +104,35 @@ fetch_proposicoes_plenario_selecionadas_senado <- function(url = NULL) {
   
   return(proposicoes)
 }
+
+#' @title Recupera e processa dados de todas as proposições que tiveram votações nominais da casa em plenário disponíveis
+#' @description Retorna os dados das proposições que tiveram votações nominais em plenário disponíveis
+#' @param casa_aderencia informa a casa de interesse
+#' @return Dataframe com os dados de proposições
+fetch_proposicoes_plenario <- 
+  function(casa_aderencia = "camara") {
+    source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
+    source(here("crawler/votacoes/fetcher_votacoes_senado.R"))
+    
+    if (casa_aderencia == "camara") {
+      proposicoes <- fetch_proposicoes_votadas_por_ano_camara() %>% mutate(id_proposicao = id)
+    } else {
+      #TODO Nome proposicao
+      proposicoes <- fetcher_votacoes_por_intervalo_senado()
+    }
+    
+    proposicoes <- proposicoes %>% 
+      mutate(descricao = NA,
+             titulo = NA,
+             status_proposicao = "Inativa",
+             status_importante = "Inativa",
+             casa = casa_aderencia) %>%
+      select(id_proposicao, 
+             casa, 
+             projeto_lei = nome_proposicao, 
+             titulo, 
+             descricao, 
+             status_proposicao, 
+             status_importante)
+    
+  }

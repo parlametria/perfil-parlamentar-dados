@@ -19,7 +19,7 @@ getIdfromTema <- function(tema_nome) {
   return(tema_id)
 }
 
-#' @title Retorna as proposições votadas em plenários e seus temas 
+#' @title Retorna as proposições selecionadas votadas em plenários e seus temas 
 #' (mais de uma observação por proposição se houver mais de uma tema para a proposição)
 #' @description IDs dos temas das proposições
 #' @param url URL para os dados de proposições votadas na legislatura atual
@@ -45,6 +45,26 @@ process_proposicoes_plenario_selecionadas_temas <- function(url = NULL) {
     mutate(id_tema = getIdfromTema(tema)) %>% 
     ungroup() %>% 
     mutate(id_proposicao = id) %>% 
+    distinct(id_proposicao, id_tema)
+  
+  return(proposicoes_va)
+}
+
+#' @title Retorna as proposições votadas em plenários e seus temas 
+#' (mais de uma observação por proposição se houver mais de uma tema para a proposição)
+#' @description IDs dos temas das proposições
+#' @param proposicoes dataframe contendo todas proposicoes de interesse
+#' @return Dataframe com proposições e os temas (ids)
+process_proposicoes_plenario_temas <- function(proposicoes) {
+  proposicoes_va <- proposicoes %>% 
+    mutate(tema = map_chr(id_proposicao, fetch_apenas_tema_proposicao)) %>%
+    mutate(tema = strsplit(as.character(tema), ";")) %>%
+    unnest(tema) %>%
+    ungroup() %>%
+    rowwise() %>%
+    mutate(id_tema = getIdfromTema(tema)) %>%
+    ungroup() %>%
+    mutate(id_proposicao = id_proposicao) %>%
     distinct(id_proposicao, id_tema)
   
   return(proposicoes_va)
