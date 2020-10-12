@@ -47,8 +47,6 @@ process_proposicoes_plenario_selecionadas_temas <- function(url = NULL) {
     mutate(id_proposicao = id) %>% 
     distinct(id_proposicao, id_tema)
   
-  print(proposicoes_va)
-  
   return(proposicoes_va)
 }
 

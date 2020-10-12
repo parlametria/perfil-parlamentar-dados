@@ -11,9 +11,9 @@ processa_proposicoes <- function() {
   
   proposicoes_questionario <- fetch_proposicoes_questionario(.URL_PROPOSICOES_VOZATIVA)
   
-  proposicoes_plenario <- fetch_proposicoes_plenario_selecionadas(.URL_PROPOSICOES_PLENARIO_CAMARA)
+  proposicoes_plenario <- fetch_proposicoes(casa_aderencia = "camara", selecionadas = 0, proposicoes_url = .URL_PROPOSICOES_PLENARIO_CAMARA)
   
-  proposicoes_plenario_senado <- fetch_proposicoes_plenario_selecionadas_senado(.URL_PROPOSICOES_PLENARIO_SENADO) 
+  proposicoes_plenario_senado <- fetch_proposicoes(casa_aderencia = "senado", selecionadas = 0,proposicoes_url = .URL_PROPOSICOES_PLENARIO_SENADO)
   
   proposicoes <- proposicoes_questionario %>% 
     rbind(proposicoes_plenario) %>% 

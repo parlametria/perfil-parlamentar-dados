@@ -55,7 +55,7 @@ processa_aderencia_parlamentares <-
       }
     }
     
-    proposicoes <- seleciona_proposicoes(selecionadas, casa_aderencia, proposicoes_url)
+    proposicoes <- fetch_proposicoes(selecionadas, casa_aderencia,proposicoes_url)
     
     if(selecionadas == 1) {
       proposicoes_temas <-
@@ -168,34 +168,4 @@ processa_aderencia_parlamentares <-
       )
 
     return(aderencia_alt)
-  }
-
-#' @title Realiza a filtragem de proposições desejadas
-#' @description Com base nos parâmetros de selecionar proposições e de qual casa de interesse realiza a seleção
-#' @param selecionadas Flag para expressar se deseja somente as proposições selecionadas
-#' @param casa_aderencia Casa para a seleção das proposições (pode ser "camara" ou "senado)
-#' @param proposicoes_url URL para a tabela de proposições com informações dos temas no VA
-#' @return Dataframe contendo informações sobre as proposições
-seleciona_proposicoes <- 
-  function(selecionadas = 1, 
-           casa_aderencia = "camara", 
-           proposicoes_url = NULL) {
-    
-    source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
-    
-    proposicoes_selecionadas <-
-      fetch_proposicoes_plenario_selecionadas_senado(proposicoes_url)
-    
-    proposicoes <- proposicoes_selecionadas %>%
-      filter(status_importante == "Ativa")
-    
-    if (selecionadas == 0) {
-          proposicoes <- fetch_proposicoes_plenario(casa_aderencia) 
-          
-          proposicoes <- proposicoes_selecionadas %>% 
-            rbind(proposicoes) %>%
-            distinct(id_proposicao, .keep_all = TRUE)
-    }
-    
-    return(proposicoes)
   }
