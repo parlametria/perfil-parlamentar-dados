@@ -37,9 +37,9 @@ fetch_proposicoes_senado <- function(id_proposicao) {
       ~ uri_tramitacao
     ))
   })
-    
   return(proposicao)
 }
+
 
 #' @title Recupera e processa dados de um conjunto de proposições
 #' @description A partir de uma lista de ids, retorna os dados das respectivas proposições
@@ -105,20 +105,39 @@ fetch_proposicoes_plenario_selecionadas_senado <- function(url = NULL) {
   return(proposicoes)
 }
 
+fetch_tema_proposicoes_senado <- function(id_proposicao){
+  proposicao <- fetch_proposicoes_senado(id_proposicao)
+  if (nrow(proposicao) == 0) {
+    return(NA)
+  }
+  return(proposicao$tema)
+}
+
+fetch_nome_proposicoes_senado <- function(id_proposicao){
+  proposicao <- fetch_proposicoes_senado(id_proposicao)
+  if (nrow(proposicao) == 0) {
+    return(NA)
+  }
+  return(proposicao$nome)
+}
+
+
 #' @title Recupera e processa dados de todas as proposições que tiveram votações nominais da casa em plenário disponíveis
 #' @description Retorna os dados das proposições que tiveram votações nominais em plenário disponíveis
 #' @param casa_aderencia informa a casa de interesse
 #' @return Dataframe com os dados de proposições
 fetch_proposicoes_plenario <- 
   function(casa_aderencia = "camara") {
+    library(here)
+    library(tidyverse)
     source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
     source(here("crawler/votacoes/fetcher_votacoes_senado.R"))
     
     if (casa_aderencia == "camara") {
       proposicoes <- fetch_proposicoes_votadas_por_ano_camara() %>% mutate(id_proposicao = id)
     } else {
-      #TODO Nome proposicao
       proposicoes <- fetcher_votacoes_por_intervalo_senado()
+      proposicoes <- proposicoes %>% mutate(nome_proposicao = map_chr(proposicoes$id_proposicao, fetch_nome_proposicoes_senado))
     }
     
     proposicoes <- proposicoes %>% 
@@ -134,5 +153,4 @@ fetch_proposicoes_plenario <-
              descricao, 
              status_proposicao, 
              status_importante)
-    
   }

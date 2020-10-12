@@ -16,8 +16,7 @@ processa_aderencia_parlamentares <-
            selecionadas = 1) {
     library(tidyverse)
     library(here)
-    
-    #TODO eliminar extras
+  
     source(here("crawler/votacoes/utils_votacoes.R"))
     source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
     source(here("crawler/votacoes/aderencia/processa_dados_aderencia.R"))
@@ -47,15 +46,23 @@ processa_aderencia_parlamentares <-
       dplyr::mutate(id_partido = map_sigla_id(sg_partido)) %>%
       ungroup()
     
-    proposicoes <- seleciona_proposicoes(selecionadas, casa_aderencia)
+    if (is.null(proposicoes_url)) {
+      if (casa_aderencia == "camara") {
+        proposicoes_url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+      } else {
+        proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
+      }
+    }
+    
+    proposicoes <- seleciona_proposicoes(selecionadas, casa_aderencia, proposicoes_url)
     
     if(selecionadas == 1) {
       proposicoes_temas <-
         process_proposicoes_plenario_selecionadas_temas(proposicoes_url) %>%
         filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
     } else {
-      #TODO padronizar temas
-      proposicoes_temas <- process_proposicoes_plenario_temas(proposicoes) %>%
+      proposicoes_temas <- 
+        process_proposicoes_plenario_temas(proposicoes, casa_aderencia) %>%
         filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
     }
     
@@ -169,14 +176,6 @@ seleciona_proposicoes <-
     
     source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
     
-    if (is.null(proposicoes_url)) {
-      if (casa_aderencia == "camara") {
-        proposicoes_url <- .URL_PROPOSICOES_PLENARIO_CAMARA
-      } else {
-        proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
-      }
-    }
-    
     proposicoes_selecionadas <-
       fetch_proposicoes_plenario_selecionadas_senado(proposicoes_url)
     
@@ -191,5 +190,7 @@ seleciona_proposicoes <-
             distinct(id_proposicao, .keep_all = TRUE)
     }
     
-    proposicoes
+    return(proposicoes)
   }
+
+processa_aderencia_parlamentares(selecionadas = 0, casa_aderencia = "senado")
