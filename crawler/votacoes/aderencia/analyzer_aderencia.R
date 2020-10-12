@@ -6,6 +6,7 @@
 #' @param parlamentares_path Caminho para o arquivo de dados de parlamentares
 #' @param proposicoes_url URL para a tabela de proposições com informações dos temas no VA
 #' @param casa_aderencia Casa para o cálculo da aderência (pode ser "camara" ou "senado)
+#' @param selecionadas Flag para expressar se deseja somente as proposições selecionadas
 #' @return Dataframe com informações de aderência
 processa_aderencia_parlamentares <-
   function(votos_path = here::here("crawler/raw_data/votos.csv"),
@@ -165,10 +166,16 @@ processa_aderencia_parlamentares <-
         seguiu,
         aderencia = freq
       )
-    
+
     return(aderencia_alt)
   }
 
+#' @title Realiza a filtragem de proposições desejadas
+#' @description Com base nos parâmetros de selecionar proposições e de qual casa de interesse realiza a seleção
+#' @param selecionadas Flag para expressar se deseja somente as proposições selecionadas
+#' @param casa_aderencia Casa para a seleção das proposições (pode ser "camara" ou "senado)
+#' @param proposicoes_url URL para a tabela de proposições com informações dos temas no VA
+#' @return Dataframe contendo informações sobre as proposições
 seleciona_proposicoes <- 
   function(selecionadas = 1, 
            casa_aderencia = "camara", 
@@ -192,5 +199,3 @@ seleciona_proposicoes <-
     
     return(proposicoes)
   }
-
-processa_aderencia_parlamentares(selecionadas = 0, casa_aderencia = "senado")

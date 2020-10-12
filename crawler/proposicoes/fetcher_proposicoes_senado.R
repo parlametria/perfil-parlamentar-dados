@@ -105,6 +105,11 @@ fetch_proposicoes_plenario_selecionadas_senado <- function(url = NULL) {
   return(proposicoes)
 }
 
+#' @title Recupera os temas de uma proposição específica
+#' @description Especialização de fetch_proposicoes_senado, necessaria para mapeamento específico,
+#' no caso em questão somente para os temas
+#' @param id_proposicao ID da proposição
+#' @return Lista com os dados do tema da proposição
 fetch_tema_proposicoes_senado <- function(id_proposicao){
   proposicao <- fetch_proposicoes_senado(id_proposicao)
   if (nrow(proposicao) == 0) {
@@ -113,6 +118,11 @@ fetch_tema_proposicoes_senado <- function(id_proposicao){
   return(proposicao$tema)
 }
 
+#' @title Recupera os nomes de uma proposição específica
+#' @description Especialização de fetch_proposicoes_senado, necessaria para mapeamento específico,
+#' no caso em questão somente para os nomes
+#' @param id_proposicao ID da proposição
+#' @return Lista com os dados do nome da proposição
 fetch_nome_proposicoes_senado <- function(id_proposicao){
   proposicao <- fetch_proposicoes_senado(id_proposicao)
   if (nrow(proposicao) == 0) {

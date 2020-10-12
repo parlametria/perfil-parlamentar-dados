@@ -21,7 +21,7 @@ getIdfromTema <- function(tema_nome) {
 
 #' @title Retorna as proposições selecionadas votadas em plenários e seus temas 
 #' (mais de uma observação por proposição se houver mais de uma tema para a proposição)
-#' @description IDs dos temas das proposições
+#' @description IDs dos temas das proposições selecionadas
 #' @param url URL para os dados de proposições votadas na legislatura atual
 #' @return Dataframe com proposições e os temas (ids)
 #' @examples
@@ -52,7 +52,7 @@ process_proposicoes_plenario_selecionadas_temas <- function(url = NULL) {
   return(proposicoes_va)
 }
 
-#' @title Retorna as proposições votadas em plenários e seus temas 
+#' @title Retorna as todas as proposições votadas em plenários e seus temas 
 #' (mais de uma observação por proposição se houver mais de uma tema para a proposição)
 #' @description IDs dos temas das proposições
 #' @param proposicoes dataframe contendo todas proposicoes de interesse
