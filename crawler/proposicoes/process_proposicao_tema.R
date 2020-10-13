@@ -57,25 +57,26 @@ process_proposicoes_plenario_selecionadas_temas <- function(url = NULL) {
 #' @param casa_aderencia determina qual casa deseja adquirir os temas
 #' @return Dataframe com proposições e os temas (ids)
 process_proposicoes_plenario_temas <- function(proposicoes, casa_aderencia = "camara") {
-  proposicoes_va <- 
     if(casa_aderencia == "camara") {
-      proposicoes %>% 
+      proposicoes_va <- proposicoes %>% 
       mutate(tema = map_chr(id_proposicao, fetch_apenas_tema_proposicao)) %>%
       mutate(tema = strsplit(as.character(tema), ";")) %>%
       unnest(tema) %>%
       ungroup() %>%
-      rowwise() %>%
+      rowwise() %>% 
+      mutate(tema = trata_temas_proposicao(tema)) %>%
       mutate(id_tema = getIdfromTema(tema)) %>%
       ungroup() %>%
       mutate(id_proposicao = id_proposicao) %>%
       distinct(id_proposicao, id_tema)
     } else {
-      proposicoes %>% 
+      proposicoes_va <- proposicoes %>% 
       mutate(tema = map_chr(id_proposicao, fetch_tema_proposicoes_senado)) %>%
       mutate(tema = strsplit(as.character(tema), ";")) %>%
       unnest(tema) %>%
       ungroup() %>%
       rowwise() %>%
+      mutate(tema = trata_temas_proposicao(tema)) %>%
       mutate(id_tema = getIdfromTema(tema)) %>%
       ungroup() %>%
       mutate(id_proposicao = id_proposicao) %>%
@@ -83,6 +84,20 @@ process_proposicoes_plenario_temas <- function(proposicoes, casa_aderencia = "ca
     }
   
   return(proposicoes_va)
+}
+
+#' @title Captura temas para encapsula-los nos temas selecionados
+#' @description Padroniza temas em categorias selecionadas
+#' @param tema tema que precisa de padronização
+#' @return tema padronizado
+trata_temas_proposicao <- function(tema) {
+  tema <- case_when(
+      str_detect(tema, regex("públic", ignore_case = TRUE)) ~ "Integridade e Transparência",
+      str_detect(tema, regex("direito", ignore_case = TRUE)) ~ "Direitos Humanos",
+      str_detect(tema, regex("hídrico", ignore_case = TRUE)) ~ "Meio Ambiente",
+      str_detect(tema, regex("meio ambiente", ignore_case = TRUE)) ~ "Meio Ambiente",
+      TRUE ~ as.character(tema)
+  )
 }
 
 process_proposicoes_questionario_temas <- function(url = NULL) {
