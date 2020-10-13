@@ -9,9 +9,9 @@ processa_aderencia <- function() {
   library(here)
   source(here("crawler/votacoes/aderencia/analyzer_aderencia.R"))
   
-  aderencia_camara <- processa_aderencia_parlamentares(casa = "camara")
+  aderencia_camara <- processa_aderencia_parlamentares(selecionadas = 0, casa = "camara")
   
-  aderencia_senado <- processa_aderencia_parlamentares(casa = "senado")
+  aderencia_senado <- processa_aderencia_parlamentares(selecionadas = 0, casa = "senado")
   
   aderencia_alt <- aderencia_camara %>% 
     rbind(aderencia_senado)
