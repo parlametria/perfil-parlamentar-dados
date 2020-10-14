@@ -6,7 +6,7 @@
 #' @param parlamentares_path Caminho para o arquivo de dados de parlamentares
 #' @param proposicoes_url URL para a tabela de proposições com informações dos temas no VA
 #' @param casa_aderencia Casa para o cálculo da aderência (pode ser "camara" ou "senado)
-#' @param selecionadas Flag para expressar se deseja somente as proposições selecionadas
+#' @param filtro Flag para expressar se deseja somente as proposições selecionadas
 #' @return Dataframe com informações de aderência
 processa_aderencia_parlamentares <-
   function(votos_path = here::here("crawler/raw_data/votos.csv"),
@@ -14,7 +14,7 @@ processa_aderencia_parlamentares <-
            parlamentares_path = here::here("crawler/raw_data/parlamentares.csv"),
            proposicoes_url = NULL,
            casa_aderencia = "camara",
-           selecionadas = 1) {
+           filtro = 1) {
     library(tidyverse)
     library(here)
   
@@ -55,9 +55,9 @@ processa_aderencia_parlamentares <-
       }
     }
     
-    proposicoes <- fetch_proposicoes(selecionadas, casa_aderencia,proposicoes_url)
+    proposicoes <- fetch_proposicoes(filtro, casa_aderencia,proposicoes_url)
     
-    if(selecionadas == 1) {
+    if(filtro == 1) {
       proposicoes_temas <-
         process_proposicoes_plenario_selecionadas_temas(proposicoes_url) %>%
         filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
@@ -66,6 +66,8 @@ processa_aderencia_parlamentares <-
         process_proposicoes_plenario_temas(proposicoes, casa_aderencia) %>%
         filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
     }
+    
+    return()
     
     temas <- processa_temas_proposicoes()
     
@@ -155,7 +157,8 @@ processa_aderencia_parlamentares <-
       rbind(aderencia_temas) %>%
       mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa_aderencia == "camara", 1, 2),
                                          id)) %>%
-      mutate(freq = if_else(freq == -1, -1, freq / 100)) %>%
+      mutate(freq = if_else(freq == -1, -1, freq / 100),
+             selecionadas = filtro) %>%
       select(
         id_parlamentar_voz,
         id_partido,
@@ -164,8 +167,11 @@ processa_aderencia_parlamentares <-
         partido_liberou,
         nao_seguiu,
         seguiu,
-        aderencia = freq
+        aderencia = freq,
+        selecionadas
       )
 
     return(aderencia_alt)
   }
+
+processa_aderencia_parlamentares(filtro = 0, casa_aderencia = "senado")
