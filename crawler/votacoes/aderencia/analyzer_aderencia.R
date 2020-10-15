@@ -57,19 +57,19 @@ processa_aderencia_parlamentares <-
     
     proposicoes <- fetch_proposicoes(filtro, casa_aderencia,proposicoes_url)
     
+    temas <- processa_temas_proposicoes()
+    
     if(filtro == 1) {
       proposicoes_temas <-
         process_proposicoes_plenario_selecionadas_temas(proposicoes_url) %>%
         filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
     } else {
       proposicoes_temas <- 
-        process_proposicoes_plenario_temas(proposicoes, casa_aderencia) %>%
+        process_proposicoes_plenario_temas(proposicoes, casa_aderencia, temas) %>%
         filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
     }
     
-    return()
-    
-    temas <- processa_temas_proposicoes()
+    print(proposicoes_temas)
     
     ## Calcula aderência por tema
     aderencia_temas <-
@@ -170,8 +170,6 @@ processa_aderencia_parlamentares <-
         aderencia = freq,
         selecionadas
       )
-
+  
     return(aderencia_alt)
   }
-
-processa_aderencia_parlamentares(filtro = 0, casa_aderencia = "senado")
