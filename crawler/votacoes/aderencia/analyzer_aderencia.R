@@ -57,19 +57,17 @@ processa_aderencia_parlamentares <-
     
     proposicoes <- fetch_proposicoes(filtro, casa_aderencia,proposicoes_url)
     
-    temas <- processa_temas_proposicoes()
-    
     if(filtro == 1) {
       proposicoes_temas <-
         process_proposicoes_plenario_selecionadas_temas(proposicoes_url) %>%
         filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
     } else {
       proposicoes_temas <- 
-        process_proposicoes_plenario_temas(proposicoes, casa_aderencia, temas) %>%
+        process_proposicoes_plenario_temas(proposicoes, casa_aderencia) %>%
         filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
     }
     
-    print(proposicoes_temas)
+    temas <- processa_temas_proposicoes()
     
     ## Calcula aderência por tema
     aderencia_temas <-
@@ -158,7 +156,7 @@ processa_aderencia_parlamentares <-
       mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa_aderencia == "camara", 1, 2),
                                          id)) %>%
       mutate(freq = if_else(freq == -1, -1, freq / 100),
-             selecionadas = filtro) %>%
+             selecionada = filtro) %>%
       select(
         id_parlamentar_voz,
         id_partido,
@@ -168,7 +166,7 @@ processa_aderencia_parlamentares <-
         nao_seguiu,
         seguiu,
         aderencia = freq,
-        selecionadas
+        selecionada
       )
   
     return(aderencia_alt)

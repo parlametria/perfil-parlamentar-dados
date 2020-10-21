@@ -40,6 +40,31 @@ fetch_proposicoes_senado <- function(id_proposicao) {
   return(proposicao)
 }
 
+#' @title Recupera os temas de uma proposição específica
+#' @description Especialização de fetch_proposicoes_senado, necessaria para mapeamento específico,
+#' no caso em questão somente para os temas
+#' @param id_proposicao ID da proposição
+#' @return Lista com os dados do tema da proposição
+fetch_tema_proposicoes_senado <- function(id_proposicao){
+  proposicao <- fetch_proposicoes_senado(id_proposicao)
+  if (nrow(proposicao) == 0) {
+    return(NA)
+  }
+  return(proposicao$tema)
+}
+
+#' @title Recupera os nomes de uma proposição específica
+#' @description Especialização de fetch_proposicoes_senado, necessaria para mapeamento específico,
+#' no caso em questão somente para os nomes
+#' @param id_proposicao ID da proposição
+#' @return Lista com os dados do nome da proposição
+fetch_nome_proposicoes_senado <- function(id_proposicao){
+  proposicao <- fetch_proposicoes_senado(id_proposicao)
+  if (nrow(proposicao) == 0) {
+    return(NA)
+  }
+  return(proposicao$nome)
+}
 
 #' @title Recupera e processa dados de um conjunto de proposições
 #' @description A partir de uma lista de ids, retorna os dados das respectivas proposições
@@ -105,32 +130,6 @@ fetch_proposicoes_plenario_selecionadas_senado <- function(url = NULL) {
   return(proposicoes)
 }
 
-#' @title Recupera os temas de uma proposição específica
-#' @description Especialização de fetch_proposicoes_senado, necessaria para mapeamento específico,
-#' no caso em questão somente para os temas
-#' @param id_proposicao ID da proposição
-#' @return Lista com os dados do tema da proposição
-fetch_tema_proposicoes_senado <- function(id_proposicao){
-  proposicao <- fetch_proposicoes_senado(id_proposicao)
-  if (nrow(proposicao) == 0) {
-    return(NA)
-  }
-  return(proposicao$tema)
-}
-
-#' @title Recupera os nomes de uma proposição específica
-#' @description Especialização de fetch_proposicoes_senado, necessaria para mapeamento específico,
-#' no caso em questão somente para os nomes
-#' @param id_proposicao ID da proposição
-#' @return Lista com os dados do nome da proposição
-fetch_nome_proposicoes_senado <- function(id_proposicao){
-  proposicao <- fetch_proposicoes_senado(id_proposicao)
-  if (nrow(proposicao) == 0) {
-    return(NA)
-  }
-  return(proposicao$nome)
-}
-
 #' @title Captura as proposições de interesse a partir da casa
 #' @description Com base nos parâmetros de selecionar proposições e de qual casa de interesse realiza a seleção
 #' @param selecionadas Flag para expressar se deseja somente as proposições selecionadas
@@ -143,6 +142,14 @@ fetch_proposicoes <-
            proposicoes_url = NULL) {
     
     source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
+    
+    if (is.null(proposicoes_url)) {
+      if (casa_aderencia == "camara") {
+        proposicoes_url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+      } else {
+        proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
+      }
+    }
     
     proposicoes_selecionadas <-
       fetch_proposicoes_plenario_selecionadas_senado(proposicoes_url)
@@ -174,7 +181,7 @@ fetch_proposicoes_plenario <-
     source(here("crawler/votacoes/fetcher_votacoes_senado.R"))
     
     if (casa_aderencia == "camara") {
-      proposicoes <- fetch_proposicoes_votadas_por_ano_camara() %>% mutate(id_proposicao = id)
+      proposicoes <- map_dfr(c(2019, 2020), fetch_proposicoes_votadas_por_ano_camara) %>% mutate(id_proposicao = id)
     } else {
       proposicoes <- fetcher_votacoes_por_intervalo_senado()
       proposicoes <- proposicoes %>% mutate(nome_proposicao = map_chr(proposicoes$id_proposicao, fetch_nome_proposicoes_senado))

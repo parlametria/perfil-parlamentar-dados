@@ -22,7 +22,7 @@ processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/l
   liderancas_alt <- liderancas %>%
     left_join(liderancas_partidos %>% select(bloco_partido, id_partido),
               by = c("bloco_partido")) %>% 
-    select(id_parlamentar_voz, id_partido, casa, cargo)
+    select(id_parlamentar_voz, id_partido, casa, cargo) %>% distinct(id_parlamentar_voz, id_partido, .keep_all = TRUE);
   
   return(liderancas_alt)
 }

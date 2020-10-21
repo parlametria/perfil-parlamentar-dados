@@ -150,7 +150,8 @@ CREATE TABLE IF NOT EXISTS "aderencias" (
     "nao_seguiu" INTEGER,
     "seguiu" INTEGER,
     "aderencia" REAL,
-    PRIMARY KEY("id_parlamentar_voz", "id_partido", "id_tema")
+    "selecionada" BOOLEAN,
+    PRIMARY KEY("id_parlamentar_voz", "id_partido", "id_tema", "selecionada")
 );
 
 CREATE TABLE IF NOT EXISTS "liderancas" (    

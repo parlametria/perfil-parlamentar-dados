@@ -17,7 +17,9 @@ processa_aderencia <- function() {
   aderencia_alt <- aderencia_camara_selecionadas %>%
     rbind(aderencia_camara) %>% 
     rbind(aderencia_senado_selecionadas) %>%
-    rbind(aderencia_senado)
+    rbind(aderencia_senado) %>% distinct(id_parlamentar_voz, id_partido, id_tema, selecionada, .keep_all = TRUE)
   
   return(aderencia_alt)
 }
+
+processa_aderencia()
