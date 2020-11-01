@@ -6,7 +6,7 @@ processa_proposicoes <- function() {
   library(tidyverse)
   library(here)
   source(here("crawler/proposicoes/fetch_proposicoes_voz_ativa.R"))
-  source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
+  source(here("crawler/proposicoes/analyzer_proposicoes.R"))
   source(here("crawler/proposicoes/utils_proposicoes.R"))
   
   proposicoes_questionario <- fetch_proposicoes_questionario(.URL_PROPOSICOES_VOZATIVA)

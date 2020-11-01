@@ -19,6 +19,11 @@ getIdfromTema <- function(tema_nome) {
   return(tema_id)
 }
 
+#' @title Retorna o id de um tema dado sem nome, a partir de uma lista de temas previamente selecionados
+#' @description A partir do nome do tema retorna seu id
+#' @param tema_nome Nome do tema
+#' @param temas Lista contendo todos os temas selecionados
+#' @return Inteiro com o id do tema
 getIdfromListaTema <- function(tema_nome, temas) {
   library(tidyverse)
   
@@ -73,7 +78,7 @@ process_proposicoes_plenario_selecionadas_temas <- function(url = NULL) {
 #' @return Dataframe com proposições e os temas (ids)
 process_proposicoes_plenario_temas <- function(proposicoes = NULL, casa_aderencia = "camara") {
   if (is.null(proposicoes)) {
-    source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
+    source(here("crawler/proposicoes/analyzer_proposicoes.R"))
     proposicoes <- fetch_proposicoes(selecionadas = 0, casa_aderencia)
   }
   
@@ -139,7 +144,9 @@ process_proposicoes_questionario_temas <- function(url = NULL) {
 #' @description Cria os dados dos temas
 #' @return Dataframe com informações dos temas (descrição e id)
 processa_temas_proposicoes <- function() {
-  temas <- read.csv(file = "crawler/proposicoes/temas/temas.csv", colClasses = c("numeric", "character", "character", "numeric"))
+  library(tidyverse)
   
+  temas <- read_csv(file = "crawler/proposicoes/temas/temas.csv", col_types = cols(col_number(), col_character(), col_character(), col_number()))
+
   return(temas)
 }

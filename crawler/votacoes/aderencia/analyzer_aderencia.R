@@ -23,6 +23,7 @@ processa_aderencia_parlamentares <-
     source(here("crawler/votacoes/aderencia/processa_dados_aderencia.R"))
     source(here("crawler/parlamentares/partidos/utils_partidos.R"))
     source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
+    source(here("crawler/proposicoes/analyzer_proposicoes.R"))
     source(here("crawler/proposicoes/utils_proposicoes.R"))
     source(here("crawler/proposicoes/process_proposicao_tema.R"))
     source(here("crawler/proposicoes/fetcher_proposicao_info.R"))
