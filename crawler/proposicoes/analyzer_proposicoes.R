@@ -10,18 +10,20 @@ fetch_proposicoes <-
            proposicoes_url = NULL) {
     
     source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
-    source(here("crawler/proposicoes/analyzer_proposicoes.R"))
+    source(here("crawler/proposicoes/fetch_proposicoes_voz_ativa.R"))
+    source(here("crawler/proposicoes/utils_proposicoes.R"))
     
-    if (is.null(proposicoes_url)) {
-      if (casa_aderencia == "camara") {
+    if (casa_aderencia == "camara") {
+      if (is.null(proposicoes_url)) {
         proposicoes_url <- .URL_PROPOSICOES_PLENARIO_CAMARA
-      } else {
+      }
+      proposicoes_selecionadas <- fetch_proposicoes_plenario_selecionadas(proposicoes_url)
+    } else {
+      if (is.null(proposicoes_url)) {
         proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
       }
+      proposicoes_selecionadas <- fetch_proposicoes_plenario_selecionadas_senado(proposicoes_url)
     }
-    
-    proposicoes_selecionadas <-
-      fetch_proposicoes_plenario_selecionadas_senado(proposicoes_url)
     
     proposicoes <- proposicoes_selecionadas %>%
       filter(status_importante == "Ativa")
