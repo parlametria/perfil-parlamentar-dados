@@ -13,7 +13,7 @@ getIdfromTema <- function(tema_nome) {
     tolower(tema_nome) == tolower("Integridade e Transparência") ~ 2,
     tolower(tema_nome) == tolower("Agenda Nacional") ~ 3,
     tolower(tema_nome) == tolower("Educação") ~ 5,
-    TRUE ~ 99
+    TRUE ~ 101
   )
   
   return(tema_id)
@@ -33,7 +33,7 @@ getIdfromListaTema <- function(tema_nome, temas) {
   if(tema_nome %in% sapply(temas$tema, tolower)) {
     as.numeric(temas %>% filter(tolower(tema) == tema_nome) %>% pull(id_tema))
   } else {
-    99
+    101
   }
   
   return(tema_id)

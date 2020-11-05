@@ -20,7 +20,7 @@ opt <- parse_args(opt_parser)
 
 output <- opt$output
 
-temas <- data.frame(id_tema = c(0, 1, 2, 3, 5, seq(6, 59, 1), 99),
+temas <- data.frame(id_tema = c(0, 1, 2, 3, 5, seq(6, 60, 1), 99, 101),
                     tema = c("Meio Ambiente"
                              ,"Direitos Humanos"
                              ,"Integridade e Transparência"
@@ -80,7 +80,9 @@ temas <- data.frame(id_tema = c(0, 1, 2, 3, 5, seq(6, 59, 1), 99),
                              ,"Desporto e Lazer"                                             
                              ,"Trânsito"                                                     
                              ,"Minas e Energia"
-                             ,"Geral"), 
+                             ,"Agricultura, Pecuária, Pesca e Extrativismo"
+                             ,"Geral"
+                             ,"Indefinido"), 
                     slug = c("meio-ambiente"
                              ,"direitos-humanos"
                              ,"integridade-e-transparencia"
@@ -140,8 +142,10 @@ temas <- data.frame(id_tema = c(0, 1, 2, 3, 5, seq(6, 59, 1), 99),
                              ,"desporto-e-lazer"
                              ,"transito"
                              ,"minas-e-energia"
-                             ,"geral"),
-                    ativo = c(1, 1, 1, 1, 1, rep(0, 55)),
+                             ,"agricultura,pecuaria,pesca-e-extrativismo"
+                             ,"geral"
+                             ,"indefinido"),
+                    ativo = c(1, 1, 1, 1, 1, rep(0, 57)),
                     stringsAsFactors = FALSE)
 
 write_csv(temas, paste0(output, "temas.csv"))

@@ -58,4 +58,6 @@ id_tema,tema,slug,ativo
 57,Desporto e Lazer,desporto-e-lazer,0
 58,Trânsito,transito,0
 59,Minas e Energia,minas-e-energia,0
+60,"Agricultura, Pecuária, Pesca e Extrativismo","agricultura,pecuaria,pesca-e-extrativismo",0
 99,Geral,geral,0
+101,Indefinido,indefinido,0
