@@ -27,6 +27,7 @@ processa_aderencia_parlamentares <-
     source(here("crawler/proposicoes/utils_proposicoes.R"))
     source(here("crawler/proposicoes/process_proposicao_tema.R"))
     source(here("crawler/proposicoes/fetcher_proposicao_info.R"))
+    source(here("crawler/proposicoes/fetch_proposicoes_voz_ativa.R"))
     
     ## Preparando dados de votos, orientações e senadores
     votos <-
@@ -51,21 +52,29 @@ processa_aderencia_parlamentares <-
     if (is.null(proposicoes_url)) {
       if (casa_aderencia == "camara") {
         proposicoes_url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+        proposicoes_selecionadas <- fetch_proposicoes_plenario_selecionadas(proposicoes_url)
       } else {
         proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
+        proposicoes_selecionadas <- fetch_proposicoes_plenario_selecionadas_senado(proposicoes_url)
       }
     }
     
-    proposicoes <- fetch_proposicoes(filtro, casa_aderencia,proposicoes_url)
+    proposicoes_selecionadas <- proposicoes_selecionadas %>% filter(status_importante == "Ativa")
     
-    if(filtro == 1) {
-      proposicoes_temas <-
-        process_proposicoes_plenario_selecionadas_temas(proposicoes_url) %>%
-        filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
-    } else {
-      proposicoes_temas <- 
+    proposicoes_temas <-
+      process_proposicoes_plenario_selecionadas_temas(proposicoes_url) %>%
+      filter(id_proposicao %in% (proposicoes_selecionadas %>% pull(id_proposicao)))
+    
+    if(filtro == 0) {
+      proposicoes <- fetch_proposicoes_plenario(casa_aderencia)
+      
+      proposicoes_gerais_temas <- 
         process_proposicoes_plenario_temas(proposicoes, casa_aderencia) %>%
         filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
+      
+      proposicoes_temas <- proposicoes_temas %>%
+        rbind(proposicoes_gerais_temas) %>%
+        distinct()
     }
     
     temas <- processa_temas_proposicoes()
