@@ -583,7 +583,7 @@ id_parlamentar_voz,id_parlamentar,casa,cpf,nome_civil,nome_eleitoral,genero,uf,i
 1160611,160611,camara,37031074649,ANTÔNIO PINHEIRO JÚNIOR,TONINHO PINHEIRO,M,MG,37903,Fim de Mandato,Titular,55,0,NA
 1178934,178934,camara,18591035968,ANTONIO WANDSCHEER,Toninho Wandscheer,M,PR,36763,Exercício,Titular,56,1,2300260
 1178863,178863,camara,03746803101,ULDURICO ALENCAR PINTO,Uldurico Junior,M,BA,36763,Exercício,Titular,56,1,2289217
-1195866,195866,camara,56571739291,FRANCISCO VAIDON OLIVEIRA,Vaidon Oliveira,M,CE,36763,Licença,Titular,56,0,NA
+1195866,195866,camara,56571739291,FRANCISCO VAIDON OLIVEIRA,Vaidon Oliveira,M,CE,36763,Exercício,Titular,56,1,2290360
 1194340,194340,camara,10516186493,AUDIVAL AMÉLIO DA SILVA NETO,VAL AMÉLIO,M,AL,36829,Suplência,Suplente,55,0,NA
 1141384,141384,camara,80616291515,ANTÔNIO CARLOS VALADARES FILHO,VALADARES FILHO,M,SE,36832,Fim de Mandato,Titular,55,0,NA
 174010,74010,camara,16261577900,VALDIR COLATTO,VALDIR COLATTO,M,SC,36899,Suplência,Suplente,56,0,NA
@@ -701,7 +701,7 @@ id_parlamentar_voz,id_parlamentar,casa,cpf,nome_civil,nome_eleitoral,genero,uf,i
 1204512,204512,camara,03572972612,MARCELO EDUARDO FREITAS,Delegado Marcelo Freitas,M,MG,36837,Exercício,Titular,56,1,2294639
 1204569,204569,camara,55926169291,PABLO OLIVA SOUZA,Delegado Pablo,M,AM,36837,Exercício,Titular,56,1,2287761
 1204542,204542,camara,62156047391,DENIS ANDERSON DA ROCHA BEZERRA,Denis Bezerra,M,CE,36832,Exercício,Titular,56,1,2290351
-1213856,213856,camara,50243950349,FRANCISCO DEUZINHO DE OLIVEIRA FILHO,Deuzinho Filho,M,CE,37908,Exercício,Suplente,56,1,2290298
+1213856,213856,camara,50243950349,FRANCISCO DEUZINHO DE OLIVEIRA FILHO,Deuzinho Filho,M,CE,37908,Suplência,Suplente,56,0,NA
 1213854,213854,camara,09111638320,AGRIPINO RODRIGUES GOMES MAGALHÃES,Dr. Agripino Magalhães,M,CE,36763,Exercício,Suplente,56,1,2290807
 1204518,204518,camara,07422257717,FREDERICO DE CASTRO ESCALEIRA,Dr. Frederico,M,MG,37907,Exercício,Titular,56,1,2295007
 1212625,212625,camara,05461154387,ANTONIO ELIZABETH GONÇALO DE SOUSA,Dr. Gonçalo,M,MA,37908,Suplência,Suplente,56,0,NA
@@ -790,7 +790,7 @@ id_parlamentar_voz,id_parlamentar,casa,cpf,nome_civil,nome_eleitoral,genero,uf,i
 1204457,204457,camara,07845799700,ROGERIO TEIXEIRA JUNIOR,Juninho do Pneu,M,RJ,36769,Exercício,Titular,56,1,2301365
 1204520,204520,camara,07554049631,GERALDO JUNIO DO AMARAL,Junio Amaral,M,MG,36837,Exercício,Titular,56,1,2295173
 1204497,204497,camara,23211253220,JOÃO FERRARI JÚNIOR,Júnior Ferrari,M,PA,36834,Exercício,Titular,56,1,2297516
-1204574,204574,camara,78247128349,JOSE LOURENÇO BOMFIM JUNIOR,Junior Lourenço,M,MA,37906,Licença,Titular,56,0,NA
+1204574,204574,camara,78247128349,JOSE LOURENÇO BOMFIM JUNIOR,Junior Lourenço,M,MA,37906,Exercício,Titular,56,1,2293271
 1204550,204550,camara,97891231320,ANTÔNIO LUIZ RODRIGUES MANO JÚNIOR,Júnior Mano,M,CE,37906,Exercício,Titular,56,1,2290561
 1204536,204536,camara,39313495864,KIM PATROCA KATAGUIRI,Kim Kataguiri,M,SP,36769,Exercício,Titular,56,1,2309284
 198057,98057,camara,38105195100,LAFAYETTE LUIZ DOORGAL DE ANDRADA,Lafayette de Andrada,M,MG,37908,Exercício,Titular,56,1,2295600
@@ -806,7 +806,7 @@ id_parlamentar_voz,id_parlamentar,casa,cpf,nome_civil,nome_eleitoral,genero,uf,i
 1204404,204404,camara,71471278115,LUCAS BELLO REDECKER,Lucas Redecker,M,RS,36835,Exercício,Titular,56,1,2307851
 1204381,204381,camara,90218647115,LUIS CLAUDIO FERNANDES MIRANDA,Luis Miranda,M,DF,36769,Exercício,Titular,56,1,2313610
 1204410,204410,camara,05823529910,LUISA CANZIANI DOS SANTOS SILVEIRA,Luisa Canziani,F,PR,36845,Exercício,Titular,56,1,2300684
-1204448,204448,camara,01563114704,LUIZ ANTONIO DA COSTA CARVALHO CORREA DA SILVA,Luiz Antônio Corrêa,M,RJ,37906,Exercício,Titular,56,1,2303376
+1204448,204448,camara,01563114704,LUIZ ANTONIO C. C. CORRÊA DA SILVA,Luiz Antônio Corrêa,M,RJ,37906,Exercício,Titular,56,1,2303376
 1160645,160645,camara,63223228268,LUIZ CARLOS GOMES DOS SANTOS JUNIOR,Luiz Carlos,M,AP,36835,Exercício,Titular,56,1,2288775
 1204485,204485,camara,03035521824,LUIZ CARLOS MOTTA,Luiz Carlos Motta,M,SP,37906,Exercício,Titular,56,1,2311133
 1204543,204543,camara,70641218834,LUIZ FLAVIO GOMES,Luiz Flávio Gomes,M,SP,36832,Vacância,Titular,56,0,NA
@@ -814,7 +814,7 @@ id_parlamentar_voz,id_parlamentar,casa,cpf,nome_civil,nome_eleitoral,genero,uf,i
 1204526,204526,camara,11844856828,LUIZ PHILIPPE DE ORLEANS BRAGANÇA,Luiz Philippe de Orleans e Bragança,M,SP,36837,Exercício,Titular,56,1,2309493
 1204418,204418,camara,53601106949,LUIZ GOULARTE ALVES,Luizão Goulart,M,PR,37908,Exercício,Titular,56,1,2301097
 1204458,204458,camara,07862227786,FABIANA SILVA DE SOUZA POUBEL,Major Fabiana,F,RJ,36837,Exercício,Titular,56,1,2302970
-1204469,204469,camara,36089427268,MANUEL MARCOS CARVALHO DE MESQUITA,Manuel Marcos,M,AC,37908,Exercício,Titular,56,1,2287169
+1204469,204469,camara,36089427268,MANUEL MARCOS CARVALHO DE MESQUITA,Manuel Marcos,M,AC,37908,Vacância,Não Eleito,56,0,NA
 1204471,204471,camara,41186273291,CYLMARA FERNANDES DA ROCHA GRIPP,Mara Rocha,F,AC,36835,Exercício,Titular,56,1,2287027
 1212749,212749,camara,09300885731,MARCUS WELBER GOMES DA SILVA,Marcão Gomes,M,RJ,37906,Suplência,Suplente,56,0,NA
 1156190,156190,camara,00731302060,MARCEL VAN HATTEM,Marcel van Hattem,M,RS,37901,Exercício,Titular,56,1,2307381
@@ -859,7 +859,7 @@ id_parlamentar_voz,id_parlamentar,casa,cpf,nome_civil,nome_eleitoral,genero,uf,i
 1204538,204538,camara,45417202215,PAULO EDUARDO MAESTRI BENGTSON,Paulo Bengtson,M,PA,36845,Exercício,Titular,56,1,2297671
 1204461,204461,camara,09911967751,PAULO GUSTAVO GANIME ALVES TEIXEIRA,Paulo Ganime,M,RJ,37901,Exercício,Titular,56,1,2302374
 1204492,204492,camara,86753991620,PAULO JOSE CARLOS GUEDES,Paulo Guedes,M,MG,36844,Exercício,Titular,56,1,2294342
-1128760,128760,camara,66488737368,PAULO CELSO FONSECA MARINHO JÚNIOR,Paulo Marinho Jr,M,MA,37906,Exercício,Suplente,56,1,2293114
+1128760,128760,camara,66488737368,PAULO CELSO FONSECA MARINHO JÚNIOR,Paulo Marinho Jr,M,MA,37906,Suplência,Suplente,56,0,NA
 1133968,133968,camara,03273970715,Paulo Sérgio Ramos Barboza,Paulo Ramos,M,RJ,36786,Exercício,Titular,56,1,2301521
 190201,90201,camara,87850885368,PEDRO AUGUSTO GEROMEL BEZERRA DE MENEZES,Pedro Augusto Bezerra,M,CE,36845,Exercício,Titular,56,1,2291107
 1122974,122974,camara,82994684349,PEDRO LUCAS ANDRADE FERNANDES RIBEIRO,Pedro Lucas Fernandes,M,MA,36845,Exercício,Titular,56,1,2293299
@@ -1100,7 +1100,7 @@ id_parlamentar_voz,id_parlamentar,casa,cpf,nome_civil,nome_eleitoral,genero,uf,i
 25967,5967,senado,NA,Angelo Mario Coronel de Azevedo Martins,Angelo Coronel,M,BA,36834,NA,Titular,56,1,2289595
 25529,5529,senado,NA,Antonio Augusto Junho Anastasia,Antonio Anastasia,M,MG,36834,NA,Titular,56,1,1772588
 26001,6001,senado,NA,Arlindo Penha da Silva,Arlindo Silva,M,PA,36852,NA,1º Suplente,56,0,NA
-2751,751,senado,NA,Arolde de Oliveira,Arolde de Oliveira,M,RJ,36834,NA,Titular,56,1,2304304
+2751,751,senado,NA,Arolde de Oliveira,Arolde de Oliveira,M,RJ,36834,NA,Titular,56,0,NA
 26009,6009,senado,NA,Marcos Cesar Pontes,Astronauta Marcos Pontes,M,SP,36852,NA,2º Suplente,56,0,NA
 25633,5633,senado,NA,Atilio Francisco da Silva,Atilio Francisco,M,SP,37908,NA,2º Suplente,56,0,NA
 25631,5631,senado,NA,Genésio Ayres Marchetti,Ayres Marchetti,M,SC,36834,NA,2º Suplente,56,0,NA
@@ -1115,11 +1115,12 @@ id_parlamentar_voz,id_parlamentar,casa,cpf,nome_civil,nome_eleitoral,genero,uf,i
 25603,5603,senado,NA,Carlos Augusto Lopes da Costa,Carlos Augusto Costa,M,PE,36851,NA,1º Suplente,56,0,NA
 26295,6295,senado,NA,Carlos Henrique Baqueta Fávaro,Carlos Fávaro,M,MT,36834,NA,Titular,56,1,2296785
 26020,6020,senado,NA,Carlos Milton Morais,Carlos Milton Morais,M,RO,36852,NA,2º Suplente,56,0,NA
+25936,5936,senado,NA,Carlos Francisco Portinho,Carlos Portinho,M,RJ,36834,NA,1º Suplente,56,1,NA
 25990,5990,senado,NA,Carlos Alberto Dias Viana,Carlos Viana,M,MG,36834,NA,Titular,56,1,2294589
 25991,5991,senado,NA,Castellar Modesto Guimarães Neto,Castellar Guimarães Neto,M,MG,36852,NA,1º Suplente,56,0,NA
 25593,5593,senado,NA,Celso Dal Lago Rodrigues,Celso Dal Lago Rodrigues,M,MS,36899,NA,1º Suplente,56,0,NA
 26000,6000,senado,NA,João Chamon Neto,Chamon,M,PA,36852,NA,2º Suplente,56,0,NA
-2470,470,senado,NA,Francisco de Assis Rodrigues,Chico Rodrigues,M,RR,36769,NA,Titular,56,1,2306436
+2470,470,senado,NA,Francisco de Assis Rodrigues,Chico Rodrigues,M,RR,36769,NA,Titular,56,0,NA
 2611,611,senado,NA,Francisco Feitosa de Albuquerque Lima,Chiquinho Feitosa,M,CE,36835,NA,1º Suplente,56,0,NA
 25623,5623,senado,NA,Christopher Belchior Goulart,Christopher Goulart,M,RS,36786,NA,1º Suplente,56,0,NA
 25973,5973,senado,NA,Cid Ferreira Gomes,Cid Gomes,M,CE,36786,NA,Titular,56,1,2290731
@@ -1269,7 +1270,6 @@ id_parlamentar_voz,id_parlamentar,casa,cpf,nome_civil,nome_eleitoral,genero,uf,i
 24606,4606,senado,NA,José Eleonildo Soares,Pinto Itamaraty,M,MA,36835,NA,1º Suplente,56,0,NA
 25922,5922,senado,NA,Plinio Destro,Plinio Destro,M,PR,36852,NA,2º Suplente,56,0,NA
 25502,5502,senado,NA,Francisco Plínio Valério Tomaz,Plínio Valério,M,AM,36835,NA,Titular,56,1,2288408
-25936,5936,senado,NA,Carlos Francisco Portinho,Portinho,M,RJ,36852,NA,1º Suplente,56,0,NA
 25971,5971,senado,NA,Prisco Rodrigues Bezerra,Prisco Bezerra,M,CE,36786,NA,1º Suplente,56,0,NA
 25984,5984,senado,NA,Terezinha Bazé de Lima,Professora Bazé,F,MS,36852,NA,2º Suplente,56,0,NA
 25913,5913,senado,NA,Cicero Rafael Tenorio da Silva,Rafael Tenorio,M,AL,36852,NA,1º Suplente,56,0,NA

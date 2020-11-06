@@ -1,61 +1,63 @@
 id_tema,tema,slug,ativo
 0,Meio Ambiente,meio-ambiente,1
 1,Direitos Humanos,direitos-humanos,1
-2,Integridade e Transparência,integridade-e-transparência,1
+2,Integridade e Transparência,integridade-e-transparencia,1
 3,Agenda Nacional,agenda-nacional,1
-5,Educação,educação,1
-6,Administração Pública,administração-pública,0
+5,Educação,educacao,1
+6,Administração Pública,administracao-publica,0
 7,Direito Penal e Processual Penal,direito-penal-e-processual-penal,0
 8,Trabalho e Emprego,trabalho-e-emprego,0
-9,Processo Legislativo e Atuação Parlamentar,processo-legislativo-e-atuação-parlamentar,0
-10,Finanças Públicas e Orçamento,finanças-públicas-e-orçamento,0
+9,Processo Legislativo e Atuação Parlamentar,processo-legislativo-e-atuacao-parlamentar,0
+10,Finanças Públicas e Orçamento,financas-publicas-e-orcamento,0
 11,Economia,economia,0
-12,Defesa e Segurança,defesa-e-segurança,0
-13,Relações Internacionais e Comércio Exterior,relações-internacionais-e-comércio-exterior,0
-14,"Política,Partidos e Eleições","política,partidos-e-eleições",0
-15,"Indústria,Comércio e Serviços","indústria,comércio-e-serviços",0
-16,"Viação,Transporte e Mobilidade","viação,transporte-e-mobilidade",0
-17,Estrutura Fundiária,estrutura-fundiária,0
-18,Meio Ambiente e Desenvolvimento Sustentável,meio-ambiente-e-desenvolvimento-sustentável,0
-19,Previdência e Assistência Social,previdência-e-assistência-social,0
+12,Defesa e Segurança,defesa-e-seguranca,0
+13,Relações Internacionais e Comércio Exterior,relacoes-internacionais-e-comercio-exterior,0
+14,"Política, Partidos e Eleições","politica,partidos-e-eleicoes",0
+15,"Indústria, Comércio e Serviços","industria,comercio-e-servicos",0
+16,"Viação, Transporte e Mobilidade","viacao,transporte-e-mobilidade",0
+17,Estrutura Fundiária,estrutura-fundiaria,0
+18,Meio Ambiente e Desenvolvimento Sustentável,meio-ambiente-e-desenvolvimento-sustentavel,0
+19,Previdência e Assistência Social,previdencia-e-assistencia-social,0
 20,Direitos Humanos e Minorias,direitos-humanos-e-minorias,0
-21,"Energia,Recursos Hídricos e Minerais","energia,recursos-hídricos-e-minerais",0
+21,"Energia, Recursos Hídricos e Minerais","energia,recursos-hidricos-e-minerais",0
 22,Direito Civil e Processual Civil,direito-civil-e-processual-civil,0
-23,Saúde,saúde,0
-24,Comunicações,comunicações,0
+23,Saúde,saude,0
+24,Comunicações,comunicacoes,0
 25,Esporte e Lazer,esporte-e-lazer,0
-26,"Arte,Cultura e Religião","arte,cultura-e-religião",0
+26,"Arte, Cultura e Religião","arte,cultura-e-religiao",0
 27,Direito e Defesa do Consumidor,direito-e-defesa-do-consumidor,0
 28,Cidades e Desenvolvimento Urbano,cidades-e-desenvolvimento-urbano,0
-29,"Ciência,Tecnologia e Inovação","ciência,tecnologia-e-inovação",0
+29,"Ciência, Tecnologia e Inovação","ciencia,tecnologia-e-inovacao",0
 30,Defesa do Consumidor,defesa-do-consumidor,0
-31,"Indústria,Comércio e Serviço","indústria,comércio-e-serviço",0
-32,Servidores Públicos,servidores-públicos,0
-33,Planejamento e Orçamento,planejamento-e-orçamento,0
-34,Direito Eleitoral e Partidos Políticos,direito-eleitoral-e-partidos-políticos,0
-35,Tributação,tributação,0
-36,Administração Pública: Órgãos Públicos,administração-pública:-órgãos-públicos,0
-37,Previdência Social,previdência-social,0
-38,Política Econômica e Sistema Financeiro,política-econômica-e-sistema-financeiro,0
+31,"Indústria, Comércio e Serviço","industria,comercio-e-servico",0
+32,Servidores Públicos,servidores-publicos,0
+33,Planejamento e Orçamento,planejamento-e-orcamento,0
+34,Direito Eleitoral e Partidos Políticos,direito-eleitoral-e-partidos-politicos,0
+35,Tributação,tributacao,0
+36,Administração Pública: Órgãos Públicos,administracao-publica:-orgaos-publicos,0
+37,Previdência Social,previdencia-social,0
+38,Política Econômica e Sistema Financeiro,politica-economica-e-sistema-financeiro,0
 39,Processo Legislativo,processo-legislativo,0
-40,Segurança Pública,segurança-pública,0
+40,Segurança Pública,seguranca-publica,0
 41,Desenvolvimento Regional,desenvolvimento-regional,0
-42,Organização Político-administrativa do Estado,organização-político-administrativa-do-estado,0
-43,"Família,Proteção a Crianças,Adolescentes,Mulheres e Idosos","família,proteção-a-crianças,adolescentes,mulheres-e-idosos",0
-44,Assistência Social,assistência-social,0
-45,Licitação e Contratos,licitação-e-contratos,0
+42,Organização Político-administrativa do Estado,organizacao-politico-administrativa-do-estado,0
+43,"Família, Proteção a Crianças, Adolescentes, Mulheres e Idosos","familia,protecao-a-criancas,adolescentes,mulheres-e-idosos",0
+44,Assistência Social,assistencia-social,0
+45,Licitação e Contratos,licitacao-e-contratos,0
 46,Desenvolvimento Social e Combate à Fome,desenvolvimento-social-e-combate-à-fome,0
-47,Política Urbana,política-urbana,0
+47,Política Urbana,politica-urbana,0
 48,Turismo,turismo,0
-49,"Agricultura,Pecuária e Abastecimento","agricultura,pecuária-e-abastecimento",0
-50,Crédito Extraordinário,crédito-extraordinário,0
+49,"Agricultura, Pecuária e Abastecimento","agricultura,pecuaria-e-abastecimento",0
+50,Crédito Extraordinário,credito-extraordinario,0
 51,Arte e Cultura,arte-e-cultura,0
-52,Recursos Hídricos,recursos-hídricos,0
-53,"Ciência,Tecnologia e Informática","ciência,tecnologia-e-informática",0
-54,Direito Comercial e Econômico,direito-comercial-e-econômico,0
-55,Viação e Transportes,viação-e-transportes,0
-56,Coronavírus (Covid-19),coronavírus-(covid-19),0
+52,Recursos Hídricos,recursos-hidricos,0
+53,"Ciência, Tecnologia e Informática","ciencia,tecnologia-e-informatica",0
+54,Direito Comercial e Econômico,direito-comercial-e-economico,0
+55,Viação e Transportes,viacao-e-transportes,0
+56,Coronavírus (Covid-19),coronavirus-(covid-19),0
 57,Desporto e Lazer,desporto-e-lazer,0
-58,Trânsito,trânsito,0
+58,Trânsito,transito,0
 59,Minas e Energia,minas-e-energia,0
+60,"Agricultura, Pecuária, Pesca e Extrativismo","agricultura,pecuaria,pesca-e-extrativismo",0
 99,Geral,geral,0
+101,Indefinido,indefinido,0

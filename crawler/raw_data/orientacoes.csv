@@ -8132,6 +8132,9 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,142499,6221,Governo,1,senado
 2020,143156,6222,Governo,1,senado
 2020,144655,6223,Governo,1,senado
+2020,143574,6247,Governo,-1,senado
+2020,135147,6248,Governo,1,senado
+2020,135147,6249,Governo,-1,senado
 2019,116081,5967,PDT,1,senado
 2019,117839,5961,PDT,1,senado
 2019,118042,6051,PDT,1,senado
@@ -8192,6 +8195,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,PDT,1,senado
 2019,139897,6072,PDT,1,senado
 2020,124513,6075,PDT,0,senado
+2020,135147,6248,PDT,0,senado
+2020,135147,6249,PDT,0,senado
 2020,139427,6076,PDT,1,senado
 2020,139736,6086,PDT,1,senado
 2020,139882,6097,PDT,1,senado
@@ -8294,6 +8299,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,PDT,0,senado
 2020,143258,6179,PDT,0,senado
 2020,143551,6166,PDT,1,senado
+2020,143574,6247,PDT,1,senado
 2020,143597,6173,PDT,1,senado
 2020,143611,6167,PDT,1,senado
 2020,143611,6169,PDT,1,senado
@@ -8360,6 +8366,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,CIDADANIA,1,senado
 2019,139897,6072,CIDADANIA,1,senado
 2020,124513,6075,CIDADANIA,1,senado
+2020,135147,6248,CIDADANIA,1,senado
+2020,135147,6249,CIDADANIA,-1,senado
 2020,139427,6076,CIDADANIA,1,senado
 2020,139736,6086,CIDADANIA,1,senado
 2020,139882,6097,CIDADANIA,1,senado
@@ -8462,6 +8470,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,CIDADANIA,1,senado
 2020,143258,6179,CIDADANIA,1,senado
 2020,143551,6166,CIDADANIA,1,senado
+2020,143574,6247,CIDADANIA,1,senado
 2020,143597,6173,CIDADANIA,1,senado
 2020,143611,6167,CIDADANIA,1,senado
 2020,143611,6169,CIDADANIA,1,senado
@@ -8528,6 +8537,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,PODEMOS,1,senado
 2019,139897,6072,PODEMOS,1,senado
 2020,124513,6075,PODEMOS,1,senado
+2020,135147,6248,PODEMOS,1,senado
+2020,135147,6249,PODEMOS,-1,senado
 2020,139427,6076,PODEMOS,1,senado
 2020,139736,6086,PODEMOS,1,senado
 2020,139882,6097,PODEMOS,1,senado
@@ -8630,6 +8641,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,PODEMOS,1,senado
 2020,143258,6179,PODEMOS,1,senado
 2020,143551,6166,PODEMOS,1,senado
+2020,143574,6247,PODEMOS,-1,senado
 2020,143597,6173,PODEMOS,1,senado
 2020,143611,6167,PODEMOS,1,senado
 2020,143611,6169,PODEMOS,1,senado
@@ -8696,6 +8708,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,PSD,1,senado
 2019,139897,6072,PSD,1,senado
 2020,124513,6075,PSD,1,senado
+2020,135147,6248,PSD,1,senado
+2020,135147,6249,PSD,-1,senado
 2020,139427,6076,PSD,1,senado
 2020,139736,6086,PSD,1,senado
 2020,139882,6097,PSD,1,senado
@@ -8798,6 +8812,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,PSD,-1,senado
 2020,143258,6179,PSD,-1,senado
 2020,143551,6166,PSD,1,senado
+2020,143574,6247,PSD,-1,senado
 2020,143597,6173,PSD,1,senado
 2020,143611,6167,PSD,1,senado
 2020,143611,6169,PSD,1,senado
@@ -8864,6 +8879,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,PSDB,1,senado
 2019,139897,6072,PSDB,1,senado
 2020,124513,6075,PSDB,1,senado
+2020,135147,6248,PSDB,1,senado
+2020,135147,6249,PSDB,-1,senado
 2020,139427,6076,PSDB,1,senado
 2020,139736,6086,PSDB,1,senado
 2020,139882,6097,PSDB,1,senado
@@ -8966,6 +8983,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,PSDB,1,senado
 2020,143258,6179,PSDB,0,senado
 2020,143551,6166,PSDB,1,senado
+2020,143574,6247,PSDB,-1,senado
 2020,143597,6173,PSDB,1,senado
 2020,143611,6167,PSDB,1,senado
 2020,143611,6169,PSDB,1,senado
@@ -9032,6 +9050,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,DEM,1,senado
 2019,139897,6072,DEM,1,senado
 2020,124513,6075,DEM,1,senado
+2020,135147,6248,DEM,1,senado
+2020,135147,6249,DEM,-1,senado
 2020,139427,6076,DEM,1,senado
 2020,139736,6086,DEM,1,senado
 2020,139882,6097,DEM,1,senado
@@ -9134,6 +9154,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,DEM,-1,senado
 2020,143258,6179,DEM,-1,senado
 2020,143551,6166,DEM,1,senado
+2020,143574,6247,DEM,-1,senado
 2020,143597,6173,DEM,1,senado
 2020,143611,6167,DEM,1,senado
 2020,143611,6169,DEM,1,senado
@@ -9200,6 +9221,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,PP,1,senado
 2019,139897,6072,PP,1,senado
 2020,124513,6075,PP,1,senado
+2020,135147,6248,PP,1,senado
+2020,135147,6249,PP,-1,senado
 2020,139427,6076,PP,1,senado
 2020,139736,6086,PP,1,senado
 2020,139882,6097,PP,1,senado
@@ -9302,6 +9325,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,PP,-1,senado
 2020,143258,6179,PP,-1,senado
 2020,143551,6166,PP,-1,senado
+2020,143574,6247,PP,-1,senado
 2020,143597,6173,PP,1,senado
 2020,143611,6167,PP,1,senado
 2020,143611,6169,PP,1,senado
@@ -9368,6 +9392,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,MDB,1,senado
 2019,139897,6072,MDB,0,senado
 2020,124513,6075,MDB,1,senado
+2020,135147,6248,MDB,1,senado
+2020,135147,6249,MDB,-1,senado
 2020,139427,6076,MDB,1,senado
 2020,139736,6086,MDB,1,senado
 2020,139882,6097,MDB,1,senado
@@ -9470,6 +9496,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,MDB,-1,senado
 2020,143258,6179,MDB,-1,senado
 2020,143551,6166,MDB,1,senado
+2020,143574,6247,MDB,-1,senado
 2020,143597,6173,MDB,1,senado
 2020,143611,6167,MDB,1,senado
 2020,143611,6169,MDB,1,senado
@@ -9536,6 +9563,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,REDE,0,senado
 2019,139897,6072,REDE,0,senado
 2020,124513,6075,REDE,1,senado
+2020,135147,6248,REDE,-1,senado
+2020,135147,6249,REDE,1,senado
 2020,139427,6076,REDE,1,senado
 2020,139736,6086,REDE,1,senado
 2020,139882,6097,REDE,1,senado
@@ -9638,6 +9667,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,REDE,1,senado
 2020,143258,6179,REDE,1,senado
 2020,143551,6166,REDE,1,senado
+2020,143574,6247,REDE,1,senado
 2020,143597,6173,REDE,1,senado
 2020,143611,6167,REDE,1,senado
 2020,143611,6169,REDE,1,senado
@@ -9703,6 +9733,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,PROS,1,senado
 2019,139897,6072,PROS,1,senado
 2020,124513,6075,PROS,1,senado
+2020,135147,6248,PROS,1,senado
+2020,135147,6249,PROS,-1,senado
 2020,139427,6076,PROS,1,senado
 2020,139736,6086,PROS,1,senado
 2020,139882,6097,PROS,1,senado
@@ -9805,6 +9837,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,PROS,0,senado
 2020,143258,6179,PROS,0,senado
 2020,143551,6166,PROS,1,senado
+2020,143574,6247,PROS,1,senado
 2020,143597,6173,PROS,1,senado
 2020,143611,6167,PROS,1,senado
 2020,143611,6169,PROS,1,senado
@@ -9871,6 +9904,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,PSL,1,senado
 2019,139897,6072,PSL,1,senado
 2020,124513,6075,PSL,1,senado
+2020,135147,6248,PSL,1,senado
+2020,135147,6249,PSL,-1,senado
 2020,139427,6076,PSL,1,senado
 2020,139736,6086,PSL,1,senado
 2020,139882,6097,PSL,1,senado
@@ -9973,6 +10008,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,PSL,0,senado
 2020,143258,6179,PSL,0,senado
 2020,143551,6166,PSL,1,senado
+2020,143574,6247,PSL,-1,senado
 2020,143597,6173,PSL,1,senado
 2020,143611,6167,PSL,1,senado
 2020,143611,6169,PSL,1,senado
@@ -10039,6 +10075,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,PT,1,senado
 2019,139897,6072,PT,1,senado
 2020,124513,6075,PT,1,senado
+2020,135147,6248,PT,-1,senado
+2020,135147,6249,PT,1,senado
 2020,139427,6076,PT,1,senado
 2020,139736,6086,PT,1,senado
 2020,139882,6097,PT,2,senado
@@ -10141,6 +10179,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,PT,1,senado
 2020,143258,6179,PT,1,senado
 2020,143551,6166,PT,1,senado
+2020,143574,6247,PT,-1,senado
 2020,143597,6173,PT,1,senado
 2020,143611,6167,PT,1,senado
 2020,143611,6169,PT,1,senado
@@ -10207,6 +10246,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,PSB,1,senado
 2019,139897,6072,PSB,1,senado
 2020,124513,6075,PSB,1,senado
+2020,135147,6248,PSB,0,senado
+2020,135147,6249,PSB,0,senado
 2020,139427,6076,PSB,1,senado
 2020,139736,6086,PSB,1,senado
 2020,139882,6097,PSB,1,senado
@@ -10309,6 +10350,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,PSB,1,senado
 2020,143258,6179,PSB,-1,senado
 2020,143551,6166,PSB,-1,senado
+2020,143574,6247,PSB,-1,senado
 2020,143597,6173,PSB,1,senado
 2020,143611,6167,PSB,1,senado
 2020,143611,6169,PSB,1,senado
@@ -10375,6 +10417,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,PL,1,senado
 2019,139897,6072,PL,1,senado
 2020,124513,6075,PL,1,senado
+2020,135147,6248,PL,1,senado
+2020,135147,6249,PL,-1,senado
 2020,139427,6076,PL,1,senado
 2020,139736,6086,PL,1,senado
 2020,139882,6097,PL,1,senado
@@ -10477,6 +10521,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,PL,-1,senado
 2020,143258,6179,PL,-1,senado
 2020,143551,6166,PL,1,senado
+2020,143574,6247,PL,-1,senado
 2020,143597,6173,PL,1,senado
 2020,143611,6167,PL,1,senado
 2020,143611,6169,PL,1,senado
@@ -10540,6 +10585,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,REPUBLICANOS,0,senado
 2019,139897,6072,REPUBLICANOS,0,senado
 2020,124513,6075,REPUBLICANOS,1,senado
+2020,135147,6248,REPUBLICANOS,1,senado
+2020,135147,6249,REPUBLICANOS,0,senado
 2020,139427,6076,REPUBLICANOS,1,senado
 2020,139736,6086,REPUBLICANOS,1,senado
 2020,139882,6097,REPUBLICANOS,1,senado
@@ -10642,6 +10689,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,REPUBLICANOS,-1,senado
 2020,143258,6179,REPUBLICANOS,-1,senado
 2020,143551,6166,REPUBLICANOS,1,senado
+2020,143574,6247,REPUBLICANOS,-1,senado
 2020,143597,6173,REPUBLICANOS,1,senado
 2020,143611,6167,REPUBLICANOS,1,senado
 2020,143611,6169,REPUBLICANOS,1,senado
@@ -10707,6 +10755,8 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2019,139897,6071,PSC,1,senado
 2019,139897,6072,PSC,1,senado
 2020,124513,6075,PSC,1,senado
+2020,135147,6248,PSC,0,senado
+2020,135147,6249,PSC,0,senado
 2020,139427,6076,PSC,1,senado
 2020,139736,6086,PSC,1,senado
 2020,139882,6097,PSC,1,senado
@@ -10809,6 +10859,7 @@ ano,id_proposicao,id_votacao,partido,voto,casa
 2020,143258,6178,PSC,-1,senado
 2020,143258,6179,PSC,-1,senado
 2020,143551,6166,PSC,0,senado
+2020,143574,6247,PSC,0,senado
 2020,143597,6173,PSC,1,senado
 2020,143611,6167,PSC,1,senado
 2020,143611,6169,PSC,1,senado

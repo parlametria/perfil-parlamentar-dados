@@ -130,8 +130,8 @@ CIDADANIA,141391,Arnaldo Jardim ,Líder,CIDADANIA,SP,camara
 CIDADANIA,204377,Paula Belmonte ,Vice-líder,CIDADANIA,DF,camara
 CIDADANIA,164360,Carmen Zanotto ,Vice-líder,CIDADANIA,SC,camara
 NOVO,204461,Paulo Ganime ,Líder,NOVO,RJ,camara
-NOVO,204532,Vinicius Poit ,Vice-líder,NOVO,SP,camara
 NOVO,156190,Marcel van Hattem,Vice-líder,NOVO,RS,camara
+NOVO,204532,Vinicius Poit ,Vice-líder,NOVO,SP,camara
 PATRIOTA,204494,Fred Costa ,Líder,PATRIOTA,MG,camara
 PATRIOTA,204518,Dr. Frederico ,Vice-líder,PATRIOTA,MG,camara
 PATRIOTA,160642,Pastor Eurico ,Vice-líder,PATRIOTA,PE,camara
@@ -191,13 +191,13 @@ PODEMOS,5924,Oriovisto Guimarães,Vice-líder,PODEMOS,PR,senado
 PODEMOS,5976,Eduardo Girão,Vice-líder,PODEMOS,CE,senado
 PODEMOS,2331,Rose de Freitas,Vice-líder,PODEMOS,ES,senado
 Bloco Parlamentar PSDB/PSL,5905,Rodrigo Cunha,Líder,PSDB,AL,senado
+Bloco Parlamentar da Resistência Democrática,374,Paulo Rocha,Líder,PT,PA,senado
+Bloco Parlamentar da Resistência Democrática,5783,Zenaide Maia,Vice-líder,PROS,RN,senado
 Bloco Parlamentar Senado Independente,5979,Leila Barros,Líder em exercício,PSB,DF,senado
 Bloco Parlamentar Vanguarda,1173,Wellington Fagundes,Líder,PL,MT,senado
 Bloco Parlamentar Vanguarda,5732,Rodrigo Pacheco,Vice-líder,DEM,MG,senado
 Bloco Parlamentar Vanguarda,5350,Jorginho Mello,Vice-líder,PL,SC,senado
 Bloco Parlamentar Vanguarda,3806,Zequinha Marinho,Vice-líder,PSC,PA,senado
-Bloco Parlamentar da Resistência Democrática,374,Paulo Rocha,Líder,PT,PA,senado
-Bloco Parlamentar da Resistência Democrática,5783,Zenaide Maia,Vice-líder,PROS,RN,senado
 Maioria,4994,Eduardo Braga,Líder,MDB,AM,senado
 Minoria,5012,Randolfe Rodrigues,Líder,REDE,AP,senado
 Governo,5540,Fernando Bezerra Coelho,Líder,MDB,PE,senado
@@ -214,6 +214,9 @@ PSDB,4770,Izalci Lucas,Vice-líder,PSDB,DF,senado
 PSDB,5905,Rodrigo Cunha,Vice-líder,PSDB,AL,senado
 PSL,5666,Major Olimpio,Líder,PSL,SP,senado
 PSL,5988,Soraya Thronicke,Vice-líder,PSL,MS,senado
+PT,5352,Rogério Carvalho,Líder,PT,SE,senado
+PROS,5535,Telmário Mota,Líder,PROS,RR,senado
+PROS,5783,Zenaide Maia,Vice-líder,PROS,RN,senado
 CIDADANIA,5718,Eliziane Gama,Líder,CIDADANIA,MA,senado
 CIDADANIA,5982,Alessandro Vieira,Vice-líder,CIDADANIA,SE,senado
 PDT,5411,Weverton,Líder,PDT,MA,senado
@@ -223,6 +226,3 @@ DEM,5732,Rodrigo Pacheco,Líder,DEM,MG,senado
 DEM,5422,Marcos Rogério,Vice-líder,DEM,RO,senado
 PL,5350,Jorginho Mello,Líder,PL,SC,senado
 PSC,3806,Zequinha Marinho,Líder,PSC,PA,senado
-PT,5352,Rogério Carvalho,Líder,PT,SE,senado
-PROS,5535,Telmário Mota,Líder,PROS,RR,senado
-PROS,5783,Zenaide Maia,Vice-líder,PROS,RN,senado

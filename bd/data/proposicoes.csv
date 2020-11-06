@@ -44,32 +44,32 @@ id_proposicao_voz,casa,projeto_lei,titulo,descricao,status_proposicao,status_imp
 1603566,camara,PLP 366/2013,Tributação serviços de internet,"Novas regras para o ISS (Imposto sobre Serviços). O texto-base fixa em 2% a alíquota do ISS (Imposto sobre Serviços), tentando acabar com a guerra fiscal entre os municípios. Além disso, O projeto inclui novos serviços na lista daqueles que podem ser tributados como aplicação de tatuagens, piercings e congêneres; vigilância e monitoramento de bens móveis; e disponibilização de conteúdos de áudio, vídeo, imagem e texto em páginas eletrônicas, exceto no caso de jornais, livros e periódicos.",Inativa,Inativa
 13733278,camara,PEC 182/2007,Voto Facultativo,Não obrigatoriedade do voto.,Inativa,Inativa
 13733279,camara,PEC 182/2007,Voto impresso,Impressão do voto.,Inativa,Inativa
-216526,senado,PL 1292/1995,NA,NA,Inativa,Ativa
-228692,senado,PL 4742/2001,NA,NA,Inativa,Ativa
-2516111,senado,PEC 70/2011,NA,NA,Inativa,Ativa
-2946494,senado,PEC 2/2015,NA,NA,Inativa,Ativa
-22160860,senado,PLP 441/2017,NA,NA,Inativa,Ativa
-22179189,senado,PL 10431/2018,NA,NA,Inativa,Ativa
-22183943,senado,MPV 852/2018,NA,NA,Inativa,Ativa
-22187087,senado,PL 5029/2019,NA,NA,Inativa,Ativa
-22188301,senado,MPV 861/2018,NA,NA,Inativa,Ativa
-22189858,senado,MPV 863/2018,NA,NA,Inativa,Ativa
-22190237,senado,MPV 867/2018,NA,NA,Inativa,Ativa
-22190355,senado,MPV 871/2019,NA,NA,Inativa,Ativa
-22190880,senado,PDL 3/2019,NA,NA,Inativa,Ativa
-22192459,senado,PEC 6/2019,Reforma da Previdência,NA,Inativa,Ativa
-22193540,senado,PL 1321/2019,NA,NA,Inativa,Ativa
-22193696,senado,PLN 2/2019,Alteração da Lei Orçamentária Anual,NA,Inativa,Ativa
-22197160,senado,PEC 34/2019,NA,NA,Inativa,Ativa
-22201529,senado,PL 2787/2019,NA,NA,Inativa,Ativa
-22201532,senado,PL 2788/2019,NA,NA,Inativa,Ativa
-22204056,senado,PL 2999/2019,NA,NA,Inativa,Ativa
-22208720,senado,MPV 886/2019,NA,NA,Inativa,Ativa
-22209381,senado,PL 3723/2019,NA,NA,Inativa,Ativa
-22212949,senado,MPV 889/2019,NA,NA,Inativa,Ativa
-22213191,senado,MPV 890/2019,NA,NA,Inativa,Ativa
-22214046,senado,PLN 18/2019,NA,NA,Inativa,Ativa
-22231930,senado,PLN 51/2019,NA,NA,Inativa,Ativa
+116526,camara,PL 1292/1995,NA,NA,Inativa,Ativa
+128692,camara,PL 4742/2001,NA,NA,Inativa,Ativa
+1516111,camara,PEC 70/2011,NA,NA,Inativa,Ativa
+1946494,camara,PEC 2/2015,NA,NA,Inativa,Ativa
+12160860,camara,PLP 441/2017,NA,NA,Inativa,Ativa
+12179189,camara,PL 10431/2018,NA,NA,Inativa,Ativa
+12183943,camara,MPV 852/2018,NA,NA,Inativa,Ativa
+12187087,camara,PL 5029/2019,NA,NA,Inativa,Ativa
+12188301,camara,MPV 861/2018,NA,NA,Inativa,Ativa
+12189858,camara,MPV 863/2018,NA,NA,Inativa,Ativa
+12190237,camara,MPV 867/2018,NA,NA,Inativa,Ativa
+12190355,camara,MPV 871/2019,NA,NA,Inativa,Ativa
+12190880,camara,PDL 3/2019,NA,NA,Inativa,Ativa
+12192459,camara,PEC 6/2019,Reforma da Previdência,NA,Inativa,Ativa
+12193540,camara,PL 1321/2019,NA,NA,Inativa,Ativa
+12193696,camara,PLN 2/2019,Alteração da Lei Orçamentária Anual,NA,Inativa,Ativa
+12197160,camara,PEC 34/2019,NA,NA,Inativa,Ativa
+12201529,camara,PL 2787/2019,NA,NA,Inativa,Ativa
+12201532,camara,PL 2788/2019,NA,NA,Inativa,Ativa
+12204056,camara,PL 2999/2019,NA,NA,Inativa,Ativa
+12208720,camara,MPV 886/2019,NA,NA,Inativa,Ativa
+12209381,camara,PL 3723/2019,NA,NA,Inativa,Ativa
+12212949,camara,MPV 889/2019,NA,NA,Inativa,Ativa
+12213191,camara,MPV 890/2019,NA,NA,Inativa,Ativa
+12214046,camara,PLN 18/2019,NA,NA,Inativa,Ativa
+12231930,camara,PLN 51/2019,NA,NA,Inativa,Ativa
 1358126,camara,PL 1481/2007,NA,NA,Inativa,Inativa
 11672576,camara,PL 2724/2015,NA,NA,Inativa,Inativa
 12075448,camara,PL 4067/2015,NA,NA,Inativa,Inativa
@@ -182,191 +182,196 @@ id_proposicao_voz,casa,projeto_lei,titulo,descricao,status_proposicao,status_imp
 2138728,senado,MSF 54/2019,NA,NA,Inativa,Ativa
 2138729,senado,MSF 55/2019,NA,NA,Inativa,Ativa
 2138732,senado,MSF 57/2019,NA,NA,Inativa,Ativa
-2130919,senado,NA,NA,NA,Inativa,Inativa
-2129887,senado,NA,NA,NA,Inativa,Inativa
-2136708,senado,NA,NA,NA,Inativa,Inativa
-2137179,senado,NA,NA,NA,Inativa,Inativa
-2137464,senado,NA,NA,NA,Inativa,Inativa
-2137072,senado,NA,NA,NA,Inativa,Inativa
-2137073,senado,NA,NA,NA,Inativa,Inativa
-2137077,senado,NA,NA,NA,Inativa,Inativa
-2137056,senado,NA,NA,NA,Inativa,Inativa
-2137808,senado,NA,NA,NA,Inativa,Inativa
-2136913,senado,NA,NA,NA,Inativa,Inativa
-2137153,senado,NA,NA,NA,Inativa,Inativa
-2135775,senado,NA,NA,NA,Inativa,Inativa
-2136534,senado,NA,NA,NA,Inativa,Inativa
-2136533,senado,NA,NA,NA,Inativa,Inativa
-2137361,senado,NA,NA,NA,Inativa,Inativa
-2135772,senado,NA,NA,NA,Inativa,Inativa
-2137114,senado,NA,NA,NA,Inativa,Inativa
-2137097,senado,NA,NA,NA,Inativa,Inativa
-2135757,senado,NA,NA,NA,Inativa,Inativa
-2136411,senado,NA,NA,NA,Inativa,Inativa
-2122909,senado,NA,NA,NA,Inativa,Inativa
-2137305,senado,NA,NA,NA,Inativa,Inativa
-2138564,senado,NA,NA,NA,Inativa,Inativa
-2138202,senado,NA,NA,NA,Inativa,Inativa
-2139277,senado,NA,NA,NA,Inativa,Inativa
-2138203,senado,NA,NA,NA,Inativa,Inativa
-2139005,senado,NA,NA,NA,Inativa,Inativa
-2138567,senado,NA,NA,NA,Inativa,Inativa
-2138849,senado,NA,NA,NA,Inativa,Inativa
-2139101,senado,NA,NA,NA,Inativa,Inativa
-2138572,senado,NA,NA,NA,Inativa,Inativa
-2118042,senado,NA,NA,NA,Inativa,Inativa
-2139014,senado,NA,NA,NA,Inativa,Inativa
-2136775,senado,NA,NA,NA,Inativa,Inativa
-2138555,senado,NA,NA,NA,Inativa,Inativa
-2138845,senado,NA,NA,NA,Inativa,Inativa
-2138846,senado,NA,NA,NA,Inativa,Inativa
-2138565,senado,NA,NA,NA,Inativa,Inativa
-2137315,senado,NA,NA,NA,Inativa,Inativa
-2138848,senado,NA,NA,NA,Inativa,Inativa
-2136532,senado,NA,NA,NA,Inativa,Inativa
-2139098,senado,NA,NA,NA,Inativa,Inativa
-2139097,senado,NA,NA,NA,Inativa,Inativa
-2138566,senado,NA,NA,NA,Inativa,Inativa
-2138847,senado,NA,NA,NA,Inativa,Inativa
-2139544,senado,NA,NA,NA,Inativa,Inativa
-2139897,senado,NA,NA,NA,Inativa,Inativa
-2137122,senado,NA,NA,NA,Inativa,Inativa
-2138177,senado,NA,NA,NA,Inativa,Inativa
-2124513,senado,NA,NA,NA,Inativa,Inativa
-2141114,senado,NA,NA,NA,Inativa,Inativa
-2139427,senado,NA,NA,NA,Inativa,Inativa
-2141109,senado,NA,NA,NA,Inativa,Inativa
-2141110,senado,NA,NA,NA,Inativa,Inativa
-2141270,senado,NA,NA,NA,Inativa,Inativa
-2141219,senado,NA,NA,NA,Inativa,Inativa
-2141174,senado,NA,NA,NA,Inativa,Inativa
-2141306,senado,NA,NA,NA,Inativa,Inativa
-2141363,senado,NA,NA,NA,Inativa,Inativa
-2139736,senado,NA,NA,NA,Inativa,Inativa
-2141321,senado,NA,NA,NA,Inativa,Inativa
-2141443,senado,NA,NA,NA,Inativa,Inativa
-2141614,senado,NA,NA,NA,Inativa,Inativa
-2141674,senado,NA,NA,NA,Inativa,Inativa
-2139882,senado,NA,NA,NA,Inativa,Inativa
-2139928,senado,NA,NA,NA,Inativa,Inativa
-2141571,senado,NA,NA,NA,Inativa,Inativa
-2141814,senado,NA,NA,NA,Inativa,Inativa
-2140367,senado,NA,NA,NA,Inativa,Inativa
-2141837,senado,NA,NA,NA,Inativa,Inativa
-2141823,senado,NA,NA,NA,Inativa,Inativa
-2141819,senado,NA,NA,NA,Inativa,Inativa
-2141815,senado,NA,NA,NA,Inativa,Inativa
-2141816,senado,NA,NA,NA,Inativa,Inativa
-2140100,senado,NA,NA,NA,Inativa,Inativa
-2140385,senado,NA,NA,NA,Inativa,Inativa
-2141962,senado,NA,NA,NA,Inativa,Inativa
-2141354,senado,NA,NA,NA,Inativa,Inativa
-2141193,senado,NA,NA,NA,Inativa,Inativa
-2141561,senado,NA,NA,NA,Inativa,Inativa
-2140394,senado,NA,NA,NA,Inativa,Inativa
-2142089,senado,NA,NA,NA,Inativa,Inativa
-2141756,senado,NA,NA,NA,Inativa,Inativa
-2141437,senado,NA,NA,NA,Inativa,Inativa
-2140424,senado,NA,NA,NA,Inativa,Inativa
-2140423,senado,NA,NA,NA,Inativa,Inativa
-2140392,senado,NA,NA,NA,Inativa,Inativa
-2141439,senado,NA,NA,NA,Inativa,Inativa
-2141840,senado,NA,NA,NA,Inativa,Inativa
-2142088,senado,NA,NA,NA,Inativa,Inativa
-2141436,senado,NA,NA,NA,Inativa,Inativa
-2142091,senado,NA,NA,NA,Inativa,Inativa
-2140096,senado,NA,NA,NA,Inativa,Inativa
-2142022,senado,NA,NA,NA,Inativa,Inativa
-2142136,senado,NA,NA,NA,Inativa,Inativa
-2141375,senado,NA,NA,NA,Inativa,Inativa
-2141368,senado,NA,NA,NA,Inativa,Inativa
-2142016,senado,NA,NA,NA,Inativa,Inativa
-2141346,senado,NA,NA,NA,Inativa,Inativa
-2140534,senado,NA,NA,NA,Inativa,Inativa
-2140850,senado,NA,NA,NA,Inativa,Inativa
-2141944,senado,NA,NA,NA,Inativa,Inativa
-2141309,senado,NA,NA,NA,Inativa,Inativa
-2142085,senado,NA,NA,NA,Inativa,Inativa
-2141308,senado,NA,NA,NA,Inativa,Inativa
-2142691,senado,NA,NA,NA,Inativa,Inativa
-2141111,senado,NA,NA,NA,Inativa,Inativa
-2141415,senado,NA,NA,NA,Inativa,Inativa
-2143101,senado,NA,NA,NA,Inativa,Inativa
-2141349,senado,NA,NA,NA,Inativa,Inativa
-2142263,senado,NA,NA,NA,Inativa,Inativa
-2141417,senado,NA,NA,NA,Inativa,Inativa
-2141475,senado,NA,NA,NA,Inativa,Inativa
-2141297,senado,NA,NA,NA,Inativa,Inativa
-2142077,senado,NA,NA,NA,Inativa,Inativa
-2143551,senado,NA,NA,NA,Inativa,Inativa
-2143258,senado,NA,NA,NA,Inativa,Inativa
-2143611,senado,NA,NA,NA,Inativa,Inativa
-2141753,senado,NA,NA,NA,Inativa,Inativa
-2142693,senado,NA,NA,NA,Inativa,Inativa
-2143597,senado,NA,NA,NA,Inativa,Inativa
-2142690,senado,NA,NA,NA,Inativa,Inativa
-2141863,senado,NA,NA,NA,Inativa,Inativa
-2143646,senado,NA,NA,NA,Inativa,Inativa
-2142442,senado,NA,NA,NA,Inativa,Inativa
-2140005,senado,NA,NA,NA,Inativa,Inativa
-2143025,senado,NA,NA,NA,Inativa,Inativa
-2140065,senado,NA,NA,NA,Inativa,Inativa
-2141067,senado,NA,NA,NA,Inativa,Inativa
-2142946,senado,NA,NA,NA,Inativa,Inativa
-2142947,senado,NA,NA,NA,Inativa,Inativa
-2142948,senado,NA,NA,NA,Inativa,Inativa
-2142955,senado,NA,NA,NA,Inativa,Inativa
-2143383,senado,NA,NA,NA,Inativa,Inativa
-2144630,senado,NA,NA,NA,Inativa,Inativa
-2142953,senado,NA,NA,NA,Inativa,Inativa
-2142957,senado,NA,NA,NA,Inativa,Inativa
-2143071,senado,NA,NA,NA,Inativa,Inativa
-2143385,senado,NA,NA,NA,Inativa,Inativa
-2144601,senado,NA,NA,NA,Inativa,Inativa
-2144455,senado,NA,NA,NA,Inativa,Inativa
-2144600,senado,NA,NA,NA,Inativa,Inativa
-2143384,senado,NA,NA,NA,Inativa,Inativa
-2142949,senado,NA,NA,NA,Inativa,Inativa
-2143069,senado,NA,NA,NA,Inativa,Inativa
-2140746,senado,NA,NA,NA,Inativa,Inativa
-2143016,senado,NA,NA,NA,Inativa,Inativa
-2144420,senado,NA,NA,NA,Inativa,Inativa
-2142956,senado,NA,NA,NA,Inativa,Inativa
-2144226,senado,NA,NA,NA,Inativa,Inativa
-2142954,senado,NA,NA,NA,Inativa,Inativa
-2144629,senado,NA,NA,NA,Inativa,Inativa
-2142951,senado,NA,NA,NA,Inativa,Inativa
-2142950,senado,NA,NA,NA,Inativa,Inativa
-2143002,senado,NA,NA,NA,Inativa,Inativa
-2143070,senado,NA,NA,NA,Inativa,Inativa
-2142958,senado,NA,NA,NA,Inativa,Inativa
-2143635,senado,NA,NA,NA,Inativa,Inativa
-2144227,senado,NA,NA,NA,Inativa,Inativa
-2144598,senado,NA,NA,NA,Inativa,Inativa
-2144602,senado,NA,NA,NA,Inativa,Inativa
-2144508,senado,NA,NA,NA,Inativa,Inativa
-2142952,senado,NA,NA,NA,Inativa,Inativa
-2142596,senado,NA,NA,NA,Inativa,Inativa
-2142499,senado,NA,NA,NA,Inativa,Inativa
-2143156,senado,NA,NA,NA,Inativa,Inativa
-2144655,senado,NA,NA,NA,Inativa,Inativa
-2145158,senado,NA,NA,NA,Inativa,Inativa
-2145159,senado,NA,NA,NA,Inativa,Inativa
-2145160,senado,NA,NA,NA,Inativa,Inativa
-2145108,senado,NA,NA,NA,Inativa,Inativa
-2145161,senado,NA,NA,NA,Inativa,Inativa
-2145162,senado,NA,NA,NA,Inativa,Inativa
-2145080,senado,NA,NA,NA,Inativa,Inativa
-2145149,senado,NA,NA,NA,Inativa,Inativa
-2145155,senado,NA,NA,NA,Inativa,Inativa
-2145156,senado,NA,NA,NA,Inativa,Inativa
-2145157,senado,NA,NA,NA,Inativa,Inativa
-2145130,senado,NA,NA,NA,Inativa,Inativa
-2145074,senado,NA,NA,NA,Inativa,Inativa
-2145075,senado,NA,NA,NA,Inativa,Inativa
-2139957,senado,NA,NA,NA,Inativa,Inativa
-2145073,senado,NA,NA,NA,Inativa,Inativa
-2145072,senado,NA,NA,NA,Inativa,Inativa
-2145077,senado,NA,NA,NA,Inativa,Inativa
-2145107,senado,NA,NA,NA,Inativa,Inativa
-2145132,senado,NA,NA,NA,Inativa,Inativa
+2130919,senado,PEC 31/2017,NA,NA,Inativa,Inativa
+2129887,senado,PEC 26/2017,NA,NA,Inativa,Inativa
+2136708,senado,MSF 17/2019,NA,NA,Inativa,Inativa
+2137179,senado,OFS 30/2019,NA,NA,Inativa,Inativa
+2137464,senado,OFS 32/2019,NA,NA,Inativa,Inativa
+2137072,senado,OFS 23/2019,NA,NA,Inativa,Inativa
+2137073,senado,OFS 24/2019,NA,NA,Inativa,Inativa
+2137077,senado,OFS 25/2019,NA,NA,Inativa,Inativa
+2137056,senado,OFS 22/2019,NA,NA,Inativa,Inativa
+2137808,senado,OFS 34/2019,NA,NA,Inativa,Inativa
+2136913,senado,PEC 82/2019,NA,NA,Inativa,Inativa
+2137153,senado,OFS 29/2019,NA,NA,Inativa,Inativa
+2135775,senado,OFS 5/2019,NA,NA,Inativa,Inativa
+2136534,senado,OFS 10/2019,NA,NA,Inativa,Inativa
+2136533,senado,OFS 9/2019,NA,NA,Inativa,Inativa
+2137361,senado,OFS 31/2019,NA,NA,Inativa,Inativa
+2135772,senado,OFS 4/2019,NA,NA,Inativa,Inativa
+2137114,senado,OFS 27/2019,NA,NA,Inativa,Inativa
+2137097,senado,OFS 26/2019,NA,NA,Inativa,Inativa
+2135757,senado,OFS 3/2019,NA,NA,Inativa,Inativa
+2136411,senado,OFS 7/2019,NA,NA,Inativa,Inativa
+2122909,senado,PLC 113/2015,NA,NA,Inativa,Inativa
+2137305,senado,PEC 95/2019,NA,NA,Inativa,Inativa
+2138564,senado,MSF 47/2019,NA,NA,Inativa,Inativa
+2138202,senado,OFS 35/2019,NA,NA,Inativa,Inativa
+2139277,senado,PL 5478/2019,NA,NA,Inativa,Inativa
+2138203,senado,OFS 36/2019,NA,NA,Inativa,Inativa
+2139005,senado,PLP 223/2019,NA,NA,Inativa,Inativa
+2138567,senado,MSF 50/2019,NA,NA,Inativa,Inativa
+2138849,senado,MSF 64/2019,NA,NA,Inativa,Inativa
+2139101,senado,MSF 79/2019,NA,NA,Inativa,Inativa
+2138572,senado,MSF 51/2019,NA,NA,Inativa,Inativa
+2118042,senado,PEC 19/2014,NA,NA,Inativa,Inativa
+2139014,senado,MSF 73/2019,NA,NA,Inativa,Inativa
+2136775,senado,PEC 75/2019,NA,NA,Inativa,Inativa
+2138555,senado,PEC 133/2019,NA,NA,Inativa,Inativa
+2138845,senado,MSF 60/2019,NA,NA,Inativa,Inativa
+2138846,senado,MSF 61/2019,NA,NA,Inativa,Inativa
+2138565,senado,MSF 48/2019,NA,NA,Inativa,Inativa
+2137315,senado,PLP 55/2019,NA,NA,Inativa,Inativa
+2138848,senado,MSF 63/2019,NA,NA,Inativa,Inativa
+2136532,senado,OFS 8/2019,NA,NA,Inativa,Inativa
+2139098,senado,OFS 39/2019,NA,NA,Inativa,Inativa
+2139097,senado,OFS 38/2019,NA,NA,Inativa,Inativa
+2138566,senado,MSF 49/2019,NA,NA,Inativa,Inativa
+2138847,senado,MSF 62/2019,NA,NA,Inativa,Inativa
+2139544,senado,MSF 81/2019,NA,NA,Inativa,Inativa
+2139897,senado,PEC 48/2019 (fase 2),NA,NA,Inativa,Inativa
+2137122,senado,PLP 147/2019,NA,NA,Inativa,Inativa
+2138177,senado,MPV 893/2019,NA,NA,Inativa,Inativa
+2124513,senado,PLS 796/2015,NA,NA,Inativa,Inativa
+2141114,senado,PDL 88/2020,NA,NA,Inativa,Inativa
+2139427,senado,MPV 899/2019,NA,NA,Inativa,Inativa
+2141109,senado,PLP 232/2019,NA,NA,Inativa,Inativa
+2141110,senado,PL 668/2020,NA,NA,Inativa,Inativa
+2141270,senado,PL 1066/2020,NA,NA,Inativa,Inativa
+2141219,senado,PL 1006/2020,NA,NA,Inativa,Inativa
+2141174,senado,PL 873/2020,NA,NA,Inativa,Inativa
+2141306,senado,PL 1179/2020,NA,NA,Inativa,Inativa
+2141363,senado,PL 1282/2020,NA,NA,Inativa,Inativa
+2139736,senado,MPV 903/2019,NA,NA,Inativa,Inativa
+2141321,senado,PL 1194/2020,NA,NA,Inativa,Inativa
+2141443,senado,PEC 10/2020,NA,NA,Inativa,Inativa
+2141614,senado,PL 873/2020 (Substitutivo-CD),NA,NA,Inativa,Inativa
+2141674,senado,PL 1282/2020 (Substitutivo-CD),NA,NA,Inativa,Inativa
+2139882,senado,MPV 906/2019,NA,NA,Inativa,Inativa
+2139928,senado,MPV 907/2019,NA,NA,Inativa,Inativa
+2141571,senado,PLP 149/2019,NA,NA,Inativa,Inativa
+2141814,senado,PL 1304/2020,NA,NA,Inativa,Inativa
+2140367,senado,MPV 913/2019,NA,NA,Inativa,Inativa
+2141837,senado,PLP 39/2020 (Emenda-CD),NA,NA,Inativa,Inativa
+2141823,senado,PL 864/2020,NA,NA,Inativa,Inativa
+2141819,senado,PL 675/2020,NA,NA,Inativa,Inativa
+2141815,senado,PL 1409/2020,NA,NA,Inativa,Inativa
+2141816,senado,PL 1079/2020,NA,NA,Inativa,Inativa
+2140100,senado,MPV 909/2019,NA,NA,Inativa,Inativa
+2140385,senado,MPV 915/2019,NA,NA,Inativa,Inativa
+2141962,senado,PL 1179/2020 (Substitutivo-CD),NA,NA,Inativa,Inativa
+2141354,senado,PL 1277/2020,NA,NA,Inativa,Inativa
+2141193,senado,PL 890/2020,NA,NA,Inativa,Inativa
+2141561,senado,PL 1886/2020,NA,NA,Inativa,Inativa
+2140394,senado,MPV 918/2020,NA,NA,Inativa,Inativa
+2142089,senado,PL 669/2019 (Substitutivo-CD),NA,NA,Inativa,Inativa
+2141756,senado,PL 2324/2020,NA,NA,Inativa,Inativa
+2141437,senado,PL 1543/2020,NA,NA,Inativa,Inativa
+2140424,senado,MPV 920/2020,NA,NA,Inativa,Inativa
+2140423,senado,MPV 919/2020,NA,NA,Inativa,Inativa
+2140392,senado,MPV 917/2019,NA,NA,Inativa,Inativa
+2141439,senado,PL 1545/2020,NA,NA,Inativa,Inativa
+2141840,senado,PL 2424/2020,NA,NA,Inativa,Inativa
+2142088,senado,PL 1194/2020 (Substitutivo-CD),NA,NA,Inativa,Inativa
+2141436,senado,PL 1542/2020,NA,NA,Inativa,Inativa
+2142091,senado,PL 1291/2020,NA,NA,Inativa,Inativa
+2140096,senado,PL 6330/2019,NA,NA,Inativa,Inativa
+2142022,senado,PL 1562/2020,NA,NA,Inativa,Inativa
+2142136,senado,PL 1075/2020,NA,NA,Inativa,Inativa
+2141375,senado,MPV 936/2020,NA,NA,Inativa,Inativa
+2141368,senado,PL 1328/2020,NA,NA,Inativa,Inativa
+2142016,senado,PEC 18/2020,NA,NA,Inativa,Inativa
+2141346,senado,MPV 932/2020,NA,NA,Inativa,Inativa
+2140534,senado,PL 4162/2019,NA,NA,Inativa,Inativa
+2140850,senado,MPV 923/2020,NA,NA,Inativa,Inativa
+2141944,senado,PL 2630/2020,NA,NA,Inativa,Inativa
+2141309,senado,MPV 931/2020,NA,NA,Inativa,Inativa
+2142085,senado,PL 1826/2020,NA,NA,Inativa,Inativa
+2141308,senado,MPV 930/2020,NA,NA,Inativa,Inativa
+2142691,senado,PLP 9/2020,NA,NA,Inativa,Inativa
+2141111,senado,MPV 925/2020,NA,NA,Inativa,Inativa
+2141415,senado,MPV 944/2020,NA,NA,Inativa,Inativa
+2143101,senado,MPV 986/2020,NA,NA,Inativa,Inativa
+2141349,senado,MPV 934/2020,NA,NA,Inativa,Inativa
+2142263,senado,MPV 975/2020,NA,NA,Inativa,Inativa
+2141417,senado,MPV 945/2020,NA,NA,Inativa,Inativa
+2141475,senado,MPV 946/2020,NA,NA,Inativa,Inativa
+2141297,senado,PL 1166/2020,NA,NA,Inativa,Inativa
+2142077,senado,PLP 135/2020,NA,NA,Inativa,Inativa
+2143551,senado,PL 2824/2020,NA,NA,Inativa,Inativa
+2143258,senado,PL 3267/2019,NA,NA,Inativa,Inativa
+2143611,senado,PEC 26/2020,NA,NA,Inativa,Inativa
+2141753,senado,MPV 959/2020,NA,NA,Inativa,Inativa
+2142693,senado,PLP 170/2020 (Substitutivo-CD),NA,NA,Inativa,Inativa
+2143597,senado,PL 3892/2020,NA,NA,Inativa,Inativa
+2142690,senado,PL 550/2019 (Substitutivo-CD),NA,NA,Inativa,Inativa
+2141863,senado,MPV 961/2020,NA,NA,Inativa,Inativa
+2143646,senado,PLP 195/2020,NA,NA,Inativa,Inativa
+2142442,senado,PL 3229/2020,NA,NA,Inativa,Inativa
+2140005,senado,MSF 86/2019,NA,NA,Inativa,Inativa
+2143025,senado,OFS 4/2020,NA,NA,Inativa,Inativa
+2140065,senado,MSF 87/2019,NA,NA,Inativa,Inativa
+2141067,senado,MSF 4/2020,NA,NA,Inativa,Inativa
+2142946,senado,MSF 10/2020,NA,NA,Inativa,Inativa
+2142947,senado,MSF 11/2020,NA,NA,Inativa,Inativa
+2142948,senado,MSF 12/2020,NA,NA,Inativa,Inativa
+2142955,senado,MSF 19/2020,NA,NA,Inativa,Inativa
+2143383,senado,MSF 30/2020,NA,NA,Inativa,Inativa
+2144630,senado,MSF 47/2020,NA,NA,Inativa,Inativa
+2142953,senado,MSF 17/2020,NA,NA,Inativa,Inativa
+2142957,senado,MSF 21/2020,NA,NA,Inativa,Inativa
+2143071,senado,MSF 27/2020,NA,NA,Inativa,Inativa
+2143385,senado,MSF 32/2020,NA,NA,Inativa,Inativa
+2144601,senado,MSF 44/2020,NA,NA,Inativa,Inativa
+2144455,senado,MSF 38/2020,NA,NA,Inativa,Inativa
+2144600,senado,MSF 43/2020,NA,NA,Inativa,Inativa
+2143384,senado,MSF 31/2020,NA,NA,Inativa,Inativa
+2142949,senado,MSF 13/2020,NA,NA,Inativa,Inativa
+2143069,senado,MSF 25/2020,NA,NA,Inativa,Inativa
+2140746,senado,MSF 3/2020,NA,NA,Inativa,Inativa
+2143016,senado,MSF 24/2020,NA,NA,Inativa,Inativa
+2144420,senado,MSF 36/2020,NA,NA,Inativa,Inativa
+2142956,senado,MSF 20/2020,NA,NA,Inativa,Inativa
+2144226,senado,MSF 34/2020,NA,NA,Inativa,Inativa
+2142954,senado,MSF 18/2020,NA,NA,Inativa,Inativa
+2144629,senado,MSF 46/2020,NA,NA,Inativa,Inativa
+2142951,senado,MSF 15/2020,NA,NA,Inativa,Inativa
+2142950,senado,MSF 14/2020,NA,NA,Inativa,Inativa
+2143002,senado,MSF 23/2020,NA,NA,Inativa,Inativa
+2143070,senado,MSF 26/2020,NA,NA,Inativa,Inativa
+2142958,senado,MSF 22/2020,NA,NA,Inativa,Inativa
+2143635,senado,MSF 33/2020,NA,NA,Inativa,Inativa
+2144227,senado,MSF 35/2020,NA,NA,Inativa,Inativa
+2144598,senado,MSF 42/2020,NA,NA,Inativa,Inativa
+2144602,senado,MSF 45/2020,NA,NA,Inativa,Inativa
+2144508,senado,MSF 41/2020,NA,NA,Inativa,Inativa
+2142952,senado,MSF 16/2020,NA,NA,Inativa,Inativa
+2142596,senado,PL 1013/2020,NA,NA,Inativa,Inativa
+2142499,senado,MPV 982/2020,NA,NA,Inativa,Inativa
+2143156,senado,MPV 987/2020,NA,NA,Inativa,Inativa
+2144655,senado,PL 4537/2020,NA,NA,Inativa,Inativa
+2145158,senado,MSF 72/2020,NA,NA,Inativa,Inativa
+2145159,senado,MSF 73/2020,NA,NA,Inativa,Inativa
+2145160,senado,MSF 74/2020,NA,NA,Inativa,Inativa
+2145108,senado,MSF 61/2020,NA,NA,Inativa,Inativa
+2145161,senado,MSF 75/2020,NA,NA,Inativa,Inativa
+2145162,senado,MSF 76/2020,NA,NA,Inativa,Inativa
+2145080,senado,MSF 58/2020,NA,NA,Inativa,Inativa
+2145149,senado,MSF 66/2020,NA,NA,Inativa,Inativa
+2145155,senado,MSF 69/2020,NA,NA,Inativa,Inativa
+2145156,senado,MSF 70/2020,NA,NA,Inativa,Inativa
+2145157,senado,MSF 71/2020,NA,NA,Inativa,Inativa
+2145130,senado,MSF 64/2020,NA,NA,Inativa,Inativa
+2145074,senado,MSF 53/2020,NA,NA,Inativa,Inativa
+2145075,senado,MSF 54/2020,NA,NA,Inativa,Inativa
+2139957,senado,MSF 85/2019,NA,NA,Inativa,Inativa
+2145073,senado,MSF 52/2020,NA,NA,Inativa,Inativa
+2145072,senado,MSF 51/2020,NA,NA,Inativa,Inativa
+2145077,senado,MSF 56/2020,NA,NA,Inativa,Inativa
+2145107,senado,MSF 60/2020,NA,NA,Inativa,Inativa
+2145132,senado,MSF 65/2020,NA,NA,Inativa,Inativa
+2145153,senado,MSF 67/2020,NA,NA,Inativa,Inativa
+2145076,senado,MSF 55/2020,NA,NA,Inativa,Inativa
+2145102,senado,MSF 59/2020,NA,NA,Inativa,Inativa
+2143574,senado,PL 3877/2020,NA,NA,Inativa,Inativa
+2135147,senado,PLP 19/2019,NA,NA,Inativa,Inativa

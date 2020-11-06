@@ -130,8 +130,8 @@ id_parlamentar_voz,id_partido,casa,cargo
 1204377,37905,camara,Vice-líder
 1164360,37905,camara,Vice-líder
 1204461,37901,camara,Líder
-1204532,37901,camara,Vice-líder
 1156190,37901,camara,Vice-líder
+1204532,37901,camara,Vice-líder
 1204494,37907,camara,Líder
 1204518,37907,camara,Vice-líder
 1160642,37907,camara,Vice-líder
@@ -191,13 +191,13 @@ id_parlamentar_voz,id_partido,casa,cargo
 25976,36896,senado,Vice-líder
 22331,36896,senado,Vice-líder
 25905,771,senado,Líder
+2374,755,senado,Líder
+25783,755,senado,Vice-líder
 25979,754,senado,Líder em exercício
 21173,763,senado,Líder
 25732,763,senado,Vice-líder
 25350,763,senado,Vice-líder
 23806,763,senado,Vice-líder
-2374,755,senado,Líder
-25783,755,senado,Vice-líder
 24994,1,senado,Líder
 25012,2,senado,Líder
 25540,0,senado,Líder
@@ -213,6 +213,9 @@ id_parlamentar_voz,id_partido,casa,cargo
 25905,36835,senado,Vice-líder
 25666,36837,senado,Líder
 25988,36837,senado,Vice-líder
+25352,36844,senado,Líder
+25535,36763,senado,Líder
+25783,36763,senado,Vice-líder
 25718,37905,senado,Líder
 25982,37905,senado,Vice-líder
 25411,36786,senado,Líder
@@ -222,6 +225,3 @@ id_parlamentar_voz,id_partido,casa,cargo
 25422,36769,senado,Vice-líder
 25350,37906,senado,Líder
 23806,36833,senado,Líder
-25352,36844,senado,Líder
-25535,36763,senado,Líder
-25783,36763,senado,Vice-líder
