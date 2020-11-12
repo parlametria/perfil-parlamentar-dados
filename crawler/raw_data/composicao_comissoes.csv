@@ -1671,6 +1671,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 1363,senado,4525,Suplente,Suplente
 1363,senado,374,Titular,Titular
 1363,senado,5352,Suplente,Suplente
+1363,senado,5936,Titular,Titular
 1363,senado,5990,Suplente,Suplente
 1363,senado,5967,Titular,Titular
 1363,senado,5899,Suplente,Suplente
@@ -1704,6 +1705,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 834,senado,374,Suplente,Suplente
 834,senado,5535,Vice-presidente,Titular
 834,senado,5783,Suplente,Suplente
+834,senado,5936,Titular,Titular
 834,senado,4560,Suplente,Suplente
 834,senado,5985,Titular,Titular
 834,senado,5926,Suplente,Suplente
@@ -1948,6 +1950,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 1716,senado,5352,Titular,Titular
 1716,senado,5783,Suplente,Suplente
 1716,senado,5385,Titular,Titular
+1716,senado,5936,Suplente,Suplente
 1716,senado,3806,Vice-presidente,Titular
 1716,senado,1173,Suplente,Suplente
 1716,senado,945,Titular,Titular
