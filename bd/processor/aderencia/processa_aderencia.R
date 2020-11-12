@@ -21,5 +21,3 @@ processa_aderencia <- function() {
   
   return(aderencia_alt)
 }
-
-processa_aderencia()

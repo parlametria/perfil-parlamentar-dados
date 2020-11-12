@@ -61,12 +61,17 @@ processa_aderencia_parlamentares <-
     
     proposicoes_selecionadas <- proposicoes_selecionadas %>% filter(status_importante == "Ativa")
     
+    if(filtro == 1) {
+      votos = votos %>% filter(id_proposicao %in% proposicoes_selecionadas$id_proposicao)
+      orientacoes = orientacoes %>% filter(id_proposicao %in% proposicoes_selecionadas$id_proposicao)
+    }
+    
     proposicoes_temas <-
       process_proposicoes_plenario_selecionadas_temas(proposicoes_url) %>%
       filter(id_proposicao %in% (proposicoes_selecionadas %>% pull(id_proposicao)))
     
     if(filtro == 0) {
-      proposicoes <- fetch_proposicoes_plenario(casa_aderencia)
+      proposicoes <- fetch_proposicoes_plenario(casa_aderencia) %>% distinct()
       
       proposicoes_gerais_temas <- 
         process_proposicoes_plenario_temas(proposicoes, casa_aderencia) %>%
