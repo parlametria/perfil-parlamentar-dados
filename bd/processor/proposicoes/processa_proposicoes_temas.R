@@ -12,11 +12,13 @@ processa_proposicoes_temas <- function() {
     mutate(casa = "camara")
   
   proposicoes_plenario <-
-    process_proposicoes_plenario_selecionadas_temas(.URL_PROPOSICOES_PLENARIO_CAMARA) %>% 
+    process_proposicoes_plenario_selecionadas_temas(.URL_PROPOSICOES_PLENARIO_CAMARA) %>%
+    rbind(process_proposicoes_plenario_temas(casa_aderencia = "camara")) %>%
     mutate(casa = "camara")
   
   proposicoes_plenario_senado <-
-    process_proposicoes_plenario_selecionadas_temas(.URL_PROPOSICOES_PLENARIO_SENADO) %>% 
+    process_proposicoes_plenario_selecionadas_temas(.URL_PROPOSICOES_PLENARIO_SENADO) %>%
+    rbind(process_proposicoes_plenario_temas(casa_aderencia = "senado")) %>%
     mutate(casa = "senado")
   
   proposicoes <- proposicoes_questionario %>%

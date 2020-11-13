@@ -31,11 +31,22 @@ fetch_tema_proposicao <- function(id_prop) {
       data_apresentacao = lubridate::ymd_hm(gsub("T", " ", dataApresentacao)) %>%
         format("%d/%m/%Y"),
       id = as.character(id),
-      tema = paste(unlist(temas$tema), collapse = '; ')
+      tema = paste(unlist(temas$tema), collapse = ";")
     ) %>%
     select(id, nome, data_apresentacao, tema)
   
   return(proposicao)
+}
+
+#' @title Recupera apenas os temas individualmente de uma proposição
+#' @description A partir do id, recupera dados de uma proposição na Câmara dos Deputados,
+#' retorna apenas o tema
+#' @param id_prop ID de uma proposição
+#' @return Lista contendo os temas da proposição
+#' @examples
+fetch_apenas_tema_proposicao <- function(id_prop) {
+  proposicao <- fetch_tema_proposicao(id_prop)
+  return(proposicao$tema)
 }
 
 #' @title Mapeia conjunto de temas da câmara para uma proposição para um tema do Voz Ativa

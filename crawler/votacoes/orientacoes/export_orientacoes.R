@@ -21,7 +21,7 @@ opt = parse_args(opt_parser);
 output_datapath <- opt$out
 
 message("Iniciando processamento...")
-orientacoes <- rbind(process_orientacao_anos_url_camara(),
+orientacoes <- rbind(process_orientacao_anos_url_camara(selecionadas = 0),
                      process_orientacao_senado())
 
 message(paste0("Salvando o resultado em ", output_datapath))

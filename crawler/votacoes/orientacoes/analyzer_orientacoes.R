@@ -6,7 +6,7 @@
 #' @return Dataframe com informações das orientações
 #' @examples
 #' orientacao <- process_orientacao_por_ano(2019)
-process_orientacao_por_ano_camara <- function(ano = 2019, url = NULL) {
+process_orientacao_por_ano_camara <- function(ano = 2019, url = NULL, selecionadas = 1) {
   library(tidyverse)
   library(here)
   
@@ -21,7 +21,7 @@ process_orientacao_por_ano_camara <- function(ano = 2019, url = NULL) {
     return(data)
   })
   
-  if (!is.null(url)) {
+  if (!is.null(url) && selecionadas == 1) {
     proposicoes_selecionadas <- read_csv(url, col_types = cols(id = "c")) %>% 
       filter(tolower(tema_va) != "não entra") %>% 
       select(id, nome_proposicao = nome)
@@ -63,7 +63,7 @@ process_orientacao_por_ano_camara <- function(ano = 2019, url = NULL) {
 #' @examples
 #' orientacao <- process_orientacao_anos_url_camara(2019)
 process_orientacao_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
-                                               url = NULL) {
+                                               url = NULL, selecionadas = 1) {
   library(tidyverse)
   library(here)
   
@@ -76,7 +76,8 @@ process_orientacao_anos_url_camara <- function(anos = c(2019, 2020, 2021, 2022),
     mutate(dados = map(
       ano,
       process_orientacao_por_ano_camara,
-      url
+      url,
+      selecionadas
     )) %>% 
     unnest(dados) %>% 
     distinct() %>% 

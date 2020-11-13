@@ -6,21 +6,28 @@
 #' @param parlamentares_path Caminho para o arquivo de dados de parlamentares
 #' @param proposicoes_url URL para a tabela de proposições com informações dos temas no VA
 #' @param casa_aderencia Casa para o cálculo da aderência (pode ser "camara" ou "senado)
+#' @param filtro Flag para expressar se deseja somente as proposições selecionadas
 #' @return Dataframe com informações de aderência
 processa_aderencia_parlamentares <-
   function(votos_path = here::here("crawler/raw_data/votos.csv"),
            orientacoes_path = here::here("crawler/raw_data/orientacoes.csv"),
            parlamentares_path = here::here("crawler/raw_data/parlamentares.csv"),
            proposicoes_url = NULL,
-           casa_aderencia = "camara") {
+           casa_aderencia = "camara",
+           filtro = 1) {
     library(tidyverse)
     library(here)
+  
     source(here("crawler/votacoes/utils_votacoes.R"))
+    source(here("crawler/votacoes/fetcher_votacoes_camara.R"))
     source(here("crawler/votacoes/aderencia/processa_dados_aderencia.R"))
     source(here("crawler/parlamentares/partidos/utils_partidos.R"))
     source(here("crawler/proposicoes/fetcher_proposicoes_senado.R"))
+    source(here("crawler/proposicoes/analyzer_proposicoes.R"))
     source(here("crawler/proposicoes/utils_proposicoes.R"))
     source(here("crawler/proposicoes/process_proposicao_tema.R"))
+    source(here("crawler/proposicoes/fetcher_proposicao_info.R"))
+    source(here("crawler/proposicoes/fetch_proposicoes_voz_ativa.R"))
     
     ## Preparando dados de votos, orientações e senadores
     votos <-
@@ -45,21 +52,35 @@ processa_aderencia_parlamentares <-
     if (is.null(proposicoes_url)) {
       if (casa_aderencia == "camara") {
         proposicoes_url <- .URL_PROPOSICOES_PLENARIO_CAMARA
+        proposicoes_selecionadas <- fetch_proposicoes_plenario_selecionadas(proposicoes_url)
       } else {
         proposicoes_url <- .URL_PROPOSICOES_PLENARIO_SENADO
+        proposicoes_selecionadas <- fetch_proposicoes_plenario_selecionadas_senado(proposicoes_url)
       }
     }
     
-    ## Preparando dados de proposições e seus respectivos temas
-    proposicoes <-
-      fetch_proposicoes_plenario_selecionadas_senado(proposicoes_url)
+    proposicoes_selecionadas <- proposicoes_selecionadas %>% filter(status_importante == "Ativa")
     
-    proposicoes <- proposicoes %>%
-      filter(status_importante == "Ativa")
+    if(filtro == 1) {
+      votos = votos %>% filter(id_proposicao %in% proposicoes_selecionadas$id_proposicao)
+      orientacoes = orientacoes %>% filter(id_proposicao %in% proposicoes_selecionadas$id_proposicao)
+    }
     
     proposicoes_temas <-
       process_proposicoes_plenario_selecionadas_temas(proposicoes_url) %>%
-      filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
+      filter(id_proposicao %in% (proposicoes_selecionadas %>% pull(id_proposicao)))
+    
+    if(filtro == 0) {
+      proposicoes <- fetch_proposicoes_plenario(casa_aderencia) %>% distinct()
+      
+      proposicoes_gerais_temas <- 
+        process_proposicoes_plenario_temas(proposicoes, casa_aderencia) %>%
+        filter(id_proposicao %in% (proposicoes %>% pull(id_proposicao)))
+      
+      proposicoes_temas <- proposicoes_temas %>%
+        rbind(proposicoes_gerais_temas) %>%
+        distinct()
+    }
     
     temas <- processa_temas_proposicoes()
     
@@ -149,7 +170,8 @@ processa_aderencia_parlamentares <-
       rbind(aderencia_temas) %>%
       mutate(id_parlamentar_voz = paste0(dplyr::if_else(casa_aderencia == "camara", 1, 2),
                                          id)) %>%
-      mutate(freq = if_else(freq == -1, -1, freq / 100)) %>%
+      mutate(freq = if_else(freq == -1, -1, freq / 100),
+             selecionada = filtro) %>%
       select(
         id_parlamentar_voz,
         id_partido,
@@ -158,8 +180,9 @@ processa_aderencia_parlamentares <-
         partido_liberou,
         nao_seguiu,
         seguiu,
-        aderencia = freq
+        aderencia = freq,
+        selecionada
       )
-    
+  
     return(aderencia_alt)
   }

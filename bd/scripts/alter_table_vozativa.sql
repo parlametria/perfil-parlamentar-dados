@@ -17,6 +17,14 @@
 -- ALTER TABLE temas
 -- ADD COLUMN IF NOT EXISTS slug varchar(255) DEFAULT 'sem-nome';
 
--- CREATE COLUMN id_perfil_politico em PARLAMENTARES
-ALTER TABLE parlamentares
-ADD COLUMN IF NOT EXISTS id_perfil_politico VARCHAR(40) DEFAULT NULL;
+-- -- CREATE COLUMN id_perfil_politico em PARLAMENTARES
+-- ALTER TABLE parlamentares
+-- ADD COLUMN IF NOT EXISTS id_perfil_politico VARCHAR(40) DEFAULT NULL;
+
+-- CREATE COLUMN selecionada em ADERENCIAS
+ALTER TABLE aderencias 
+ADD COLUMN IF NOT EXISTS selecionada BOOLEAN DEFAULT FALSE;
+
+-- ALTER PRIMARY KEY ADERENCIAS
+ALTER TABLE aderencias DROP CONSTRAINT aderencias_pkey;
+ALTER TABLE aderencias ADD PRIMARY KEY (id_parlamentar_voz, id_partido, id_tema, selecionada);

@@ -9,11 +9,14 @@ processa_aderencia <- function() {
   library(here)
   source(here("crawler/votacoes/aderencia/analyzer_aderencia.R"))
   
-  aderencia_camara <- processa_aderencia_parlamentares(casa = "camara")
+  aderencia_camara_selecionadas <- processa_aderencia_parlamentares(filtro = 1, casa_aderencia = "camara")
+  aderencia_camara <- processa_aderencia_parlamentares(filtro = 0, casa_aderencia = "camara")
+  aderencia_senado_selecionadas <- processa_aderencia_parlamentares(filtro = 1, casa_aderencia = "senado")
+  aderencia_senado <- processa_aderencia_parlamentares(filtro = 0, casa_aderencia = "senado")
   
-  aderencia_senado <- processa_aderencia_parlamentares(casa = "senado")
-  
-  aderencia_alt <- aderencia_camara %>% 
+  aderencia_alt <- aderencia_camara_selecionadas %>%
+    rbind(aderencia_camara) %>% 
+    rbind(aderencia_senado_selecionadas) %>%
     rbind(aderencia_senado)
   
   return(aderencia_alt)
