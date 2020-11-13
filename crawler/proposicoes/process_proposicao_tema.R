@@ -146,7 +146,7 @@ process_proposicoes_questionario_temas <- function(url = NULL) {
 processa_temas_proposicoes <- function() {
   library(tidyverse)
   
-  temas <- read_csv(file = "crawler/proposicoes/temas/temas.csv", col_types = cols(col_number(), col_character(), col_character(), col_number()))
+  temas <- read_csv(file = here::here("crawler/proposicoes/temas/temas.csv"), col_types = cols(col_number(), col_character(), col_character(), col_number()))
 
   return(temas)
 }
