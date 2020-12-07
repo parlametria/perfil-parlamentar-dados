@@ -3,8 +3,8 @@
 #' @param id_proposicao ID da proposição
 #' @return Dataframe com os dados de proposições
 #' @examples
-#' proposicoes <- fetch_proposicoes_senado(id_proposicao)
-fetch_proposicoes_senado <- function(id_proposicao) {
+#' proposicoes <- fetch_proposicao_senado(id_proposicao)
+fetch_proposicao_senado <- function(id_proposicao) {
   library(tidyverse)
   
   cat(paste0("Baixando dados de proposição de id ", id_proposicao, "...\n"))
@@ -48,7 +48,7 @@ fetch_proposicoes_senado <- function(id_proposicao) {
 #' @examples
 #' proposicoes <- fetch_all_proposicoes(ids)
 fetch_all_proposicoes <- function(ids) {
-  proposicoes <-purrr::map_df(ids, ~ fetch_proposicoes_senado(.x))
+  proposicoes <-purrr::map_df(ids, ~ fetch_proposicao_senado(.x))
   return(proposicoes)
 }
 
@@ -69,7 +69,7 @@ fetch_all_proposicoes_votadas_em_intervalo_senado <- function(initial_date = "01
     select(id_proposicao) %>% unique()
   
   proposicoes <-
-    purrr::map_df(votacoes$id_proposicao, ~ fetch_proposicoes_senado(.x))
+    purrr::map_df(votacoes$id_proposicao, ~ fetch_proposicao_senado(.x))
   
   return(proposicoes)
 }

@@ -66,7 +66,7 @@ process_props_apresentadas_intervalo_senado <-
       purrr::map_df(proposicoes %>%
                       distinct(id) %>%
                       pull(id),
-                    ~ fetch_proposicoes_senado(.x))
+                    ~ fetch_proposicao_senado(.x))
     
     proposicoes_alt <- proposicoes_metadados %>%
       mutate(indexacao = "",
