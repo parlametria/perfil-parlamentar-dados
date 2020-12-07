@@ -119,6 +119,7 @@ processa_empresas_doadores <- function(
   
   socios_empresas_doadores <-
     filter_socios_empresas_doadores(socios_folderpath, doadores_folderpath)
+  gc()
   
   if (isTRUE(fragmentado)) {
     source(here("parlametria/crawler/empresas/socios_empresas/doadores_campanha/paraleliza_fetcher_socios_empresas_doadores_campanha.R"))
@@ -129,7 +130,7 @@ processa_empresas_doadores <- function(
   
   empresas_doadores <- empresas_doadores %>% 
     mutate(id_parlamentar = as.character(id_parlamentar))
-  
+
   res_socios <- process_socios_empresas_doadores(empresas_doadores, ano)
   
   cnpjs <- res_socios %>% distinct(cnpj_empresa) 

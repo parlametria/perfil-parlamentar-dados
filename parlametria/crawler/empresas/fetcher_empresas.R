@@ -49,8 +49,8 @@ fetch_dados_empresa_por_cnpj <- function(cnpj) {
     cnaes_secundarios <- json$cnaes_secundarios %>% 
       map(function(x) {
         cnae_sec <- tibble(cnae_tipo = "cnae_secundario",
-                           cnae_codigo = x$cnae_codigo,
-                           cnae_descricao = x$cnae_descricao)
+                           cnae_codigo = x$codigo,
+                           cnae_descricao = x$descricao)
         return(cnae_sec)
       }) %>% 
       reduce(rbind) %>% 
@@ -65,7 +65,7 @@ fetch_dados_empresa_por_cnpj <- function(cnpj) {
     cnae_descricao = ""
   ) %>%
     rbind(cnaes_secundarios) %>% 
-    mutate(cnpj = cnpj) %>% 
+    mutate(cnpj = as.character(cnpj)) %>% 
     left_join(empresa, by = "cnpj") %>% 
     select(cnpj, razao_social, capital_social, uf, porte, data_inicio_atividade,
            data_situacao_especial, situacao_especial, motivo_situacao_cadastral,

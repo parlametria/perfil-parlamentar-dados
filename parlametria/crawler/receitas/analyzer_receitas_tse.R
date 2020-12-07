@@ -105,7 +105,8 @@ processa_doacoes_tse <- function(
       select(SQ_CANDIDATO, NR_CPF_CNPJ_DOADOR, NM_DOADOR, NM_DOADOR_RFB, DS_ORIGEM_RECEITA, VR_RECEITA) %>% 
       mutate(VR_RECEITA = as.numeric(gsub(",", ".", VR_RECEITA)))
   } else {
-    receitas <- import_receita_tse_modelo_antigo(receitas_datapath)
+    receitas <- import_receita_tse_modelo_antigo(receitas_datapath) %>% 
+      mutate(VR_RECEITA = as.numeric(gsub(",", ".", VR_RECEITA)))
   }
   
   if (summarized) {
