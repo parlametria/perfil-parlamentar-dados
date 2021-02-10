@@ -7,6 +7,7 @@ id,casa,sigla,nome
 2007,camara,CDHM,Comissão De Direitos Humanos E Minorias
 2008,camara,CDEICS,"Comissão De Desenvolvimento Econômico, Indústria, Comércio E Serviços"
 2009,camara,CE,Comissão De Educação
+102375,camara,CE,Secretaria Do Desenvolvimento Agrário Do Estado Do Ceará
 2010,camara,CFT,Comissão De Finanças E Tributação
 2011,camara,CFFC,Comissão De Fiscalização Financeira E Controle
 2012,camara,CME,Comissão De Minas E Energia
@@ -33,7 +34,6 @@ id,casa,sigla,nome
 47,senado,CE,"Comissão De Educação, Cultura E Esporte"
 59,senado,CI,Comissão De Serviços De Infraestrutura
 50,senado,CMA,Comissão De Meio Ambiente
-2309,senado,CPICHAPE,Cpi Sobre A Situação Das Vítimas E Familiares Do Acidente Da Chapecoense
 1307,senado,CRA,Comissão De Agricultura E Reforma Agrária
 54,senado,CRE,Comissão De Relações Exteriores E Defesa Nacional
 1716,senado,CSF,Comissão Senado Do Futuro
