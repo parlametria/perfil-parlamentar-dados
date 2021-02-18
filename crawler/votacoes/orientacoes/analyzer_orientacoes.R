@@ -208,12 +208,10 @@ define_orientacao_governo <- function(votos) {
   source(here::here("crawler/parlamentares/liderancas/fetcher_liderancas_senado.R"))
   
   lideres <- fetch_liderancas_senado() %>% 
-    filter(bloco_partido == "Governo")
+    filter(bloco_partido == "Governo", str_detect(cargo, "^Líder"))
   
   orientacoes <- votos %>% 
-    filter(id_parlamentar == lideres %>% 
-             filter(cargo == "Líder") %>% 
-             pull(id)) %>% 
+    filter(id_parlamentar %in% lideres$id) %>% 
     mutate(partido = "Governo",
            voto = if_else(voto == 0, 5, as.numeric(voto))) %>% 
     select(-id_parlamentar, ano, id_proposicao, id_votacao, partido, voto, casa)

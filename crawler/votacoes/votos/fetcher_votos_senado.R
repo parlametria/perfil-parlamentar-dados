@@ -37,7 +37,7 @@ scrap_votos_from_pdf_senado <- function(pdf_filepath) {
       
     } else{
       
-      return(tribble(~ senador, ~ uf, ~ partido, ~ voto))
+      return(tibble(senador = character(), uf = character(), partido = character(), voto = character()))
     }
    
   })
