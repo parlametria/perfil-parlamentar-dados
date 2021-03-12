@@ -14,7 +14,8 @@ processa_liderancas <- function() {
   liderancas_senado <- fetch_liderancas_senado()
 
   liderancas <- liderancas_camara %>%
-    rbind(liderancas_senado)
+    rbind(liderancas_senado) %>% 
+    distinct(id_parlamentar_voz, id_partido, .keep_all = T)
   
   return(liderancas)
 }
