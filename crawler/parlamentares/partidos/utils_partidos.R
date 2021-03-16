@@ -54,16 +54,10 @@ map_sigla_to_id <- function(df,
 map_sigla_padronizada_para_sigla <- function(sigla) {
   library(tidyverse)
   
-  sigla_clean <- padroniza_string(sigla)
+  sigla_clean <- padroniza_sigla(sigla) %>% 
+    padroniza_string()
   
-  sigla_alt <- case_when(
-    str_detect(sigla_clean, "PODEMOS") ~ "PODE",
-    str_detect(sigla_clean, "BLOCO PP MDB PTB") ~ "BLOCO PP, MDB, PTB",
-    str_detect(sigla_clean, "BLOCO PARLAMENTAR PSDBPSL") ~ "BLOCO PARLAMENTAR PSDB/PSL",
-    TRUE ~ sigla_clean
-  )
-  
-  return(sigla_alt)
+  return(sigla_clean)
 }
 
 #' @title Mapeia sigla de partido para id
@@ -77,16 +71,24 @@ map_sigla_id <- function(sigla_partido) {
   
   partidos <- suppressWarnings(suppressMessages(read_csv(here("crawler/raw_data/partidos.csv"))))
   
-  sigla_padronizada <- padroniza_sigla(sigla_partido) %>% 
-    padroniza_string()
+  sigla_padronizada <- map_sigla_padronizada_para_sigla(sigla_partido)
   
   id_partido <- partidos %>% 
-    filter(padroniza_string(sigla) == map_sigla_padronizada_para_sigla(sigla_padronizada)) %>%
+    rowwise(.) %>% 
+    mutate(sigla_padronizada_partido = map_sigla_padronizada_para_sigla(sigla)) %>% 
+    ungroup() %>% 
+    filter(sigla_padronizada == sigla_padronizada_partido) %>%
     pull(id)
   
   if (length(id_partido) == 0) {
-    return(partidos %>% filter(sigla == "SPART") %>% pull(id))
-  } else {
-    return(id_partido)
-  }
+    id_partido <- partidos %>% 
+      filter(sigla == "SPART") %>% 
+      pull(id)
+    
+  } else if (length(id_partido) > 1) {
+    id_partido <- max(id_partido)
+  } 
+  
+  return(id_partido)
+
 }
