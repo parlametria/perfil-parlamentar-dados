@@ -57,7 +57,6 @@ map_sigla_padronizada_para_sigla <- function(sigla) {
   sigla_clean <- padroniza_sigla(sigla) %>% 
     padroniza_string()
   
-  
   return(sigla_clean)
 }
 
