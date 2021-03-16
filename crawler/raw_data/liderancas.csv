@@ -1,44 +1,52 @@
 bloco_partido,id,nome,cargo,partido,uf,casa
-"Bloco PSL, PL, PP, PSD, REPUBLICANOS, PTB, PROS, PODE, PSC, AVANTE, PATRIOTA",160674,Hugo Motta ,Líder,REPUBLICANOS,PB,camara
-PT,132504,Enio Verri ,Líder,PT,PR,camara
-PT,204495,Airton Faleiro ,Vice-líder,PT,PA,camara
-PT,204501,Alencar Santana Braga ,Vice-líder,PT,SP,camara
-PT,204503,Alexandre Padilha ,Vice-líder,PT,SP,camara
-PT,160538,Bohn Gass ,Vice-líder,PT,RS,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",160674,Hugo Motta ,Líder,REPUBLICANOS,PB,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",179587,Vitor Hugo ,Vice-líder,PSL,GO,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",74043,Wellington Roberto ,Vice-líder,PL,PB,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",93083,Cacá Leão ,Vice-líder,PP,BA,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",160553,Antonio Brito ,Vice-líder,PSD,BA,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",194260,Nivaldo Albuquerque ,Vice-líder,PTB,AL,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204487,Capitão Wagner ,Vice-líder,PROS,CE,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204359,Léo Moraes ,Vice-líder,PODE,RO,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",178881,Aluisio Mendes ,Vice-líder,PSC,MA,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",160510,Luis Tibé ,Vice-líder,AVANTE,MG,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204494,Fred Costa ,Vice-líder,PATRIOTA,MG,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204354,Flávia Arruda ,Vice-líder,PL,DF,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",160673,Giovani Cherini ,Vice-líder,PL,RS,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",137070,Vicentinho Júnior ,Vice-líder,PL,TO,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",141450,Hugo Leal ,Vice-líder,PSD,RJ,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",160587,Fábio Trad ,Vice-líder,PSD,MS,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204392,Francisco Jr. ,Vice-líder,PSD,GO,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204522,Marco Bertaiolli ,Vice-líder,PSD,SP,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204538,Paulo Bengtson ,Vice-líder,PTB,PA,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",178929,Diego Garcia ,Vice-líder,PODE,PR,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204391,José Nelto ,Vice-líder,PODE,GO,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",215043,Josivaldo JP,Vice-líder,PODE,MA,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",195866,Vaidon Oliveira ,Vice-líder,PROS,CE,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",178934,Toninho Wandscheer ,Vice-líder,PROS,PR,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",141555,Vinicius Carvalho ,Vice-líder,REPUBLICANOS,SP,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204372,Julio Cesar Ribeiro ,Vice-líder,REPUBLICANOS,DF,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",141405,Celso Maldaner ,Vice-líder,MDB,SC,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",75431,Maurício Dziedricki ,Vice-líder,PTB,RS,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",160601,Pr. Marco Feliciano ,Vice-líder,REPUBLICANOS,SP,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",98057,Lafayette de Andrada ,Vice-líder,REPUBLICANOS,MG,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204418,Luizão Goulart ,Vice-líder,REPUBLICANOS,PR,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204353,Aline Gurgel ,Vice-líder,REPUBLICANOS,AP,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204414,Aroldo Martins ,Vice-líder,REPUBLICANOS,PR,camara
+"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",204425,Silvio Costa Filho ,Vice-líder,REPUBLICANOS,PE,camara
+PT,160538,Bohn Gass ,Líder,PT,RS,camara
 PT,107283,Gleisi Hoffmann ,Vice-líder,PT,PR,camara
-PT,178873,Helder Salomão ,Vice-líder,PT,ES,camara
-PT,74398,Maria do Rosário ,Vice-líder,PT,RS,camara
-PT,204453,Natália Bonavides ,Vice-líder,PT,RN,camara
-PT,74159,Odair Cunha ,Vice-líder,PT,MG,camara
-PT,74160,Patrus Ananias ,Vice-líder,PT,MG,camara
-PT,160604,Pedro Uczai ,Vice-líder,PT,SC,camara
 PT,204480,Rogério Correia ,Vice-líder,PT,MG,camara
 PT,73604,Rui Falcão ,Vice-líder,PT,SP,camara
-PT,74283,Vicentinho ,Vice-líder,PT,SP,camara
-MDB,204436,Isnaldo Bulhões Jr. ,Líder,MDB,AL,camara
-MDB,178884,Hildo Rocha ,Vice-líder,MDB,MA,camara
-MDB,204459,Daniela do Waguinho ,Vice-líder,MDB,RJ,camara
-MDB,141427,Fábio Ramalho ,Vice-líder,MDB,MG,camara
-MDB,171623,Fabio Reis ,Vice-líder,MDB,SE,camara
-MDB,204539,Hercílio Coelho Diniz ,Vice-líder,MDB,MG,camara
-MDB,178954,Lucio Mosquini ,Vice-líder,MDB,RO,camara
-MDB,179001,Márcio Biolchi ,Vice-líder,MDB,RS,camara
-PSDB,141531,Rodrigo de Castro ,Líder,PSDB,MG,camara
-PSDB,204560,Adolfo Viana ,Vice-líder,PSDB,BA,camara
-PSDB,204358,Beto Pereira ,Vice-líder,PSDB,MS,camara
-PSDB,74655,Eduardo Barbosa ,Vice-líder,PSDB,MG,camara
-PSDB,204404,Lucas Redecker ,Vice-líder,PSDB,RS,camara
-PSDB,204357,Rose Modesto ,Vice-líder,PSDB,MS,camara
-PSDB,178990,Samuel Moreira ,Vice-líder,PSDB,SP,camara
-PSDB,178961,Shéridan ,Vice-líder,PSDB,RR,camara
-DEM,141422,Efraim Filho ,Líder,DEM,PB,camara
-DEM,178836,Alan Rick ,Vice-líder,DEM,AC,camara
-DEM,204386,Jose Mario Schreiner ,Vice-líder,DEM,GO,camara
-DEM,204536,Kim Kataguiri ,Vice-líder,DEM,SP,camara
-DEM,204381,Luis Miranda ,Vice-líder,DEM,DF,camara
-DEM,178860,Paulo Azi ,Vice-líder,DEM,BA,camara
-DEM,204395,Pedro Lupion ,Vice-líder,DEM,PR,camara
-DEM,160639,Professora Dorinha Seabra Rezende,Vice-líder,DEM,TO,camara
+PT,204453,Natália Bonavides ,Vice-líder,PT,RN,camara
+PT,74159,Odair Cunha ,Vice-líder,PT,MG,camara
+PT,178825,LEO DE BRITO,Vice-líder,PT,AC,camara
+PT,74161,Reginaldo Lopes ,Vice-líder,PT,MG,camara
+PT,204467,Professora Rosa Neide ,Vice-líder,PT,MT,camara
+PT,74400,Paulo Pimenta ,Vice-líder,PT,RS,camara
+PT,178986,Nilto Tatto ,Vice-líder,PT,SP,camara
+PT,204492,Paulo Guedes ,Vice-líder,PT,MG,camara
+PT,204559,Zé Neto ,Vice-líder,PT,BA,camara
+PT,178873,Helder Salomão ,Vice-líder,PT,ES,camara
 PSB,160528,Danilo Cabral ,Líder,PSB,PE,camara
 PSB,204561,Bira do Pindaré ,Vice-líder,PSB,MA,camara
 PSB,204352,Camilo Capiberibe ,Vice-líder,PSB,AP,camara
@@ -48,43 +56,38 @@ PSB,204389,Elias Vaz ,Vice-líder,PSB,GO,camara
 PSB,204558,Marcelo Nilo ,Vice-líder,PSB,BA,camara
 PSB,72442,Felipe Carreras ,Vice-líder,PSB,PE,camara
 PDT,74439,Wolney Queiroz ,Líder,PDT,PE,camara
-PDT,178835,Afonso Motta ,Vice-líder,PDT,RS,camara
-PDT,141411,Dagoberto Nogueira ,Vice-líder,PDT,MS,camara
-PDT,204541,Eduardo Bismarck ,Vice-líder,PDT,CE,camara
-PDT,73460,Gustavo Fruet ,Vice-líder,PDT,PR,camara
-PDT,74299,Leônidas Cristino ,Vice-líder,PDT,CE,camara
 PDT,133968,Paulo Ramos ,Vice-líder,PDT,RJ,camara
-SOLIDARIEDADE,178879,Lucas Vergilio ,Líder,SOLIDARIEDADE,GO,camara
+PDT,73486,Pompeo de Mattos ,Vice-líder,PDT,RS,camara
+PDT,68720,Fábio Henrique ,Vice-líder,PDT,SE,camara
+PDT,133439,André Figueiredo ,Vice-líder,PDT,CE,camara
+PDT,74467,Damião Feliciano ,Vice-líder,PDT,PB,camara
+PDT,74158,Mário Heringer ,Vice-líder,PDT,MG,camara
+PDT,177282,Subtenente Gonzaga ,Vice-líder,PDT,MG,camara
+"Bloco NOVO, CIDADANIA, PV",178972,Alex Manente ,Líder,CIDADANIA,SP,camara
+"Bloco NOVO, CIDADANIA, PV",204532,Vinicius Poit ,Vice-líder,NOVO,SP,camara
 PSOL,204464,Talíria Petrone ,Líder,PSOL,RJ,camara
-PSOL,76874,Marcelo Freixo ,Vice-líder,PSOL,RJ,camara
+PSOL,204509,Áurea Carolina ,Vice-líder,PSOL,MG,camara
+PSOL,215044,Vivi Reis,Vice-líder,PSOL,PA,camara
 PSOL,204407,Fernanda Melchionna ,Vice-líder,PSOL,RS,camara
-PSOL,73531,Ivan Valente ,Vice-líder,PSOL,SP,camara
-NOVO,204532,Vinicius Poit ,Líder,NOVO,SP,camara
-NOVO,204516,Alexis Fonteyne ,Vice-líder,NOVO,SP,camara
-NOVO,204365,Gilson Marques ,Vice-líder,NOVO,SC,camara
-CIDADANIA,178972,Alex Manente ,Líder,CIDADANIA,SP,camara
-CIDADANIA,164360,Carmen Zanotto ,Vice-líder,CIDADANIA,SC,camara
-CIDADANIA,204377,Paula Belmonte ,Vice-líder,CIDADANIA,DF,camara
 PCdoB,73801,Renildo Calheiros ,Líder,PCdoB,PE,camara
+PCdoB,73943,Perpétua Almeida ,Vice-líder,PCdoB,AC,camara
 PCdoB,74060,Daniel Almeida ,Vice-líder,PCdoB,BA,camara
-PV,204537,Enrico Misasi ,Líder,PV,SP,camara
-PV,204383,Professor Israel Batista ,Vice-líder,PV,DF,camara
 REDE,204468,Joenia Wapichana ,Representante,REDE,RR,camara
 Governo,73788,Ricardo Barros ,Líder,PP,PR,camara
 Governo,204472,José Medeiros ,Vice-líder,PODE,MT,camara
 Governo,178871,Evair Vieira de Melo ,Vice-líder,PP,ES,camara
-Governo,178881,Aluisio Mendes ,Vice-líder,PSC,MA,camara
-Governo,75431,Maurício Dziedricki ,Vice-líder,PTB,RS,camara
-Governo,204455,Luiz Lima ,Vice-líder,PSL,RJ,camara
 Governo,160673,Giovani Cherini ,Vice-líder,PL,RS,camara
 Governo,178910,Joaquim Passarinho ,Vice-líder,PSD,PA,camara
 Governo,198197,Greyce Elias ,Vice-líder,AVANTE,MG,camara
-Governo,178860,Paulo Azi ,Vice-líder,DEM,BA,camara
 Governo,178954,Lucio Mosquini ,Vice-líder,MDB,RO,camara
 Governo,204408,Gustinho Ribeiro ,Vice-líder,SOLIDARIEDADE,SE,camara
 Governo,204566,Marreca Filho ,Vice-líder,PATRIOTA,MA,camara
 Governo,204572,Capitão Alberto Neto ,Vice-líder,REPUBLICANOS,AM,camara
 Governo,213762,Carla Dickson,Vice-líder,PROS,RN,camara
+Governo,204416,Sanderson ,Vice-líder,PSL,RS,camara
+Governo,204423,André Ferreira ,Vice-líder,PSC,PE,camara
+Governo,133810,Marcelo Moraes ,Vice-líder,PTB,RS,camara
+Governo,204386,Jose Mario Schreiner ,Vice-líder,DEM,GO,camara
 Maioria,160527,Aguinaldo Ribeiro ,Líder,PP,PB,camara
 Maioria,93083,Cacá Leão ,Vice-líder,PP,BA,camara
 Maioria,178879,Lucas Vergilio ,Vice-líder,SOLIDARIEDADE,GO,camara
@@ -92,10 +95,10 @@ Oposição,133439,André Figueiredo ,Líder,PDT,CE,camara
 Oposição,178922,Tadeu Alencar ,Vice-líder,PSB,PE,camara
 Oposição,178987,Orlando Silva ,Vice-líder,PCdoB,SP,camara
 Oposição,141439,Chico D'Angelo ,Vice-líder,PDT,RJ,camara
-Oposição,204468,Joenia Wapichana ,Vice-líder,REDE,RR,camara
 Oposição,178927,Aliel Machado ,Vice-líder,PSB,PR,camara
 Oposição,204394,Gervásio Maia ,Vice-líder,PSB,PB,camara
-Oposição,73531,Ivan Valente ,Vice-líder,PSOL,SP,camara
+Oposição,76874,Marcelo Freixo ,Vice-líder,PSOL,RJ,camara
+Oposição,73482,Henrique Fontana ,Vice-líder,PT,RS,camara
 Minoria,141470,José Guimarães ,Líder,PT,CE,camara
 Minoria,157130,Túlio Gadêlha ,Vice-líder,PDT,PE,camara
 Minoria,139285,Lídice da Mata ,Vice-líder,PSB,BA,camara
@@ -110,52 +113,64 @@ PSL,179587,Vitor Hugo ,Líder,PSL,GO,camara
 PL,74043,Wellington Roberto ,Líder,PL,PB,camara
 PP,93083,Cacá Leão ,Líder,PP,BA,camara
 PSD,160553,Antonio Brito ,Líder,PSD,BA,camara
+MDB,204436,Isnaldo Bulhões Jr. ,Líder,MDB,AL,camara
+PSDB,141531,Rodrigo de Castro ,Líder,PSDB,MG,camara
 REPUBLICANOS,160674,Hugo Motta ,Líder,REPUBLICANOS,PB,camara
+DEM,141422,Efraim Filho ,Líder,DEM,PB,camara
+SOLIDARIEDADE,178879,Lucas Vergilio ,Líder,SOLIDARIEDADE,GO,camara
 PROS,204487,Capitão Wagner ,Líder,PROS,CE,camara
 PTB,194260,Nivaldo Albuquerque ,Líder,PTB,AL,camara
-PODE,204359,Léo Moraes ,Líder,PODE,RO,camara
+PODE,204508,Igor Timo ,Líder,PODE,MG,camara
 PSC,178881,Aluisio Mendes ,Líder,PSC,MA,camara
-AVANTE,160510,Luis Tibé ,Líder,AVANTE,MG,camara
+NOVO,204532,Vinicius Poit ,Líder,NOVO,SP,camara
+AVANTE,178921,Sebastião Oliveira ,Líder,AVANTE,PE,camara
+CIDADANIA,178972,Alex Manente ,Líder,CIDADANIA,SP,camara
 PATRIOTA,204494,Fred Costa ,Líder,PATRIOTA,MG,camara
-Maioria,70,Renan Calheiros,Líder do Senado Federal,MDB,AL,senado
-Minoria,5627,Jean Paul Prates,Líder do Senado Federal,PT,RN,senado
+PV,204537,Enrico Misasi ,Líder,PV,SP,camara
 Bloco Parlamentar Unidos pelo Brasil,5557,Mailza Gomes,Líder do Senado Federal,PP,AC,senado
-Bloco Parlamentar PSDB/PSL,5905,Rodrigo Cunha,Líder do Senado Federal,PSDB,AL,senado
-Bloco Parlamentar Senado Independente,5718,Eliziane Gama,Líder do Senado Federal,CIDADANIA,MA,senado
-Bloco Parlamentar da Resistência Democrática,5783,Zenaide Maia,Líder do Senado Federal,PROS,RN,senado
+Bloco Parlamentar Unidos pelo Brasil,739,Ciro Nogueira,Vice-líder do Senado Federal,PP,PI,senado
+Bloco Parlamentar PODEMOS/PSDB/PSL,5533,Lasier Martins,Líder do Senado Federal,PODEMOS,RS,senado
+Bloco Parlamentar PODEMOS/PSDB/PSL,5905,Rodrigo Cunha,Vice-líder do Senado Federal,PSDB,AL,senado
+Bloco Parlamentar PODEMOS/PSDB/PSL,5988,Soraya Thronicke,Vice-líder do Senado Federal,PSL,MS,senado
+Bloco Parlamentar PODEMOS/PSDB/PSL,345,Flávio Arns,Vice-líder do Senado Federal,PODEMOS,PR,senado
 Bloco Parlamentar Vanguarda,1173,Wellington Fagundes,Líder do Senado Federal,PL,MT,senado
 Bloco Parlamentar Vanguarda,5350,Jorginho Mello,Vice-líder do Senado Federal,PL,SC,senado
 Bloco Parlamentar Vanguarda,3806,Zequinha Marinho,Vice-líder do Senado Federal,PSC,PA,senado
+Bloco Parlamentar da Resistência Democrática,5783,Zenaide Maia,Líder do Senado Federal,PROS,RN,senado
+Bloco Parlamentar Senado Independente,5718,Eliziane Gama,Líder do Senado Federal,CIDADANIA,MA,senado
 PSD,5985,Nelsinho Trad,Líder do Senado Federal,PSD,MS,senado
 PSD,5525,Omar Aziz,Vice-líder do Senado Federal,PSD,AM,senado
 PSD,6295,Carlos Fávaro,Vice-líder do Senado Federal,PSD,MT,senado
-PODEMOS,945,Alvaro Dias,Líder do Senado Federal,PODEMOS,PR,senado
-PODEMOS,5924,Oriovisto Guimarães,Vice-líder do Senado Federal,PODEMOS,PR,senado
-PODEMOS,5976,Eduardo Girão,Vice-líder do Senado Federal,PODEMOS,CE,senado
+Maioria,70,Renan Calheiros,Líder do Senado Federal,MDB,AL,senado
+Minoria,5627,Jean Paul Prates,Líder do Senado Federal,PT,RN,senado
 Governo,5540,Fernando Bezerra Coelho,Líder do Senado Federal,MDB,PE,senado
 Governo,3777,Eduardo Gomes,Vice-líder do Senado Federal,MDB,TO,senado
 Governo,5531,Elmano Férrer,Vice-líder do Senado Federal,PP,PI,senado
 Governo,5990,Carlos Viana,Vice-líder do Senado Federal,PSD,MG,senado
+Oposição,5012,Randolfe Rodrigues,Líder do Senado Federal,REDE,AP,senado
 MDB,4994,Eduardo Braga,Líder do Senado Federal,MDB,AM,senado
-MDB,285,Marcio Bittar,Vice-líder do Senado Federal,MDB,AC,senado
+MDB,742,Marcelo Castro,Vice-líder do Senado Federal,MDB,PI,senado
 PP,5998,Daniella Ribeiro,Líder do Senado Federal,PP,PB,senado
 PP,739,Ciro Nogueira,Vice-líder do Senado Federal,PP,PI,senado
 PP,1186,Luis Carlos Heinze,Vice-líder do Senado Federal,PP,RS,senado
 REPUBLICANOS,6027,Mecias de Jesus,Líder do Senado Federal,REPUBLICANOS,RR,senado
+PODEMOS,945,Alvaro Dias,Líder do Senado Federal,PODEMOS,PR,senado
+PODEMOS,5924,Oriovisto Guimarães,Vice-líder do Senado Federal,PODEMOS,PR,senado
+PODEMOS,5976,Eduardo Girão,Vice-líder do Senado Federal,PODEMOS,CE,senado
+PODEMOS,5959,Styvenson Valentim,Vice-líder do Senado Federal,PODEMOS,RN,senado
 PSDB,4770,Izalci Lucas,Líder do Senado Federal,PSDB,DF,senado
 PSDB,5376,Mara Gabrilli,Vice-líder do Senado Federal,PSDB,SP,senado
 PSDB,5905,Rodrigo Cunha,Vice-líder do Senado Federal,PSDB,AL,senado
 PSL,5666,Major Olimpio,Líder do Senado Federal,PSL,SP,senado
 PSL,5988,Soraya Thronicke,Vice-líder do Senado Federal,PSL,MS,senado
-CIDADANIA,5982,Alessandro Vieira,Líder do Senado Federal,CIDADANIA,SE,senado
-PDT,5411,Weverton,Líder do Senado Federal,PDT,MA,senado
-REDE,5012,Randolfe Rodrigues,Líder do Senado Federal,REDE,AP,senado
-REDE,5953,Fabiano Contarato,Vice-líder do Senado Federal,REDE,ES,senado
-PSB,5979,Leila Barros,Líder do Senado Federal,PSB,DF,senado
-PT,374,Paulo Rocha,Líder do Senado Federal,PT,PA,senado
-PROS,5535,Telmário Mota,Líder do Senado Federal,PROS,RR,senado
-PROS,5783,Zenaide Maia,Vice-líder do Senado Federal,PROS,RN,senado
 DEM,5422,Marcos Rogério,Líder do Senado Federal,DEM,RO,senado
 PL,5936,Carlos Portinho,Líder do Senado Federal,PL,RJ,senado
 PL,5350,Jorginho Mello,Vice-líder do Senado Federal,PL,SC,senado
 PSC,3806,Zequinha Marinho,Líder do Senado Federal,PSC,PA,senado
+PT,374,Paulo Rocha,Líder do Senado Federal,PT,PA,senado
+PROS,5535,Telmário Mota,Líder do Senado Federal,PROS,RR,senado
+PROS,5783,Zenaide Maia,Vice-líder do Senado Federal,PROS,RN,senado
+PDT,5973,Cid Gomes,Líder do Senado Federal,PDT,CE,senado
+CIDADANIA,5982,Alessandro Vieira,Líder do Senado Federal,CIDADANIA,SE,senado
+REDE,5012,Randolfe Rodrigues,Líder do Senado Federal,REDE,AP,senado
+PSB,5979,Leila Barros,Líder do Senado Federal,PSB,DF,senado

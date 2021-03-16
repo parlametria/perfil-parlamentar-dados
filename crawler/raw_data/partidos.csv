@@ -1,58 +1,58 @@
-"id","sigla","tipo","situacao"
-"0","Governo","Governo","Ativo"
-"1","Maioria","Maioria","Ativo"
-"2","Minoria","Minoria","Ativo"
-"3","Oposição","Oposição","Ativo"
-"575","Bloco PP, MDB, PTB","Bloco","Ativo"
-"36761","PEN","partido","Ativo"
-"36762","PPL","partido","Ativo"
-"36763","PROS","partido","Ativo"
-"36765","SD","partido","Ativo"
-"36769","DEM","partido","Ativo"
-"36779","PCdoB","partido","Ativo"
-"36781","PCO","partido","Ativo"
-"36786","PDT","partido","Ativo"
-"36793","PHS","partido","Ativo"
-"36800","PMDB","partido","Ativo"
-"36801","PMN","partido","Ativo"
-"36809","PP**","partido","Ativo"
-"36813","PPS","partido","Ativo"
-"36814","PR","partido","Ativo"
-"36815","PRB","partido","Ativo"
-"36824","PRP","partido","Ativo"
-"36829","PRTB","partido","Ativo"
-"36832","PSB","partido","Ativo"
-"36833","PSC","partido","Ativo"
-"36834","PSD","partido","Ativo"
-"36835","PSDB","partido","Ativo"
-"36836","PSDC","partido","Ativo"
-"36837","PSL","partido","Ativo"
-"36839","PSOL","partido","Ativo"
-"36843","PSTU","partido","Ativo"
-"36844","PT","partido","Ativo"
-"36845","PTB","partido","Ativo"
-"36846","PTC","partido","Ativo"
-"36847","PTdoB","partido","Ativo"
-"36848","PTN","partido","Ativo"
-"36851","PV","partido","Ativo"
-"36852","SPART","partido","Ativo"
-"36863","PCB","partido","Ativo"
-"36886","REDE","partido","Ativo"
-"36887","PMB","partido","Ativo"
-"36896","PODE","partido","Ativo"
-"36898","AVANTE","partido","Ativo"
-"36899","MDB","partido","Ativo"
-"37900","PATRI","partido","Ativo"
-"37901","NOVO","partido","Ativo"
-"37902","DC","partido","Ativo"
-"37903","PP","partido","Ativo"
-"37904","SOLIDARIEDADE","partido","Ativo"
-"37905","CIDADANIA","partido","Ativo"
-"37906","PL","partido","Ativo"
-"37907","PATRIOTA","partido","Ativo"
-"37908","REPUBLICANOS","partido","Ativo"
-"770","Bloco Parlamentar Unidos pelo Brasil","Bloco","Ativo"
-"754","Bloco Parlamentar Senado Independente","Bloco","Ativo"
-"771","Bloco Parlamentar PSDB/PSL","Bloco","Ativo"
-"763","Bloco Parlamentar Vanguarda","Bloco","Ativo"
-"755","Bloco Parlamentar da Resistência Democrática","Bloco","Ativo"
+id,sigla,tipo,situacao
+0,Governo,Governo,Ativo
+1,Maioria,Maioria,Ativo
+2,Minoria,Minoria,Ativo
+3,Oposição,Oposição,Ativo
+577,"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",Bloco,Ativo
+579,"Bloco NOVO, CIDADANIA, PV",Bloco,Ativo
+36761,PEN,partido,Ativo
+36762,PPL,partido,Ativo
+36763,PROS,partido,Ativo
+36765,SD,partido,Ativo
+36769,DEM,partido,Ativo
+36779,PCdoB,partido,Ativo
+36781,PCO,partido,Ativo
+36786,PDT,partido,Ativo
+36793,PHS,partido,Ativo
+36800,PMDB,partido,Ativo
+36801,PMN,partido,Ativo
+36809,PP**,partido,Ativo
+36813,PPS,partido,Ativo
+36814,PR,partido,Ativo
+36815,PRB,partido,Ativo
+36824,PRP,partido,Ativo
+36829,PRTB,partido,Ativo
+36832,PSB,partido,Ativo
+36833,PSC,partido,Ativo
+36834,PSD,partido,Ativo
+36835,PSDB,partido,Ativo
+36836,PSDC,partido,Ativo
+36837,PSL,partido,Ativo
+36839,PSOL,partido,Ativo
+36843,PSTU,partido,Ativo
+36844,PT,partido,Ativo
+36845,PTB,partido,Ativo
+36846,PTC,partido,Ativo
+36847,PTdoB,partido,Ativo
+36848,PTN,partido,Ativo
+36851,PV,partido,Ativo
+36852,SPART,partido,Ativo
+36863,PCB,partido,Ativo
+36886,REDE,partido,Ativo
+36887,PMB,partido,Ativo
+36896,PODE,partido,Ativo
+36898,AVANTE,partido,Ativo
+36899,MDB,partido,Ativo
+37900,PATRI,partido,Ativo
+37901,NOVO,partido,Ativo
+37902,DC,partido,Ativo
+37903,PP,partido,Ativo
+37904,SOLIDARIEDADE,partido,Ativo
+37905,CIDADANIA,partido,Ativo
+37906,PL,partido,Ativo
+37907,PATRIOTA,partido,Ativo
+37908,REPUBLICANOS,partido,Ativo
+277,Bloco Parlamentar Unidos pelo Brasil,Bloco,Ativo
+274,Bloco Parlamentar Vanguarda,Bloco,Ativo
+273,Bloco Parlamentar da Resistência Democrática,Bloco,Ativo
+272,Bloco Parlamentar Senado Independente,Bloco,Ativo
