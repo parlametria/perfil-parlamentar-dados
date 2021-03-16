@@ -1483,9 +1483,9 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 2018,camara,178889,Suplente,Suplente
 2018,camara,92346,Presidente,Titular
 2018,camara,205548,Titular,Titular
-2018,camara,160589,Titular,Titular
 2018,camara,152605,Suplente,Suplente
 2018,camara,204382,Suplente,Suplente
+2018,camara,160589,Titular,Titular
 2018,camara,204473,Suplente,Suplente
 2018,camara,160610,Suplente,Suplente
 2018,camara,178881,Titular,Titular
@@ -1836,8 +1836,8 @@ comissao_id,casa,id_parlamentar,cargo,situacao
 537236,camara,204397,Suplente,Suplente
 537236,camara,204361,Suplente,Suplente
 537236,camara,204412,Suplente,Suplente
-537236,camara,146788,Suplente,Suplente
 537236,camara,160598,Suplente,Suplente
+537236,camara,146788,Suplente,Suplente
 537236,camara,178969,Presidente,Titular
 537236,camara,171623,Segundo Vice-presidente,Titular
 537236,camara,136811,Terceiro Vice-presidente,Titular

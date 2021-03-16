@@ -1,46 +1,46 @@
 id_parlamentar_voz,id_partido,casa,cargo
-1160674,36852,camara,Líder
-1179587,36852,camara,Vice-líder
-174043,36852,camara,Vice-líder
-193083,36852,camara,Vice-líder
-1160553,36852,camara,Vice-líder
-1194260,36852,camara,Vice-líder
-1204487,36852,camara,Vice-líder
-1204359,36852,camara,Vice-líder
-1178881,36852,camara,Vice-líder
-1160510,36852,camara,Vice-líder
-1204494,36852,camara,Vice-líder
-1204354,36852,camara,Vice-líder
-1160673,36852,camara,Vice-líder
-1137070,36852,camara,Vice-líder
-1141450,36852,camara,Vice-líder
-1160587,36852,camara,Vice-líder
-1204392,36852,camara,Vice-líder
-1204522,36852,camara,Vice-líder
-1204538,36852,camara,Vice-líder
-1178929,36852,camara,Vice-líder
-1204391,36852,camara,Vice-líder
-1215043,36852,camara,Vice-líder
-1195866,36852,camara,Vice-líder
-1178934,36852,camara,Vice-líder
-1141555,36852,camara,Vice-líder
-1204372,36852,camara,Vice-líder
-1141405,36852,camara,Vice-líder
-175431,36852,camara,Vice-líder
-1160601,36852,camara,Vice-líder
-198057,36852,camara,Vice-líder
-1204418,36852,camara,Vice-líder
-1204353,36852,camara,Vice-líder
-1204414,36852,camara,Vice-líder
-1204425,36852,camara,Vice-líder
-1204430,36852,camara,Vice-líder
-1204380,36852,camara,Vice-líder
-192699,36852,camara,Vice-líder
-1178882,36852,camara,Vice-líder
-1178959,36852,camara,Vice-líder
-1108338,36852,camara,Vice-líder
-1204510,36852,camara,Vice-líder
-1151208,36852,camara,Vice-líder
+1160674,577,camara,Líder
+1179587,577,camara,Vice-líder
+174043,577,camara,Vice-líder
+193083,577,camara,Vice-líder
+1160553,577,camara,Vice-líder
+1194260,577,camara,Vice-líder
+1204487,577,camara,Vice-líder
+1204359,577,camara,Vice-líder
+1178881,577,camara,Vice-líder
+1160510,577,camara,Vice-líder
+1204494,577,camara,Vice-líder
+1204354,577,camara,Vice-líder
+1160673,577,camara,Vice-líder
+1137070,577,camara,Vice-líder
+1141450,577,camara,Vice-líder
+1160587,577,camara,Vice-líder
+1204392,577,camara,Vice-líder
+1204522,577,camara,Vice-líder
+1204538,577,camara,Vice-líder
+1178929,577,camara,Vice-líder
+1204391,577,camara,Vice-líder
+1215043,577,camara,Vice-líder
+1195866,577,camara,Vice-líder
+1178934,577,camara,Vice-líder
+1141555,577,camara,Vice-líder
+1204372,577,camara,Vice-líder
+1141405,577,camara,Vice-líder
+175431,577,camara,Vice-líder
+1160601,577,camara,Vice-líder
+198057,577,camara,Vice-líder
+1204418,577,camara,Vice-líder
+1204353,577,camara,Vice-líder
+1204414,577,camara,Vice-líder
+1204430,577,camara,Vice-líder
+1204380,577,camara,Vice-líder
+192699,577,camara,Vice-líder
+1178882,577,camara,Vice-líder
+1178959,577,camara,Vice-líder
+1108338,577,camara,Vice-líder
+1204510,577,camara,Vice-líder
+1204422,577,camara,Vice-líder
+1151208,577,camara,Vice-líder
 1160538,36844,camara,Líder
 1107283,36844,camara,Vice-líder
 1204480,36844,camara,Vice-líder
@@ -72,8 +72,8 @@ id_parlamentar_voz,id_partido,casa,cargo
 174467,36786,camara,Vice-líder
 174158,36786,camara,Vice-líder
 1177282,36786,camara,Vice-líder
-1178972,36852,camara,Líder
-1204532,36852,camara,Vice-líder
+1178972,579,camara,Líder
+1204532,579,camara,Vice-líder
 1204464,36839,camara,Líder
 1204509,36839,camara,Vice-líder
 1215044,36839,camara,Vice-líder
@@ -129,24 +129,24 @@ id_parlamentar_voz,id_partido,casa,cargo
 1178879,37904,camara,Líder
 1204487,36763,camara,Líder
 1194260,36845,camara,Líder
-1204508,36896,camara,Líder
+1204508,NA,camara,Líder
 1178881,36833,camara,Líder
 1204532,37901,camara,Líder
 1178921,36898,camara,Líder
 1178972,37905,camara,Líder
 1204494,37907,camara,Líder
 1204537,36851,camara,Líder
-25557,770,senado,Líder do Senado Federal
-2739,770,senado,Vice-líder do Senado Federal
+25557,277,senado,Líder do Senado Federal
+2739,277,senado,Vice-líder do Senado Federal
 25533,36852,senado,Líder do Senado Federal
 25905,36852,senado,Vice-líder do Senado Federal
 25988,36852,senado,Vice-líder do Senado Federal
 2345,36852,senado,Vice-líder do Senado Federal
-21173,763,senado,Líder do Senado Federal
-25350,763,senado,Vice-líder do Senado Federal
-23806,763,senado,Vice-líder do Senado Federal
-25783,755,senado,Líder do Senado Federal
-25718,754,senado,Líder do Senado Federal
+21173,274,senado,Líder do Senado Federal
+25350,274,senado,Vice-líder do Senado Federal
+23806,274,senado,Vice-líder do Senado Federal
+25783,273,senado,Líder do Senado Federal
+25718,272,senado,Líder do Senado Federal
 25985,36834,senado,Líder do Senado Federal
 25525,36834,senado,Vice-líder do Senado Federal
 26295,36834,senado,Vice-líder do Senado Federal

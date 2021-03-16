@@ -13,6 +13,7 @@ processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/l
     )
   
   liderancas_partidos <- liderancas %>% 
+    mutate(bloco_partido = if_else(bloco_partido == "PODE", "PODEMOS", bloco_partido)) %>% 
     group_by(bloco_partido) %>% 
     summarise(n = n()) %>% 
     rowwise() %>% 

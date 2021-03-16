@@ -3,7 +3,8 @@ id,sigla,tipo,situacao
 1,Maioria,Maioria,Ativo
 2,Minoria,Minoria,Ativo
 3,Oposição,Oposição,Ativo
-575,"Bloco PP, MDB, PTB",Bloco,Ativo
+577,"Bloco PSL, PL, PP, PSD, MDB, PSDB, REPUBLICANOS, DEM, SOLIDARIEDADE, PROS, PTB, PODE, PSC, AVANTE, PATRIOTA",Bloco,Ativo
+579,"Bloco NOVO, CIDADANIA, PV",Bloco,Ativo
 36761,PEN,partido,Ativo
 36762,PPL,partido,Ativo
 36763,PROS,partido,Ativo
@@ -51,8 +52,7 @@ id,sigla,tipo,situacao
 37906,PL,partido,Ativo
 37907,PATRIOTA,partido,Ativo
 37908,REPUBLICANOS,partido,Ativo
-770,Bloco Parlamentar Unidos pelo Brasil,Bloco,Ativo
-754,Bloco Parlamentar Senado Independente,Bloco,Ativo
-771,Bloco Parlamentar PSDB/PSL,Bloco,Ativo
-763,Bloco Parlamentar Vanguarda,Bloco,Ativo
-755,Bloco Parlamentar da Resistência Democrática,Bloco,Ativo
+277,Bloco Parlamentar Unidos pelo Brasil,Bloco,Ativo
+274,Bloco Parlamentar Vanguarda,Bloco,Ativo
+273,Bloco Parlamentar da Resistência Democrática,Bloco,Ativo
+272,Bloco Parlamentar Senado Independente,Bloco,Ativo

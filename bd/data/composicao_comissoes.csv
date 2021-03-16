@@ -1483,9 +1483,9 @@ id_comissao_voz,id_parlamentar_voz,cargo,situacao
 12018,1178889,Suplente,Suplente
 12018,192346,Presidente,Titular
 12018,1205548,Titular,Titular
-12018,1160589,Titular,Titular
 12018,1152605,Suplente,Suplente
 12018,1204382,Suplente,Suplente
+12018,1160589,Titular,Titular
 12018,1204473,Suplente,Suplente
 12018,1160610,Suplente,Suplente
 12018,1178881,Titular,Titular
@@ -1836,8 +1836,8 @@ id_comissao_voz,id_parlamentar_voz,cargo,situacao
 1537236,1204397,Suplente,Suplente
 1537236,1204361,Suplente,Suplente
 1537236,1204412,Suplente,Suplente
-1537236,1146788,Suplente,Suplente
 1537236,1160598,Suplente,Suplente
+1537236,1146788,Suplente,Suplente
 1537236,1178969,Presidente,Titular
 1537236,1171623,Segundo Vice-presidente,Titular
 1537236,1136811,Terceiro Vice-presidente,Titular
