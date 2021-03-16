@@ -163,6 +163,7 @@ cnpj,id_atividade_economica,cnae_tipo
 01771386000106,32,cnae_fiscal
 01846246000141,11,cnae_fiscal
 01865584000120,7,cnae_fiscal
+01873545000175,5,cnae_fiscal
 01879332000150,32,cnae_fiscal
 01882701000164,8,cnae_fiscal
 01882701000164,37,cnae_secundario
@@ -580,8 +581,6 @@ cnpj,id_atividade_economica,cnae_tipo
 04573461000104,6,cnae_secundario
 04583235000104,3,cnae_fiscal
 04626403000100,13,cnae_fiscal
-04631265000149,36,cnae_fiscal
-04631265000149,36,cnae_secundario
 04670300000139,12,cnae_fiscal
 04670300000139,37,cnae_secundario
 04671312000188,36,cnae_fiscal
@@ -623,6 +622,8 @@ cnpj,id_atividade_economica,cnae_tipo
 04865568000630,13,cnae_fiscal
 04865568000630,13,cnae_secundario
 04874170000156,32,cnae_fiscal
+04913762000130,20,cnae_fiscal
+04913762000130,20,cnae_secundario
 04987987000130,13,cnae_fiscal
 04987987000130,43,cnae_secundario
 04987987000130,13,cnae_secundario
@@ -636,7 +637,6 @@ cnpj,id_atividade_economica,cnae_tipo
 05016048000101,32,cnae_secundario
 05022973000145,43,cnae_fiscal
 05022973000145,43,cnae_secundario
-05032895000160,37,cnae_fiscal
 05059983000155,13,cnae_fiscal
 05119218000183,11,cnae_fiscal
 05119218000183,11,cnae_secundario
@@ -1340,9 +1340,6 @@ cnpj,id_atividade_economica,cnae_tipo
 11077821000142,30,cnae_fiscal
 11077821000142,12,cnae_secundario
 11077821000142,30,cnae_secundario
-11080134000186,32,cnae_fiscal
-11080134000186,44,cnae_secundario
-11080134000186,45,cnae_secundario
 11127999000150,44,cnae_fiscal
 11127999000150,45,cnae_fiscal
 11127999000150,44,cnae_secundario
@@ -1359,8 +1356,6 @@ cnpj,id_atividade_economica,cnae_tipo
 11248900000250,14,cnae_fiscal
 11279865000155,41,cnae_fiscal
 11279865000155,7,cnae_secundario
-11289977000197,37,cnae_fiscal
-11289977000197,37,cnae_secundario
 11292373000108,32,cnae_fiscal
 11292373000108,32,cnae_secundario
 11292373000108,6,cnae_secundario
@@ -2211,8 +2206,6 @@ cnpj,id_atividade_economica,cnae_tipo
 23026819000123,14,cnae_secundario
 23026819000123,8,cnae_secundario
 23044745000158,37,cnae_fiscal
-23162125000113,3,cnae_fiscal
-23162125000113,3,cnae_secundario
 23205958000114,37,cnae_fiscal
 23205958000114,15,cnae_secundario
 23239336000107,15,cnae_fiscal
@@ -2416,13 +2409,6 @@ cnpj,id_atividade_economica,cnae_tipo
 26161720000122,37,cnae_secundario
 26161720000122,4,cnae_secundario
 26161720000122,14,cnae_secundario
-26329038000104,3,cnae_fiscal
-26329038000104,44,cnae_secundario
-26329038000104,45,cnae_secundario
-26329038000104,3,cnae_secundario
-26329038000104,8,cnae_secundario
-26329038000104,12,cnae_secundario
-26329038000104,35,cnae_secundario
 26349217000103,32,cnae_fiscal
 26349217000103,32,cnae_secundario
 26349217000103,13,cnae_secundario
@@ -3118,6 +3104,11 @@ cnpj,id_atividade_economica,cnae_tipo
 03972629000191,7,cnae_secundario
 03972629000191,37,cnae_secundario
 03972629000191,12,cnae_secundario
+04127598000135,14,cnae_fiscal
+04127598000135,35,cnae_secundario
+04127598000135,37,cnae_secundario
+04127598000135,43,cnae_secundario
+04127598000135,14,cnae_secundario
 04196136000170,44,cnae_fiscal
 04196136000170,45,cnae_fiscal
 04196136000170,44,cnae_secundario
@@ -3498,6 +3489,8 @@ cnpj,id_atividade_economica,cnae_tipo
 81665366000262,26,cnae_fiscal
 81665366000343,26,cnae_fiscal
 83369082000173,36,cnae_fiscal
+84022615000109,36,cnae_fiscal
+84022615000109,36,cnae_secundario
 84318096000120,20,cnae_fiscal
 84318096000120,20,cnae_secundario
 84626571000126,32,cnae_fiscal
