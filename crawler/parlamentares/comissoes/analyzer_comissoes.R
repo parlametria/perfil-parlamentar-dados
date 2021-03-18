@@ -1,3 +1,24 @@
+#' @title Processa dados de comissões no Senado
+#' @description Processa dados de comissões no Senado
+#' @param comissoes_senado_df Dataframe com os dados de comissões
+#' @return Dataframe processado
+processa_comissoes_senado <- function(comissoes_senado_df) {
+  comissoes_senado_df <- comissoes_senado_df %>% 
+    dplyr::mutate(id_senado = stringr::str_match(foto, "fotos-oficiais/senador(.*?).jpg")[,2]) %>% 
+    dplyr::filter(nome != "", nome != "VAGO", id_senado != "") %>%
+    dplyr::mutate(cargo = dplyr::if_else(is.na(cargo), 
+                                         situacao,
+                                         cargo)) %>% 
+    dplyr::mutate(cargo = dplyr::if_else(cargo == "RELATOR",
+                                         situacao,
+                                         cargo)) %>% # Checagem adicional que irá sair quando o erro da API (Senado) for corrigido 
+    dplyr::select(id = id_senado, nome, cargo, situacao, sigla, casa, data_inicio, data_fim) %>% 
+    dplyr::distinct()
+  
+  return(comissoes_senado_df)
+
+}
+
 #' @title Padroniza nomenclatura do cargo de um parlamentar numa Comissão
 #' @description Padroniza nomenclatura do cargo de um parlamentar numa Comissão
 #' @param cargo Cargo para padronização
@@ -53,12 +74,19 @@ processa_comissoes <- function() {
   library(here)
   source(here::here("crawler/parlamentares/comissoes/fetcher_comissoes.R"))
   
-  comissao_composicao_camara <- fetch_comissoes_composicao_camara()
+  comissoes <- agoradigital::fetch_all_composicao_comissao()
   
-  comissao_composicao_senado <- fetch_comissoes_composicao_senado()
+  comissao_composicao_camara <- comissoes %>% 
+    filter(casa == "camara") %>% 
+    mutate(is_membro_atual = !is.na(data_inicio) & is.na(data_fim))
+  
+  comissao_composicao_senado <- comissoes %>% 
+    filter(casa == "senado") %>% 
+    processa_comissoes_senado(.) %>% 
+    mutate(is_membro_atual = TRUE)
   
   comissao_composicao <- comissao_composicao_camara %>% 
-    rbind(comissao_composicao_senado)
+    bind_rows(comissao_composicao_senado)
   
   lista_comissao <- comissao_composicao %>% 
     dplyr::distinct(casa, sigla) %>% 
@@ -81,7 +109,7 @@ processa_comissoes <- function() {
     dplyr::mutate(maximo = max(peso_cargo)) %>%
     dplyr::filter(maximo == peso_cargo) %>%
     ungroup() %>% 
-    dplyr::select(comissao_id, casa, id_parlamentar = id, cargo, situacao) %>% 
+    dplyr::select(comissao_id, casa, id_parlamentar = id, cargo, situacao, data_inicio, data_fim, is_membro_atual) %>% 
     dplyr::filter(!is.na(comissao_id))
 
   ## Informações das Comissões
