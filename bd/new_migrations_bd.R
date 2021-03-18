@@ -31,7 +31,7 @@ file = here::here("bd/scripts/migrations/migration_comissoes.sql")
 execute_migration(file, log_file)
 
 ## REALIZA MIGRATION DE COMPOSIÇÃO COMISSÕES
-file = here::here("bd/scripts/migrations/migration_parlamentares.sql")
+file = here::here("bd/scripts/migrations/migration_composicao_comissoes.sql")
 execute_migration(file, log_file)
 
 if (length(grep("ROLLBACK", readLines(log_file), value = TRUE)) > 0) {
