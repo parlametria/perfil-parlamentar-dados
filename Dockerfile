@@ -20,6 +20,7 @@ RUN R -e "install.packages(c('here', 'optparse', 'RCurl', 'xml2', 'ellipsis', 'd
 RUN Rscript -e 'devtools::install_version("dplyr", version = "0.8.5", repos = "http://cran.us.r-project.org")'
 RUN R -e "devtools::install_github('analytics-ufcg/rcongresso', force = T)"
 RUN R -e "devtools::install_github('analytics-ufcg/leggoR', force = T)"
+RUN R -e "devtools::install_github('Cepesp-Fgv/cepesp-r')"
 RUN apt-get install -y libjpeg-dev
 RUN R -e "install.packages('pdftools')"
 RUN R -e "install.packages('eeptools')"

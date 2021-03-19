@@ -175,6 +175,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2001,camara,204530,Suplente,Suplente,2021-03-10,NA,TRUE
 2001,camara,204426,Suplente,Suplente,2021-03-10,NA,TRUE
 2001,camara,204370,Suplente,Suplente,2021-03-10,NA,TRUE
+2001,camara,204440,Suplente,Suplente,2021-03-16,NA,TRUE
 2003,camara,204365,Titular,Titular,2019-03-11,2020-02-03,FALSE
 2003,camara,178977,Titular,Titular,2019-03-11,2020-02-03,FALSE
 2003,camara,73466,Titular,Titular,2019-03-11,2020-02-03,FALSE
@@ -192,7 +193,6 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2003,camara,193726,Titular,Titular,2019-03-12,2020-02-03,FALSE
 2003,camara,204430,Titular,Titular,2019-03-12,2020-02-03,FALSE
 2003,camara,204537,Titular,Titular,2019-03-12,2020-02-03,FALSE
-2003,camara,116379,Titular,Titular,2019-03-12,2020-02-03,FALSE
 2003,camara,204367,Titular,Titular,2019-03-12,2020-02-03,FALSE
 2003,camara,204562,Titular,Titular,2019-03-12,2020-02-03,FALSE
 2003,camara,204479,Titular,Titular,2019-03-12,2020-02-03,FALSE
@@ -299,7 +299,6 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2003,camara,204550,Titular,Titular,2019-04-15,2019-04-17,FALSE
 2003,camara,204563,Titular,Titular,2019-04-15,2019-04-23,FALSE
 2003,camara,204354,Suplente,Suplente,2019-04-15,2019-11-11,FALSE
-2003,camara,178879,Titular,Titular,2019-04-16,2019-04-23,FALSE
 2003,camara,194260,Suplente,Suplente,2019-04-17,2019-04-23,FALSE
 2003,camara,204472,Suplente,Suplente,2019-04-17,2019-05-21,FALSE
 2003,camara,160669,Titular,Titular,2019-04-23,2019-12-03,FALSE
@@ -352,7 +351,6 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2003,camara,204524,Titular,Titular,2021-03-09,NA,TRUE
 2003,camara,204474,Titular,Titular,2021-03-09,NA,TRUE
 2003,camara,92102,Titular,Titular,2021-03-09,NA,TRUE
-2003,camara,204506,Titular,Titular,2021-03-09,NA,TRUE
 2003,camara,73460,Titular,Titular,2021-03-09,NA,TRUE
 2003,camara,160666,Titular,Titular,2021-03-09,NA,TRUE
 2003,camara,178975,Titular,Titular,2021-03-09,NA,TRUE
@@ -373,7 +371,6 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2003,camara,178987,Titular,Titular,2021-03-09,NA,TRUE
 2003,camara,204487,Titular,Titular,2021-03-09,NA,TRUE
 2003,camara,204425,Titular,Titular,2021-03-09,NA,TRUE
-2003,camara,178879,Titular,Titular,2021-03-09,NA,TRUE
 2003,camara,177282,Titular,Titular,2021-03-09,NA,TRUE
 2003,camara,204514,Titular,Titular,2021-03-09,2021-03-11,FALSE
 2003,camara,204440,Suplente,Suplente,2021-03-09,NA,TRUE
@@ -407,7 +404,6 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2003,camara,160587,Titular,Titular,2021-03-10,NA,TRUE
 2003,camara,204367,Titular,Titular,2021-03-10,NA,TRUE
 2003,camara,204562,Titular,Titular,2021-03-10,NA,TRUE
-2003,camara,116379,Titular,Titular,2021-03-10,NA,TRUE
 2003,camara,73586,Titular,Titular,2021-03-10,NA,TRUE
 2003,camara,74160,Titular,Titular,2021-03-10,NA,TRUE
 2003,camara,74398,Titular,Titular,2021-03-10,NA,TRUE
@@ -459,6 +455,10 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2003,camara,204411,Titular,Titular,2021-03-11,NA,TRUE
 2003,camara,179587,Titular,Titular,2021-03-12,NA,TRUE
 2003,camara,204526,Suplente,Suplente,2021-03-12,NA,TRUE
+2003,camara,204506,Primeiro Vice-presidente,Titular,2021-03-16,NA,TRUE
+2003,camara,116379,Segundo Vice-presidente,Titular,2021-03-16,NA,TRUE
+2003,camara,178879,Terceiro Vice-presidente,Titular,2021-03-16,NA,TRUE
+2003,camara,178989,Suplente,Suplente,2021-03-16,NA,TRUE
 2002,camara,141391,Suplente,Suplente,2019-03-11,2019-09-26,FALSE
 2002,camara,204487,Titular,Titular,2019-03-12,2019-03-19,FALSE
 2002,camara,204388,Titular,Titular,2019-03-12,2019-08-06,FALSE
@@ -848,6 +848,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2006,camara,204498,Suplente,Suplente,2021-03-10,NA,TRUE
 2006,camara,204503,Suplente,Suplente,2021-03-10,NA,TRUE
 2006,camara,204570,Suplente,Suplente,2021-03-10,NA,TRUE
+2006,camara,204478,Titular,Titular,2021-03-16,NA,TRUE
 2009,camara,204377,Titular,Titular,2019-03-11,2020-02-03,FALSE
 2009,camara,204433,Suplente,Suplente,2019-03-11,2020-02-03,FALSE
 2009,camara,205865,Titular,Titular,2019-03-12,2019-04-23,FALSE
@@ -873,7 +874,6 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2009,camara,204397,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 2009,camara,108338,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 2009,camara,204359,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
-2009,camara,204508,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 2009,camara,204369,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 2009,camara,204460,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 2009,camara,81297,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
@@ -881,6 +881,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2009,camara,204528,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 2009,camara,74160,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 2009,camara,204557,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
+2009,camara,204508,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 2009,camara,178843,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 2009,camara,74655,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 2009,camara,178912,Presidente,Titular,2019-03-13,2021-03-10,FALSE
@@ -947,8 +948,8 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2009,camara,74200,Titular,Titular,2021-03-09,NA,TRUE
 2009,camara,74090,Titular,Titular,2021-03-09,NA,TRUE
 2009,camara,160641,Titular,Titular,2021-03-09,NA,TRUE
-2009,camara,178947,Titular,Titular,2021-03-09,NA,TRUE
 2009,camara,204459,Titular,Titular,2021-03-09,NA,TRUE
+2009,camara,178947,Titular,Titular,2021-03-09,NA,TRUE
 2009,camara,204418,Titular,Titular,2021-03-09,NA,TRUE
 2009,camara,178831,Suplente,Suplente,2021-03-09,NA,TRUE
 2009,camara,204388,Suplente,Suplente,2021-03-09,NA,TRUE
@@ -1001,6 +1002,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2009,camara,74459,Titular,Titular,2021-03-11,NA,TRUE
 2009,camara,204455,Titular,Titular,2021-03-12,NA,TRUE
 2009,camara,204376,Titular,Titular,2021-03-12,NA,TRUE
+2009,camara,178929,Suplente,Suplente,2021-03-16,NA,TRUE
 537236,camara,160635,Titular,Titular,2019-03-12,2019-03-19,FALSE
 537236,camara,204567,Titular,Titular,2019-03-12,2019-07-03,FALSE
 537236,camara,204444,Titular,Titular,2019-03-12,2020-02-03,FALSE
@@ -1116,6 +1118,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2011,camara,178825,Titular,Titular,2021-03-10,NA,TRUE
 2011,camara,74400,Titular,Titular,2021-03-10,NA,TRUE
 2011,camara,204557,Suplente,Suplente,2021-03-10,NA,TRUE
+2011,camara,141553,Suplente,Suplente,2021-03-16,NA,TRUE
 2010,camara,204377,Suplente,Suplente,2019-03-11,2020-02-03,FALSE
 2010,camara,204553,Titular,Titular,2019-03-12,2019-03-21,FALSE
 2010,camara,160635,Titular,Titular,2019-03-12,2020-02-03,FALSE
@@ -1245,12 +1248,12 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2010,camara,188097,Suplente,Suplente,2021-03-10,NA,TRUE
 2010,camara,73788,Suplente,Suplente,2021-03-10,NA,TRUE
 2010,camara,204398,Suplente,Suplente,2021-03-10,NA,TRUE
-2010,camara,73482,Suplente,Suplente,2021-03-10,NA,TRUE
 2010,camara,143632,Suplente,Suplente,2021-03-10,NA,TRUE
 2010,camara,160570,Suplente,Suplente,2021-03-10,NA,TRUE
 2010,camara,160589,Suplente,Suplente,2021-03-10,NA,TRUE
 2010,camara,74646,Suplente,Suplente,2021-03-10,NA,TRUE
 2010,camara,204562,Suplente,Suplente,2021-03-10,NA,TRUE
+2010,camara,73482,Suplente,Suplente,2021-03-10,2021-03-18,FALSE
 2010,camara,74270,Suplente,Suplente,2021-03-11,NA,TRUE
 2010,camara,204548,Titular,Titular,2021-03-12,NA,TRUE
 2010,camara,204526,Titular,Titular,2021-03-12,NA,TRUE
@@ -1617,6 +1620,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2012,camara,73772,Titular,Titular,2021-03-11,NA,TRUE
 2012,camara,204378,Titular,Titular,2021-03-11,NA,TRUE
 2012,camara,160640,Titular,Titular,2021-03-15,NA,TRUE
+2012,camara,204524,Suplente,Suplente,2021-03-16,NA,TRUE
 537870,camara,74283,Titular,Titular,2019-03-12,2019-09-12,FALSE
 537870,camara,204565,Titular,Titular,2019-03-12,2019-11-12,FALSE
 537870,camara,204354,Titular,Titular,2019-03-12,2020-02-03,FALSE
@@ -1896,8 +1900,8 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 5503,camara,204514,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 5503,camara,204518,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 5503,camara,204532,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
-5503,camara,204479,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 5503,camara,204560,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
+5503,camara,204479,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 5503,camara,204442,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 5503,camara,204512,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 5503,camara,193726,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
@@ -2170,11 +2174,14 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2014,camara,204450,Presidente,Titular,2021-03-11,NA,TRUE
 2014,camara,191923,Titular,Titular,2021-03-11,NA,TRUE
 2014,camara,204566,Titular,Titular,2021-03-11,NA,TRUE
+2014,camara,204388,Suplente,Suplente,2021-03-16,NA,TRUE
+2014,camara,108338,Suplente,Suplente,2021-03-16,NA,TRUE
+2014,camara,204451,Suplente,Suplente,2021-03-16,NA,TRUE
+2014,camara,204390,Suplente,Suplente,2021-03-16,NA,TRUE
 2015,camara,204531,Titular,Titular,2019-03-12,2019-04-15,FALSE
 2015,camara,133968,Titular,Titular,2019-03-12,2020-02-03,FALSE
 2015,camara,204425,Titular,Titular,2019-03-12,2020-02-03,FALSE
 2015,camara,74060,Titular,Titular,2019-03-12,2020-02-03,FALSE
-2015,camara,74283,Titular,Titular,2019-03-12,2020-02-03,FALSE
 2015,camara,178969,Titular,Titular,2019-03-12,2020-02-03,FALSE
 2015,camara,204548,Suplente,Suplente,2019-03-12,2019-09-03,FALSE
 2015,camara,204518,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
@@ -2186,11 +2193,9 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2015,camara,160665,Suplente,Suplente,2019-03-12,2020-02-03,FALSE
 2015,camara,160641,Presidente,Titular,2019-03-13,2021-03-10,FALSE
 2015,camara,160598,Primeiro Vice-presidente,Titular,2019-03-13,2021-03-10,FALSE
-2015,camara,75431,Segundo Vice-presidente,Titular,2019-03-13,2021-03-10,FALSE
 2015,camara,178879,Titular,Titular,2019-03-13,2019-04-16,FALSE
 2015,camara,157130,Titular,Titular,2019-03-13,2020-02-03,FALSE
 2015,camara,204480,Titular,Titular,2019-03-13,2020-02-03,FALSE
-2015,camara,204485,Titular,Titular,2019-03-13,2020-02-03,FALSE
 2015,camara,204536,Titular,Titular,2019-03-13,2020-02-03,FALSE
 2015,camara,141508,Titular,Titular,2019-03-13,2020-02-03,FALSE
 2015,camara,160538,Titular,Titular,2019-03-13,2020-02-03,FALSE
@@ -2239,6 +2244,9 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2015,camara,178954,Suplente,Suplente,2021-03-12,NA,TRUE
 2015,camara,178889,Titular,Titular,2021-03-15,NA,TRUE
 2015,camara,204407,Suplente,Suplente,2021-03-15,NA,TRUE
+2015,camara,75431,Primeiro Vice-presidente,Titular,2021-03-16,NA,TRUE
+2015,camara,74283,Segundo Vice-presidente,Titular,2021-03-16,NA,TRUE
+2015,camara,204485,Terceiro Vice-presidente,Titular,2021-03-16,NA,TRUE
 6066,camara,204388,Titular,Titular,2019-03-12,2019-08-06,FALSE
 6066,camara,204356,Titular,Titular,2019-03-12,2020-02-03,FALSE
 6066,camara,204541,Titular,Titular,2019-03-12,2020-02-03,FALSE
@@ -2293,6 +2301,7 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 6066,camara,74159,Suplente,Suplente,2021-03-10,NA,TRUE
 6066,camara,204508,Suplente,Suplente,2021-03-10,2021-03-12,FALSE
 6066,camara,69871,Presidente,Titular,2021-03-12,NA,TRUE
+6066,camara,73801,Suplente,Suplente,2021-03-16,NA,TRUE
 2016,camara,141450,Titular,Titular,2019-03-12,2019-09-17,FALSE
 2016,camara,204437,Titular,Titular,2019-03-12,2020-02-03,FALSE
 2016,camara,204368,Titular,Titular,2019-03-12,2020-02-03,FALSE
@@ -2782,6 +2791,18 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 50,senado,5718,Suplente,Suplente,NA,NA,TRUE
 50,senado,5953,Titular,Titular,NA,NA,TRUE
 50,senado,5979,Suplente,Suplente,NA,NA,TRUE
+2309,senado,5537,Vice-presidente,Titular,NA,NA,TRUE
+2309,senado,285,Suplente,Suplente,NA,NA,TRUE
+2309,senado,6027,Titular,Titular,NA,NA,TRUE
+2309,senado,22,Titular,Titular,NA,NA,TRUE
+2309,senado,5979,Titular,Titular,NA,NA,TRUE
+2309,senado,5895,Titular,Titular,NA,NA,TRUE
+2309,senado,4770,Titular,Titular,NA,NA,TRUE
+2309,senado,5976,Titular,Titular,NA,NA,TRUE
+2309,senado,5942,Suplente,Suplente,NA,NA,TRUE
+2309,senado,5350,Presidente,Titular,NA,NA,TRUE
+2309,senado,5523,Titular,Titular,NA,NA,TRUE
+2309,senado,5985,Suplente,Suplente,NA,NA,TRUE
 1307,senado,4994,Titular,Titular,NA,NA,TRUE
 1307,senado,5537,Suplente,Suplente,NA,NA,TRUE
 1307,senado,35,Titular,Titular,NA,NA,TRUE
@@ -2872,6 +2893,8 @@ comissao_id,casa,id_parlamentar,cargo,situacao,data_inicio,data_fim,is_membro_at
 2429,senado,5967,Suplente,Suplente,NA,NA,TRUE
 2429,senado,5523,Titular,Titular,NA,NA,TRUE
 2429,senado,5990,Titular,Titular,NA,NA,TRUE
+2429,senado,1173,Titular,Titular,NA,NA,TRUE
+2429,senado,5422,Titular,Titular,NA,NA,TRUE
 1956,senado,4994,Titular,Titular,NA,NA,TRUE
 1956,senado,70,Suplente,Suplente,NA,NA,TRUE
 1956,senado,5537,Titular,Titular,NA,NA,TRUE
