@@ -9,11 +9,14 @@ processa_orientacoes <- function(votos_path = here::here("crawler/raw_data/votos
   
   source(here::here("crawler/parlamentares/partidos/utils_partidos.R"))
   source(here::here("crawler/votacoes/aderencia/processa_dados_aderencia.R"))
+  source(here::here("crawler/votacoes/utils_votacoes.R"))
   
-  votos <- read_csv(votos_path, col_types = cols(.default = "c", id_votacao = "i", voto = "i"))
+  votos <- read_csv(votos_path, col_types = cols(.default = "c", id_votacao = "i", voto = "i")) %>% 
+    mutate(partido = padroniza_sigla(partido))
   
   orientacoes <- read_csv(orientacoes_data_path, col_types = cols(id_proposicao = "c", 
-                                                                  id_votacao = "i", voto = "i"))
+                                                                  id_votacao = "i", voto = "i")) %>% 
+    mutate(partido = padroniza_sigla(partido))
   
   orientacoes_governo <-
     adiciona_hierarquia_orientacao_governo(
