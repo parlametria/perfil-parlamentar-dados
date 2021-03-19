@@ -25,7 +25,8 @@ processa_aderencia_parlamentares <-
     ## Preparando dados de votos, orientações e senadores
     votos <-
       read_csv(votos_path, col_types = cols(.default = "c", voto = "i")) %>%
-      filter(casa == casa_aderencia)
+      filter(casa == casa_aderencia) %>% 
+      mutate(partido = padroniza_sigla(partido))
     
     orientacoes <-
       read_csv(orientacoes_path, col_types = cols(.default = "c", voto = "i")) %>%
