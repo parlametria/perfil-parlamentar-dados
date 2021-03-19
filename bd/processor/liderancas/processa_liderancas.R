@@ -11,7 +11,8 @@ processa_liderancas <- function(liderancas_path = here::here("crawler/raw_data/l
       casa_enum = dplyr::if_else(casa == "camara", 1, 2),
       id_parlamentar_voz = paste0(casa_enum, as.character(id))
     ) %>% 
-    mutate(bloco_partido = if_else(bloco_partido == "PODE", "PODEMOS", bloco_partido)) 
+    mutate(partido = if_else(partido == "PODE", "PODEMOS", partido),
+           bloco_partido = if_else(bloco_partido == "PODE", "PODEMOS", bloco_partido))
   
   liderancas_partidos <- liderancas %>% 
     group_by(bloco_partido) %>% 

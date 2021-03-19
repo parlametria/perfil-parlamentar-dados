@@ -25,15 +25,18 @@ processa_aderencia_parlamentares <-
     ## Preparando dados de votos, orientações e senadores
     votos <-
       read_csv(votos_path, col_types = cols(.default = "c", voto = "i")) %>%
-      filter(casa == casa_aderencia)
+      filter(casa == casa_aderencia) %>% 
+      mutate(partido = padroniza_sigla(partido))
     
     orientacoes <-
       read_csv(orientacoes_path, col_types = cols(.default = "c", voto = "i")) %>%
-      filter(casa == casa_aderencia)
+      filter(casa == casa_aderencia) %>% 
+      mutate(partido = padroniza_sigla(partido))
     
     parlamentares <-
       read_csv(parlamentares_path, col_types = cols(id = "c")) %>%
-      filter(casa == casa_aderencia, em_exercicio == 1)
+      filter(casa == casa_aderencia, em_exercicio == 1) %>% 
+      mutate(sg_partido = padroniza_sigla(sg_partido))
     
     partidos <- parlamentares %>%
       group_by(sg_partido) %>%
@@ -76,6 +79,7 @@ processa_aderencia_parlamentares <-
       )
     
     partidos_aderencia_temas <- aderencia_temas %>%
+      mutate(partido = padroniza_sigla(partido)) %>% 
       group_by(partido) %>%
       summarise(n = n()) %>%
       rowwise() %>%
