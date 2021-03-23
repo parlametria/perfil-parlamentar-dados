@@ -144,6 +144,36 @@ tryCatch(
 
 tryCatch(
   {
+    log <- paste0(log, date(), " - Executando crawler de Cargos Políticos...\n")
+    source(here::here("parlametria/crawler/cargos_politicos/export_cargos_politicos.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Cargos Políticos")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
+tryCatch(
+  {
+    log <- paste0(log, date(), " - Executando crawler de Resumo em Cargos (comissões e lideranças)...\n")
+    source(here::here("parlametria/crawler/resumo/cargos_resumo/export_cargos_resumo.R"))
+  },
+  error=function(cond) {
+    log_error <- get_log_error(cond, "Um erro ocorreu durante a execução do crawler de Resumo em Cargos (comissões e lideranças)")
+    message(log_error)
+    log <- paste0(log, date(), " ", log_error)
+    send_log_to_bot(log)
+    stop("A execução foi interrompida", call. = FALSE)
+    return(NA)
+  }
+)
+
+tryCatch(
+  {
     log <- paste0(log, date(), " - Executando processador dos dados para o perfil mais...\n")
     source(here::here("parlametria/processor/export_dados_perfil_mais.R"))
   },
