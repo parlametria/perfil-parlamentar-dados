@@ -69,7 +69,7 @@ fetch_comissao_info_camara <- function(sigla_comissao) {
 fetch_comissao_info_senado <- function(sigla) {
   library(tidyverse)
   
-  url <- paste0("http://legis.senado.leg.br/dadosabertos/comissao/", sigla)
+  url <- paste0("https://legis.senado.leg.br/dadosabertos/comissao/", sigla)
   
   comissao <- tryCatch({
     xml <- RCurl::getURL(url) %>% xml2::read_xml()

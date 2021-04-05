@@ -64,7 +64,7 @@ fetch_autores_senado <- function(id_proposicao) {
   library(tidyverse)
   library(here)
   
-  url <- paste0("http://legis.senado.leg.br/dadosabertos/materia/", id_proposicao)
+  url <- paste0("https://legis.senado.leg.br/dadosabertos/materia/", id_proposicao)
   
   autores <- tryCatch({
     xml <- RCurl::getURL(url) %>% xml2::read_xml()
