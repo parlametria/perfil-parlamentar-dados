@@ -7,7 +7,7 @@
 fetch_senadores_legislatura <- function(legislatura = 56) {
   library(tidyverse)
   
-  url <- paste0("http://legis.senado.leg.br/dadosabertos/senador/lista/legislatura/", legislatura)
+  url <- paste0("https://legis.senado.leg.br/dadosabertos/senador/lista/legislatura/", legislatura)
   
   senadores <- tryCatch({
     xml <- RCurl::getURL(url, .encoding = "Windows-1252") %>% xml2::read_xml()
@@ -61,7 +61,7 @@ fetch_senadores_legislatura <- function(legislatura = 56) {
 fetch_senadores_atuais <- function(legislatura_atual = 56) {
   library(tidyverse)
     
-  url <- paste0("http://legis.senado.leg.br/dadosabertos/senador/lista/atual")
+  url <- paste0("https://legis.senado.leg.br/dadosabertos/senador/lista/atual")
   
   senadores <- tryCatch({
     xml <- RCurl::getURL(url, .encoding = "Windows-1252") %>% xml2::read_xml()
@@ -96,7 +96,7 @@ fetch_info_por_senador <- function(id_senador) {
   library(tidyverse)
   
   print(paste0("Baixando informações do Senador ", id_senador))
-  url <- paste0("http://legis.senado.leg.br/dadosabertos/senador/", id_senador)
+  url <- paste0("https://legis.senado.leg.br/dadosabertos/senador/", id_senador)
   
   senador <- tryCatch({
     xml <- RCurl::getURL(url, .encoding = "Windows-1252") %>% xml2::read_xml()

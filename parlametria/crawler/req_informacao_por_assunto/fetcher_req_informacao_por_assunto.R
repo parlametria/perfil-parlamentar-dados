@@ -140,7 +140,7 @@ filter_proposicoes_by_term_senado <- function(
   
   term <- URLencode(term, reserved = TRUE)
   
-  url <- paste0("http://legis.senado.leg.br/dadosabertos/materia/pesquisa/lista",
+  url <- paste0("https://legis.senado.leg.br/dadosabertos/materia/pesquisa/lista",
                 "?sigla=", tipo_proposicao,
                 "&ano=", ano,
                 "&palavraChave=", term)

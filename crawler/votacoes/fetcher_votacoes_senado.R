@@ -114,7 +114,7 @@ fetcher_votacoes_por_proposicao_senado <-
     print(paste0("Capturando votações da proposição ", id_proposicao))
     
     url <-
-      paste0("http://legis.senado.leg.br/dadosabertos/materia/votacoes/",
+      paste0("https://legis.senado.leg.br/dadosabertos/materia/votacoes/",
              id_proposicao)
     
     xml <-

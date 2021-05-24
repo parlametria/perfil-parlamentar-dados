@@ -44,7 +44,7 @@ fetch_cargos_mesa_camara <- function(legislatura = 56, atual_cargo = TRUE) {
 fetch_cargos_mesa_senado <- function() {
   library(tidyverse)
   
-  url <- "http://legis.senado.leg.br/dadosabertos/dados/MesaSenado.xml"
+  url <- "https://legis.senado.leg.br/dadosabertos/dados/MesaSenado.xml"
   
   senadores <- tryCatch({
     xml <- RCurl::getURL(url) %>% xml2::read_xml()
