@@ -120,8 +120,8 @@ O R-updater exige que algumas variáveis de ambiente estejam disponíveis:
 
 Para configurar essas variáveis de ambiente execute os seguintes passos:
 
-1. Crie um arquivo .env na raiz desse repositório
-2. Preencha o arquivo .env com o seguinte conteúdo:
+1. Copie o arquivo `.env.sample` para um arquivo `.env`;
+2. Preencha este `.env` com o seguinte conteúdo:
 
 ```
 PASSWORD=secret
